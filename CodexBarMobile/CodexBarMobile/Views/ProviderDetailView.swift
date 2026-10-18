@@ -324,11 +324,14 @@ struct ProviderDetailView: View {
                             tintColor: self.providerColor)
                     }
                 }
-                if self.provider.providerID == "codex",
-                   let resetCredits = self.provider.codexResetCredits,
-                   resetCredits.availableCount > 0
+                if let resetCredits = ResetCreditsCardPresentation.make(
+                    provider: self.provider,
+                    now: self.isDemoMode ? self.costReferenceDate : Date())
                 {
-                    CodexResetCreditsCard(resetCredits: resetCredits, tintColor: self.providerColor)
+                    ResetCreditsCard(
+                        presentation: resetCredits,
+                        tintColor: self.providerColor,
+                        isInCalendar: ResetCreditCalendarSync.shared.isEnabled && !self.isDemoMode)
                 }
                 if self.provider.providerID == "codex",
                    let confidence = self.provider.usageDataConfidence,

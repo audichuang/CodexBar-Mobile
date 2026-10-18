@@ -46,6 +46,8 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>Add reset credit expirations to a CodexBar calendar, and update or remove those events when credits are used.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>Save shared cost report images to your photo library.</string>
 	<key>UIBackgroundModes</key>

@@ -1,11 +1,37 @@
 import CodexBarSync
 import SwiftUI
 
-/// Codex manual rate-limit reset credits added upstream in v0.37.0. Rendered
-/// only when the Mac sync payload carries at least one available credit.
-struct CodexResetCreditsCard: View {
-    let resetCredits: SyncCodexResetCredits
+/// What the reset-credit card shows for one provider account (Codex, Claude, Grok).
+struct ResetCreditsCardPresentation: Equatable {
+    let availableCount: Int
+    /// Available resets grouped by identical expiry, soonest first.
+    let groups: [ResetCreditObservation.Group]
+
+    static func make(provider: ProviderUsageSnapshot, now: Date) -> ResetCreditsCardPresentation? {
+        if let observation = ResetCreditObservation.make(from: provider) {
+            let groups = observation.groups(availableAt: now)
+            let count = groups.reduce(0) { $0 + $1.count }
+            guard count > 0 else { return nil }
+            return ResetCreditsCardPresentation(availableCount: count, groups: groups)
+        }
+        // Older Codex payloads may carry only a count and the next expiry.
+        guard provider.providerID == "codex",
+              let resetCredits = provider.codexResetCredits,
+              resetCredits.availableCount > 0
+        else { return nil }
+        let next = resetCredits.nextExpiresAt.flatMap { $0 > now ? $0 : nil }
+        return ResetCreditsCardPresentation(
+            availableCount: resetCredits.availableCount,
+            groups: next.map { [ResetCreditObservation.Group(expiresAt: $0, count: 1)] } ?? [])
+    }
+}
+
+/// Redeemable usage-limit resets with each reset's exact expiry (Codex since iOS 1.15.0; Claude and Grok since
+/// iOS 2.10.0 with Mac 0.76.0.2). Rendered only when at least one reset is available.
+struct ResetCreditsCard: View {
+    let presentation: ResetCreditsCardPresentation
     let tintColor: Color
+    var isInCalendar = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -21,16 +47,32 @@ struct CodexResetCreditsCard: View {
                     .foregroundStyle(self.tintColor)
             }
 
-            if let expiryText = self.expiryText {
-                HStack(spacing: 6) {
+            ForEach(Array(self.presentation.groups.enumerated()), id: \.offset) { _, group in
+                HStack(alignment: .firstTextBaseline, spacing: 6) {
                     Image(systemName: "timer")
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                    Text(expiryText)
+                    Text(Self.expiryText(group.expiresAt))
                         .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Spacer(minLength: 0)
+                        .foregroundStyle(.primary)
+                    if group.count > 1 {
+                        Text(verbatim: "×\(group.count)")
+                            .font(.caption.monospacedDigit())
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer(minLength: 4)
+                    if let expiresAt = group.expiresAt {
+                        Text(Self.relativeText(expiresAt))
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
                 }
+            }
+
+            if self.isInCalendar {
+                Label(String(localized: "Expirations are in your calendar"), systemImage: "calendar.badge.clock")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
             }
         }
         .padding(14)
@@ -41,28 +83,27 @@ struct CodexResetCreditsCard: View {
             RoundedRectangle(cornerRadius: 10, style: .continuous)
                 .strokeBorder(self.tintColor.opacity(0.22), lineWidth: 1))
         .accessibilityElement(children: .combine)
-        .accessibilityIdentifier("codex-reset-credits-card")
+        .accessibilityIdentifier("reset-credits-card")
     }
 
     private var availableText: String {
-        if self.resetCredits.availableCount == 1 {
-            return String(localized: "1 manual reset available")
+        if self.presentation.availableCount == 1 {
+            return String(localized: "1 reset available")
         }
-        return String(
-            format: String(localized: "%d manual resets available"),
-            self.resetCredits.availableCount)
+        return String(format: String(localized: "%d resets available"), self.presentation.availableCount)
     }
 
-    private var expiryText: String? {
-        guard let nextExpiresAt = self.resetCredits.nextExpiresAt else {
-            return nil
-        }
+    static func expiryText(_ expiresAt: Date?) -> String {
+        guard let expiresAt else { return String(localized: "No expiry") }
+        let formatted = expiresAt.formatted(
+            .dateTime.weekday(.abbreviated).month(.abbreviated).day().hour().minute())
+        return String(format: String(localized: "Expires %@"), formatted)
+    }
+
+    private static func relativeText(_ expiresAt: Date) -> String {
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .full
-        let relative = formatter.localizedString(for: nextExpiresAt, relativeTo: Date())
-        return String(
-            format: String(localized: "Next expires %@"),
-            relative)
+        return formatter.localizedString(for: expiresAt, relativeTo: Date())
     }
 }
 
@@ -142,15 +183,17 @@ struct UsageDataConfidenceNotice: View {
     }
 }
 
-#Preview("Codex reset credits") {
+#Preview("Reset credits") {
     VStack(spacing: 12) {
-        CodexResetCreditsCard(
-            resetCredits: SyncCodexResetCredits(
-                availableCount: 2,
-                nextExpiresAt: Date().addingTimeInterval(86_400),
-                credits: [],
-                updatedAt: Date()),
-            tintColor: .purple)
+        ResetCreditsCard(
+            presentation: ResetCreditsCardPresentation(
+                availableCount: 3,
+                groups: [
+                    .init(expiresAt: Date().addingTimeInterval(86400), count: 2),
+                    .init(expiresAt: Date().addingTimeInterval(5 * 86400), count: 1),
+                ]),
+            tintColor: .orange,
+            isInCalendar: true)
         UsageDataConfidenceNotice(rawValue: "estimated", tintColor: .purple)
     }
     .padding()
