@@ -2,6 +2,18 @@
 
 All notable changes to the CodexBar iOS companion app will be documented in this file.
 
+## [2.10.0 (243)] — Reset credit expiries and calendar reminders
+
+### Added
+- Reset-credit inventory on the wire (Research 077): new optional `ProviderUsageSnapshot.resetCreditInventory` (`SyncResetCreditInventory { expirations: [Date?], updatedAt }`, `decodeIfPresent`, nil not encoded, lossy decode with a 50-entry cap) published by Mac 0.76.0.2 for Claude (`cedar_ember` grants) and Grok (`GetRemainingResets` tokens). Expiry times only; grant and token identifiers never leave the Mac. Presence means a complete observation (an empty array confirms none are left); absence means unknown. Codex keeps using `codexResetCredits`. The merger keeps the newest inventory by its own `updatedAt`, including an empty one.
+- Generic `ResetCreditsCard` (replaces `CodexResetCreditsCard`) on the Codex, Claude and Grok detail pages: available count plus each reset's exact expiry date and time with a relative countdown, identical expiries grouped. Older Codex payloads with only a count keep the count and next expiry. Demo Claude data includes two sample resets.
+- Settings → Calendar Reminders (off by default): writes each reset credit's expiry into a dedicated "CodexBar" calendar (iCloud source first) as a 30-minute block ending at the expiry, with alarms one day and one hour before; lists the current inventories and names supported providers the Mac did not report. Requires calendar Full Access (`NSCalendarsFullAccessUsageDescription`, localized through the new `InfoPlist.xcstrings`).
+- `ResetCreditCalendarPlanner` reconcile rules: one event per provider account and expiry; only a newer observation can add or remove an event (stale writers cannot resurrect a used reset or delete a listed one); a reset that disappears from a newer observation before it expires is removed (used early); unknown inventories leave events untouched; past events stay as history and their state is pruned 30 days after expiry; an event the user deleted is not recreated, a deleted CodexBar calendar is recreated with all future events; turning the setting off removes future events. Hide Personal Info keeps the account out of event notes. Mock and demo data never reach the calendar.
+
+### Notes
+- Mac 0.76.0.2 or later is needed for Claude and Grok inventories; with an older Mac they are unknown (no card, no events) and everything else behaves as in 2.9.0. Old iPhones ignore the new key.
+- No CloudKit schema change: the new key rides the existing `DeviceProviderSnapshot.payload` JSON; `providerPayloadVersion` stays 1 (`NO_DEPLOY`).
+
 ## [2.9.0 (242)] — Upstream v0.75–v0.76 companion
 
 ### Added
