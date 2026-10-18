@@ -280,6 +280,20 @@ struct V077ResetCreditCalendarTests {
         #expect(store.events.values.first?.notes.contains("b@example.com") == true)
     }
 
+    @Test func `A second device adopts the event already in the shared calendar`() throws {
+        let store = FakeCalendarStore()
+        let providers = [self.claude([self.now.addingTimeInterval(self.day)], observedAt: self.now)]
+        let first = try self.reconcile(ResetCreditCalendarState(), providers, store: store).state
+        // Another device on the same iCloud calendar starts with empty local state.
+        let second = try self.reconcile(
+            ResetCreditCalendarState(calendarIdentifier: first.calendarIdentifier),
+            providers,
+            store: store).state
+        #expect(store.events.count == 1)
+        #expect(second.entries.values.first?.eventIdentifier == first.entries.values.first?.eventIdentifier)
+        #expect(store.events.values.first?.url?.absoluteString.contains("example.com") == false)
+    }
+
     @Test func `No calendar is created when nothing is scheduled`() throws {
         let store = FakeCalendarStore()
         let result = try self.reconcile(
@@ -405,6 +419,13 @@ private final class FakeCalendarStore: ResetCreditCalendarEventStore {
         self.events[identifier] != nil
     }
 
+    func existingEventIdentifier(
+        for draft: ResetCreditCalendarEventDraft,
+        calendarIdentifier: String) -> String?
+    {
+        self.events.first { $0.value.url != nil && $0.value.url == draft.url }?.key
+    }
+
     func saveEvent(
         _ draft: ResetCreditCalendarEventDraft,
         existingIdentifier: String?,
@@ -450,10 +471,14 @@ struct V077ResetCreditEventKitTests {
             startDate: expiry.addingTimeInterval(-1800),
             endDate: expiry,
             notes: "Expires: test",
-            alarmOffsets: [-84600, -1800])
+            alarmOffsets: [-84600, -1800],
+            url: ResetCreditCalendarPlanner.eventURL(key: "claude|test#1"))
         let eventID = try store.saveEvent(draft, existingIdentifier: nil, calendarIdentifier: calendarID)
         let saved = try #require(eventStore.event(withIdentifier: eventID))
         #expect(saved.calendar.calendarIdentifier == calendarID)
+        #expect(saved.url == draft.url)
+        #expect(store.existingEventIdentifier(for: draft, calendarIdentifier: calendarID) == eventID)
+        #expect(try store.makeCalendar() == calendarID)
         #expect(saved.endDate == expiry)
         #expect(saved.alarms?.map(\.relativeOffset).sorted() == [-84600, -1800])
 
@@ -462,7 +487,8 @@ struct V077ResetCreditEventKitTests {
             startDate: draft.startDate,
             endDate: draft.endDate,
             notes: draft.notes,
-            alarmOffsets: draft.alarmOffsets)
+            alarmOffsets: draft.alarmOffsets,
+            url: draft.url)
         let updatedID = try store.saveEvent(renamed, existingIdentifier: eventID, calendarIdentifier: calendarID)
         #expect(updatedID == eventID)
         #expect(eventStore.event(withIdentifier: eventID)?.title == "2 Claude reset credits expire")
@@ -472,8 +498,8 @@ struct V077ResetCreditEventKitTests {
     }
 }
 
-private extension Date {
-    func rounded() -> Date {
+extension Date {
+    fileprivate func rounded() -> Date {
         Date(timeIntervalSince1970: self.timeIntervalSince1970.rounded())
     }
 }

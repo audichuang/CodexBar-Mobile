@@ -25,6 +25,17 @@ final class EventKitResetCreditCalendarStore: ResetCreditCalendarEventStore {
     }
 
     func makeCalendar() throws -> String {
+        let existing = self.eventStore.calendars(for: .event).filter { calendar in
+            calendar.title == Self.calendarTitle && calendar.allowsContentModifications
+        }
+        let preferredSourceIDs = self.candidateSources().map(\.sourceIdentifier)
+        if let reusable = existing.min(by: { lhs, rhs in
+            (preferredSourceIDs.firstIndex(of: lhs.source.sourceIdentifier) ?? .max)
+                < (preferredSourceIDs.firstIndex(of: rhs.source.sourceIdentifier) ?? .max)
+        }) {
+            return reusable.calendarIdentifier
+        }
+
         var lastError: Error = ResetCreditCalendarError.noWritableSource
         for source in self.candidateSources() {
             let calendar = EKCalendar(for: .event, eventStore: self.eventStore)
@@ -43,6 +54,19 @@ final class EventKitResetCreditCalendarStore: ResetCreditCalendarEventStore {
 
     func eventExists(identifier: String) -> Bool {
         self.eventStore.event(withIdentifier: identifier) != nil
+    }
+
+    func existingEventIdentifier(
+        for draft: ResetCreditCalendarEventDraft,
+        calendarIdentifier: String) -> String?
+    {
+        guard let url = draft.url, let calendar = self.eventStore.calendar(withIdentifier: calendarIdentifier)
+        else { return nil }
+        let predicate = self.eventStore.predicateForEvents(
+            withStart: draft.startDate.addingTimeInterval(-60),
+            end: draft.endDate.addingTimeInterval(60),
+            calendars: [calendar])
+        return self.eventStore.events(matching: predicate).first { $0.url == url }?.eventIdentifier
     }
 
     func saveEvent(
@@ -64,6 +88,7 @@ final class EventKitResetCreditCalendarStore: ResetCreditCalendarEventStore {
         event.startDate = draft.startDate
         event.endDate = draft.endDate
         event.notes = draft.notes
+        event.url = draft.url
         event.alarms = draft.alarmOffsets.map { EKAlarm(relativeOffset: $0) }
         try self.eventStore.save(event, span: .thisEvent, commit: true)
         return event.eventIdentifier

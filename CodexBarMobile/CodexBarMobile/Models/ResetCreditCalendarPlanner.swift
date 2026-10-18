@@ -1,3 +1,4 @@
+import CryptoKit
 import Foundation
 
 /// One calendar event CodexBar owns: every reset of one provider account that expires at the same moment.
@@ -33,9 +34,13 @@ struct ResetCreditCalendarEventDraft: Equatable, Sendable {
     let notes: String
     /// Alarm offsets relative to `startDate`, in seconds (negative = before).
     let alarmOffsets: [TimeInterval]
+    /// Opaque, device-independent marker for this provider account and expiry. Another device with the same
+    /// iCloud calendar adopts the event that carries it instead of adding a duplicate.
+    let url: URL?
 
     var signature: String {
         [
+            self.url?.absoluteString ?? "",
             self.title,
             String(self.startDate.timeIntervalSince1970),
             String(self.endDate.timeIntervalSince1970),
@@ -49,9 +54,12 @@ struct ResetCreditCalendarEventDraft: Equatable, Sendable {
 @MainActor
 protocol ResetCreditCalendarEventStore: AnyObject {
     func calendarExists(identifier: String) -> Bool
-    /// Creates the dedicated CodexBar calendar and returns its identifier.
+    /// Returns the dedicated CodexBar calendar, reusing one that already exists (for example created by the
+    /// user's other device on the same iCloud account), or creates it.
     func makeCalendar() throws -> String
     func eventExists(identifier: String) -> Bool
+    /// An event in the calendar that already carries `draft.url` around the draft's dates.
+    func existingEventIdentifier(for draft: ResetCreditCalendarEventDraft, calendarIdentifier: String) -> String?
     /// Creates (`existingIdentifier == nil`) or updates an event and returns its identifier.
     func saveEvent(
         _ draft: ResetCreditCalendarEventDraft,
@@ -187,6 +195,12 @@ enum ResetCreditCalendarPlanner {
                     summary.scheduled += 1
                     continue
                 }
+                if entry.eventIdentifier == nil {
+                    // Adopt the same event written by another device on this iCloud calendar.
+                    entry.eventIdentifier = store.existingEventIdentifier(
+                        for: content,
+                        calendarIdentifier: calendarIdentifier)
+                }
                 do {
                     let isUpdate = entry.eventIdentifier != nil
                     entry.eventIdentifier = try store.saveEvent(
@@ -260,6 +274,13 @@ enum ResetCreditCalendarPlanner {
             startDate: entry.expiresAt.addingTimeInterval(-Self.eventLeadTime),
             endDate: entry.expiresAt,
             notes: lines.joined(separator: "\n"),
-            alarmOffsets: Self.alarmLeadTimes.map { Self.eventLeadTime - $0 })
+            alarmOffsets: Self.alarmLeadTimes.map { Self.eventLeadTime - $0 },
+            url: Self.eventURL(key: entry.key))
+    }
+
+    /// The key holds the account email, so only a digest of it is written into the event.
+    static func eventURL(key: String) -> URL? {
+        let digest = SHA256.hash(data: Data(key.utf8)).prefix(16).map { String(format: "%02x", $0) }.joined()
+        return URL(string: "codexbar://reset-credit/\(digest)")
     }
 }
