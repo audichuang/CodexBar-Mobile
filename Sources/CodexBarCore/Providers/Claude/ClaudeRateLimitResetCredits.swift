@@ -90,6 +90,10 @@ struct ClaudeLimitResetStatusResponse: Decodable {
 
     /// `usable_now` is not consulted: a saved reset counts even while Claude gates redemption. A grant that has
     /// not started yet is left out until a refresh after its start.
+    ///
+    /// Fork (Research 077): an eligible block with no available reset yields an empty inventory rather than nil,
+    /// so the iPhone calendar can tell "none left" from "not read". Every presentation already hides an empty
+    /// inventory; an ineligible, absent, or implausible block remains nil.
     func snapshot(updatedAt: Date) -> ClaudeRateLimitResetCreditsSnapshot? {
         guard self.eligible else { return nil }
         var expirations: [Date?] = []
@@ -97,7 +101,6 @@ struct ClaudeLimitResetStatusResponse: Decodable {
             guard grant.resetsLeft <= Self.maximumResets - expirations.count else { return nil }
             expirations.append(contentsOf: repeatElement(grant.endsAt, count: grant.resetsLeft))
         }
-        guard !expirations.isEmpty else { return nil }
         return ClaudeRateLimitResetCreditsSnapshot(expirations: expirations, updatedAt: updatedAt)
     }
 

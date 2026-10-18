@@ -462,6 +462,23 @@ enum ProviderSnapshotMerger {
             .flatMap { entries[$0][keyPath: keyPath] }
     }
 
+    /// Reset inventories age independently of quota refreshes; an empty inventory is an authoritative
+    /// observation, so the newest observation wins even when it lists nothing.
+    private static func latestResetCreditInventory(
+        _ entries: [ProviderUsageSnapshot],
+        sourceDeviceIDs: [String]) -> SyncResetCreditInventory?
+    {
+        precondition(entries.count == sourceDeviceIDs.count)
+        return entries.indices.filter { entries[$0].resetCreditInventory != nil }
+            .max { lhs, rhs in
+                let left = entries[lhs].resetCreditInventory?.updatedAt ?? .distantPast
+                let right = entries[rhs].resetCreditInventory?.updatedAt ?? .distantPast
+                if left != right { return left < right }
+                return sourceDeviceIDs[lhs] < sourceDeviceIDs[rhs]
+            }
+            .flatMap { entries[$0].resetCreditInventory }
+    }
+
     /// Balance observations age independently of quota refreshes; zero is an authoritative observation.
     private static func latestProviderAmount(
         _ entries: [ProviderUsageSnapshot],
@@ -857,6 +874,7 @@ enum ProviderSnapshotMerger {
             accountOrganization: Self.latestNonNil(
                 presentationEntries, sourceDeviceIDs: presentationDeviceIDs, \.accountOrganization),
             zoomMateCredits: Self.latestNonNil(entries, sourceDeviceIDs: sourceDeviceIDs, \.zoomMateCredits),
+            resetCreditInventory: Self.latestResetCreditInventory(entries, sourceDeviceIDs: sourceDeviceIDs),
             details: Self.mergedDetails(
                 presentationEntries,
                 sourceAppVersions: presentationAppVersions,

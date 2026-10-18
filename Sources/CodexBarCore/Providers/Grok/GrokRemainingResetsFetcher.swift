@@ -176,7 +176,12 @@ enum GrokRemainingResetsFetcher {
                 Task {
                     let tokens = await refresh(credentials, cookieHeader, now)
                     Self.cache.finishRefresh(key: key, tokens: tokens, attemptedAt: now)
-                    return Self.snapshot(tokens: tokens ?? retainedTokens, now: now)
+                    guard let tokens else { return Self.snapshot(tokens: retainedTokens, now: now) }
+                    // Fork (Research 077): a completed lookup is authoritative even when it lists no token, so the
+                    // iPhone calendar can remove a reset that was used early. Presentations hide an empty inventory.
+                    return GrokRateLimitResetCreditsSnapshot(
+                        expirations: Self.availableTokens(tokens, now: now).map(\.expiresAt),
+                        updatedAt: now)
                 }
             })
         return GrokRemainingResetsLookupResult(tokens: state.tokens, snapshotTask: state.snapshotTask)
@@ -223,7 +228,8 @@ enum GrokRemainingResetsFetcher {
         }
         let outcome = await BoundedTaskJoin(sourceTask: sourceTask).value(joinGrace: Self.joinGrace)
         if Task.isCancelled {
-            return []
+            // Fork (Research 077): cancellation is not an observation; keep the retained inventory.
+            return nil
         }
         switch outcome {
         case let .value(tokens):

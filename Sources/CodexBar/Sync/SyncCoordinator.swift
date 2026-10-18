@@ -740,6 +740,30 @@ final class SyncCoordinator {
             updatedAt: resetCredits.updatedAt)
     }
 
+    /// Claude and Grok reset inventories for the iOS detail card and calendar (Research 077). Only expiry
+    /// times cross the wire; grant and token identifiers never reach the native snapshot. An empty inventory
+    /// is a confirmed observation that none are available; nil (no live inventory) stays unknown.
+    static func mapResetCreditInventory(
+        provider: UsageProvider,
+        snapshot: UsageSnapshot?) -> SyncResetCreditInventory?
+    {
+        // Provider-specific by design: only Claude and Grok keep live-only reset inventories on the native snapshot.
+        switch provider {
+        case .claude:
+            guard let resetCredits = snapshot?.claudeResetCredits else { return nil }
+            return SyncResetCreditInventory(
+                expirations: resetCredits.availableExpirations(at: resetCredits.updatedAt),
+                updatedAt: resetCredits.updatedAt)
+        case .grok:
+            guard let resetCredits = snapshot?.grokResetCredits else { return nil }
+            return SyncResetCreditInventory(
+                expirations: resetCredits.availableExpirations(at: resetCredits.updatedAt).map(Optional.some),
+                updatedAt: resetCredits.updatedAt)
+        default:
+            return nil
+        }
+    }
+
     private static func mapUsageDataConfidence(snapshot: UsageSnapshot?) -> String? {
         guard let confidence = snapshot?.dataConfidence, confidence != .unknown else {
             return nil
@@ -1306,6 +1330,7 @@ final class SyncCoordinator {
         let minimaxBilling = Self.mapMiniMaxBilling(provider: provider, snapshot: snapshot)
         let codexWorkspace = self.mapCodexWorkspace(provider: provider, snapshot: snapshot)
         let codexResetCredits = Self.mapCodexResetCredits(provider: provider, snapshot: snapshot)
+        let resetCreditInventory = Self.mapResetCreditInventory(provider: provider, snapshot: snapshot)
         let wayfinderUsage = Self.mapWayfinderUsage(provider: provider, snapshot: snapshot)
         let sub2APIUsage = Self.mapSub2APIUsage(provider: provider, snapshot: snapshot)
         let zoomMateCredits = Self.mapZoomMateCredits(provider: provider, snapshot: snapshot)
@@ -1378,6 +1403,7 @@ final class SyncCoordinator {
             accountRecordKey: accountRecordKey,
             accountOrganization: snapshot?.identity?.accountOrganization,
             zoomMateCredits: zoomMateCredits,
+            resetCreditInventory: resetCreditInventory,
             details: Self.mapSyncedDetails(snapshot?.details ?? [], provider: provider))
     }
 

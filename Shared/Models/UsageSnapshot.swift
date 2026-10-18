@@ -1526,6 +1526,12 @@ public struct ProviderUsageSnapshot: Codable, Sendable, Equatable {
     /// ZoomMate credit status and optional 30-day history.
     public let zoomMateCredits: SyncZoomMateCredits?
 
+    // MARK: - iOS 2.10.0 / Mac 0.76.0.2 — reset-credit inventory (077)
+
+    /// Claude and Grok redeemable resets with their expiry times. Codex keeps
+    /// using `codexResetCredits`. Missing means unknown; see `SyncResetCreditInventory`.
+    public let resetCreditInventory: SyncResetCreditInventory?
+
     /// All real rate windows. Prefers `rateWindows` if non-empty, otherwise
     /// falls back to primary/secondary. Mac-generated layout placeholders
     /// are intentionally omitted from iOS quota cards.
@@ -1609,6 +1615,7 @@ public struct ProviderUsageSnapshot: Codable, Sendable, Equatable {
             || self.sub2APIUsage != nil
             || self.providerAmount != nil
             || self.zoomMateCredits != nil
+            || self.resetCreditInventory != nil
             || self.isError
             || self.statusMessage != nil
     }
@@ -1672,6 +1679,7 @@ public struct ProviderUsageSnapshot: Codable, Sendable, Equatable {
         accountRecordKey: String? = nil,
         accountOrganization: String? = nil,
         zoomMateCredits: SyncZoomMateCredits? = nil,
+        resetCreditInventory: SyncResetCreditInventory? = nil,
         details: [SyncProviderDetailSection] = [],
         providerIconMonogram: String? = nil,
         providerIconTintHex: String? = nil)
@@ -1726,6 +1734,7 @@ public struct ProviderUsageSnapshot: Codable, Sendable, Equatable {
         self.providerAmount = providerAmount
         self.accountRecordKey = accountRecordKey
         self.zoomMateCredits = zoomMateCredits
+        self.resetCreditInventory = resetCreditInventory
         self.details = details
         self.providerIconMonogram = providerIconMonogram
         self.providerIconTintHex = providerIconTintHex
@@ -1787,6 +1796,7 @@ public struct ProviderUsageSnapshot: Codable, Sendable, Equatable {
             accountRecordKey: self.accountRecordKey,
             accountOrganization: self.accountOrganization,
             zoomMateCredits: self.zoomMateCredits,
+            resetCreditInventory: self.resetCreditInventory,
             details: self.details,
             providerIconMonogram: self.providerIconMonogram,
             providerIconTintHex: self.providerIconTintHex)
@@ -1867,6 +1877,10 @@ public struct ProviderUsageSnapshot: Codable, Sendable, Equatable {
         self.providerAmount = try container.decodeIfPresent(SyncProviderAmount.self, forKey: .providerAmount)
         self.accountRecordKey = try container.decodeIfPresent(String.self, forKey: .accountRecordKey)
         self.zoomMateCredits = try container.decodeIfPresent(SyncZoomMateCredits.self, forKey: .zoomMateCredits)
+        // iOS 2.10.0 / Mac 0.76.0.2 — lossy: a malformed inventory reads as unknown, never as a decode failure.
+        self.resetCreditInventory = (try? container.decodeIfPresent(
+            SyncResetCreditInventory.self,
+            forKey: .resetCreditInventory)) ?? nil
         self.details = try container.decodeLossyBoundedArray(
             SyncProviderDetailSection.self,
             forKey: .details,

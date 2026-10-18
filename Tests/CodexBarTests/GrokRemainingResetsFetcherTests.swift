@@ -252,6 +252,30 @@ struct GrokRemainingResetsFetcherTests {
         #expect(second.tokens == [token])
     }
 
+    @Test
+    func `completed empty lookup is a confirmed empty inventory while a failed one stays unknown`() async throws {
+        // Fork (Research 077): the iPhone calendar removes a used reset only after a confirmed read.
+        GrokRemainingResetsFetcher.resetCacheForTesting()
+        defer { GrokRemainingResetsFetcher.resetCacheForTesting() }
+        let now = Date(timeIntervalSince1970: 1_787_647_576)
+
+        let failed = GrokRemainingResetsFetcher.cachedLookupAndRefresh(
+            credentials: Self.credentials,
+            cookieHeader: nil,
+            now: now,
+            refresh: { _, _, _ in nil })
+        #expect(await failed.snapshotTask?.value == nil)
+
+        let empty = GrokRemainingResetsFetcher.cachedLookupAndRefresh(
+            credentials: Self.credentials,
+            cookieHeader: nil,
+            now: now.addingTimeInterval(GrokRemainingResetsFetcher.cacheRefreshInterval + 1),
+            refresh: { _, _, _ in [] })
+        let snapshot = try #require(await empty.snapshotTask?.value)
+        #expect(snapshot.expirations.isEmpty)
+        #expect(GrokRemainingResetsFetcher.detailSections(snapshot: snapshot, now: now).isEmpty)
+    }
+
     @Test(.timeLimit(.minutes(1)))
     func `deferred lookup publishes a display snapshot after returning cached usage`() async throws {
         GrokRemainingResetsFetcher.resetCacheForTesting()

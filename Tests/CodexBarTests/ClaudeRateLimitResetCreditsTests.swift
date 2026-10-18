@@ -235,7 +235,6 @@ struct ClaudeRateLimitResetCreditsTests {
             #"{"grants": [\#(grant)]}"#,
             #"{"eligible": null, "grants": [\#(grant)]}"#,
             #"{"eligible": "yes", "grants": [\#(grant)]}"#,
-            Self.eligibleBlock([]),
             "null",
             "[]",
             nil,
@@ -243,6 +242,27 @@ struct ClaudeRateLimitResetCreditsTests {
             let usage = try Self.parseUsage(block)
             #expect(usage.resetCredits == nil)
             #expect(usage.sessionPercentUsed == 12)
+        }
+    }
+
+    @Test
+    func `eligible block without an available reset is a confirmed empty inventory that shows nothing`() throws {
+        let now = Self.wholeSecondNow()
+        for grants in [
+            [],
+            [
+                Self.grant(id: "used_up", resetsLeft: 0, endsIn: 86400, now: now),
+                Self.grant(id: "expired", resetsLeft: 1, endsIn: -60, now: now),
+                Self.grant(id: "paused", resetsLeft: 1, endsIn: 86400, now: now, paused: true),
+            ],
+        ] {
+            // Fork (Research 077): the iPhone calendar needs "none left" to differ from "not read".
+            let resets = try #require(Self.parse(Self.eligibleBlock(grants)))
+            #expect(resets.expirations.isEmpty)
+            #expect(resets.detailSections(now: now).isEmpty)
+            let model = try Self.model(now: now, grants: grants)
+            #expect(model.limitResetCredits == nil)
+            #expect(!model.providerDetails.flatMap(\.rows).contains { $0.label == "Limit Reset Credits" })
         }
     }
 
