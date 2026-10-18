@@ -1,4 +1,5 @@
 import CodexBarSync
+import EventKit
 import Foundation
 import Testing
 @testable import CodexBarMobile
@@ -420,5 +421,59 @@ private final class FakeCalendarStore: ResetCreditCalendarEventStore {
 
     func removeEvent(identifier: String) throws {
         self.events.removeValue(forKey: identifier)
+    }
+}
+
+/// Real EventKit round trip. Runs only where the test host already has calendar Full Access (grant it on a
+/// dedicated simulator); it creates and deletes its own calendar and never touches existing events.
+@MainActor
+@Suite(
+    "v0.76.0.2 reset-credit calendar EventKit",
+    .serialized,
+    .enabled(if: EKEventStore.authorizationStatus(for: .event) == .fullAccess))
+struct V077ResetCreditEventKitTests {
+    @Test func `EventKit store creates updates and removes events in its own calendar`() throws {
+        let eventStore = EKEventStore()
+        let store = EventKitResetCreditCalendarStore(eventStore: eventStore)
+        let calendarID = try store.makeCalendar()
+        defer {
+            if let calendar = eventStore.calendar(withIdentifier: calendarID) {
+                try? eventStore.removeCalendar(calendar, commit: true)
+            }
+        }
+        #expect(store.calendarExists(identifier: calendarID))
+        #expect(eventStore.calendar(withIdentifier: calendarID)?.title == "CodexBar")
+
+        let expiry = Date().addingTimeInterval(3 * 86400).rounded()
+        let draft = ResetCreditCalendarEventDraft(
+            title: "Claude reset credit expires",
+            startDate: expiry.addingTimeInterval(-1800),
+            endDate: expiry,
+            notes: "Expires: test",
+            alarmOffsets: [-84600, -1800])
+        let eventID = try store.saveEvent(draft, existingIdentifier: nil, calendarIdentifier: calendarID)
+        let saved = try #require(eventStore.event(withIdentifier: eventID))
+        #expect(saved.calendar.calendarIdentifier == calendarID)
+        #expect(saved.endDate == expiry)
+        #expect(saved.alarms?.map(\.relativeOffset).sorted() == [-84600, -1800])
+
+        let renamed = ResetCreditCalendarEventDraft(
+            title: "2 Claude reset credits expire",
+            startDate: draft.startDate,
+            endDate: draft.endDate,
+            notes: draft.notes,
+            alarmOffsets: draft.alarmOffsets)
+        let updatedID = try store.saveEvent(renamed, existingIdentifier: eventID, calendarIdentifier: calendarID)
+        #expect(updatedID == eventID)
+        #expect(eventStore.event(withIdentifier: eventID)?.title == "2 Claude reset credits expire")
+
+        try store.removeEvent(identifier: eventID)
+        #expect(!store.eventExists(identifier: eventID))
+    }
+}
+
+private extension Date {
+    func rounded() -> Date {
+        Date(timeIntervalSince1970: self.timeIntervalSince1970.rounded())
     }
 }
