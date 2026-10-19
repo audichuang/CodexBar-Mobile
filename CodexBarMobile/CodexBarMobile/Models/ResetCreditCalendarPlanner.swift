@@ -12,18 +12,17 @@ struct ResetCreditCalendarEntry: Codable, Equatable, Sendable {
     var count: Int
     /// Whether the newest observation of this account still lists the reset.
     var isAvailable: Bool
-    /// The newest inventory observation that decided `isAvailable`. Older observations cannot change it.
-    var lastObservedAt: Date
     var eventIdentifier: String?
     /// Fingerprint of the event content last written, so unchanged events are not rewritten.
     var eventSignature: String?
-    /// The user deleted this event in Calendar; CodexBar does not recreate it.
-    var dismissedByUser: Bool
 }
 
 struct ResetCreditCalendarState: Codable, Equatable, Sendable {
     var calendarIdentifier: String?
     var entries: [String: ResetCreditCalendarEntry] = [:]
+    /// Newest observation applied per provider account. An observation that is not newer is ignored as a whole,
+    /// so a stale writer can neither resurrect a reset that was used early nor remove one a newer read lists.
+    var scopeObservedAt: [String: Date] = [:]
 }
 
 /// The content of one reset-credit event.
@@ -34,8 +33,8 @@ struct ResetCreditCalendarEventDraft: Equatable, Sendable {
     let notes: String
     /// Alarm offsets relative to `startDate`, in seconds (negative = before).
     let alarmOffsets: [TimeInterval]
-    /// Opaque, device-independent marker for this provider account and expiry. Another device with the same
-    /// iCloud calendar adopts the event that carries it instead of adding a duplicate.
+    /// Opaque, device-independent marker for this provider account and expiry. It finds the event again after
+    /// EventKit changes its identifier, and lets another device on the same iCloud calendar adopt it.
     let url: URL?
 
     var signature: String {
@@ -57,9 +56,8 @@ protocol ResetCreditCalendarEventStore: AnyObject {
     /// Returns the dedicated CodexBar calendar, reusing one that already exists (for example created by the
     /// user's other device on the same iCloud account), or creates it.
     func makeCalendar() throws -> String
-    func eventExists(identifier: String) -> Bool
-    /// An event in the calendar that already carries `draft.url` around the draft's dates.
-    func existingEventIdentifier(for draft: ResetCreditCalendarEventDraft, calendarIdentifier: String) -> String?
+    /// Events in the calendar that carry `draft.url` around the draft's dates, oldest identifier first.
+    func eventIdentifiers(matching draft: ResetCreditCalendarEventDraft, calendarIdentifier: String) -> [String]
     /// Creates (`existingIdentifier == nil`) or updates an event and returns its identifier.
     func saveEvent(
         _ draft: ResetCreditCalendarEventDraft,
@@ -80,18 +78,28 @@ struct ResetCreditCalendarSyncSummary: Equatable, Sendable {
 /// Folds Mac reset-credit observations into calendar state and applies the result (Research 077).
 ///
 /// Rules:
-/// - Only observations newer than the one that last decided an event can add or remove it, so a stale
-///   writer cannot resurrect a reset that was used early or drop one a newer read still lists.
-/// - A provider account without an observation (older Mac, unreadable source) leaves its events untouched.
+/// - Each provider account only accepts observations newer than the last one applied.
+/// - A provider account without an observation (older Mac, unreadable source) leaves its events untouched; an
+///   incomplete observation can add or update events but never removes one.
+/// - A future reset that a newer complete observation no longer lists was used early: its event is removed.
+/// - Events are found by their URL marker, so a changed EventKit identifier, an event another device created,
+///   or a duplicate from two devices writing at once is adopted or cleaned up instead of multiplied.
+/// - A missing event or calendar is recreated while the setting is on; turning it off removes future events.
 /// - Past events stay in the calendar as history; their state is pruned 30 days after expiry.
-/// - An event the user deleted is not recreated. A deleted CodexBar calendar is recreated with every future event.
 enum ResetCreditCalendarPlanner {
     static let eventLeadTime: TimeInterval = 30 * 60
     static let alarmLeadTimes: [TimeInterval] = [24 * 60 * 60, 60 * 60]
     static let pruneAfterExpiry: TimeInterval = 30 * 24 * 60 * 60
 
     static func key(scopeKey: String, expiresAt: Date) -> String {
-        "\(scopeKey)#\(Int64(expiresAt.timeIntervalSince1970.rounded()))"
+        "\(scopeKey)#\(self.wholeSeconds(expiresAt))"
+    }
+
+    /// Whole seconds since 1970, clamped so an implausible date cannot trap.
+    static func wholeSeconds(_ date: Date) -> Int64 {
+        let seconds = date.timeIntervalSince1970.rounded()
+        guard seconds.isFinite else { return 0 }
+        return Int64(min(max(seconds, -1e15), 1e15))
     }
 
     /// Merges observations into `state` without touching the calendar.
@@ -102,48 +110,47 @@ enum ResetCreditCalendarPlanner {
     {
         var state = state
         for observation in observations {
+            if let applied = state.scopeObservedAt[observation.scopeKey], observation.observedAt <= applied {
+                continue
+            }
+            state.scopeObservedAt[observation.scopeKey] = observation.observedAt
+
             var observedKeys: Set<String> = []
             for group in observation.groups(availableAt: max(now, observation.observedAt)) {
                 guard let expiresAt = group.expiresAt else { continue }
                 let key = Self.key(scopeKey: observation.scopeKey, expiresAt: expiresAt)
                 observedKeys.insert(key)
-                if var entry = state.entries[key] {
-                    guard observation.observedAt > entry.lastObservedAt else { continue }
-                    entry.isAvailable = true
-                    entry.count = group.count
-                    entry.providerName = observation.providerName
-                    entry.accountLabel = observation.accountLabel
-                    entry.lastObservedAt = observation.observedAt
-                    state.entries[key] = entry
-                } else {
-                    state.entries[key] = ResetCreditCalendarEntry(
-                        key: key,
-                        scopeKey: observation.scopeKey,
-                        providerID: observation.providerID,
-                        providerName: observation.providerName,
-                        accountLabel: observation.accountLabel,
-                        expiresAt: expiresAt,
-                        count: group.count,
-                        isAvailable: true,
-                        lastObservedAt: observation.observedAt,
-                        eventIdentifier: nil,
-                        eventSignature: nil,
-                        dismissedByUser: false)
-                }
+                var entry = state.entries[key] ?? ResetCreditCalendarEntry(
+                    key: key,
+                    scopeKey: observation.scopeKey,
+                    providerID: observation.providerID,
+                    providerName: observation.providerName,
+                    accountLabel: observation.accountLabel,
+                    expiresAt: expiresAt,
+                    count: group.count,
+                    isAvailable: true,
+                    eventIdentifier: nil,
+                    eventSignature: nil)
+                entry.isAvailable = true
+                entry.count = group.count
+                entry.providerName = observation.providerName
+                entry.accountLabel = observation.accountLabel
+                state.entries[key] = entry
             }
 
+            guard observation.isComplete else { continue }
             for (key, entry) in state.entries
                 where entry.scopeKey == observation.scopeKey
                 && !observedKeys.contains(key)
                 && entry.isAvailable
                 && entry.expiresAt > now
-                && observation.observedAt > entry.lastObservedAt
             {
-                var updated = entry
-                updated.isAvailable = false
-                updated.lastObservedAt = observation.observedAt
-                state.entries[key] = updated
+                state.entries[key]?.isAvailable = false
             }
+        }
+        state.scopeObservedAt = state.scopeObservedAt.filter { scopeKey, _ in
+            state.entries.values.contains { $0.scopeKey == scopeKey }
+                || observations.contains { $0.scopeKey == scopeKey }
         }
         return state
     }
@@ -161,18 +168,15 @@ enum ResetCreditCalendarPlanner {
         var state = Self.applying(observations, to: state, now: now)
         var summary = ResetCreditCalendarSyncSummary()
 
-        let needsCalendar = state.entries.values.contains { entry in
-            entry.expiresAt > now && entry.isAvailable && !entry.dismissedByUser
-        }
         if let identifier = state.calendarIdentifier, !store.calendarExists(identifier: identifier) {
-            // The user deleted the whole CodexBar calendar; start over with every future event.
+            // The CodexBar calendar was deleted; start over with every future event.
             state.calendarIdentifier = nil
             for key in state.entries.keys {
                 state.entries[key]?.eventIdentifier = nil
                 state.entries[key]?.eventSignature = nil
-                state.entries[key]?.dismissedByUser = false
             }
         }
+        let needsCalendar = state.entries.values.contains { $0.expiresAt > now && $0.isAvailable }
         if state.calendarIdentifier == nil, needsCalendar {
             state.calendarIdentifier = try store.makeCalendar()
         }
@@ -180,49 +184,50 @@ enum ResetCreditCalendarPlanner {
         for key in state.entries.keys.sorted() {
             guard var entry = state.entries[key] else { continue }
             defer { state.entries[key] = entry }
-            guard entry.expiresAt > now else { continue }
+            guard entry.expiresAt > now, let calendarIdentifier = state.calendarIdentifier else { continue }
 
-            if entry.isAvailable, !entry.dismissedByUser {
-                guard let calendarIdentifier = state.calendarIdentifier else { continue }
-                if let identifier = entry.eventIdentifier, !store.eventExists(identifier: identifier) {
-                    entry.eventIdentifier = nil
-                    entry.eventSignature = nil
-                    entry.dismissedByUser = true
-                    continue
+            let content = draft(entry)
+            let matches = store.eventIdentifiers(matching: content, calendarIdentifier: calendarIdentifier)
+            if entry.isAvailable {
+                let current = entry.eventIdentifier.flatMap { matches.contains($0) ? $0 : nil } ?? matches.first
+                for duplicate in matches where duplicate != current {
+                    do {
+                        try store.removeEvent(identifier: duplicate)
+                        summary.removed += 1
+                    } catch {
+                        summary.failures += 1
+                    }
                 }
-                let content = draft(entry)
-                if entry.eventIdentifier != nil, entry.eventSignature == content.signature {
+                if let current, current == entry.eventIdentifier, entry.eventSignature == content.signature {
                     summary.scheduled += 1
                     continue
                 }
-                if entry.eventIdentifier == nil {
-                    // Adopt the same event written by another device on this iCloud calendar.
-                    entry.eventIdentifier = store.existingEventIdentifier(
-                        for: content,
-                        calendarIdentifier: calendarIdentifier)
-                }
                 do {
-                    let isUpdate = entry.eventIdentifier != nil
                     entry.eventIdentifier = try store.saveEvent(
                         content,
-                        existingIdentifier: entry.eventIdentifier,
+                        existingIdentifier: current,
                         calendarIdentifier: calendarIdentifier)
                     entry.eventSignature = content.signature
-                    if isUpdate { summary.updated += 1 } else { summary.created += 1 }
+                    if current == nil { summary.created += 1 } else { summary.updated += 1 }
                     summary.scheduled += 1
                 } catch {
                     summary.failures += 1
                 }
-            } else if !entry.isAvailable, let identifier = entry.eventIdentifier {
-                do {
-                    if store.eventExists(identifier: identifier) {
+            } else {
+                var failed = false
+                for identifier in matches {
+                    do {
                         try store.removeEvent(identifier: identifier)
                         summary.removed += 1
+                    } catch {
+                        failed = true
                     }
+                }
+                if failed {
+                    summary.failures += 1
+                } else {
                     entry.eventIdentifier = nil
                     entry.eventSignature = nil
-                } catch {
-                    summary.failures += 1
                 }
             }
         }
@@ -233,20 +238,29 @@ enum ResetCreditCalendarPlanner {
         return (state, summary)
     }
 
-    /// Removes every future event CodexBar created, keeping past events and the calendar itself.
+    /// Removes every future event this device tracks, keeping past events and the calendar itself.
     @MainActor
     static func removeFutureEvents(
         state: ResetCreditCalendarState,
         now: Date,
-        store: ResetCreditCalendarEventStore) -> (state: ResetCreditCalendarState, failures: Int)
+        store: ResetCreditCalendarEventStore,
+        draft: (ResetCreditCalendarEntry) -> ResetCreditCalendarEventDraft) -> (
+        state: ResetCreditCalendarState,
+        failures: Int)
     {
         var failures = 0
-        for entry in state.entries.values where entry.expiresAt > now {
-            guard let identifier = entry.eventIdentifier, store.eventExists(identifier: identifier) else { continue }
-            do {
-                try store.removeEvent(identifier: identifier)
-            } catch {
-                failures += 1
+        if let calendarIdentifier = state.calendarIdentifier, store.calendarExists(identifier: calendarIdentifier) {
+            for entry in state.entries.values where entry.expiresAt > now {
+                for identifier in store.eventIdentifiers(
+                    matching: draft(entry),
+                    calendarIdentifier: calendarIdentifier)
+                {
+                    do {
+                        try store.removeEvent(identifier: identifier)
+                    } catch {
+                        failures += 1
+                    }
+                }
             }
         }
         return (ResetCreditCalendarState(calendarIdentifier: state.calendarIdentifier), failures)
@@ -278,7 +292,7 @@ enum ResetCreditCalendarPlanner {
             url: Self.eventURL(key: entry.key))
     }
 
-    /// The key holds the account email, so only a digest of it is written into the event.
+    /// The key holds the account identity, so only a digest of it is written into the event.
     static func eventURL(key: String) -> URL? {
         let digest = SHA256.hash(data: Data(key.utf8)).prefix(16).map { String(format: "%02x", $0) }.joined()
         return URL(string: "codexbar://reset-credit/\(digest)")

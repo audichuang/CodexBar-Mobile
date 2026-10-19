@@ -23,7 +23,7 @@ struct ResetCreditCalendarSettingsView: View {
             } footer: {
                 Text(
                     String(
-                        localized: "CodexBar adds each reset credit's expiration to a calendar named CodexBar, with reminders one day and one hour before. If you use a reset early, its event is removed the next time your Mac reports it."))
+                        localized: "CodexBar adds each reset credit's expiration to a calendar named CodexBar, with reminders one day and one hour before. If you use a reset early, its event is removed once your Mac reports the change and you open CodexBar on your iPhone. Turning this off removes upcoming events."))
             }
 
             if let accessMessage = self.accessMessage {

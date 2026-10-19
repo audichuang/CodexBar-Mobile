@@ -36,7 +36,7 @@ old = Mac 0.76.0.1 / iPhone 2.9.0；new = Mac 0.76.0.2 / iPhone 2.10.0。实体 
 | 1 | old | old | old | old | substituted | 无 wire 变化 | 与 2.9.0 相同 |
 | 2 | old | old | old | new | substituted | `Claude without an inventory from an older Mac has no observation`；Codex 观测单测 | new iPhone：Codex 卡片 + 日历可用，Claude / Grok 未知 |
 | 3 | old | old | new | old | substituted | 同 2 | 同 2 |
-| 4 | old | old | new | new | substituted | 同 2 | 两台 iPhone 各自本地日历状态，互不影响 |
+| 4 | old | old | new | new | substituted | 同 2 + `A second device adopts the event already in the shared calendar`、`Duplicate events from two devices collapse into one` | 两台 iPhone 共用同一 iCloud 日历时按 URL 接管同一事件 |
 | 5 | old | new | old | old | substituted | `Payload without the inventory key decodes as unknown`、Mac 推送单测 | old iPhone 忽略新 key |
 | 6 | old | new | old | new | substituted | 合并器单测 + Mac 推送单测 | new iPhone 取 Mac B 的 Claude / Grok 库存 |
 | 7 | old | new | new | old | substituted | 同 6 | 同 6 |

@@ -7,11 +7,16 @@ struct ProviderDetailsView: View {
     let providerID: String
     let sections: [SyncProviderDetailSection]
     let tintColor: Color
+    var hasResetCreditCard = false
 
+    /// `hasResetCreditCard`: the structured reset-credit card already shows this provider's resets (Grok with a
+    /// Mac 0.76.0.2 inventory), so the Mac's generic "Limit Reset Credits" row would duplicate it.
     static func visibleSections(
-        providerID: String, sections: [SyncProviderDetailSection]) -> [SyncProviderDetailSection]
+        providerID: String,
+        sections: [SyncProviderDetailSection],
+        hasResetCreditCard: Bool = false) -> [SyncProviderDetailSection]
     {
-        guard providerID == "claude" else { return sections }
+        guard providerID == "claude" || hasResetCreditCard else { return sections }
         return sections.compactMap { section in
             let rows = section.rows.filter { $0.label != "Limit Reset Credits" }
             if rows.count == section.rows.count { return section }
@@ -21,7 +26,10 @@ struct ProviderDetailsView: View {
     }
 
     private var visibleSections: [SyncProviderDetailSection] {
-        Self.visibleSections(providerID: self.providerID, sections: self.sections)
+        Self.visibleSections(
+            providerID: self.providerID,
+            sections: self.sections,
+            hasResetCreditCard: self.hasResetCreditCard)
     }
 
     var body: some View {

@@ -1,4 +1,4 @@
 • Claude, Codex, and Grok details list every available reset credit with its exact expiry date and time.
 • Turn on Settings → Calendar Reminders to add each reset credit's expiry to a CodexBar calendar, with reminders one day and one hour before.
-• If you use a reset credit early, its calendar event is removed the next time your Mac reports the change. Past expiries stay in the calendar.
+• If you use a reset credit early, its calendar event is removed once your Mac reports the change and you open CodexBar on your iPhone. Past expiries stay in the calendar.
 • Claude and Grok reset credits need CodexBar on Mac 0.76.0.2 or later. Codex reset credits also work with older Mac versions; with an older Mac, the rest of the app works as before.

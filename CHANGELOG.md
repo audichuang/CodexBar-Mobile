@@ -12,7 +12,7 @@
 
 ### Changed
 
-- Claude: an eligible reset-credit response with no available reset is kept as an empty inventory instead of no inventory; Grok: a completed remaining-resets lookup with no token is kept as an empty inventory, and a cancelled lookup keeps the previous one. Menus, Settings previews, and CLI output still hide empty inventories, so nothing changes on the Mac.
+- Claude: an eligible reset-credit response with no available reset is kept as an empty inventory instead of no inventory; Grok: a completed remaining-resets lookup with no token is kept as an empty inventory, a cancelled lookup keeps the previous one, and cached or retained tokens keep the time they were read instead of looking newly read. Menus, Settings previews, and CLI output still hide empty inventories, so nothing changes on the Mac.
 
 ## 0.76.0.1 — 2026-10-15
 

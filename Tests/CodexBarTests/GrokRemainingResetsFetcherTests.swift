@@ -276,6 +276,38 @@ struct GrokRemainingResetsFetcherTests {
         #expect(GrokRemainingResetsFetcher.detailSections(snapshot: snapshot, now: now).isEmpty)
     }
 
+    @Test
+    func `retained and cached tokens keep the time they were read`() async throws {
+        // Fork (Research 077): a Mac whose lookup fails must not publish old tokens as a newer observation.
+        GrokRemainingResetsFetcher.resetCacheForTesting()
+        defer { GrokRemainingResetsFetcher.resetCacheForTesting() }
+        let readAt = Date(timeIntervalSince1970: 1_787_647_576)
+        let token = GrokRemainingReset(
+            tokenID: "restok_sample",
+            grantedAt: nil,
+            expiresAt: readAt.addingTimeInterval(86400))
+
+        let first = GrokRemainingResetsFetcher.cachedLookupAndRefresh(
+            credentials: Self.credentials,
+            cookieHeader: nil,
+            now: readAt,
+            refresh: { _, _, _ in [token] })
+        #expect(try #require(await first.snapshotTask?.value).updatedAt == readAt)
+
+        let later = readAt.addingTimeInterval(GrokRemainingResetsFetcher.cacheRefreshInterval + 5)
+        let failed = GrokRemainingResetsFetcher.cachedLookupAndRefresh(
+            credentials: Self.credentials,
+            cookieHeader: nil,
+            now: later,
+            refresh: { _, _, _ in nil })
+        #expect(failed.observedAt == readAt)
+        let cached = await failed.resolved(at: later, requiresCompleteness: false)
+        #expect(cached.snapshot?.updatedAt == readAt)
+        let retained = try #require(await failed.snapshotTask?.value)
+        #expect(retained.updatedAt == readAt)
+        #expect(retained.expirations == [token.expiresAt])
+    }
+
     @Test(.timeLimit(.minutes(1)))
     func `deferred lookup publishes a display snapshot after returning cached usage`() async throws {
         GrokRemainingResetsFetcher.resetCacheForTesting()

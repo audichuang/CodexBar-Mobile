@@ -185,7 +185,7 @@ struct ContentView: View {
                 useLedger: self.widgetUsesLedger,
                 referenceDate: self.costReferenceDate)
         }
-        .task(id: ResetCreditCalendarSync.refreshKey(for: self.usageData.snapshot)) {
+        .task(id: ResetCreditCalendarSync.refreshKey(for: self.usageData.snapshot, isDemoMode: self.isDemoMode)) {
             // Research 077: keep reset-credit expirations in the user's calendar. Demo data never reaches it.
             guard !self.isLayoutPreview, !self.isDemoMode else { return }
             ResetCreditCalendarSync.shared.sync(providers: self.usageData.snapshot?.providers ?? [])
@@ -4976,7 +4976,7 @@ private enum MobileReleaseNotesCatalog {
                     String(
                         localized: "Turn on Settings → Calendar Reminders to add each reset credit's expiry to a CodexBar calendar, with reminders one day and one hour before."),
                     String(
-                        localized: "If you use a reset credit early, its calendar event is removed the next time your Mac reports the change. Past expiries stay in the calendar."),
+                        localized: "If you use a reset credit early, its calendar event is removed once your Mac reports the change and you open CodexBar on your iPhone. Past expiries stay in the calendar."),
                 ]),
                 .init(title: String(localized: "Required Mac version"), items: [
                     String(

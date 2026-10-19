@@ -13,7 +13,8 @@ struct ResetCreditObservation: Equatable, Sendable {
         let count: Int
     }
 
-    /// Stable per provider account; matches the card identity the merger uses.
+    /// Stable per provider account across Macs: the merger's account identity, never a per-install record key
+    /// when a real identity exists.
     let scopeKey: String
     let providerID: String
     let providerName: String
@@ -22,6 +23,9 @@ struct ResetCreditObservation: Equatable, Sendable {
     let observedAt: Date
     /// Resets available at `observedAt`, soonest first; resets without an expiry sort last.
     let expirations: [Date?]
+    /// Whether `expirations` is the whole inventory. An incomplete observation (for example a Codex credit in a
+    /// status this version does not know) may add reminders but never removes one.
+    let isComplete: Bool
 
     static let supportedProviderIDs: Set<String> = ["codex", "claude", "grok"]
 
@@ -30,29 +34,43 @@ struct ResetCreditObservation: Equatable, Sendable {
 
         let observedAt: Date
         let expirations: [Date?]
+        let isComplete: Bool
         if provider.providerID == "codex" {
             guard let resetCredits = provider.codexResetCredits else { return nil }
+            // A count without any list cannot say which expiry is gone, so it stays unknown.
+            guard !(resetCredits.credits.isEmpty && resetCredits.availableCount > 0) else { return nil }
             let available = resetCredits.credits.filter { credit in
                 credit.status == "available" && (credit.expiresAt.map { $0 > resetCredits.updatedAt } ?? true)
             }
-            // The credit list is authoritative, as on Mac. A count without any list cannot say which expiry is
-            // gone, so it stays unknown.
-            guard !(resetCredits.credits.isEmpty && resetCredits.availableCount > 0) else { return nil }
             observedAt = resetCredits.updatedAt
             expirations = available.map(\.expiresAt)
+            isComplete = available.count >= resetCredits.availableCount
+                && resetCredits.credits.allSatisfy { Self.knownCodexStatuses.contains($0.status) }
         } else {
             guard let inventory = provider.resetCreditInventory else { return nil }
             observedAt = inventory.updatedAt
             expirations = inventory.availableExpirations(at: inventory.updatedAt)
+            isComplete = true
         }
 
         return ResetCreditObservation(
-            scopeKey: provider.cardIdentityKey,
+            scopeKey: Self.scopeKey(for: provider),
             providerID: provider.providerID,
             providerName: provider.providerName,
             accountLabel: provider.accountEmail,
             observedAt: observedAt,
-            expirations: Self.sorted(expirations))
+            expirations: Self.sorted(expirations),
+            isComplete: isComplete)
+    }
+
+    private static let knownCodexStatuses: Set<String> = ["available", "redeeming", "redeemed", "expired"]
+
+    /// The merged card's `accountRecordKey` comes from whichever Mac published last and is per install, so the
+    /// scope uses the merger's stable account identity instead, preferring the email identity.
+    static func scopeKey(for provider: ProviderUsageSnapshot) -> String {
+        let identities = CloudSyncReader.effectiveIdentifiers(for: provider)
+        let identity = identities.first { $0.contains(":email:") } ?? identities.sorted().first ?? ""
+        return "\(provider.providerID)|\(identity)"
     }
 
     /// Observations eligible for the user's calendar. Synthetic mock providers never reach it.

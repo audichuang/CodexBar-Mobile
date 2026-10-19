@@ -52,21 +52,17 @@ final class EventKitResetCreditCalendarStore: ResetCreditCalendarEventStore {
         throw lastError
     }
 
-    func eventExists(identifier: String) -> Bool {
-        self.eventStore.event(withIdentifier: identifier) != nil
-    }
-
-    func existingEventIdentifier(
-        for draft: ResetCreditCalendarEventDraft,
-        calendarIdentifier: String) -> String?
-    {
+    func eventIdentifiers(matching draft: ResetCreditCalendarEventDraft, calendarIdentifier: String) -> [String] {
         guard let url = draft.url, let calendar = self.eventStore.calendar(withIdentifier: calendarIdentifier)
-        else { return nil }
+        else { return [] }
         let predicate = self.eventStore.predicateForEvents(
             withStart: draft.startDate.addingTimeInterval(-60),
             end: draft.endDate.addingTimeInterval(60),
             calendars: [calendar])
-        return self.eventStore.events(matching: predicate).first { $0.url == url }?.eventIdentifier
+        return self.eventStore.events(matching: predicate)
+            .filter { $0.url == url }
+            .compactMap(\.eventIdentifier)
+            .sorted()
     }
 
     func saveEvent(
@@ -132,6 +128,13 @@ final class ResetCreditCalendarSync {
     static let enabledKey = "resetCreditCalendarEnabled"
     static let stateKey = "resetCreditCalendarState"
 
+    /// Unit-test hosts and UI tests run on synthetic preview data that must never reach a real calendar.
+    static var isSuppressedForTestLaunch: Bool {
+        let process = ProcessInfo.processInfo
+        return process.environment["XCTestConfigurationFilePath"] != nil
+            || process.arguments.contains { $0.hasPrefix("UI_TEST_") }
+    }
+
     private(set) var isEnabled: Bool
     private(set) var accessState: AccessState = .notDetermined
     private(set) var lastSyncAt: Date?
@@ -150,15 +153,16 @@ final class ResetCreditCalendarSync {
     }
 
     /// Identity of the reset-credit data in a snapshot; drives the view task that calls `sync`.
-    static func refreshKey(for snapshot: SyncedUsageSnapshot?) -> String {
-        ResetCreditObservation.observations(from: snapshot?.providers ?? [])
+    static func refreshKey(for snapshot: SyncedUsageSnapshot?, isDemoMode: Bool) -> String {
+        let observations = ResetCreditObservation.observations(from: snapshot?.providers ?? [])
             .map { observation in
                 let expirations = observation.expirations
-                    .map { $0.map { String(Int64($0.timeIntervalSince1970)) } ?? "-" }
+                    .map { $0.map { String(ResetCreditCalendarPlanner.wholeSeconds($0)) } ?? "-" }
                     .joined(separator: ",")
                 return "\(observation.scopeKey)@\(observation.observedAt.timeIntervalSince1970)[\(expirations)]"
             }
             .joined(separator: ";")
+        return "\(isDemoMode ? "demo" : "live")|\(observations)"
     }
 
     func refreshAccessState() {
@@ -184,7 +188,8 @@ final class ResetCreditCalendarSync {
                 let result = ResetCreditCalendarPlanner.removeFutureEvents(
                     state: self.loadState(),
                     now: Date(),
-                    store: self.store)
+                    store: self.store,
+                    draft: self.makeDraft)
                 self.saveState(result.state)
             }
             self.updateEnabled(false)
@@ -208,23 +213,17 @@ final class ResetCreditCalendarSync {
 
     func sync(providers: [ProviderUsageSnapshot], now: Date = Date()) {
         self.latestProviders = providers
-        guard self.isEnabled else { return }
+        guard self.isEnabled, !Self.isSuppressedForTestLaunch else { return }
         self.refreshAccessState()
         guard self.accessState == .granted else { return }
 
-        let includeAccount = !self.defaults.bool(forKey: MobileSettingsKeys.hidePersonalInfo)
         do {
             let result = try ResetCreditCalendarPlanner.reconcile(
                 state: self.loadState(),
                 observations: ResetCreditObservation.observations(from: providers),
                 now: now,
                 store: self.store,
-                draft: { entry in
-                    ResetCreditCalendarPlanner.eventDraft(
-                        for: entry,
-                        includeAccount: includeAccount,
-                        expiryText: entry.expiresAt.formatted(date: .complete, time: .shortened))
-                })
+                draft: self.makeDraft)
             self.saveState(result.state)
             self.lastSummary = result.summary
             self.lastSyncFailed = result.summary.failures > 0
@@ -232,6 +231,18 @@ final class ResetCreditCalendarSync {
             self.lastSyncFailed = true
         }
         self.lastSyncAt = now
+    }
+
+    /// Whether the detail card can say its resets are in the calendar.
+    var isActive: Bool {
+        self.isEnabled && self.accessState == .granted && !Self.isSuppressedForTestLaunch
+    }
+
+    private func makeDraft(_ entry: ResetCreditCalendarEntry) -> ResetCreditCalendarEventDraft {
+        ResetCreditCalendarPlanner.eventDraft(
+            for: entry,
+            includeAccount: !self.defaults.bool(forKey: MobileSettingsKeys.hidePersonalInfo),
+            expiryText: entry.expiresAt.formatted(date: .complete, time: .shortened))
     }
 
     private func updateEnabled(_ enabled: Bool) {

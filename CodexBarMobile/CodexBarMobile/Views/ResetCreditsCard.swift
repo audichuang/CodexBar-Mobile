@@ -6,13 +6,18 @@ struct ResetCreditsCardPresentation: Equatable {
     let availableCount: Int
     /// Available resets grouped by identical expiry, soonest first.
     let groups: [ResetCreditObservation.Group]
+    /// Built from an inventory the calendar can use (not a bare Codex count).
+    let isCalendarEligible: Bool
 
     static func make(provider: ProviderUsageSnapshot, now: Date) -> ResetCreditsCardPresentation? {
         if let observation = ResetCreditObservation.make(from: provider) {
             let groups = observation.groups(availableAt: now)
-            let count = groups.reduce(0) { $0 + $1.count }
+            let listed = groups.reduce(0) { $0 + $1.count }
+            // Codex may report more available resets than it lists; never show fewer than the Mac counts.
+            let reported = provider.providerID == "codex" ? provider.codexResetCredits?.availableCount ?? 0 : 0
+            let count = max(listed, reported)
             guard count > 0 else { return nil }
-            return ResetCreditsCardPresentation(availableCount: count, groups: groups)
+            return ResetCreditsCardPresentation(availableCount: count, groups: groups, isCalendarEligible: true)
         }
         // Older Codex payloads may carry only a count and the next expiry.
         guard provider.providerID == "codex",
@@ -22,7 +27,8 @@ struct ResetCreditsCardPresentation: Equatable {
         let next = resetCredits.nextExpiresAt.flatMap { $0 > now ? $0 : nil }
         return ResetCreditsCardPresentation(
             availableCount: resetCredits.availableCount,
-            groups: next.map { [ResetCreditObservation.Group(expiresAt: $0, count: 1)] } ?? [])
+            groups: next.map { [ResetCreditObservation.Group(expiresAt: $0, count: 1)] } ?? [],
+            isCalendarEligible: false)
     }
 }
 
@@ -191,7 +197,8 @@ struct UsageDataConfidenceNotice: View {
                 groups: [
                     .init(expiresAt: Date().addingTimeInterval(86400), count: 2),
                     .init(expiresAt: Date().addingTimeInterval(5 * 86400), count: 1),
-                ]),
+                ],
+                isCalendarEligible: true),
             tintColor: .orange,
             isInCalendar: true)
         UsageDataConfidenceNotice(rawValue: "estimated", tintColor: .purple)

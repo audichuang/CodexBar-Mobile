@@ -217,16 +217,171 @@ struct V077ResetCreditCalendarTests {
         #expect(store.events.values.first?.title.contains("2") == false)
     }
 
-    @Test func `An event the user deleted is not recreated`() throws {
+    @Test func `A missing event is recreated while reminders are on`() throws {
+        // Another device turning reminders off, or a changed EventKit identifier, must not silently stop them here.
         let store = FakeCalendarStore()
         let expiry = self.now.addingTimeInterval(self.day)
-        var state = try self.reconcile(
+        let state = try self.reconcile(
             ResetCreditCalendarState(), [self.claude([expiry], observedAt: self.now)], store: store).state
         store.events.removeAll()
-        state = try self.reconcile(
-            state, [self.claude([expiry], observedAt: self.now.addingTimeInterval(60))], store: store).state
+        let result = try self.reconcile(state, [self.claude([expiry], observedAt: self.now)], store: store)
+        #expect(result.summary.created == 1)
+        #expect(store.events.count == 1)
+    }
+
+    @Test func `An event whose identifier changed is adopted by its URL`() throws {
+        let store = FakeCalendarStore()
+        let expiry = self.now.addingTimeInterval(self.day)
+        let state = try self.reconcile(
+            ResetCreditCalendarState(), [self.claude([expiry], observedAt: self.now)], store: store).state
+        let (oldID, draft) = try #require(store.events.first)
+        store.events = ["renamed-id": draft]
+        _ = oldID
+        let next = try self.reconcile(
+            state,
+            [self.claude([], observedAt: self.now.addingTimeInterval(60))],
+            store: store)
+        #expect(next.summary.removed == 1)
         #expect(store.events.isEmpty)
-        #expect(state.entries.values.first?.dismissedByUser == true)
+    }
+
+    @Test func `Duplicate events from two devices collapse into one`() throws {
+        let store = FakeCalendarStore()
+        let providers = [self.claude([self.now.addingTimeInterval(self.day)], observedAt: self.now)]
+        let state = try self.reconcile(ResetCreditCalendarState(), providers, store: store).state
+        let draft = try #require(store.events.values.first)
+        store.events["other-device"] = draft
+        _ = try self.reconcile(state, providers, store: store)
+        #expect(store.events.count == 1)
+    }
+
+    @Test func `A stale observation cannot add a reset that a newer one no longer lists`() throws {
+        let store = FakeCalendarStore()
+        let expiry = self.now.addingTimeInterval(self.day)
+        let state = try self.reconcile(
+            ResetCreditCalendarState(), [self.claude([], observedAt: self.now)], store: store).state
+        _ = try self.reconcile(
+            state, [self.claude([expiry], observedAt: self.now.addingTimeInterval(-60))], store: store)
+        #expect(store.events.isEmpty)
+    }
+
+    @Test func `An incomplete Codex inventory adds reminders but never removes one`() throws {
+        let store = FakeCalendarStore()
+        let first = self.now.addingTimeInterval(self.day)
+        let second = self.now.addingTimeInterval(2 * self.day)
+        let complete = SyncCodexResetCredits(
+            availableCount: 2,
+            nextExpiresAt: first,
+            credits: [
+                self.codexCredit("a", status: "available", expiresAt: first),
+                self.codexCredit("b", status: "available", expiresAt: second),
+            ],
+            updatedAt: self.now)
+        let state = try self.reconcile(
+            ResetCreditCalendarState(), [self.provider("codex", codex: complete)], store: store).state
+        #expect(store.events.count == 2)
+
+        // A status this version does not know: the list may be partial.
+        let partial = SyncCodexResetCredits(
+            availableCount: 1,
+            nextExpiresAt: second,
+            credits: [
+                self.codexCredit("a", status: "reserved", expiresAt: first),
+                self.codexCredit("b", status: "available", expiresAt: second),
+            ],
+            updatedAt: self.now.addingTimeInterval(60))
+        let observation = try #require(ResetCreditObservation.make(from: self.provider("codex", codex: partial)))
+        #expect(!observation.isComplete)
+        _ = try self.reconcile(state, [self.provider("codex", codex: partial)], store: store)
+        #expect(store.events.count == 2)
+    }
+
+    @Test func `Codex reporting more resets than it lists is incomplete and keeps the reported count`() {
+        let expiry = self.now.addingTimeInterval(self.day)
+        let codex = SyncCodexResetCredits(
+            availableCount: 2,
+            nextExpiresAt: expiry,
+            credits: [
+                self.codexCredit("a", status: "available", expiresAt: expiry),
+                self.codexCredit("b", status: "redeeming", expiresAt: expiry),
+            ],
+            updatedAt: self.now)
+        let provider = self.provider("codex", codex: codex)
+        #expect(ResetCreditObservation.make(from: provider)?.isComplete == false)
+        #expect(ResetCreditsCardPresentation.make(provider: provider, now: self.now)?.availableCount == 2)
+    }
+
+    @Test func `The account scope ignores per-install record keys`() throws {
+        let expiry = self.now.addingTimeInterval(self.day)
+        let macA = ProviderUsageSnapshot(
+            providerID: "claude",
+            providerName: "Claude",
+            primary: nil,
+            secondary: nil,
+            accountEmail: "user@example.com",
+            loginMethod: nil,
+            statusMessage: nil,
+            isError: false,
+            lastUpdated: self.now,
+            accountIdentities: ["claude:email:user@example.com", "claude:record:token-A"],
+            accountRecordKey: "token-A",
+            resetCreditInventory: SyncResetCreditInventory(expirations: [expiry], updatedAt: self.now))
+        let macB = ProviderUsageSnapshot(
+            providerID: "claude",
+            providerName: "Claude",
+            primary: nil,
+            secondary: nil,
+            accountEmail: "user@example.com",
+            loginMethod: nil,
+            statusMessage: nil,
+            isError: false,
+            lastUpdated: self.now,
+            accountIdentities: ["claude:email:user@example.com", "claude:record:token-B"],
+            accountRecordKey: "token-B",
+            resetCreditInventory: SyncResetCreditInventory(expirations: [expiry], updatedAt: self.now))
+        let scopeA = try #require(ResetCreditObservation.make(from: macA)?.scopeKey)
+        #expect(scopeA == ResetCreditObservation.make(from: macB)?.scopeKey)
+        #expect(scopeA == "claude|claude:email:user@example.com")
+    }
+
+    @Test func `Grok hides the generic reset row only when the structured card covers it`() {
+        let section = SyncProviderDetailSection(rows: [.init(label: "Limit Reset Credits", value: "1 available")])
+        #expect(ProviderDetailsView.visibleSections(providerID: "grok", sections: [section]) == [section])
+        #expect(ProviderDetailsView.visibleSections(
+            providerID: "grok", sections: [section], hasResetCreditCard: true).isEmpty)
+    }
+
+    @Test func `Merger keeps the newest Codex credit read even when its quota is older`() throws {
+        func codex(_ count: Int, read: Date, quota: Date) -> ProviderUsageSnapshot {
+            ProviderUsageSnapshot(
+                providerID: "codex",
+                providerName: "Codex",
+                primary: nil,
+                secondary: nil,
+                accountEmail: "user@example.com",
+                loginMethod: nil,
+                statusMessage: nil,
+                isError: false,
+                lastUpdated: quota,
+                codexResetCredits: SyncCodexResetCredits(
+                    availableCount: count,
+                    nextExpiresAt: nil,
+                    credits: [],
+                    updatedAt: read))
+        }
+        let older = SyncedUsageSnapshot(
+            providers: [codex(1, read: self.now, quota: self.now.addingTimeInterval(600))],
+            syncTimestamp: self.now,
+            deviceName: "Mac A",
+            deviceID: "mac-a")
+        let newer = SyncedUsageSnapshot(
+            providers: [codex(0, read: self.now.addingTimeInterval(300), quota: self.now.addingTimeInterval(300))],
+            syncTimestamp: self.now,
+            deviceName: "Mac B",
+            deviceID: "mac-b")
+        let merged = try #require(CloudSyncReader.mergeSnapshots([older, newer]))
+        let provider = try #require(merged.providers.first { $0.providerID == "codex" })
+        #expect(provider.codexResetCredits?.availableCount == 0)
     }
 
     @Test func `A deleted CodexBar calendar is recreated with every future event`() throws {
@@ -314,7 +469,8 @@ struct V077ResetCreditCalendarTests {
         let result = ResetCreditCalendarPlanner.removeFutureEvents(
             state: state,
             now: soon.addingTimeInterval(60),
-            store: store)
+            store: store,
+            draft: { ResetCreditCalendarPlanner.eventDraft(for: $0, includeAccount: true, expiryText: "x") })
         #expect(store.events.count == 1)
         #expect(store.events.values.first?.endDate == soon)
         #expect(result.state.entries.isEmpty)
@@ -331,10 +487,8 @@ struct V077ResetCreditCalendarTests {
             expiresAt: self.now,
             count: 1,
             isAvailable: true,
-            lastObservedAt: self.now,
             eventIdentifier: nil,
-            eventSignature: nil,
-            dismissedByUser: false)
+            eventSignature: nil)
         let hidden = ResetCreditCalendarPlanner.eventDraft(for: entry, includeAccount: false, expiryText: "x")
         #expect(!hidden.notes.contains("user@example.com"))
         let shown = ResetCreditCalendarPlanner.eventDraft(for: entry, includeAccount: true, expiryText: "x")
@@ -415,15 +569,8 @@ private final class FakeCalendarStore: ResetCreditCalendarEventStore {
         return identifier
     }
 
-    func eventExists(identifier: String) -> Bool {
-        self.events[identifier] != nil
-    }
-
-    func existingEventIdentifier(
-        for draft: ResetCreditCalendarEventDraft,
-        calendarIdentifier: String) -> String?
-    {
-        self.events.first { $0.value.url != nil && $0.value.url == draft.url }?.key
+    func eventIdentifiers(matching draft: ResetCreditCalendarEventDraft, calendarIdentifier: String) -> [String] {
+        self.events.filter { $0.value.url != nil && $0.value.url == draft.url }.keys.sorted()
     }
 
     func saveEvent(
@@ -477,7 +624,7 @@ struct V077ResetCreditEventKitTests {
         let saved = try #require(eventStore.event(withIdentifier: eventID))
         #expect(saved.calendar.calendarIdentifier == calendarID)
         #expect(saved.url == draft.url)
-        #expect(store.existingEventIdentifier(for: draft, calendarIdentifier: calendarID) == eventID)
+        #expect(store.eventIdentifiers(matching: draft, calendarIdentifier: calendarID) == [eventID])
         #expect(try store.makeCalendar() == calendarID)
         #expect(saved.endDate == expiry)
         #expect(saved.alarms?.map(\.relativeOffset).sorted() == [-84600, -1800])
@@ -494,7 +641,7 @@ struct V077ResetCreditEventKitTests {
         #expect(eventStore.event(withIdentifier: eventID)?.title == "2 Claude reset credits expire")
 
         try store.removeEvent(identifier: eventID)
-        #expect(!store.eventExists(identifier: eventID))
+        #expect(store.eventIdentifiers(matching: draft, calendarIdentifier: calendarID).isEmpty)
     }
 }
 

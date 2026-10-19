@@ -152,7 +152,8 @@ struct ProviderDetailView: View {
                     ProviderDetailsView(
                         providerID: self.provider.providerID,
                         sections: self.provider.details,
-                        tintColor: self.providerColor)
+                        tintColor: self.providerColor,
+                        hasResetCreditCard: self.provider.resetCreditInventory != nil)
                 }
 
                 // v0.26 dedicated cards — dispatched by providerID +
@@ -331,7 +332,10 @@ struct ProviderDetailView: View {
                     ResetCreditsCard(
                         presentation: resetCredits,
                         tintColor: self.providerColor,
-                        isInCalendar: ResetCreditCalendarSync.shared.isEnabled && !self.isDemoMode)
+                        isInCalendar: resetCredits.isCalendarEligible
+                            && ResetCreditCalendarSync.shared.isActive
+                            && !self.isDemoMode
+                            && !MockProviderDetector.isMock(self.provider))
                 }
                 if self.provider.providerID == "codex",
                    let confidence = self.provider.usageDataConfidence,
