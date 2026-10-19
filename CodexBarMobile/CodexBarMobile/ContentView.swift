@@ -49,6 +49,7 @@ struct ContentView: View {
     let usageData: SyncedUsageData
     private let isLayoutPreview: Bool
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.scenePhase) private var scenePhase
     @State private var isDemoMode = false
     @State private var layoutContainerSize: CGSize = .zero
     @State private var selectedTab: MobileRootTab
@@ -191,6 +192,11 @@ struct ContentView: View {
         {
             // Research 077: keep reset-credit expirations in the user's calendar. Demo data never reaches it.
             guard !self.isLayoutPreview, !self.isDemoMode else { return }
+            ResetCreditCalendarSync.shared.sync(input: .make(from: self.usageData))
+        }
+        .onChange(of: self.scenePhase) { _, phase in
+            // Calendar access may have changed in Settings; reconcile (or finish queued removals) on return.
+            guard phase == .active, !self.isLayoutPreview, !self.isDemoMode else { return }
             ResetCreditCalendarSync.shared.sync(input: .make(from: self.usageData))
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in

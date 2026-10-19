@@ -92,13 +92,12 @@ struct ResetCreditCalendarSettingsView: View {
         }
         .navigationTitle(String(localized: "Calendar Reminders"))
         .onAppear {
-            self.sync.refreshAccessState()
-            self.sync.retryPendingRemovals()
+            // Reconciles when on, or finishes queued removals when off.
+            self.sync.sync(input: .make(from: self.usageData))
         }
         .onChange(of: self.scenePhase) { _, phase in
             guard phase == .active else { return }
-            self.sync.refreshAccessState()
-            self.sync.retryPendingRemovals()
+            self.sync.sync(input: .make(from: self.usageData))
         }
     }
 

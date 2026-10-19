@@ -493,6 +493,33 @@ struct V077ResetCreditCalendarTests {
         #expect(store.events.count == 1)
     }
 
+    @Test func `An account's watermark survives a refresh without its inventory`() throws {
+        let store = FakeCalendarStore()
+        let expiry = self.now.addingTimeInterval(self.day)
+        var state = try self.reconcile(
+            ResetCreditCalendarState(), [self.claude([], observedAt: self.now)], store: store).state
+        // The provider is temporarily unknown (no inventory), then an older Mac snapshot arrives.
+        state = try self.reconcile(state, [self.provider("claude")], store: store).state
+        _ = try self.reconcile(
+            state, [self.claude([expiry], observedAt: self.now.addingTimeInterval(-60))], store: store)
+        #expect(store.events.isEmpty)
+        // Watermarks without entries are dropped only long after any reset could still be pending.
+        let muchLater = self.now.addingTimeInterval(ResetCreditCalendarPlanner.scopeWatermarkRetention + self.day)
+        let pruned = ResetCreditCalendarPlanner.applying([], to: state, now: muchLater)
+        #expect(pruned.scopeObservedAt.isEmpty)
+    }
+
+    @Test func `Only dated resets are shown as being in the calendar`() throws {
+        let undated = try #require(ResetCreditsCardPresentation.make(
+            provider: self.claude([nil], observedAt: self.now),
+            now: self.now))
+        #expect(!undated.hasSchedulableExpiry)
+        let dated = try #require(ResetCreditsCardPresentation.make(
+            provider: self.claude([self.now.addingTimeInterval(self.day), nil], observedAt: self.now),
+            now: self.now))
+        #expect(dated.hasSchedulableExpiry)
+    }
+
     @Test func `A stale observation cannot add a reset that a newer one no longer lists`() throws {
         let store = FakeCalendarStore()
         let expiry = self.now.addingTimeInterval(self.day)

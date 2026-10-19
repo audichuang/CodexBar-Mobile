@@ -102,6 +102,8 @@ enum ResetCreditCalendarPlanner {
     static let eventLeadTime: TimeInterval = 30 * 60
     static let alarmLeadTimes: [TimeInterval] = [24 * 60 * 60, 60 * 60]
     static let pruneAfterExpiry: TimeInterval = 30 * 24 * 60 * 60
+    /// How long an account's newest applied observation time is kept after its last entry is gone.
+    static let scopeWatermarkRetention: TimeInterval = 60 * 24 * 60 * 60
     /// A Mac clock running ahead cannot push an account's applied observation time further than this past now.
     static let clockSkewAllowance: TimeInterval = 5 * 60
 
@@ -165,8 +167,14 @@ enum ResetCreditCalendarPlanner {
                 state.entries[key]?.isAvailable = false
             }
         }
+        // A watermark outlives its entries and temporarily missing observations, so an older Mac snapshot cannot
+        // bring back a reset that a newer (possibly empty) read already ruled out. Resets expire well within the
+        // retention window.
         let liveScopes = appliedScopes.union(state.entries.values.map(\.scopeKey))
-        state.scopeObservedAt = state.scopeObservedAt.filter { liveScopes.contains($0.key) }
+        let retention = now.addingTimeInterval(-Self.scopeWatermarkRetention)
+        state.scopeObservedAt = state.scopeObservedAt.filter { scope, observedAt in
+            liveScopes.contains(scope) || observedAt > retention
+        }
         return state
     }
 

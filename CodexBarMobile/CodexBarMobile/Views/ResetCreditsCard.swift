@@ -9,6 +9,11 @@ struct ResetCreditsCardPresentation: Equatable {
     /// Built from an inventory the calendar can use (not a bare Codex count).
     let isCalendarEligible: Bool
 
+    /// Only dated resets get calendar events.
+    var hasSchedulableExpiry: Bool {
+        self.isCalendarEligible && self.groups.contains { $0.expiresAt != nil }
+    }
+
     static func make(provider: ProviderUsageSnapshot, now: Date) -> ResetCreditsCardPresentation? {
         if let observation = ResetCreditObservation.make(from: provider) {
             let groups = observation.groups(availableAt: now)
