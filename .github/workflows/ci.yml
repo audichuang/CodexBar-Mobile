@@ -195,15 +195,18 @@ jobs:
         run: ./Scripts/lint.sh lint-macos
 
       - name: Swift Test
-        # Measured cold builds take ~24 minutes, followed by ~247 isolated groups per shard.
-        # Keep every group and its 120s deadline; leave room for the complete selection.
+        # Upstream (v0.70+) batches short suites in groups of 8 and, since v0.74, runs them on two
+        # verified direct workers. The fork's isolated groups of 1 (~247 processes per shard after a
+        # ~24 minute cold build) hit this 80 minute limit on every Final CI from 2026-10-14 on.
+        # Each suite keeps its 120s deadline; expensive suites are still isolated by the runner.
+        # Unlike upstream, the fork keeps the default retry of non-timeout failures.
         timeout-minutes: 80
         run: |
-          CODEXBAR_TEST_GROUP_SIZE=1 \
+          CODEXBAR_TEST_GROUP_SIZE=8 \
             CODEXBAR_TEST_SUITE_TIMEOUT=120 \
             CODEXBAR_TEST_SHARD_INDEX=${{ matrix.shard-index }} \
             CODEXBAR_TEST_SHARD_COUNT=${{ matrix.shard-count }} \
-            ./Scripts/test.sh
+            ./Scripts/test.sh --direct-workers 2
 
       - name: Provider plugin engine A/B goldens
         if: ${{ matrix.shard-index == 0 }}

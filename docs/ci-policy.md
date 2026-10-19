@@ -29,6 +29,25 @@ provides the inexpensive syntax, lint and repository-contract signal.
 - An empty or unclassifiable diff is handled conservatively by running both.
 - Manual `full=true` always runs both matrices.
 
+## macOS test step follows upstream
+
+The fork owns the *trigger model*, not the way tests are batched. Keeping
+`ci.yml` wholesale during upstream merges once left the fork on isolated test
+groups of one suite (`CODEXBAR_TEST_GROUP_SIZE=1`) after upstream moved to
+groups of 8 (v0.70) and two direct workers (v0.74); as the suite grew, every
+Final CI from 2026-10-14 hit the 80 minute step limit and needed reruns
+although no test failed.
+
+- The `Swift Test` step uses upstream's batching: `CODEXBAR_TEST_GROUP_SIZE=8`
+  and `./Scripts/test.sh --direct-workers 2`, with the 120s suite deadline.
+  The fork keeps its six-shard matrix and the default retry of non-timeout
+  failures.
+- During every upstream sync, diff upstream's `swift-test-macos` job against
+  the fork's and adopt test-execution changes (batching, workers, timeouts,
+  caches) unless they conflict with the trigger model above.
+- A shard that times out without a failing test is a CI capacity problem to
+  fix in this step, not something to rerun indefinitely.
+
 ## Upstream-sync reuse
 
 An `upstream-sync/*` merge may skip the duplicate heavy remote matrices only
