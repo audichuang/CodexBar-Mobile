@@ -23,7 +23,7 @@ struct ResetCreditCalendarSettingsView: View {
             } footer: {
                 Text(
                     String(
-                        localized: "CodexBar adds each reset credit's expiration to a calendar named CodexBar, with reminders one day and one hour before. If you use a reset early, its event is removed once your Mac reports the change and you open CodexBar on your iPhone. Turning this off removes upcoming events."))
+                        localized: "CodexBar adds each reset credit's expiration to a calendar named CodexBar, with reminders one day and one hour before. If you use a reset early, its event is removed once your Mac reports the change and you open CodexBar on your iPhone. Turning this off removes upcoming events from the shared calendar; another device with this on adds them back."))
             }
 
             if let accessMessage = self.accessMessage {
@@ -35,6 +35,16 @@ struct ResetCreditCalendarSettingsView: View {
                             UIApplication.shared.open(url)
                         }
                     }
+                }
+            }
+
+            if !self.sync.isEnabled, self.sync.lastRemovalFailed {
+                Section {
+                    Text(
+                        String(
+                            localized: "Some upcoming events could not be removed. Turn Calendar Reminders on and off again to retry."))
+                        .font(.caption)
+                        .foregroundStyle(.orange)
                 }
             }
 

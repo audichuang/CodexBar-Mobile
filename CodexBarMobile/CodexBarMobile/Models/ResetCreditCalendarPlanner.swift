@@ -23,6 +23,21 @@ struct ResetCreditCalendarState: Codable, Equatable, Sendable {
     /// Newest observation applied per provider account. An observation that is not newer is ignored as a whole,
     /// so a stale writer can neither resurrect a reset that was used early nor remove one a newer read lists.
     var scopeObservedAt: [String: Date] = [:]
+    /// Stable identities seen per scope; an observation sharing any of them reuses that scope.
+    var scopeIdentities: [String: [String]] = [:]
+
+    init(calendarIdentifier: String? = nil) {
+        self.calendarIdentifier = calendarIdentifier
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.calendarIdentifier = try container.decodeIfPresent(String.self, forKey: .calendarIdentifier)
+        self.entries = try container.decodeIfPresent([String: ResetCreditCalendarEntry].self, forKey: .entries) ?? [:]
+        self.scopeObservedAt = try container.decodeIfPresent([String: Date].self, forKey: .scopeObservedAt) ?? [:]
+        self.scopeIdentities = try container.decodeIfPresent([String: [String]].self, forKey: .scopeIdentities)
+            ?? [:]
+    }
 }
 
 /// The content of one reset-credit event.
@@ -56,7 +71,8 @@ protocol ResetCreditCalendarEventStore: AnyObject {
     /// Returns the dedicated CodexBar calendar, reusing one that already exists (for example created by the
     /// user's other device on the same iCloud account), or creates it.
     func makeCalendar() throws -> String
-    /// Events in the calendar that carry `draft.url` around the draft's dates, oldest identifier first.
+    /// Events in the calendar that carry `draft.url` around the draft's dates, in an order every device agrees on
+    /// (oldest creation first), so concurrent de-duplication on two devices keeps the same event.
     func eventIdentifiers(matching draft: ResetCreditCalendarEventDraft, calendarIdentifier: String) -> [String]
     /// Creates (`existingIdentifier == nil`) or updates an event and returns its identifier.
     func saveEvent(
@@ -90,6 +106,8 @@ enum ResetCreditCalendarPlanner {
     static let eventLeadTime: TimeInterval = 30 * 60
     static let alarmLeadTimes: [TimeInterval] = [24 * 60 * 60, 60 * 60]
     static let pruneAfterExpiry: TimeInterval = 30 * 24 * 60 * 60
+    /// A Mac clock running ahead cannot push an account's applied observation time further than this past now.
+    static let clockSkewAllowance: TimeInterval = 5 * 60
 
     static func key(scopeKey: String, expiresAt: Date) -> String {
         "\(scopeKey)#\(self.wholeSeconds(expiresAt))"
@@ -109,20 +127,23 @@ enum ResetCreditCalendarPlanner {
         now: Date) -> ResetCreditCalendarState
     {
         var state = state
+        var appliedScopes: Set<String> = []
         for observation in observations {
-            if let applied = state.scopeObservedAt[observation.scopeKey], observation.observedAt <= applied {
+            let scope = Self.resolveScope(for: observation, in: &state)
+            appliedScopes.insert(scope)
+            if let applied = state.scopeObservedAt[scope], observation.observedAt <= applied {
                 continue
             }
-            state.scopeObservedAt[observation.scopeKey] = observation.observedAt
+            state.scopeObservedAt[scope] = min(observation.observedAt, now.addingTimeInterval(Self.clockSkewAllowance))
 
             var observedKeys: Set<String> = []
             for group in observation.groups(availableAt: max(now, observation.observedAt)) {
                 guard let expiresAt = group.expiresAt else { continue }
-                let key = Self.key(scopeKey: observation.scopeKey, expiresAt: expiresAt)
+                let key = Self.key(scopeKey: scope, expiresAt: expiresAt)
                 observedKeys.insert(key)
                 var entry = state.entries[key] ?? ResetCreditCalendarEntry(
                     key: key,
-                    scopeKey: observation.scopeKey,
+                    scopeKey: scope,
                     providerID: observation.providerID,
                     providerName: observation.providerName,
                     accountLabel: observation.accountLabel,
@@ -140,7 +161,7 @@ enum ResetCreditCalendarPlanner {
 
             guard observation.isComplete else { continue }
             for (key, entry) in state.entries
-                where entry.scopeKey == observation.scopeKey
+                where entry.scopeKey == scope
                 && !observedKeys.contains(key)
                 && entry.isAvailable
                 && entry.expiresAt > now
@@ -148,11 +169,26 @@ enum ResetCreditCalendarPlanner {
                 state.entries[key]?.isAvailable = false
             }
         }
-        state.scopeObservedAt = state.scopeObservedAt.filter { scopeKey, _ in
-            state.entries.values.contains { $0.scopeKey == scopeKey }
-                || observations.contains { $0.scopeKey == scopeKey }
-        }
+        let liveScopes = appliedScopes.union(state.entries.values.map(\.scopeKey))
+        state.scopeObservedAt = state.scopeObservedAt.filter { liveScopes.contains($0.key) }
+        state.scopeIdentities = state.scopeIdentities.filter { liveScopes.contains($0.key) }
         return state
+    }
+
+    /// Reuses a known scope of the same provider that shares an identity with the observation, so a Mac that
+    /// reports fewer identities (for example no email) does not split one account into two sets of events.
+    private static func resolveScope(
+        for observation: ResetCreditObservation,
+        in state: inout ResetCreditCalendarState) -> String
+    {
+        let identities = Set(observation.identities)
+        let prefix = "\(observation.providerID)|"
+        let known = state.scopeIdentities
+            .filter { $0.key.hasPrefix(prefix) && !identities.isDisjoint(with: $0.value) }
+            .map(\.key)
+        let scope = known.contains(observation.scopeKey) ? observation.scopeKey : known.min() ?? observation.scopeKey
+        state.scopeIdentities[scope] = Array(identities.union(state.scopeIdentities[scope] ?? [])).sorted()
+        return scope
     }
 
     /// Applies observations and reconciles the calendar. Returns the new state and what changed.
@@ -189,8 +225,9 @@ enum ResetCreditCalendarPlanner {
             let content = draft(entry)
             let matches = store.eventIdentifiers(matching: content, calendarIdentifier: calendarIdentifier)
             if entry.isAvailable {
-                let current = entry.eventIdentifier.flatMap { matches.contains($0) ? $0 : nil } ?? matches.first
-                for duplicate in matches where duplicate != current {
+                // Every device keeps the first match in the store's shared order, never its own copy.
+                let current = matches.first
+                for duplicate in matches.dropFirst() {
                     do {
                         try store.removeEvent(identifier: duplicate)
                         summary.removed += 1
@@ -249,8 +286,10 @@ enum ResetCreditCalendarPlanner {
         failures: Int)
     {
         var failures = 0
+        var remaining = ResetCreditCalendarState(calendarIdentifier: state.calendarIdentifier)
         if let calendarIdentifier = state.calendarIdentifier, store.calendarExists(identifier: calendarIdentifier) {
             for entry in state.entries.values where entry.expiresAt > now {
+                var failed = false
                 for identifier in store.eventIdentifiers(
                     matching: draft(entry),
                     calendarIdentifier: calendarIdentifier)
@@ -258,12 +297,19 @@ enum ResetCreditCalendarPlanner {
                     do {
                         try store.removeEvent(identifier: identifier)
                     } catch {
-                        failures += 1
+                        failed = true
                     }
+                }
+                if failed {
+                    // Keep it so the next sync with reminders on removes it.
+                    failures += 1
+                    var kept = entry
+                    kept.isAvailable = false
+                    remaining.entries[entry.key] = kept
                 }
             }
         }
-        return (ResetCreditCalendarState(calendarIdentifier: state.calendarIdentifier), failures)
+        return (remaining, failures)
     }
 
     static func eventDraft(

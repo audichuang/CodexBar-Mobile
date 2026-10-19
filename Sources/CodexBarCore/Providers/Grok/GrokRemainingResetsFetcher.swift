@@ -295,14 +295,17 @@ enum GrokRemainingResetsFetcher {
         ]
     }
 
-    /// `observedAt` (fork, Research 077) is when `tokens` were read; it defaults to `now` for a fresh read.
+    /// `observedAt` (fork, Research 077) is when `tokens` were last read successfully. With a read time, an empty
+    /// result is a confirmed empty inventory; without one (never read, or a fresh upstream call) it stays nil and
+    /// the snapshot is stamped `now`.
     static func snapshot(
         tokens: [GrokRemainingReset],
         now: Date,
         observedAt: Date? = nil) -> GrokRateLimitResetCreditsSnapshot?
     {
         let available = self.availableTokens(tokens, now: now)
-        guard !available.isEmpty else { return nil }
+        // A cached successful read stays a confirmed inventory even when it lists nothing.
+        guard !available.isEmpty || observedAt != nil else { return nil }
         return GrokRateLimitResetCreditsSnapshot(
             expirations: available.map(\.expiresAt),
             updatedAt: min(observedAt ?? now, now))

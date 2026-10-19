@@ -255,6 +255,99 @@ struct V077ResetCreditCalendarTests {
         #expect(store.events.count == 1)
     }
 
+    @Test func `Macs reporting overlapping identities share one account scope`() throws {
+        let store = FakeCalendarStore()
+        let expiry = self.now.addingTimeInterval(self.day)
+        func claude(_ identities: [String], _ email: String?, observedAt: Date, _ expirations: [Date?])
+            -> ProviderUsageSnapshot
+        {
+            ProviderUsageSnapshot(
+                providerID: "claude",
+                providerName: "Claude",
+                primary: nil,
+                secondary: nil,
+                accountEmail: email,
+                loginMethod: nil,
+                statusMessage: nil,
+                isError: false,
+                lastUpdated: observedAt,
+                accountIdentities: identities,
+                resetCreditInventory: SyncResetCreditInventory(expirations: expirations, updatedAt: observedAt))
+        }
+        var state = try self.reconcile(
+            ResetCreditCalendarState(),
+            [claude(
+                ["claude:account:X", "claude:email:user@example.com"],
+                "user@example.com",
+                observedAt: self.now,
+                [expiry])],
+            store: store).state
+        // A Mac without the email publishes later for the same account.
+        state = try self.reconcile(
+            state,
+            [claude(["claude:account:X"], nil, observedAt: self.now.addingTimeInterval(60), [expiry])],
+            store: store).state
+        #expect(store.events.count == 1)
+        // It then reports the reset used early; the original event goes away.
+        _ = try self.reconcile(
+            state,
+            [claude(["claude:account:X"], nil, observedAt: self.now.addingTimeInterval(120), [])],
+            store: store)
+        #expect(store.events.isEmpty)
+    }
+
+    @Test func `A Mac clock running ahead cannot freeze an account`() throws {
+        let store = FakeCalendarStore()
+        let expiry = self.now.addingTimeInterval(self.day)
+        let state = try self.reconcile(
+            ResetCreditCalendarState(),
+            [self.claude([expiry], observedAt: self.now.addingTimeInterval(3 * 3600))],
+            store: store).state
+        #expect(store.events.count == 1)
+        let later = self.now.addingTimeInterval(600)
+        _ = try self.reconcile(state, [self.claude([], observedAt: later)], at: later, store: store)
+        #expect(store.events.isEmpty)
+    }
+
+    @Test func `Accounts without any identity stay out of the calendar`() {
+        let anonymous = self.provider(
+            "codex",
+            email: nil,
+            codex: SyncCodexResetCredits(availableCount: 0, nextExpiresAt: nil, credits: [], updatedAt: self.now))
+        #expect(ResetCreditObservation.make(from: anonymous) != nil)
+        #expect(ResetCreditObservation.observations(from: [anonymous]).isEmpty)
+    }
+
+    @Test func `Every device keeps the same duplicate`() throws {
+        let store = FakeCalendarStore()
+        let providers = [self.claude([self.now.addingTimeInterval(self.day)], observedAt: self.now)]
+        let state = try self.reconcile(ResetCreditCalendarState(), providers, store: store).state
+        let draft = try #require(store.events.values.first)
+        store.events["aaa-first-in-shared-order"] = draft
+        let result = try self.reconcile(state, providers, store: store).state
+        #expect(Array(store.events.keys) == ["aaa-first-in-shared-order"])
+        #expect(result.entries.values.first?.eventIdentifier == "aaa-first-in-shared-order")
+    }
+
+    @Test func `Turning off keeps events it could not remove for a later retry`() throws {
+        let store = FakeCalendarStore()
+        let expiry = self.now.addingTimeInterval(self.day)
+        let state = try self.reconcile(
+            ResetCreditCalendarState(), [self.claude([expiry], observedAt: self.now)], store: store).state
+        store.failsRemoval = true
+        let off = ResetCreditCalendarPlanner.removeFutureEvents(
+            state: state,
+            now: self.now,
+            store: store,
+            draft: { ResetCreditCalendarPlanner.eventDraft(for: $0, includeAccount: true, expiryText: "x") })
+        #expect(off.failures == 1)
+        #expect(off.state.entries.values.first?.isAvailable == false)
+
+        store.failsRemoval = false
+        _ = try self.reconcile(off.state, [], store: store)
+        #expect(store.events.isEmpty)
+    }
+
     @Test func `A stale observation cannot add a reset that a newer one no longer lists`() throws {
         let store = FakeCalendarStore()
         let expiry = self.now.addingTimeInterval(self.day)
@@ -556,6 +649,7 @@ private final class FakeCalendarStore: ResetCreditCalendarEventStore {
     var calendars: [String] = []
     var events: [String: ResetCreditCalendarEventDraft] = [:]
     var saveCount = 0
+    var failsRemoval = false
     private var nextID = 0
 
     func calendarExists(identifier: String) -> Bool {
@@ -588,6 +682,7 @@ private final class FakeCalendarStore: ResetCreditCalendarEventStore {
     }
 
     func removeEvent(identifier: String) throws {
+        if self.failsRemoval { throw CocoaError(.fileWriteUnknown) }
         self.events.removeValue(forKey: identifier)
     }
 }

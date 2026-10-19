@@ -61,8 +61,13 @@ final class EventKitResetCreditCalendarStore: ResetCreditCalendarEventStore {
             calendars: [calendar])
         return self.eventStore.events(matching: predicate)
             .filter { $0.url == url }
+            .sorted { lhs, rhs in
+                let left = lhs.creationDate ?? .distantFuture
+                let right = rhs.creationDate ?? .distantFuture
+                if left != right { return left < right }
+                return (lhs.calendarItemExternalIdentifier ?? "") < (rhs.calendarItemExternalIdentifier ?? "")
+            }
             .compactMap(\.eventIdentifier)
-            .sorted()
     }
 
     func saveEvent(
@@ -140,6 +145,8 @@ final class ResetCreditCalendarSync {
     private(set) var lastSyncAt: Date?
     private(set) var lastSummary: ResetCreditCalendarSyncSummary?
     private(set) var lastSyncFailed = false
+    /// Turning reminders off could not remove some future events; they are retried the next time it is on.
+    private(set) var lastRemovalFailed = false
 
     @ObservationIgnored private let defaults: UserDefaults
     @ObservationIgnored private let eventStore = EKEventStore()
@@ -162,7 +169,13 @@ final class ResetCreditCalendarSync {
                 return "\(observation.scopeKey)@\(observation.observedAt.timeIntervalSince1970)[\(expirations)]"
             }
             .joined(separator: ";")
-        return "\(isDemoMode ? "demo" : "live")|\(observations)"
+        // Event notes depend on these too; a change rewrites the notes without waiting for new Mac data.
+        let presentation = [
+            UserDefaults.standard.bool(forKey: MobileSettingsKeys.hidePersonalInfo) ? "hidden" : "shown",
+            TimeZone.current.identifier,
+            Locale.current.identifier,
+        ].joined(separator: ",")
+        return "\(isDemoMode ? "demo" : "live")|\(presentation)|\(observations)"
     }
 
     func refreshAccessState() {
@@ -191,6 +204,7 @@ final class ResetCreditCalendarSync {
                     store: self.store,
                     draft: self.makeDraft)
                 self.saveState(result.state)
+                self.lastRemovalFailed = result.failures > 0
             }
             self.updateEnabled(false)
             self.lastSummary = nil
@@ -208,6 +222,7 @@ final class ResetCreditCalendarSync {
             return
         }
         self.updateEnabled(true)
+        self.lastRemovalFailed = false
         self.sync(providers: self.latestProviders)
     }
 

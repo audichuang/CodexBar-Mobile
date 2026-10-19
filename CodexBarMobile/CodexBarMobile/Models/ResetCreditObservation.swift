@@ -16,6 +16,9 @@ struct ResetCreditObservation: Equatable, Sendable {
     /// Stable per provider account across Macs: the merger's account identity, never a per-install record key
     /// when a real identity exists.
     let scopeKey: String
+    /// Every stable identity of the account (merger identities without per-install record keys). Lets the
+    /// calendar keep one scope when Macs report overlapping but different identity sets.
+    let identities: [String]
     let providerID: String
     let providerName: String
     let accountLabel: String?
@@ -55,6 +58,7 @@ struct ResetCreditObservation: Equatable, Sendable {
 
         return ResetCreditObservation(
             scopeKey: Self.scopeKey(for: provider),
+            identities: CloudSyncReader.effectiveIdentifiers(for: provider).sorted(),
             providerID: provider.providerID,
             providerName: provider.providerName,
             accountLabel: provider.accountEmail,
@@ -73,12 +77,14 @@ struct ResetCreditObservation: Equatable, Sendable {
         return "\(provider.providerID)|\(identity)"
     }
 
-    /// Observations eligible for the user's calendar. Synthetic mock providers never reach it.
+    /// Observations eligible for the user's calendar. Synthetic mock providers never reach it, and neither does an
+    /// account without any identity: two such accounts would share a scope and could remove each other's events.
     static func observations(from providers: [ProviderUsageSnapshot]) -> [ResetCreditObservation] {
         var seen: Set<String> = []
         return providers
             .filter { !MockProviderDetector.isMock($0) }
             .compactMap(Self.make(from:))
+            .filter { !$0.scopeKey.hasSuffix(":legacy-no-identity") }
             .filter { seen.insert($0.scopeKey).inserted }
     }
 

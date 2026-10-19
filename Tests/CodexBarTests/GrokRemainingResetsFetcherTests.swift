@@ -308,6 +308,31 @@ struct GrokRemainingResetsFetcherTests {
         #expect(retained.expirations == [token.expiresAt])
     }
 
+    @Test
+    func `a cached empty read stays a confirmed empty inventory`() async throws {
+        GrokRemainingResetsFetcher.resetCacheForTesting()
+        defer { GrokRemainingResetsFetcher.resetCacheForTesting() }
+        let readAt = Date(timeIntervalSince1970: 1_787_647_576)
+        let first = GrokRemainingResetsFetcher.cachedLookupAndRefresh(
+            credentials: Self.credentials,
+            cookieHeader: nil,
+            now: readAt,
+            refresh: { _, _, _ in [] })
+        _ = await first.snapshotTask?.value
+
+        let cachedLookup = GrokRemainingResetsFetcher.cachedLookupAndRefresh(
+            credentials: Self.credentials,
+            cookieHeader: nil,
+            now: readAt.addingTimeInterval(10),
+            refresh: { _, _, _ in nil })
+        #expect(cachedLookup.snapshotTask == nil)
+        let cached = await cachedLookup.resolved(at: readAt.addingTimeInterval(10), requiresCompleteness: false)
+        let snapshot = try #require(cached.snapshot)
+        #expect(snapshot.expirations.isEmpty)
+        #expect(snapshot.updatedAt == readAt)
+        #expect(GrokRemainingResetsFetcher.snapshot(tokens: [], now: readAt) == nil)
+    }
+
     @Test(.timeLimit(.minutes(1)))
     func `deferred lookup publishes a display snapshot after returning cached usage`() async throws {
         GrokRemainingResetsFetcher.resetCacheForTesting()
