@@ -67,6 +67,7 @@ protocol ResetCreditCalendarEventStore: AnyObject {
     /// Returns the dedicated CodexBar calendar, reusing one that already exists (for example created by the
     /// user's other device on the same iCloud account), or creates it.
     func makeCalendar() throws -> String
+    func eventExists(identifier: String) -> Bool
     /// Events in the calendar that carry `draft.url` around the draft's dates, in an order every device agrees on
     /// (oldest creation first), so concurrent de-duplication on two devices keeps the same event.
     func eventIdentifiers(matching draft: ResetCreditCalendarEventDraft, calendarIdentifier: String) -> [String]
@@ -104,7 +105,8 @@ enum ResetCreditCalendarPlanner {
     static let pruneAfterExpiry: TimeInterval = 30 * 24 * 60 * 60
     /// How long an account's newest applied observation time is kept after its last entry is gone.
     static let scopeWatermarkRetention: TimeInterval = 60 * 24 * 60 * 60
-    /// A Mac clock running ahead cannot push an account's applied observation time further than this past now.
+    /// An observation stamped further than this ahead of the iPhone clock comes from a Mac whose clock runs fast.
+    /// Its time cannot be ordered against other Macs, so it is ignored until real time catches up.
     static let clockSkewAllowance: TimeInterval = 5 * 60
 
     static func key(scopeKey: String, expiresAt: Date) -> String {
@@ -129,10 +131,11 @@ enum ResetCreditCalendarPlanner {
         for observation in observations {
             let scope = observation.scopeKey
             appliedScopes.insert(scope)
+            guard observation.observedAt <= now.addingTimeInterval(Self.clockSkewAllowance) else { continue }
             if let applied = state.scopeObservedAt[scope], observation.observedAt <= applied {
                 continue
             }
-            state.scopeObservedAt[scope] = min(observation.observedAt, now.addingTimeInterval(Self.clockSkewAllowance))
+            state.scopeObservedAt[scope] = observation.observedAt
 
             var observedKeys: Set<String> = []
             for group in observation.groups(availableAt: max(now, observation.observedAt)) {
@@ -210,7 +213,11 @@ enum ResetCreditCalendarPlanner {
             guard entry.expiresAt > now, let calendarIdentifier = state.calendarIdentifier else { continue }
 
             let content = draft(entry)
-            let matches = store.eventIdentifiers(matching: content, calendarIdentifier: calendarIdentifier)
+            let matches = Self.trackedEventIdentifiers(
+                for: entry,
+                content: content,
+                calendarIdentifier: calendarIdentifier,
+                store: store)
             if entry.isAvailable {
                 // Every device keeps the first match in the store's shared order, never its own copy.
                 let current = matches.first
@@ -262,6 +269,22 @@ enum ResetCreditCalendarPlanner {
         return (state, summary)
     }
 
+    /// Events carrying the entry's URL marker around its expiry, plus the saved identifier when the user moved the
+    /// event elsewhere (the date-bounded marker search cannot see it then).
+    @MainActor
+    static func trackedEventIdentifiers(
+        for entry: ResetCreditCalendarEntry,
+        content: ResetCreditCalendarEventDraft,
+        calendarIdentifier: String,
+        store: ResetCreditCalendarEventStore) -> [String]
+    {
+        var identifiers = store.eventIdentifiers(matching: content, calendarIdentifier: calendarIdentifier)
+        if let saved = entry.eventIdentifier, !identifiers.contains(saved), store.eventExists(identifier: saved) {
+            identifiers.append(saved)
+        }
+        return identifiers
+    }
+
     /// Turning reminders off without calendar access: every future event becomes a queued removal, and the applied
     /// observation times are forgotten so turning reminders back on re-adds what the Macs still list.
     static func queueingFutureRemovals(in state: ResetCreditCalendarState, now: Date) -> ResetCreditCalendarState {
@@ -288,9 +311,11 @@ enum ResetCreditCalendarPlanner {
         if let calendarIdentifier = state.calendarIdentifier, store.calendarExists(identifier: calendarIdentifier) {
             for entry in state.entries.values where entry.expiresAt > now {
                 var failed = false
-                for identifier in store.eventIdentifiers(
-                    matching: draft(entry),
-                    calendarIdentifier: calendarIdentifier)
+                for identifier in Self.trackedEventIdentifiers(
+                    for: entry,
+                    content: draft(entry),
+                    calendarIdentifier: calendarIdentifier,
+                    store: store)
                 {
                     do {
                         try store.removeEvent(identifier: identifier)

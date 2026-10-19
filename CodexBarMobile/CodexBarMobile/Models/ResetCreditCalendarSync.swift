@@ -52,6 +52,10 @@ final class EventKitResetCreditCalendarStore: ResetCreditCalendarEventStore {
         throw lastError
     }
 
+    func eventExists(identifier: String) -> Bool {
+        self.eventStore.event(withIdentifier: identifier) != nil
+    }
+
     func eventIdentifiers(matching draft: ResetCreditCalendarEventDraft, calendarIdentifier: String) -> [String] {
         guard let url = draft.url, let calendar = self.eventStore.calendar(withIdentifier: calendarIdentifier)
         else { return [] }
@@ -171,10 +175,29 @@ final class ResetCreditCalendarSync {
     @ObservationIgnored private lazy var store = EventKitResetCreditCalendarStore(eventStore: self.eventStore)
     @ObservationIgnored private var latestInput = Input()
 
+    /// `providerID#expiry` of every future reset with an event in the calendar; drives the detail card's note.
+    private(set) var scheduledResets: Set<String> = []
+
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
         self.isEnabled = defaults.bool(forKey: Self.enabledKey)
+        self.scheduledResets = Self.scheduledResets(in: self.loadState(), now: Date())
         self.refreshAccessState()
+    }
+
+    /// Whether this provider has a calendar event for any of the given expiries.
+    func hasScheduledEvent(providerID: String, expirations: [Date]) -> Bool {
+        expirations.contains { self.scheduledResets.contains(Self.scheduledKey(providerID: providerID, expiresAt: $0)) }
+    }
+
+    private static func scheduledKey(providerID: String, expiresAt: Date) -> String {
+        "\(providerID)#\(ResetCreditCalendarPlanner.wholeSeconds(expiresAt))"
+    }
+
+    private static func scheduledResets(in state: ResetCreditCalendarState, now: Date) -> Set<String> {
+        Set(state.entries.values
+            .filter { $0.isAvailable && $0.eventIdentifier != nil && $0.expiresAt > now }
+            .map { Self.scheduledKey(providerID: $0.providerID, expiresAt: $0.expiresAt) })
     }
 
     /// Identity of the reset-credit data in a snapshot; drives the view task that calls `sync`.
@@ -242,6 +265,7 @@ final class ResetCreditCalendarSync {
         }
         self.updateEnabled(true)
         self.sync(input: self.latestInput)
+        self.scheduledResets = Self.scheduledResets(in: self.loadState(), now: Date())
     }
 
     func sync(input: Input, now: Date = Date()) {
@@ -315,6 +339,7 @@ final class ResetCreditCalendarSync {
     }
 
     private func saveState(_ state: ResetCreditCalendarState) {
+        self.scheduledResets = self.isEnabled ? Self.scheduledResets(in: state, now: Date()) : []
         guard let data = try? JSONEncoder().encode(state) else { return }
         self.defaults.set(data, forKey: Self.stateKey)
     }

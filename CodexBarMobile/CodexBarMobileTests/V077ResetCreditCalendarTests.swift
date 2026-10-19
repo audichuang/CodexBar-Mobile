@@ -392,10 +392,12 @@ struct V077ResetCreditCalendarTests {
             ResetCreditCalendarState(),
             [self.claude([expiry], observedAt: self.now.addingTimeInterval(3 * 3600))],
             store: store).state
-        #expect(store.events.count == 1)
-        let later = self.now.addingTimeInterval(600)
-        _ = try self.reconcile(state, [self.claude([], observedAt: later)], at: later, store: store)
         #expect(store.events.isEmpty)
+        #expect(state.scopeObservedAt.isEmpty)
+        // A correct Mac's later read is still accepted.
+        let later = self.now.addingTimeInterval(600)
+        _ = try self.reconcile(state, [self.claude([expiry], observedAt: later)], at: later, store: store)
+        #expect(store.events.count == 1)
     }
 
     @Test func `Anonymous accounts are scoped per Mac and ambiguous ones are left out`() {
@@ -518,6 +520,49 @@ struct V077ResetCreditCalendarTests {
             provider: self.claude([self.now.addingTimeInterval(self.day), nil], observedAt: self.now),
             now: self.now))
         #expect(dated.hasSchedulableExpiry)
+    }
+
+    @Test func `A Mac clock running ahead is ignored until time catches up`() throws {
+        let store = FakeCalendarStore()
+        let expiry = self.now.addingTimeInterval(self.day)
+        var state = try self.reconcile(
+            ResetCreditCalendarState(), [self.claude([expiry], observedAt: self.now)], store: store).state
+        // A fast Mac still lists the reset; a correct Mac reports it used. Both arrive in one update.
+        let fast = SyncedUsageSnapshot(
+            providers: [self.claude([expiry], observedAt: self.now.addingTimeInterval(3600))],
+            syncTimestamp: self.now,
+            deviceName: "Fast",
+            deviceID: "mac-fast")
+        let correct = SyncedUsageSnapshot(
+            providers: [self.claude([], observedAt: self.now.addingTimeInterval(60))],
+            syncTimestamp: self.now,
+            deviceName: "Correct",
+            deviceID: "mac-correct")
+        state = try ResetCreditCalendarPlanner.reconcile(
+            state: state,
+            observations: ResetCreditObservation.observations(fromDeviceSnapshots: [fast, correct]),
+            now: self.now.addingTimeInterval(120),
+            store: store,
+            draft: { ResetCreditCalendarPlanner.eventDraft(for: $0, includeAccount: true, expiryText: "x") }).state
+        #expect(store.events.isEmpty)
+        #expect(state.scopeObservedAt.values.allSatisfy { $0 <= self.now.addingTimeInterval(120) })
+    }
+
+    @Test func `A moved event is still updated and removed through its saved identifier`() throws {
+        let store = FakeCalendarStore()
+        let expiry = self.now.addingTimeInterval(self.day)
+        let state = try self.reconcile(
+            ResetCreditCalendarState(), [self.claude([expiry], observedAt: self.now)], store: store).state
+        let (id, draft) = try #require(store.events.first)
+        store.events[id] = ResetCreditCalendarEventDraft(
+            title: draft.title,
+            startDate: draft.startDate.addingTimeInterval(3 * self.day),
+            endDate: draft.endDate.addingTimeInterval(3 * self.day),
+            notes: draft.notes,
+            alarmOffsets: draft.alarmOffsets,
+            url: draft.url)
+        _ = try self.reconcile(state, [self.claude([], observedAt: self.now.addingTimeInterval(60))], store: store)
+        #expect(store.events.isEmpty)
     }
 
     @Test func `A stale observation cannot add a reset that a newer one no longer lists`() throws {
@@ -835,8 +880,14 @@ private final class FakeCalendarStore: ResetCreditCalendarEventStore {
         return identifier
     }
 
+    func eventExists(identifier: String) -> Bool {
+        self.events[identifier] != nil
+    }
+
     func eventIdentifiers(matching draft: ResetCreditCalendarEventDraft, calendarIdentifier: String) -> [String] {
-        self.events.filter { $0.value.url != nil && $0.value.url == draft.url }.keys.sorted()
+        // Like EventKit's date-bounded search, a moved event is not found by its marker.
+        self.events.filter { $0.value.url != nil && $0.value.url == draft.url && $0.value.endDate == draft.endDate }
+            .keys.sorted()
     }
 
     func saveEvent(

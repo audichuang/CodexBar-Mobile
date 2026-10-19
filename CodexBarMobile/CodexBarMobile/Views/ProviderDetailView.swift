@@ -332,9 +332,11 @@ struct ProviderDetailView: View {
                     ResetCreditsCard(
                         presentation: resetCredits,
                         tintColor: self.providerColor,
-                        isInCalendar: resetCredits.hasSchedulableExpiry
+                        isInCalendar: resetCredits.isCalendarEligible
                             && ResetCreditCalendarSync.shared.isActive
-                            && !ResetCreditCalendarSync.shared.lastSyncFailed
+                            && ResetCreditCalendarSync.shared.hasScheduledEvent(
+                                providerID: self.provider.providerID,
+                                expirations: resetCredits.groups.compactMap(\.expiresAt))
                             && !self.isDemoMode
                             && !MockProviderDetector.isMock(self.provider))
                 }
