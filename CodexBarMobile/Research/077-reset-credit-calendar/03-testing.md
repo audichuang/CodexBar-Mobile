@@ -73,3 +73,11 @@ old = Mac 0.76.0.1 / iPhone 2.9.0；new = Mac 0.76.0.2 / iPhone 2.10.0。实体 
 ## 多台 iPhone / iPad 同时开启
 
 同一 iCloud 账号下多台设备都开启日历提醒时：`makeCalendar` 先复用已有的、可写的"CodexBar"日历（优先 iCloud 源）；每个事件的 `url` 是 `codexbar://reset-credit/<key 的 SHA-256 前 16 字节>`（不含邮箱），设备在新建事件前按该 URL 在事件时间附近查找，找到就接管同一事件；账号范围只由每台 Mac 的原始数据决定，所以各设备算出相同的 URL（单测 `A second device adopts the event already in the shared calendar`，真实 EventKit 往返测试也断言了 URL 查找与日历复用）。局限：两台设备在 iCloud 同步完成前几乎同时首次开启，仍可能各建一个日历。
+
+## Final CI（2026-10-19）
+
+- 合并 PR #195 触发的 Final CI run [39192154606](https://github.com/o1xhack/CodexBar-Mobile/actions/runs/39192154606)：macOS 分片 1/2/3 在 `Swift Test` 80 分钟硬超时被终止，日志无失败用例；`rerun --failed`（attempt 2）后分片 3 通过（77 分钟），1/2 再次超时。Mac 0.76.0.2 已在此之前公开发布（漏查 Final CI，见下）。
+- 根因：fork 的 `ci.yml` 在上游合并中整份保留，测试步骤停在 `CODEXBAR_TEST_GROUP_SIZE=1`（每片约 247 个进程 + 约 24–28 分钟冷编译），上游 v0.70/v0.74 已改为每组 8 个、2 个 direct worker。PR #197（`3cfa2abd1`）对齐上游批处理，保留 fork 的 6 分片、触发模型与失败重试；`docs/ci-policy.md` 增加"测试步骤跟随上游"规则。
+- 新配置手动 Final CI（`full=true`，`mobile-dev` `3cfa2abd1`，包含 0.76.0.2 发布代码）run [39289679280](https://github.com/o1xhack/CodexBar-Mobile/actions/runs/39289679280)：**success**。6 个 macOS 分片 `Swift Test` 分别 32.0 / 36.5 / 33.3 / 41.7 / 42.4 / 43.5 分钟（分片 0–5），全部首轮通过、0 超时、0 重试；分片 1 统计：冷编译与发现 1708 秒，执行 467 秒，38 组。Linux CLI、musl、macOS 兼容构建与 lint 均通过。此 run 作为 0.76.0.2 的 Final CI 证据。
+- 流程教训：公开发布（`--finalize`）前必须确认合并后的 Final CI 已通过。
+
