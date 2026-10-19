@@ -1,0 +1,66 @@
+{
+  "sourceLanguage": "en",
+  "version": "1.0",
+  "strings": {
+    "NSCalendarsFullAccessUsageDescription": {
+      "comment": "Calendar permission prompt (Research 077).",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add reset credit expirations to a CodexBar calendar, and update or remove those events when credits are used."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "把重置额度的到期时间添加到“CodexBar”日历，并在重置额度用掉后更新或删除这些事件。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "把重置額度的到期時間加入「CodexBar」行事曆，並在重置額度用掉後更新或刪除這些事件。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リセットクレジットの有効期限を「CodexBar」カレンダーに追加し、使用したときにそのイベントを更新または削除します。"
+          }
+        }
+      }
+    },
+    "NSPhotoLibraryAddUsageDescription": {
+      "comment": "Photo library add permission prompt.",
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save shared cost report images to your photo library."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "把分享的费用报告图片保存到你的照片图库。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "把分享的費用報告圖片儲存到你的照片圖庫。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "共有するコストレポート画像を写真ライブラリに保存します。"
+          }
+        }
+      }
+    }
+  }
+}

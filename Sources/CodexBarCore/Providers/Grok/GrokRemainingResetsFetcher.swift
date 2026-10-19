@@ -45,6 +45,8 @@ typealias GrokRemainingResetsLookup = @Sendable (
 struct GrokRemainingResetsLookupResult: Sendable {
     let tokens: [GrokRemainingReset]
     let snapshotTask: Task<GrokRateLimitResetCreditsSnapshot?, Never>?
+    /// Fork (Research 077): when `tokens` were last read successfully; cached tokens keep that time.
+    var observedAt: Date?
 
     static let empty = GrokRemainingResetsLookupResult(tokens: [], snapshotTask: nil)
 
@@ -65,7 +67,7 @@ struct GrokRemainingResetsLookupResult: Sendable {
                 supplementalUsageTask: nil)
         }
         return GrokRemainingResetsResolution(
-            snapshot: GrokRemainingResetsFetcher.snapshot(tokens: self.tokens, now: now),
+            snapshot: GrokRemainingResetsFetcher.snapshot(tokens: self.tokens, now: now, observedAt: self.observedAt),
             supplementalUsageTask: self.supplementalUsageTask)
     }
 }
@@ -79,6 +81,8 @@ private final class GrokRemainingResetsCache: @unchecked Sendable {
     private struct Entry {
         var tokens: [GrokRemainingReset]
         var lastAttemptAt: Date?
+        /// Fork (Research 077): time of the last successful lookup that produced `tokens`.
+        var observedAt: Date?
     }
 
     private let lock = NSLock()
@@ -89,32 +93,37 @@ private final class GrokRemainingResetsCache: @unchecked Sendable {
         key: String,
         now: Date,
         refreshInterval: TimeInterval,
-        startRefresh: @Sendable ([GrokRemainingReset]) -> Task<GrokRateLimitResetCreditsSnapshot?, Never>) -> (
-        tokens: [GrokRemainingReset],
-        snapshotTask: Task<GrokRateLimitResetCreditsSnapshot?, Never>?)
+        startRefresh: @Sendable ([GrokRemainingReset], Date?) -> Task<GrokRateLimitResetCreditsSnapshot?, Never>)
+        -> (
+            tokens: [GrokRemainingReset],
+            observedAt: Date?,
+            snapshotTask: Task<GrokRateLimitResetCreditsSnapshot?, Never>?)
     {
         self.lock.lock()
         defer { self.lock.unlock() }
 
         let entry = self.entries[key] ?? Entry(tokens: [], lastAttemptAt: nil)
         if let task = self.inFlight[key] {
-            return (entry.tokens, task)
+            return (entry.tokens, entry.observedAt, task)
         }
         let isFresh = entry.lastAttemptAt.map { now.timeIntervalSince($0) < refreshInterval } ?? false
         guard !isFresh else {
-            return (entry.tokens, nil)
+            return (entry.tokens, entry.observedAt, nil)
         }
-        let task = startRefresh(entry.tokens)
+        let task = startRefresh(entry.tokens, entry.observedAt)
         self.inFlight[key] = task
-        return (entry.tokens, task)
+        return (entry.tokens, entry.observedAt, task)
     }
 
     func finishRefresh(key: String, tokens: [GrokRemainingReset]?, attemptedAt: Date) {
         self.lock.lock()
         defer { self.lock.unlock() }
 
-        let retained = self.entries[key]?.tokens ?? []
-        self.entries[key] = Entry(tokens: tokens ?? retained, lastAttemptAt: attemptedAt)
+        let retained = self.entries[key]
+        self.entries[key] = Entry(
+            tokens: tokens ?? retained?.tokens ?? [],
+            lastAttemptAt: attemptedAt,
+            observedAt: tokens == nil ? retained?.observedAt : attemptedAt)
         self.inFlight.removeValue(forKey: key)
     }
 
@@ -172,14 +181,26 @@ enum GrokRemainingResetsFetcher {
             key: key,
             now: now,
             refreshInterval: Self.cacheRefreshInterval,
-            startRefresh: { retainedTokens in
+            startRefresh: { retainedTokens, retainedObservedAt in
                 Task {
                     let tokens = await refresh(credentials, cookieHeader, now)
                     Self.cache.finishRefresh(key: key, tokens: tokens, attemptedAt: now)
-                    return Self.snapshot(tokens: tokens ?? retainedTokens, now: now)
+                    guard let tokens else {
+                        // Retained tokens keep the time they were read, so a failed lookup never looks newer
+                        // than another Mac's successful one.
+                        return Self.snapshot(tokens: retainedTokens, now: now, observedAt: retainedObservedAt)
+                    }
+                    // Fork (Research 077): a completed lookup is authoritative even when it lists no token, so the
+                    // iPhone calendar can remove a reset that was used early. Presentations hide an empty inventory.
+                    return GrokRateLimitResetCreditsSnapshot(
+                        expirations: Self.availableTokens(tokens, now: now).map(\.expiresAt),
+                        updatedAt: now)
                 }
             })
-        return GrokRemainingResetsLookupResult(tokens: state.tokens, snapshotTask: state.snapshotTask)
+        return GrokRemainingResetsLookupResult(
+            tokens: state.tokens,
+            snapshotTask: state.snapshotTask,
+            observedAt: state.observedAt)
     }
 
     static func resetCacheForTesting() {
@@ -223,7 +244,8 @@ enum GrokRemainingResetsFetcher {
         }
         let outcome = await BoundedTaskJoin(sourceTask: sourceTask).value(joinGrace: Self.joinGrace)
         if Task.isCancelled {
-            return []
+            // Fork (Research 077): cancellation is not an observation; keep the retained inventory.
+            return nil
         }
         switch outcome {
         case let .value(tokens):
@@ -273,15 +295,20 @@ enum GrokRemainingResetsFetcher {
         ]
     }
 
+    /// `observedAt` (fork, Research 077) is when `tokens` were last read successfully. With a read time, an empty
+    /// result is a confirmed empty inventory; without one (never read, or a fresh upstream call) it stays nil and
+    /// the snapshot is stamped `now`.
     static func snapshot(
         tokens: [GrokRemainingReset],
-        now: Date) -> GrokRateLimitResetCreditsSnapshot?
+        now: Date,
+        observedAt: Date? = nil) -> GrokRateLimitResetCreditsSnapshot?
     {
         let available = self.availableTokens(tokens, now: now)
-        guard !available.isEmpty else { return nil }
+        // A cached successful read stays a confirmed inventory even when it lists nothing.
+        guard !available.isEmpty || observedAt != nil else { return nil }
         return GrokRateLimitResetCreditsSnapshot(
             expirations: available.map(\.expiresAt),
-            updatedAt: now)
+            updatedAt: min(observedAt ?? now, now))
     }
 
     static func parseTokens(_ data: Data, now: Date = .init()) throws -> [GrokRemainingReset] {

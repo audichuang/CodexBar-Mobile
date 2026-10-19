@@ -121,6 +121,16 @@ git diff $LAST_TAG..HEAD -- Shared/Models/UsageSnapshot.swift | grep -E "^\+.*pu
 
 判定 `NO_DEPLOY`。本轮没有调用 Production schema export 或 deploy，也没有读写实际数据库。
 
+## v0.76.0.2 候选代码审计（2026-10-18，尚未发布）
+
+对照最新 published `v0.76.0.1-mobile.2.9.0`：
+- **schema 定义**：`Shared/iCloud/CloudConstants.swift` 与 `Scripts/cloudkit/` 无 diff，`providerPayloadVersion=1`；审计第 2 步的关键字 grep 在代码中无输出（只命中 CHANGELOG 文字）。
+- **新数据都在既有 record 的 payload 里**：`Shared/Models/UsageSnapshot.swift` 新增一个可选 `public let resetCreditInventory: SyncResetCreditInventory?`（`decodeIfPresent`，nil 时不编码，解码失败按未知处理），只位于既有 `DeviceProviderSnapshot.payload` 的 opaque JSON 中，不是 CloudKit field，也不参与查询、排序或索引（Research 077）。
+- **没有新增** record type、zone、subscription 或 `QuotaProviderList` 条目；iOS 日历提醒只读写本机 EventKit，不碰 CloudKit。
+- **打包**：`Scripts/package_app.sh` 仍为 `icloud-container-environment = Production`、容器 `iCloud.com.o1xhack.codexbar`；iOS entitlements 仍为 Production。
+
+判定 `NO_DEPLOY`。本轮没有调用 Production schema export 或 deploy，也没有读写实际数据库。
+
 ## 注意事项
 
 - **`providerPayloadVersion` bump = 强制全量重写**。看到 commit 改它必须警惕：除了 CK deploy，还会触发用户首次启动新版后 CPU/网络 spike。Phase B 加 6 个 optional 字段时**故意不 bump** 就是为了避这个。

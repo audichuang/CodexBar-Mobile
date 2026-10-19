@@ -116,7 +116,14 @@ enum PreviewData {
                     usedPercent: 11,
                     resetsAt: Date().addingTimeInterval(3600 * 2.5)),
             ]),
-        ])
+        ],
+        // Research 077 — sample redeemable resets for the reset-credit card.
+        resetCreditInventory: SyncResetCreditInventory(
+            expirations: [
+                Date().addingTimeInterval(3600 * 24 * 3),
+                Date().addingTimeInterval(3600 * 24 * 10),
+            ],
+            updatedAt: Date().addingTimeInterval(-120)))
 
     static let cursorProvider = ProviderUsageSnapshot(
         providerID: "codex",

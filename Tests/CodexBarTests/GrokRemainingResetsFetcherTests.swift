@@ -252,6 +252,87 @@ struct GrokRemainingResetsFetcherTests {
         #expect(second.tokens == [token])
     }
 
+    @Test
+    func `completed empty lookup is a confirmed empty inventory while a failed one stays unknown`() async throws {
+        // Fork (Research 077): the iPhone calendar removes a used reset only after a confirmed read.
+        GrokRemainingResetsFetcher.resetCacheForTesting()
+        defer { GrokRemainingResetsFetcher.resetCacheForTesting() }
+        let now = Date(timeIntervalSince1970: 1_787_647_576)
+
+        let failed = GrokRemainingResetsFetcher.cachedLookupAndRefresh(
+            credentials: Self.credentials,
+            cookieHeader: nil,
+            now: now,
+            refresh: { _, _, _ in nil })
+        #expect(await failed.snapshotTask?.value == nil)
+
+        let empty = GrokRemainingResetsFetcher.cachedLookupAndRefresh(
+            credentials: Self.credentials,
+            cookieHeader: nil,
+            now: now.addingTimeInterval(GrokRemainingResetsFetcher.cacheRefreshInterval + 1),
+            refresh: { _, _, _ in [] })
+        let snapshot = try #require(await empty.snapshotTask?.value)
+        #expect(snapshot.expirations.isEmpty)
+        #expect(GrokRemainingResetsFetcher.detailSections(snapshot: snapshot, now: now).isEmpty)
+    }
+
+    @Test
+    func `retained and cached tokens keep the time they were read`() async throws {
+        // Fork (Research 077): a Mac whose lookup fails must not publish old tokens as a newer observation.
+        GrokRemainingResetsFetcher.resetCacheForTesting()
+        defer { GrokRemainingResetsFetcher.resetCacheForTesting() }
+        let readAt = Date(timeIntervalSince1970: 1_787_647_576)
+        let token = GrokRemainingReset(
+            tokenID: "restok_sample",
+            grantedAt: nil,
+            expiresAt: readAt.addingTimeInterval(86400))
+
+        let first = GrokRemainingResetsFetcher.cachedLookupAndRefresh(
+            credentials: Self.credentials,
+            cookieHeader: nil,
+            now: readAt,
+            refresh: { _, _, _ in [token] })
+        #expect(try #require(await first.snapshotTask?.value).updatedAt == readAt)
+
+        let later = readAt.addingTimeInterval(GrokRemainingResetsFetcher.cacheRefreshInterval + 5)
+        let failed = GrokRemainingResetsFetcher.cachedLookupAndRefresh(
+            credentials: Self.credentials,
+            cookieHeader: nil,
+            now: later,
+            refresh: { _, _, _ in nil })
+        #expect(failed.observedAt == readAt)
+        let cached = await failed.resolved(at: later, requiresCompleteness: false)
+        #expect(cached.snapshot?.updatedAt == readAt)
+        let retained = try #require(await failed.snapshotTask?.value)
+        #expect(retained.updatedAt == readAt)
+        #expect(retained.expirations == [token.expiresAt])
+    }
+
+    @Test
+    func `a cached empty read stays a confirmed empty inventory`() async throws {
+        GrokRemainingResetsFetcher.resetCacheForTesting()
+        defer { GrokRemainingResetsFetcher.resetCacheForTesting() }
+        let readAt = Date(timeIntervalSince1970: 1_787_647_576)
+        let first = GrokRemainingResetsFetcher.cachedLookupAndRefresh(
+            credentials: Self.credentials,
+            cookieHeader: nil,
+            now: readAt,
+            refresh: { _, _, _ in [] })
+        _ = await first.snapshotTask?.value
+
+        let cachedLookup = GrokRemainingResetsFetcher.cachedLookupAndRefresh(
+            credentials: Self.credentials,
+            cookieHeader: nil,
+            now: readAt.addingTimeInterval(10),
+            refresh: { _, _, _ in nil })
+        #expect(cachedLookup.snapshotTask == nil)
+        let cached = await cachedLookup.resolved(at: readAt.addingTimeInterval(10), requiresCompleteness: false)
+        let snapshot = try #require(cached.snapshot)
+        #expect(snapshot.expirations.isEmpty)
+        #expect(snapshot.updatedAt == readAt)
+        #expect(GrokRemainingResetsFetcher.snapshot(tokens: [], now: readAt) == nil)
+    }
+
     @Test(.timeLimit(.minutes(1)))
     func `deferred lookup publishes a display snapshot after returning cached usage`() async throws {
         GrokRemainingResetsFetcher.resetCacheForTesting()

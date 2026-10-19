@@ -152,7 +152,8 @@ struct ProviderDetailView: View {
                     ProviderDetailsView(
                         providerID: self.provider.providerID,
                         sections: self.provider.details,
-                        tintColor: self.providerColor)
+                        tintColor: self.providerColor,
+                        hasResetCreditCard: self.provider.resetCreditInventory != nil)
                 }
 
                 // v0.26 dedicated cards — dispatched by providerID +
@@ -324,11 +325,11 @@ struct ProviderDetailView: View {
                             tintColor: self.providerColor)
                     }
                 }
-                if self.provider.providerID == "codex",
-                   let resetCredits = self.provider.codexResetCredits,
-                   resetCredits.availableCount > 0
+                if let resetCredits = ResetCreditsCardPresentation.make(
+                    provider: self.provider,
+                    now: self.isDemoMode ? self.costReferenceDate : Date())
                 {
-                    CodexResetCreditsCard(resetCredits: resetCredits, tintColor: self.providerColor)
+                    ResetCreditsCard(presentation: resetCredits, tintColor: self.providerColor)
                 }
                 if self.provider.providerID == "codex",
                    let confidence = self.provider.usageDataConfidence,

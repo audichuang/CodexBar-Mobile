@@ -49,6 +49,7 @@ struct ContentView: View {
     let usageData: SyncedUsageData
     private let isLayoutPreview: Bool
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.scenePhase) private var scenePhase
     @State private var isDemoMode = false
     @State private var layoutContainerSize: CGSize = .zero
     @State private var selectedTab: MobileRootTab
@@ -184,6 +185,19 @@ struct ContentView: View {
                 syncStatus: self.usageData.syncStatus,
                 useLedger: self.widgetUsesLedger,
                 referenceDate: self.costReferenceDate)
+        }
+        .task(id: ResetCreditCalendarSync.refreshKey(
+            for: .make(from: self.usageData),
+            isDemoMode: self.isDemoMode))
+        {
+            // Research 077: keep reset-credit expirations in the user's calendar. Demo data never reaches it.
+            guard !self.isLayoutPreview, !self.isDemoMode else { return }
+            ResetCreditCalendarSync.shared.sync(input: .make(from: self.usageData))
+        }
+        .onChange(of: self.scenePhase) { _, phase in
+            // Calendar access may have changed in Settings; reconcile (or finish queued removals) on return.
+            guard phase == .active, !self.isLayoutPreview, !self.isDemoMode else { return }
+            ResetCreditCalendarSync.shared.sync(input: .make(from: self.usageData))
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
             self.readerTimeZoneIdentifier = TimeZone.current.identifier
@@ -3228,7 +3242,7 @@ private func providerTint(for provider: ProviderUsageSnapshot?) -> Color {
 // MARK: - Setting Tab
 
 private struct SettingsTab: View {
-    private enum Destination: Hashable { case about, notes, usage, cost, widgets, developer, moreApps }
+    private enum Destination: Hashable { case about, notes, usage, cost, widgets, calendar, developer, moreApps }
     @Environment(\.mobileAdaptiveLayout) private var layout
     @State private var selection: Destination?
     @State private var compactColumn: NavigationSplitViewColumn = .sidebar
@@ -3285,6 +3299,14 @@ private struct SettingsTab: View {
                             symbolName: "square.grid.2x2",
                             summary: String(localized: "Preview Home Screen widgets"))
                     }
+
+                    NavigationLink(value: Destination.calendar) {
+                        SettingSummaryRow(
+                            title: "Calendar Reminders",
+                            symbolName: "calendar.badge.clock",
+                            summary: String(localized: "Add reset credit expirations to your calendar"))
+                    }
+                    .accessibilityIdentifier("settings-calendar-reminders")
                 }
 
                 Section("Developer") {
@@ -3412,6 +3434,7 @@ private struct SettingsTab: View {
                 case .usage: UsageSettingsView()
                 case .cost: CostSettingsView(usageData: self.usageData)
                 case .widgets: WidgetSettingsView(usageData: self.usageData)
+                case .calendar: ResetCreditCalendarSettingsView(usageData: self.usageData)
                 case .developer: DeveloperToolsView(usageData: self.usageData)
                 case .moreApps: MoreAppsView()
                 case nil: EmptyView()
@@ -4952,8 +4975,26 @@ private struct ReleaseNotesVersion: Identifiable {
 private enum MobileReleaseNotesCatalog {
     static let versions: [ReleaseNotesVersion] = [
         ReleaseNotesVersion(
-            version: "2.9.0",
+            version: "2.10.0",
             status: String(localized: "Latest"),
+            summary: String(localized: "CodexBar 2.10 shows when each reset credit expires and can add those times to your calendar."),
+            sections: [
+                .init(title: String(localized: "What's New"), items: [
+                    String(
+                        localized: "Claude, Codex, and Grok details list every available reset credit with its exact expiry date and time."),
+                    String(
+                        localized: "Turn on Settings → Calendar Reminders to add each reset credit's expiry to a CodexBar calendar, with reminders one day and one hour before."),
+                    String(
+                        localized: "If you use a reset credit early, its calendar event is removed once your Mac reports the change and you open CodexBar on your iPhone. Past expiries stay in the calendar."),
+                ]),
+                .init(title: String(localized: "Required Mac version"), items: [
+                    String(
+                        localized: "Claude and Grok reset credits need CodexBar on Mac 0.76.0.2 or later. Codex reset credits also work with older Mac versions; with an older Mac, the rest of the app works as before."),
+                ]),
+            ]),
+        ReleaseNotesVersion(
+            version: "2.9.0",
+            status: "",
             summary: String(localized: "CodexBar 2.9 adds Claude Platform, fal, FLORA, and Parallel from your Mac."),
             sections: [
                 .init(title: String(localized: "What's New"), items: [

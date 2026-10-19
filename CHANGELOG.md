@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.76.0.2 — 2026-10-18
+
+### Highlights
+
+- The iPhone companion (Mobile 2.10) can now show every Claude and Grok usage-limit reset credit with its exact expiry, and can add those expiries to a calendar. Update this Mac app so your iPhone receives them; Codex reset credits keep working as before.
+
+### Added
+
+- Mobile snapshots publish the Claude and Grok reset-credit inventory as expiry times only (grant and token identifiers never leave the Mac), including a confirmed empty inventory so the iPhone can remove a calendar reminder for a reset that was used early.
+
+### Changed
+
+- Claude: an eligible reset-credit response with no available reset is kept as an empty inventory instead of no inventory, and an inventory from which a malformed grant was dropped is marked incomplete so the iPhone never treats the missing grant as used; Grok: a completed remaining-resets lookup with no token is kept as an empty inventory, a cancelled lookup keeps the previous one, and cached or retained tokens keep the time they were read instead of looking newly read (a cached empty read stays a confirmed empty inventory). Menus, Settings previews, and CLI output still hide empty inventories, so nothing changes on the Mac.
+
 ## 0.76.0.1 — 2026-10-15
 
 ### Highlights

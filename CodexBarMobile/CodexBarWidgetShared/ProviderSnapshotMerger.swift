@@ -462,6 +462,43 @@ enum ProviderSnapshotMerger {
             .flatMap { entries[$0][keyPath: keyPath] }
     }
 
+    /// Codex reset credits are read separately from quota; the newest credit read wins (Research 077), so a Mac
+    /// whose quota refreshed later but whose credit list is older cannot bring back a used credit.
+    private static func latestCodexResetCredits(
+        _ entries: [ProviderUsageSnapshot],
+        sourceDeviceIDs: [String]) -> SyncCodexResetCredits?
+    {
+        precondition(entries.count == sourceDeviceIDs.count)
+        return entries.indices.filter { entries[$0].codexResetCredits != nil }
+            .max { lhs, rhs in
+                let left = entries[lhs].codexResetCredits?.updatedAt ?? .distantPast
+                let right = entries[rhs].codexResetCredits?.updatedAt ?? .distantPast
+                if left != right { return left < right }
+                if entries[lhs].lastUpdated != entries[rhs].lastUpdated {
+                    return entries[lhs].lastUpdated < entries[rhs].lastUpdated
+                }
+                return sourceDeviceIDs[lhs] < sourceDeviceIDs[rhs]
+            }
+            .flatMap { entries[$0].codexResetCredits }
+    }
+
+    /// Reset inventories age independently of quota refreshes; an empty inventory is an authoritative
+    /// observation, so the newest observation wins even when it lists nothing.
+    private static func latestResetCreditInventory(
+        _ entries: [ProviderUsageSnapshot],
+        sourceDeviceIDs: [String]) -> SyncResetCreditInventory?
+    {
+        precondition(entries.count == sourceDeviceIDs.count)
+        return entries.indices.filter { entries[$0].resetCreditInventory != nil }
+            .max { lhs, rhs in
+                let left = entries[lhs].resetCreditInventory?.updatedAt ?? .distantPast
+                let right = entries[rhs].resetCreditInventory?.updatedAt ?? .distantPast
+                if left != right { return left < right }
+                return sourceDeviceIDs[lhs] < sourceDeviceIDs[rhs]
+            }
+            .flatMap { entries[$0].resetCreditInventory }
+    }
+
     /// Balance observations age independently of quota refreshes; zero is an authoritative observation.
     private static func latestProviderAmount(
         _ entries: [ProviderUsageSnapshot],
@@ -846,7 +883,7 @@ enum ProviderSnapshotMerger {
             azureOpenAIInfo: Self.latestNonNil(entries, sourceDeviceIDs: sourceDeviceIDs, \.azureOpenAIInfo),
             alibabaTokenPlan: Self.latestNonNil(entries, sourceDeviceIDs: sourceDeviceIDs, \.alibabaTokenPlan),
             deepSeekUsage: Self.latestNonNil(entries, sourceDeviceIDs: sourceDeviceIDs, \.deepSeekUsage),
-            codexResetCredits: Self.latestNonNil(entries, sourceDeviceIDs: sourceDeviceIDs, \.codexResetCredits),
+            codexResetCredits: Self.latestCodexResetCredits(entries, sourceDeviceIDs: sourceDeviceIDs),
             usageDataConfidence: Self.latestNonNil(entries, sourceDeviceIDs: sourceDeviceIDs, \.usageDataConfidence),
             crossModelUsage: Self.latestNonNil(entries, sourceDeviceIDs: sourceDeviceIDs, \.crossModelUsage),
             wayfinderUsage: Self.latestNonNil(entries, sourceDeviceIDs: sourceDeviceIDs, \.wayfinderUsage),
@@ -857,6 +894,7 @@ enum ProviderSnapshotMerger {
             accountOrganization: Self.latestNonNil(
                 presentationEntries, sourceDeviceIDs: presentationDeviceIDs, \.accountOrganization),
             zoomMateCredits: Self.latestNonNil(entries, sourceDeviceIDs: sourceDeviceIDs, \.zoomMateCredits),
+            resetCreditInventory: Self.latestResetCreditInventory(entries, sourceDeviceIDs: sourceDeviceIDs),
             details: Self.mergedDetails(
                 presentationEntries,
                 sourceAppVersions: presentationAppVersions,
