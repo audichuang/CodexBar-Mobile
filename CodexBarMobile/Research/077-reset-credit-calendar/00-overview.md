@@ -68,7 +68,7 @@ Date: 2026-10-18
 
 ### 5. 界面
 
-- Provider 详情页：通用 `ResetCreditsCard`（Codex、Claude、Grok），显示可用次数与每次 credit 的到期日期 + 时刻 + 相对时间；替换原 `CodexResetCreditsCard`。
+- Provider 详情页：通用 `ResetCreditsCard`（Codex、Claude、Grok），显示可用次数与每次 credit 的到期日期 + 时刻 + 相对时间；替换原 `CodexResetCreditsCard`。卡片不声明"已在日历中"：这个声明要把全局同步状态精确对应到每个账号的每个到期时间，PR #195 review 第 2–5 轮反复发现误报，按架构审计移除；日历状态只在设置页展示。
 - 设置 → 新增"日历提醒"页：开关、权限状态、上次同步结果、说明 "Claude 与 Grok 需要 Mac CodexBar 0.76.0.2 或更新版本；Codex 可用旧版 Mac"。
 
 ## 版本

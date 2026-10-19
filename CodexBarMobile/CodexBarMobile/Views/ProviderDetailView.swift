@@ -329,17 +329,7 @@ struct ProviderDetailView: View {
                     provider: self.provider,
                     now: self.isDemoMode ? self.costReferenceDate : Date())
                 {
-                    ResetCreditsCard(
-                        presentation: resetCredits,
-                        tintColor: self.providerColor,
-                        isInCalendar: resetCredits.isCalendarEligible
-                            && ResetCreditCalendarSync.shared.isActive
-                            && ResetCreditCalendarSync.shared.hasScheduledEvent(
-                                providerID: self.provider.providerID,
-                                account: self.provider.accountEmail,
-                                expirations: resetCredits.groups.compactMap(\.expiresAt))
-                            && !self.isDemoMode
-                            && !MockProviderDetector.isMock(self.provider))
+                    ResetCreditsCard(presentation: resetCredits, tintColor: self.providerColor)
                 }
                 if self.provider.providerID == "codex",
                    let confidence = self.provider.usageDataConfidence,

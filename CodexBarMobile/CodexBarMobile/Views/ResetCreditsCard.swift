@@ -6,13 +6,6 @@ struct ResetCreditsCardPresentation: Equatable {
     let availableCount: Int
     /// Available resets grouped by identical expiry, soonest first.
     let groups: [ResetCreditObservation.Group]
-    /// Built from an inventory the calendar can use (not a bare Codex count).
-    let isCalendarEligible: Bool
-
-    /// Only dated resets get calendar events.
-    var hasSchedulableExpiry: Bool {
-        self.isCalendarEligible && self.groups.contains { $0.expiresAt != nil }
-    }
 
     static func make(provider: ProviderUsageSnapshot, now: Date) -> ResetCreditsCardPresentation? {
         if let observation = ResetCreditObservation.make(from: provider) {
@@ -22,7 +15,7 @@ struct ResetCreditsCardPresentation: Equatable {
             let reported = provider.providerID == "codex" ? provider.codexResetCredits?.availableCount ?? 0 : 0
             let count = max(listed, reported)
             guard count > 0 else { return nil }
-            return ResetCreditsCardPresentation(availableCount: count, groups: groups, isCalendarEligible: true)
+            return ResetCreditsCardPresentation(availableCount: count, groups: groups)
         }
         // Older Codex payloads may carry only a count and the next expiry.
         guard provider.providerID == "codex",
@@ -32,8 +25,7 @@ struct ResetCreditsCardPresentation: Equatable {
         let next = resetCredits.nextExpiresAt.flatMap { $0 > now ? $0 : nil }
         return ResetCreditsCardPresentation(
             availableCount: resetCredits.availableCount,
-            groups: next.map { [ResetCreditObservation.Group(expiresAt: $0, count: 1)] } ?? [],
-            isCalendarEligible: false)
+            groups: next.map { [ResetCreditObservation.Group(expiresAt: $0, count: 1)] } ?? [])
     }
 }
 
@@ -42,7 +34,6 @@ struct ResetCreditsCardPresentation: Equatable {
 struct ResetCreditsCard: View {
     let presentation: ResetCreditsCardPresentation
     let tintColor: Color
-    var isInCalendar = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -78,12 +69,6 @@ struct ResetCreditsCard: View {
                             .foregroundStyle(.secondary)
                     }
                 }
-            }
-
-            if self.isInCalendar {
-                Label(String(localized: "Expirations are in your calendar"), systemImage: "calendar.badge.clock")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
             }
         }
         .padding(14)
@@ -202,10 +187,8 @@ struct UsageDataConfidenceNotice: View {
                 groups: [
                     .init(expiresAt: Date().addingTimeInterval(86400), count: 2),
                     .init(expiresAt: Date().addingTimeInterval(5 * 86400), count: 1),
-                ],
-                isCalendarEligible: true),
-            tintColor: .orange,
-            isInCalendar: true)
+                ]),
+            tintColor: .orange)
         UsageDataConfidenceNotice(rawValue: "estimated", tintColor: .purple)
     }
     .padding()

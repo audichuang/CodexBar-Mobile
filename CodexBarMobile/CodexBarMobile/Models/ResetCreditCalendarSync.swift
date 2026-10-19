@@ -175,36 +175,10 @@ final class ResetCreditCalendarSync {
     @ObservationIgnored private lazy var store = EventKitResetCreditCalendarStore(eventStore: self.eventStore)
     @ObservationIgnored private var latestInput = Input()
 
-    /// `providerID#account#expiry` of every future reset with an event in the calendar; drives the card's note.
-    private(set) var scheduledResets: Set<String> = []
-
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
         self.isEnabled = defaults.bool(forKey: Self.enabledKey)
-        self.scheduledResets = Self.scheduledResets(in: self.loadState(), now: Date())
         self.refreshAccessState()
-    }
-
-    /// Whether this provider account has a calendar event for any of the given expiries. Accounts without an
-    /// email or label cannot be matched to a card, so they never claim coverage.
-    func hasScheduledEvent(providerID: String, account: String?, expirations: [Date]) -> Bool {
-        expirations.contains { expiresAt in
-            Self.scheduledKey(providerID: providerID, account: account, expiresAt: expiresAt)
-                .map { self.scheduledResets.contains($0) } ?? false
-        }
-    }
-
-    private static func scheduledKey(providerID: String, account: String?, expiresAt: Date) -> String? {
-        guard let account = AccountIdentityNormalize.normalize(account) else { return nil }
-        return "\(providerID)#\(account)#\(ResetCreditCalendarPlanner.wholeSeconds(expiresAt))"
-    }
-
-    private static func scheduledResets(in state: ResetCreditCalendarState, now: Date) -> Set<String> {
-        Set(state.entries.values
-            .filter { $0.isAvailable && $0.eventIdentifier != nil && $0.expiresAt > now }
-            .compactMap {
-                Self.scheduledKey(providerID: $0.providerID, account: $0.accountLabel, expiresAt: $0.expiresAt)
-            })
     }
 
     /// Identity of the reset-credit data in a snapshot; drives the view task that calls `sync`.
@@ -272,7 +246,6 @@ final class ResetCreditCalendarSync {
         }
         self.updateEnabled(true)
         self.sync(input: self.latestInput)
-        self.scheduledResets = Self.scheduledResets(in: self.loadState(), now: Date())
     }
 
     func sync(input: Input, now: Date = Date()) {
@@ -321,11 +294,6 @@ final class ResetCreditCalendarSync {
         self.saveState(result.state)
     }
 
-    /// Whether the detail card can say its resets are in the calendar.
-    var isActive: Bool {
-        self.isEnabled && self.accessState == .granted && !Self.isSuppressedForTestLaunch
-    }
-
     private func makeDraft(_ entry: ResetCreditCalendarEntry) -> ResetCreditCalendarEventDraft {
         ResetCreditCalendarPlanner.eventDraft(
             for: entry,
@@ -346,7 +314,6 @@ final class ResetCreditCalendarSync {
     }
 
     private func saveState(_ state: ResetCreditCalendarState) {
-        self.scheduledResets = self.isEnabled ? Self.scheduledResets(in: state, now: Date()) : []
         guard let data = try? JSONEncoder().encode(state) else { return }
         self.defaults.set(data, forKey: Self.stateKey)
     }
