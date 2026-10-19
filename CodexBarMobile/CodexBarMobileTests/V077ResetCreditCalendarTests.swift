@@ -326,6 +326,65 @@ struct V077ResetCreditCalendarTests {
         }
     }
 
+    @Test func `Merged device aliases use raw snapshots under the canonical Mac`() {
+        let expiry = self.now.addingTimeInterval(self.day)
+        let oldID = SyncedUsageSnapshot(
+            providers: [self.claude([expiry], observedAt: self.now)],
+            syncTimestamp: self.now,
+            deviceName: "Mac",
+            deviceID: "mac-old")
+        let newID = SyncedUsageSnapshot(
+            providers: [self.claude([], observedAt: self.now.addingTimeInterval(60))],
+            syncTimestamp: self.now.addingTimeInterval(60),
+            deviceName: "Mac",
+            deviceID: "mac-new")
+        let archived = SyncedUsageSnapshot(
+            providers: [self.claude([expiry], observedAt: self.now.addingTimeInterval(600))],
+            syncTimestamp: self.now,
+            deviceName: "Retired",
+            deviceID: "mac-retired")
+        let items = [
+            SyncDeviceManagementItem(
+                canonicalDeviceID: "mac-new",
+                sourceDeviceIDs: ["mac-new", "mac-old"],
+                snapshot: newID,
+                state: .mergedAlias),
+            SyncDeviceManagementItem(
+                canonicalDeviceID: "mac-retired",
+                sourceDeviceIDs: ["mac-retired"],
+                snapshot: archived,
+                state: .archived),
+        ]
+        let calendar = ResetCreditObservation.calendarSnapshots(raw: [oldID, newID, archived], items: items)
+        #expect(calendar.snapshots.map(\.deviceID) == ["mac-old", "mac-new"])
+        #expect(calendar.canonicalDeviceIDs["mac-old"] == "mac-new")
+        let observations = ResetCreditObservation.observations(
+            fromDeviceSnapshots: calendar.snapshots,
+            canonicalDeviceIDs: calendar.canonicalDeviceIDs)
+        #expect(observations.count == 2)
+        #expect(Set(observations.map(\.scopeKey)) == ["claude|email:user@example.com"])
+    }
+
+    @Test func `An account label without an email identity scopes to its Mac`() {
+        let labelled = ProviderUsageSnapshot(
+            providerID: "codex",
+            providerName: "Codex",
+            primary: nil,
+            secondary: nil,
+            accountEmail: "Work",
+            loginMethod: nil,
+            statusMessage: nil,
+            isError: false,
+            lastUpdated: self.now,
+            accountIdentities: ["codex:account:org-1"],
+            codexResetCredits: SyncCodexResetCredits(
+                availableCount: 0,
+                nextExpiresAt: nil,
+                credits: [],
+                updatedAt: self.now))
+        #expect(self.observations([labelled]).map(\.scopeKey) == ["codex|device:mac-a"])
+    }
+
     @Test func `A Mac clock running ahead cannot freeze an account`() throws {
         let store = FakeCalendarStore()
         let expiry = self.now.addingTimeInterval(self.day)

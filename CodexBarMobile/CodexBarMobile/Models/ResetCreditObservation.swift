@@ -79,13 +79,17 @@ struct ResetCreditObservation: Equatable, Sendable {
         if let email = AccountIdentityNormalize.normalize(provider.accountEmail),
            identities.contains("\(id):email:\(email)")
         {
-            let organization = identities.filter { $0.hasPrefix("\(id):account:") }.min()
+            // Codex workspaces can share an email and are told apart by organization. Claude reports its
+            // organization only from some sources, so adding it would make one account's scope drift.
+            let organization = id == "codex" ? identities.filter { $0.hasPrefix("codex:account:") }.min() : nil
             return "\(id)|email:\(email)" + (organization.map { "|\($0)" } ?? "")
         }
         if let record = AccountIdentityNormalize.normalize(provider.accountRecordKey) {
             return "\(id)|record:\(record)"
         }
-        if let email = AccountIdentityNormalize.normalize(provider.accountEmail) {
+        // Providers without account identities (Grok) report the main account's email as is. Where identities
+        // exist but hold no email, the email field is an editable label, which is not an identity.
+        if identities.isEmpty, let email = AccountIdentityNormalize.normalize(provider.accountEmail) {
             return "\(id)|email:\(email)"
         }
         return "\(id)|device:\(AccountIdentityNormalize.normalize(deviceID) ?? "unknown")"
@@ -94,10 +98,15 @@ struct ResetCreditObservation: Equatable, Sendable {
     /// Calendar observations from each Mac's own snapshot. Synthetic mock providers never reach the calendar, and
     /// entries of one Mac that still share a scope are left out because they would remove each other's events.
     /// The same account seen by several Macs yields several observations of one scope; the planner keeps the newest.
-    static func observations(fromDeviceSnapshots snapshots: [SyncedUsageSnapshot]) -> [ResetCreditObservation] {
+    /// `canonicalDeviceIDs` maps each raw device key to its physical Mac when the user merged aliases.
+    static func observations(
+        fromDeviceSnapshots snapshots: [SyncedUsageSnapshot],
+        canonicalDeviceIDs: [String: String] = [:]) -> [ResetCreditObservation]
+    {
         var result: [ResetCreditObservation] = []
         for snapshot in snapshots {
-            let deviceID = snapshot.deviceID ?? snapshot.deviceName
+            let deviceKey = DeviceSnapshotResolver.deviceKey(for: snapshot)
+            let deviceID = canonicalDeviceIDs[deviceKey] ?? deviceKey
             let entries = snapshot.providers
                 .filter { !MockProviderDetector.isMock($0) }
                 .compactMap { provider in
@@ -107,6 +116,23 @@ struct ResetCreditObservation: Equatable, Sendable {
             result += entries.filter { counts[$0.scopeKey] == 1 }
         }
         return result
+    }
+
+    /// Raw per-Mac snapshots of devices that are not archived, before any merge. Device-alias groups are collapsed
+    /// with the cross-account merger, so their collapsed snapshot cannot be used; their raw members are, mapped to
+    /// the group's canonical Mac.
+    static func calendarSnapshots(
+        raw: [SyncedUsageSnapshot],
+        items: [SyncDeviceManagementItem]) -> (snapshots: [SyncedUsageSnapshot], canonicalDeviceIDs: [String: String])
+    {
+        var canonical: [String: String] = [:]
+        for item in items where !item.isArchived {
+            for sourceID in item.sourceDeviceIDs {
+                canonical[sourceID] = item.canonicalDeviceID
+            }
+        }
+        let snapshots = raw.filter { canonical[DeviceSnapshotResolver.deviceKey(for: $0)] != nil }
+        return (snapshots, canonical)
     }
 
     private func withScopeKey(_ scopeKey: String) -> ResetCreditObservation {

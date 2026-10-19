@@ -129,6 +129,26 @@ final class ResetCreditCalendarSync {
         case restricted
     }
 
+    /// Each Mac's own snapshots (before any merge) and the physical Mac behind each raw device key.
+    struct Input {
+        var snapshots: [SyncedUsageSnapshot] = []
+        var canonicalDeviceIDs: [String: String] = [:]
+
+        var observations: [ResetCreditObservation] {
+            ResetCreditObservation.observations(
+                fromDeviceSnapshots: self.snapshots,
+                canonicalDeviceIDs: self.canonicalDeviceIDs)
+        }
+
+        @MainActor
+        static func make(from usageData: SyncedUsageData) -> Input {
+            let calendar = ResetCreditObservation.calendarSnapshots(
+                raw: usageData.rawDeviceSnapshots,
+                items: usageData.deviceManagementItems)
+            return Input(snapshots: calendar.snapshots, canonicalDeviceIDs: calendar.canonicalDeviceIDs)
+        }
+    }
+
     static let shared = ResetCreditCalendarSync()
     static let enabledKey = "resetCreditCalendarEnabled"
     static let stateKey = "resetCreditCalendarState"
@@ -149,7 +169,7 @@ final class ResetCreditCalendarSync {
     @ObservationIgnored private let defaults: UserDefaults
     @ObservationIgnored private let eventStore = EKEventStore()
     @ObservationIgnored private lazy var store = EventKitResetCreditCalendarStore(eventStore: self.eventStore)
-    @ObservationIgnored private var latestDeviceSnapshots: [SyncedUsageSnapshot] = []
+    @ObservationIgnored private var latestInput = Input()
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
@@ -158,8 +178,8 @@ final class ResetCreditCalendarSync {
     }
 
     /// Identity of the reset-credit data in a snapshot; drives the view task that calls `sync`.
-    static func refreshKey(for deviceSnapshots: [SyncedUsageSnapshot], isDemoMode: Bool) -> String {
-        let observations = ResetCreditObservation.observations(fromDeviceSnapshots: deviceSnapshots)
+    static func refreshKey(for input: Input, isDemoMode: Bool) -> String {
+        let observations = input.observations
             .map { observation in
                 let expirations = observation.expirations
                     .map { $0.map { String(ResetCreditCalendarPlanner.wholeSeconds($0)) } ?? "-" }
@@ -189,9 +209,8 @@ final class ResetCreditCalendarSync {
     }
 
     /// Turning on asks for calendar access first; the switch stays off without full access.
-    /// `deviceSnapshots` are each Mac's own snapshots, before the cross-Mac merge.
-    func setEnabled(_ enabled: Bool, deviceSnapshots: [SyncedUsageSnapshot]) async {
-        self.latestDeviceSnapshots = deviceSnapshots
+    func setEnabled(_ enabled: Bool, input: Input) async {
+        self.latestInput = input
         guard enabled else {
             self.refreshAccessState()
             // Without access the events cannot be removed; keep their state so turning the switch back on
@@ -220,12 +239,11 @@ final class ResetCreditCalendarSync {
             return
         }
         self.updateEnabled(true)
-        self.sync(deviceSnapshots: self.latestDeviceSnapshots)
+        self.sync(input: self.latestInput)
     }
 
-    /// `deviceSnapshots` are each Mac's own snapshots, before the cross-Mac merge.
-    func sync(deviceSnapshots: [SyncedUsageSnapshot], now: Date = Date()) {
-        self.latestDeviceSnapshots = deviceSnapshots
+    func sync(input: Input, now: Date = Date()) {
+        self.latestInput = input
         guard self.isEnabled, !Self.isSuppressedForTestLaunch else { return }
         self.refreshAccessState()
         guard self.accessState == .granted else { return }
@@ -233,7 +251,7 @@ final class ResetCreditCalendarSync {
         do {
             let result = try ResetCreditCalendarPlanner.reconcile(
                 state: self.loadState(),
-                observations: ResetCreditObservation.observations(fromDeviceSnapshots: deviceSnapshots),
+                observations: input.observations,
                 now: now,
                 store: self.store,
                 draft: self.makeDraft)
