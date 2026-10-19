@@ -54,4 +54,4 @@ old = Mac 0.76.0.1 / iPhone 2.9.0；new = Mac 0.76.0.2 / iPhone 2.10.0。实体 
 
 ## 多台 iPhone / iPad 同时开启
 
-同一 iCloud 账号下多台设备都开启日历提醒时：`makeCalendar` 先复用已有的、可写的"CodexBar"日历（优先 iCloud 源）；每个事件的 `url` 是 `codexbar://reset-credit/<key 的 SHA-256 前 16 字节>`（不含邮箱），设备在新建事件前按该 URL 在事件时间附近查找，找到就接管同一事件；账号范围只由同步来的卡片决定，所以各设备算出相同的 URL（单测 `A second device adopts the event already in the shared calendar`，真实 EventKit 往返测试也断言了 URL 查找与日历复用）。局限：两台设备在 iCloud 同步完成前几乎同时首次开启，仍可能各建一个日历。
+同一 iCloud 账号下多台设备都开启日历提醒时：`makeCalendar` 先复用已有的、可写的"CodexBar"日历（优先 iCloud 源）；每个事件的 `url` 是 `codexbar://reset-credit/<key 的 SHA-256 前 16 字节>`（不含邮箱），设备在新建事件前按该 URL 在事件时间附近查找，找到就接管同一事件；账号范围只由每台 Mac 的原始数据决定，所以各设备算出相同的 URL（单测 `A second device adopts the event already in the shared calendar`，真实 EventKit 往返测试也断言了 URL 查找与日历复用）。局限：两台设备在 iCloud 同步完成前几乎同时首次开启，仍可能各建一个日历。

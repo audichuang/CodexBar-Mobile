@@ -171,7 +171,7 @@ struct ResetCreditCalendarSettingsView: View {
     private func setEnabled(_ enabled: Bool) {
         self.isUpdating = true
         Task {
-            await self.sync.setEnabled(enabled, providers: self.usageData.snapshot?.providers ?? [])
+            await self.sync.setEnabled(enabled, deviceSnapshots: self.usageData.deviceSnapshots)
             self.isUpdating = false
         }
     }

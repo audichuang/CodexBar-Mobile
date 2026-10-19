@@ -13,8 +13,7 @@ struct ResetCreditObservation: Equatable, Sendable {
         let count: Int
     }
 
-    /// Per provider account, derived only from the synced card so every device computes the same value; see
-    /// `scopeKey(for:)`.
+    /// Per provider account for the calendar; see `scopeKey(for:deviceID:)`.
     let scopeKey: String
     let providerID: String
     let providerName: String
@@ -54,7 +53,8 @@ struct ResetCreditObservation: Equatable, Sendable {
         }
 
         return ResetCreditObservation(
-            scopeKey: Self.scopeKey(for: provider),
+            // Display-only until `observations(fromDeviceSnapshots:)` assigns the calendar scope.
+            scopeKey: provider.providerID,
             providerID: provider.providerID,
             providerName: provider.providerName,
             accountLabel: provider.accountEmail,
@@ -65,40 +65,48 @@ struct ResetCreditObservation: Equatable, Sendable {
 
     private static let knownCodexStatuses: Set<String> = ["available", "redeeming", "redeemed", "expired"]
 
-    static let anonymousScopeSuffix = "|single"
-
-    /// The account email (or a Mac's account label), else the record key, else a single anonymous account. Never the
-    /// organization identity: teammates share it. Only the card's own fields are used, so every device that shares
-    /// the calendar derives the same scope; the merged card's record key is per install and can change with the
-    /// publishing Mac, so it is only a fallback for accounts without any email or label.
-    static func scopeKey(for provider: ProviderUsageSnapshot) -> String {
-        if let email = AccountIdentityNormalize.normalize(provider.accountEmail) {
-            return "\(provider.providerID)|email:\(email)"
+    /// Calendar scope of one Mac's provider entry. The calendar works on each Mac's own entries, before the
+    /// cross-Mac merge: a merged card can fold several accounts together (shared email or organization, or several
+    /// accounts without identity) while carrying only one of their inventories.
+    ///
+    /// Order: a real email identity, plus the organization identity when the entry has one (two Codex workspaces can
+    /// share an email); else the record key (token accounts, whose editable label is not an identity); else an email
+    /// the provider reported for the Mac's main account; else the Mac itself. When Macs disagree the result is two
+    /// scopes for one account, which can duplicate a reminder but never lets one account remove another's events.
+    static func scopeKey(for provider: ProviderUsageSnapshot, deviceID: String) -> String {
+        let id = provider.providerID
+        let identities = provider.accountIdentities ?? []
+        if let email = AccountIdentityNormalize.normalize(provider.accountEmail),
+           identities.contains("\(id):email:\(email)")
+        {
+            let organization = identities.filter { $0.hasPrefix("\(id):account:") }.min()
+            return "\(id)|email:\(email)" + (organization.map { "|\($0)" } ?? "")
         }
         if let record = AccountIdentityNormalize.normalize(provider.accountRecordKey) {
-            return "\(provider.providerID)|record:\(record)"
+            return "\(id)|record:\(record)"
         }
-        return provider.providerID + Self.anonymousScopeSuffix
+        if let email = AccountIdentityNormalize.normalize(provider.accountEmail) {
+            return "\(id)|email:\(email)"
+        }
+        return "\(id)|device:\(AccountIdentityNormalize.normalize(deviceID) ?? "unknown")"
     }
 
-    /// Observations eligible for the user's calendar. Synthetic mock providers never reach it. Cards that share a
-    /// scope (for example two Codex workspaces under one email) are told apart by their organization identity; cards
-    /// that still collide are left out, since they would remove each other's events.
-    static func observations(from providers: [ProviderUsageSnapshot]) -> [ResetCreditObservation] {
-        let candidates = providers
-            .filter { !MockProviderDetector.isMock($0) }
-            .compactMap { provider in Self.make(from: provider).map { (provider, $0) } }
-        let baseCounts = Dictionary(grouping: candidates, by: { $0.1.scopeKey }).mapValues(\.count)
-        let refined = candidates.map { provider, observation -> ResetCreditObservation in
-            guard baseCounts[observation.scopeKey, default: 0] > 1,
-                  !observation.scopeKey.hasSuffix(Self.anonymousScopeSuffix),
-                  let organization = CloudSyncReader.effectiveIdentifiers(for: provider)
-                      .first(where: { $0.contains(":account:") })
-            else { return observation }
-            return observation.withScopeKey("\(observation.scopeKey)|\(organization)")
+    /// Calendar observations from each Mac's own snapshot. Synthetic mock providers never reach the calendar, and
+    /// entries of one Mac that still share a scope are left out because they would remove each other's events.
+    /// The same account seen by several Macs yields several observations of one scope; the planner keeps the newest.
+    static func observations(fromDeviceSnapshots snapshots: [SyncedUsageSnapshot]) -> [ResetCreditObservation] {
+        var result: [ResetCreditObservation] = []
+        for snapshot in snapshots {
+            let deviceID = snapshot.deviceID ?? snapshot.deviceName
+            let entries = snapshot.providers
+                .filter { !MockProviderDetector.isMock($0) }
+                .compactMap { provider in
+                    Self.make(from: provider)?.withScopeKey(Self.scopeKey(for: provider, deviceID: deviceID))
+                }
+            let counts = Dictionary(grouping: entries, by: \.scopeKey).mapValues(\.count)
+            result += entries.filter { counts[$0.scopeKey] == 1 }
         }
-        let refinedCounts = Dictionary(grouping: refined, by: \.scopeKey).mapValues(\.count)
-        return refined.filter { refinedCounts[$0.scopeKey] == 1 }
+        return result
     }
 
     private func withScopeKey(_ scopeKey: String) -> ResetCreditObservation {

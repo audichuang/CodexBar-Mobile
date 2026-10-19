@@ -185,10 +185,13 @@ struct ContentView: View {
                 useLedger: self.widgetUsesLedger,
                 referenceDate: self.costReferenceDate)
         }
-        .task(id: ResetCreditCalendarSync.refreshKey(for: self.usageData.snapshot, isDemoMode: self.isDemoMode)) {
+        .task(id: ResetCreditCalendarSync.refreshKey(
+            for: self.usageData.deviceSnapshots,
+            isDemoMode: self.isDemoMode))
+        {
             // Research 077: keep reset-credit expirations in the user's calendar. Demo data never reaches it.
             guard !self.isLayoutPreview, !self.isDemoMode else { return }
-            ResetCreditCalendarSync.shared.sync(providers: self.usageData.snapshot?.providers ?? [])
+            ResetCreditCalendarSync.shared.sync(deviceSnapshots: self.usageData.deviceSnapshots)
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
             self.readerTimeZoneIdentifier = TimeZone.current.identifier

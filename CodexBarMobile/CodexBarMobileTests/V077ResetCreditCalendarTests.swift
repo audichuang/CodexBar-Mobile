@@ -55,6 +55,15 @@ struct V077ResetCreditCalendarTests {
             redeemedAt: nil)
     }
 
+    /// One Mac's own snapshot, as the calendar reads it.
+    private func observations(_ providers: [ProviderUsageSnapshot], device: String = "mac-a")
+        -> [ResetCreditObservation]
+    {
+        ResetCreditObservation.observations(fromDeviceSnapshots: [
+            SyncedUsageSnapshot(providers: providers, syncTimestamp: self.now, deviceName: device, deviceID: device),
+        ])
+    }
+
     private func reconcile(
         _ state: ResetCreditCalendarState,
         _ providers: [ProviderUsageSnapshot],
@@ -63,7 +72,7 @@ struct V077ResetCreditCalendarTests {
     {
         try ResetCreditCalendarPlanner.reconcile(
             state: state,
-            observations: ResetCreditObservation.observations(from: providers),
+            observations: self.observations(providers),
             now: date ?? self.now,
             store: store,
             draft: { entry in
@@ -113,7 +122,7 @@ struct V077ResetCreditCalendarTests {
 
     @Test func `Mock providers never reach the calendar but still render`() {
         let mock = self.claude([self.now.addingTimeInterval(self.day)], observedAt: self.now, email: "x@codexbar.test")
-        #expect(ResetCreditObservation.observations(from: [mock]).isEmpty)
+        #expect(self.observations([mock]).isEmpty)
         #expect(ResetCreditsCardPresentation.make(provider: mock, now: self.now)?.availableCount == 1)
     }
 
@@ -255,7 +264,7 @@ struct V077ResetCreditCalendarTests {
         #expect(store.events.count == 1)
     }
 
-    @Test func `Two Codex workspaces under one email keep separate scopes`() {
+    @Test func `Two Codex workspaces under one email keep separate scopes`() throws {
         func workspace(_ org: String, _ expiry: Date) -> ProviderUsageSnapshot {
             ProviderUsageSnapshot(
                 providerID: "codex",
@@ -276,14 +285,45 @@ struct V077ResetCreditCalendarTests {
         }
         let personal = workspace("personal", self.now.addingTimeInterval(self.day))
         let team = workspace("team", self.now.addingTimeInterval(2 * self.day))
-        let observations = ResetCreditObservation.observations(from: [personal, team])
+        let observations = self.observations([personal, team])
         #expect(Set(observations.map(\.scopeKey)) == [
             "codex|email:user@example.com|codex:account:personal",
             "codex|email:user@example.com|codex:account:team",
         ])
-        // Alone, the same workspace keeps the plain email scope.
-        #expect(ResetCreditObservation.observations(from: [personal])
-            .map(\.scopeKey) == ["codex|email:user@example.com"])
+        // The scope comes from each Mac's own entry, so the merged card (which folds both workspaces together by
+        // their shared email and carries only one inventory) never decides it.
+        let merged = try #require(CloudSyncReader.mergeSnapshots([
+            SyncedUsageSnapshot(
+                providers: [personal, team],
+                syncTimestamp: self.now,
+                deviceName: "Mac",
+                deviceID: "mac"),
+        ]))
+        #expect(merged.providers.filter { $0.providerID == "codex" }.count <= 2)
+    }
+
+    @Test func `Two Macs reporting one account follow the newest read in either order`() throws {
+        let expiry = self.now.addingTimeInterval(self.day)
+        let older = SyncedUsageSnapshot(
+            providers: [self.claude([expiry], observedAt: self.now)],
+            syncTimestamp: self.now,
+            deviceName: "A",
+            deviceID: "mac-a")
+        let newer = SyncedUsageSnapshot(
+            providers: [self.claude([], observedAt: self.now.addingTimeInterval(60))],
+            syncTimestamp: self.now,
+            deviceName: "B",
+            deviceID: "mac-b")
+        for order in [[older, newer], [newer, older]] {
+            let store = FakeCalendarStore()
+            _ = try ResetCreditCalendarPlanner.reconcile(
+                state: ResetCreditCalendarState(),
+                observations: ResetCreditObservation.observations(fromDeviceSnapshots: order),
+                now: self.now,
+                store: store,
+                draft: { ResetCreditCalendarPlanner.eventDraft(for: $0, includeAccount: true, expiryText: "x") })
+            #expect(store.events.isEmpty)
+        }
     }
 
     @Test func `A Mac clock running ahead cannot freeze an account`() throws {
@@ -299,15 +339,21 @@ struct V077ResetCreditCalendarTests {
         #expect(store.events.isEmpty)
     }
 
-    @Test func `A single anonymous account is used but two are left out`() {
+    @Test func `Anonymous accounts are scoped per Mac and ambiguous ones are left out`() {
         func anonymous(_ count: Int) -> ProviderUsageSnapshot {
             self.provider(
                 "codex",
                 email: nil,
                 codex: SyncCodexResetCredits(availableCount: 0, nextExpiresAt: nil, credits: [], updatedAt: self.now))
         }
-        #expect(ResetCreditObservation.observations(from: [anonymous(0)]).map(\.scopeKey) == ["codex|single"])
-        #expect(ResetCreditObservation.observations(from: [anonymous(0), anonymous(1)]).isEmpty)
+        #expect(self.observations([anonymous(0)]).map(\.scopeKey) == ["codex|device:mac-a"])
+        #expect(self.observations([anonymous(0), anonymous(1)]).isEmpty)
+        // Anonymous accounts on different Macs never share a scope, so they cannot remove each other's events.
+        let both = ResetCreditObservation.observations(fromDeviceSnapshots: [
+            SyncedUsageSnapshot(providers: [anonymous(0)], syncTimestamp: self.now, deviceName: "A", deviceID: "mac-a"),
+            SyncedUsageSnapshot(providers: [anonymous(1)], syncTimestamp: self.now, deviceName: "B", deviceID: "mac-b"),
+        ])
+        #expect(Set(both.map(\.scopeKey)) == ["codex|device:mac-a", "codex|device:mac-b"])
     }
 
     @Test func `Every device keeps the same duplicate`() throws {
@@ -424,8 +470,8 @@ struct V077ResetCreditCalendarTests {
             accountIdentities: ["claude:email:user@example.com", "claude:record:token-B"],
             accountRecordKey: "token-B",
             resetCreditInventory: SyncResetCreditInventory(expirations: [expiry], updatedAt: self.now))
-        let scopeA = try #require(ResetCreditObservation.make(from: macA)?.scopeKey)
-        #expect(scopeA == ResetCreditObservation.make(from: macB)?.scopeKey)
+        let scopeA = try #require(self.observations([macA], device: "mac-a").first?.scopeKey)
+        #expect(scopeA == self.observations([macB], device: "mac-b").first?.scopeKey)
         #expect(scopeA == "claude|email:user@example.com")
     }
 

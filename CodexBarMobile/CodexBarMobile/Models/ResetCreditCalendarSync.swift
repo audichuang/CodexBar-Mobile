@@ -149,7 +149,7 @@ final class ResetCreditCalendarSync {
     @ObservationIgnored private let defaults: UserDefaults
     @ObservationIgnored private let eventStore = EKEventStore()
     @ObservationIgnored private lazy var store = EventKitResetCreditCalendarStore(eventStore: self.eventStore)
-    @ObservationIgnored private var latestProviders: [ProviderUsageSnapshot] = []
+    @ObservationIgnored private var latestDeviceSnapshots: [SyncedUsageSnapshot] = []
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
@@ -158,8 +158,8 @@ final class ResetCreditCalendarSync {
     }
 
     /// Identity of the reset-credit data in a snapshot; drives the view task that calls `sync`.
-    static func refreshKey(for snapshot: SyncedUsageSnapshot?, isDemoMode: Bool) -> String {
-        let observations = ResetCreditObservation.observations(from: snapshot?.providers ?? [])
+    static func refreshKey(for deviceSnapshots: [SyncedUsageSnapshot], isDemoMode: Bool) -> String {
+        let observations = ResetCreditObservation.observations(fromDeviceSnapshots: deviceSnapshots)
             .map { observation in
                 let expirations = observation.expirations
                     .map { $0.map { String(ResetCreditCalendarPlanner.wholeSeconds($0)) } ?? "-" }
@@ -189,8 +189,9 @@ final class ResetCreditCalendarSync {
     }
 
     /// Turning on asks for calendar access first; the switch stays off without full access.
-    func setEnabled(_ enabled: Bool, providers: [ProviderUsageSnapshot]) async {
-        self.latestProviders = providers
+    /// `deviceSnapshots` are each Mac's own snapshots, before the cross-Mac merge.
+    func setEnabled(_ enabled: Bool, deviceSnapshots: [SyncedUsageSnapshot]) async {
+        self.latestDeviceSnapshots = deviceSnapshots
         guard enabled else {
             self.refreshAccessState()
             // Without access the events cannot be removed; keep their state so turning the switch back on
@@ -219,11 +220,12 @@ final class ResetCreditCalendarSync {
             return
         }
         self.updateEnabled(true)
-        self.sync(providers: self.latestProviders)
+        self.sync(deviceSnapshots: self.latestDeviceSnapshots)
     }
 
-    func sync(providers: [ProviderUsageSnapshot], now: Date = Date()) {
-        self.latestProviders = providers
+    /// `deviceSnapshots` are each Mac's own snapshots, before the cross-Mac merge.
+    func sync(deviceSnapshots: [SyncedUsageSnapshot], now: Date = Date()) {
+        self.latestDeviceSnapshots = deviceSnapshots
         guard self.isEnabled, !Self.isSuppressedForTestLaunch else { return }
         self.refreshAccessState()
         guard self.accessState == .granted else { return }
@@ -231,7 +233,7 @@ final class ResetCreditCalendarSync {
         do {
             let result = try ResetCreditCalendarPlanner.reconcile(
                 state: self.loadState(),
-                observations: ResetCreditObservation.observations(from: providers),
+                observations: ResetCreditObservation.observations(fromDeviceSnapshots: deviceSnapshots),
                 now: now,
                 store: self.store,
                 draft: self.makeDraft)
