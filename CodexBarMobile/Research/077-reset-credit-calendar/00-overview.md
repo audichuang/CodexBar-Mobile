@@ -41,7 +41,7 @@ Date: 2026-10-18
 
 ### 2. Mac 端区分 "确定为空" 与 "不知道"
 
-- Claude：`ClaudeLimitResetStatusResponse.snapshot` 在 `eligible: true` 且解码成功、但没有可用 grant 时返回**空列表快照**（原为 nil）；`eligible` 缺失 / false（服务端说明了 `ineligible_reason`，可能只是请求来源不被支持）、块缺失、超过上限仍返回 nil。菜单与 CLI 对空列表本来就不显示（`LimitResetCreditsPresentation.make` 与 `detailSections` 遇空返回空），用户可见行为不变。
+- Claude：`ClaudeLimitResetStatusResponse.snapshot` 在 `eligible: true` 且解码成功、但没有可用 grant 时返回**空列表快照**（原为 nil）；有 grant 因格式错误被丢弃时快照标记为不完整（`isComplete = false`，同步字段里也带上），iPhone 只新增、不删除；`eligible` 缺失 / false（服务端说明了 `ineligible_reason`，可能只是请求来源不被支持）、块缺失、超过上限仍返回 nil。菜单与 CLI 对空列表本来就不显示（`LimitResetCreditsPresentation.make` 与 `detailSections` 遇空返回空），用户可见行为不变。
 - Grok：`GetRemainingResets` 请求成功（即使 0 个 token）时快照任务返回空列表快照；请求失败且沿用旧缓存时仍按旧规则（空 → nil）。菜单与明细同样遇空不显示。
 - 同步层 `SyncCoordinator.mapResetCreditInventory` 按 provider 映射，到期时间按 `updatedAt` 过滤掉已过期的。
 

@@ -191,6 +191,12 @@ struct ClaudeRateLimitResetCreditsTests {
 
         #expect(usage.sessionPercentUsed == 12)
         #expect(usage.resetCredits?.availableExpirations(at: now) == [nil])
+        // Fork (Research 077): a dropped grant may hide an available reset, so the inventory is incomplete.
+        #expect(usage.resetCredits?.isComplete == false)
+        let clean = try #require(Self.parse(Self.eligibleBlock([
+            Self.grant(id: "grant_a", resetsLeft: 1, endsIn: 86400, now: now),
+        ])))
+        #expect(clean.isComplete)
     }
 
     @Test

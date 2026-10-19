@@ -753,7 +753,8 @@ final class SyncCoordinator {
             guard let resetCredits = snapshot?.claudeResetCredits else { return nil }
             return SyncResetCreditInventory(
                 expirations: resetCredits.availableExpirations(at: resetCredits.updatedAt),
-                updatedAt: resetCredits.updatedAt)
+                updatedAt: resetCredits.updatedAt,
+                isComplete: resetCredits.isComplete)
         case .grok:
             guard let resetCredits = snapshot?.grokResetCredits else { return nil }
             return SyncResetCreditInventory(

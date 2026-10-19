@@ -445,6 +445,54 @@ struct V077ResetCreditCalendarTests {
         #expect(store.events.isEmpty)
     }
 
+    @Test func `A partial Claude inventory adds reminders but never removes one`() throws {
+        let store = FakeCalendarStore()
+        let first = self.now.addingTimeInterval(self.day)
+        let second = self.now.addingTimeInterval(2 * self.day)
+        let state = try self.reconcile(
+            ResetCreditCalendarState(), [self.claude([first, second], observedAt: self.now)], store: store).state
+        let partial = self.provider(
+            "claude",
+            inventory: SyncResetCreditInventory(
+                expirations: [second],
+                updatedAt: self.now.addingTimeInterval(60),
+                isComplete: false))
+        _ = try self.reconcile(state, [partial], store: store)
+        #expect(store.events.count == 2)
+
+        // Only an incomplete inventory carries the key on the wire.
+        let complete = try JSONEncoder().encode(SyncResetCreditInventory(expirations: [], updatedAt: self.now))
+        #expect(String(data: complete, encoding: .utf8)?.contains("isComplete") == false)
+        let incomplete = try #require(partial.resetCreditInventory)
+        let decoded = try JSONDecoder().decode(
+            SyncResetCreditInventory.self,
+            from: JSONEncoder().encode(incomplete))
+        #expect(!decoded.isComplete)
+    }
+
+    @Test func `Turning off without calendar access queues every future event for removal`() throws {
+        let store = FakeCalendarStore()
+        let expiry = self.now.addingTimeInterval(self.day)
+        let providers = [self.claude([expiry], observedAt: self.now)]
+        let state = try self.reconcile(ResetCreditCalendarState(), providers, store: store).state
+        let queued = ResetCreditCalendarPlanner.queueingFutureRemovals(in: state, now: self.now)
+        #expect(queued.entries.values.allSatisfy { !$0.isAvailable })
+        #expect(queued.scopeObservedAt.isEmpty)
+
+        // Access returns while reminders are off: the queued event goes away.
+        let cleaned = ResetCreditCalendarPlanner.removeFutureEvents(
+            state: queued,
+            now: self.now,
+            store: store,
+            draft: { ResetCreditCalendarPlanner.eventDraft(for: $0, includeAccount: true, expiryText: "x") })
+        #expect(store.events.isEmpty)
+        #expect(cleaned.failures == 0)
+
+        // Turning reminders back on re-adds what the Mac still lists, even with the same observation time.
+        _ = try self.reconcile(queued, providers, store: store)
+        #expect(store.events.count == 1)
+    }
+
     @Test func `A stale observation cannot add a reset that a newer one no longer lists`() throws {
         let store = FakeCalendarStore()
         let expiry = self.now.addingTimeInterval(self.day)

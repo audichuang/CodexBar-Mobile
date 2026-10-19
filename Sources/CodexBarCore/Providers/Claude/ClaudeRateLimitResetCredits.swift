@@ -13,10 +13,14 @@ public struct ClaudeRateLimitResetCreditsSnapshot: Sendable, Equatable {
     /// Nil means the reset has no expiry.
     public let expirations: [Date?]
     public let updatedAt: Date
+    /// Fork (Research 077): false when a malformed grant was dropped, so the list may omit an available reset.
+    /// Presentations are unchanged; the iPhone calendar treats an incomplete inventory as add-only.
+    public let isComplete: Bool
 
-    public init(expirations: [Date?], updatedAt: Date) {
+    public init(expirations: [Date?], updatedAt: Date, isComplete: Bool = true) {
         self.expirations = expirations
         self.updatedAt = updatedAt
+        self.isComplete = isComplete
     }
 
     /// Expiry of each reset still available at `date`, soonest first; resets without an expiry sort last.
@@ -63,6 +67,8 @@ struct ClaudeLimitResetStatusResponse: Decodable {
 
     let eligible: Bool
     let grants: [ClaudeLimitResetGrantResponse]
+    /// Fork (Research 077): grant records dropped as malformed.
+    let droppedGrantCount: Int
 
     private enum CodingKeys: String, CodingKey {
         case eligible
@@ -74,6 +80,7 @@ struct ClaudeLimitResetStatusResponse: Decodable {
         self.eligible = try container.decode(Bool.self, forKey: .eligible)
         var records = try container.nestedUnkeyedContainer(forKey: .grants)
         var grants: [ClaudeLimitResetGrantResponse] = []
+        var dropped = 0
         while !records.isAtEnd {
             guard records.currentIndex < Self.maximumGrantRecords else {
                 throw DecodingError.dataCorruptedError(
@@ -83,9 +90,12 @@ struct ClaudeLimitResetStatusResponse: Decodable {
             }
             if let grant = try records.decode(LossyGrant.self).grant {
                 grants.append(grant)
+            } else {
+                dropped += 1
             }
         }
         self.grants = grants
+        self.droppedGrantCount = dropped
     }
 
     /// `usable_now` is not consulted: a saved reset counts even while Claude gates redemption. A grant that has
@@ -101,7 +111,10 @@ struct ClaudeLimitResetStatusResponse: Decodable {
             guard grant.resetsLeft <= Self.maximumResets - expirations.count else { return nil }
             expirations.append(contentsOf: repeatElement(grant.endsAt, count: grant.resetsLeft))
         }
-        return ClaudeRateLimitResetCreditsSnapshot(expirations: expirations, updatedAt: updatedAt)
+        return ClaudeRateLimitResetCreditsSnapshot(
+            expirations: expirations,
+            updatedAt: updatedAt,
+            isComplete: self.droppedGrantCount == 0)
     }
 
     private struct LossyGrant: Decodable {

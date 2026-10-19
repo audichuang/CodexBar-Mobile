@@ -60,6 +60,20 @@ struct SyncV077ResetCreditInventoryTests {
     }
 
     @Test
+    func `A partial Claude inventory is published as incomplete`() throws {
+        let snapshot = UsageSnapshot(
+            primary: nil,
+            secondary: nil,
+            claudeResetCredits: ClaudeRateLimitResetCreditsSnapshot(
+                expirations: [self.observed.addingTimeInterval(self.day)],
+                updatedAt: self.observed,
+                isComplete: false),
+            updatedAt: self.observed)
+        let inventory = try #require(SyncCoordinator.mapResetCreditInventory(provider: .claude, snapshot: snapshot))
+        #expect(!inventory.isComplete)
+    }
+
+    @Test
     func `Grok inventory publishes its token expiries`() throws {
         let snapshot = UsageSnapshot(
             primary: nil,

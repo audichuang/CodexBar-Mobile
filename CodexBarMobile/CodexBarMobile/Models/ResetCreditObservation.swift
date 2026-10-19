@@ -49,7 +49,7 @@ struct ResetCreditObservation: Equatable, Sendable {
             guard let inventory = provider.resetCreditInventory else { return nil }
             observedAt = inventory.updatedAt
             expirations = inventory.availableExpirations(at: inventory.updatedAt)
-            isComplete = true
+            isComplete = inventory.isComplete
         }
 
         return ResetCreditObservation(

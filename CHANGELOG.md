@@ -12,7 +12,7 @@
 
 ### Changed
 
-- Claude: an eligible reset-credit response with no available reset is kept as an empty inventory instead of no inventory; Grok: a completed remaining-resets lookup with no token is kept as an empty inventory, a cancelled lookup keeps the previous one, and cached or retained tokens keep the time they were read instead of looking newly read (a cached empty read stays a confirmed empty inventory). Menus, Settings previews, and CLI output still hide empty inventories, so nothing changes on the Mac.
+- Claude: an eligible reset-credit response with no available reset is kept as an empty inventory instead of no inventory, and an inventory from which a malformed grant was dropped is marked incomplete so the iPhone never treats the missing grant as used; Grok: a completed remaining-resets lookup with no token is kept as an empty inventory, a cancelled lookup keeps the previous one, and cached or retained tokens keep the time they were read instead of looking newly read (a cached empty read stays a confirmed empty inventory). Menus, Settings previews, and CLI output still hide empty inventories, so nothing changes on the Mac.
 
 ## 0.76.0.1 — 2026-10-15
 

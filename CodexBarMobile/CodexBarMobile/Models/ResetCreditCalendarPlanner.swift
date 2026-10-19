@@ -254,6 +254,17 @@ enum ResetCreditCalendarPlanner {
         return (state, summary)
     }
 
+    /// Turning reminders off without calendar access: every future event becomes a queued removal, and the applied
+    /// observation times are forgotten so turning reminders back on re-adds what the Macs still list.
+    static func queueingFutureRemovals(in state: ResetCreditCalendarState, now: Date) -> ResetCreditCalendarState {
+        var state = state
+        for key in state.entries.keys where state.entries[key].map({ $0.expiresAt > now }) == true {
+            state.entries[key]?.isAvailable = false
+        }
+        state.scopeObservedAt = [:]
+        return state
+    }
+
     /// Removes every future event this device tracks, keeping past events and the calendar itself.
     @MainActor
     static func removeFutureEvents(

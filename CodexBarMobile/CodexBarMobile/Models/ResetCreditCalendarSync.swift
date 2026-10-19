@@ -213,8 +213,6 @@ final class ResetCreditCalendarSync {
         self.latestInput = input
         guard enabled else {
             self.refreshAccessState()
-            // Without access the events cannot be removed; keep their state so turning the switch back on
-            // after restoring access continues with the same events instead of duplicating them.
             if self.accessState == .granted {
                 let result = ResetCreditCalendarPlanner.removeFutureEvents(
                     state: self.loadState(),
@@ -222,6 +220,10 @@ final class ResetCreditCalendarSync {
                     store: self.store,
                     draft: self.makeDraft)
                 self.saveState(result.state)
+            } else {
+                // Without access the events cannot be removed yet: queue them, and remove them once access
+                // returns (`retryPendingRemovals`).
+                self.saveState(ResetCreditCalendarPlanner.queueingFutureRemovals(in: self.loadState(), now: Date()))
             }
             self.updateEnabled(false)
             self.lastSummary = nil
@@ -244,7 +246,11 @@ final class ResetCreditCalendarSync {
 
     func sync(input: Input, now: Date = Date()) {
         self.latestInput = input
-        guard self.isEnabled, !Self.isSuppressedForTestLaunch else { return }
+        guard !Self.isSuppressedForTestLaunch else { return }
+        guard self.isEnabled else {
+            self.retryPendingRemovals(now: now)
+            return
+        }
         self.refreshAccessState()
         guard self.accessState == .granted else { return }
 
@@ -264,10 +270,24 @@ final class ResetCreditCalendarSync {
         self.lastSyncAt = now
     }
 
-    /// Turning reminders off left future events it could not remove; they are retried the next time it is on.
+    /// Turning reminders off left future events it could not remove yet (no calendar access, or a failed delete).
     /// Derived from the saved state so the notice survives a relaunch.
     func hasPendingRemovals(now: Date = Date()) -> Bool {
         !self.isEnabled && self.loadState().entries.values.contains { !$0.isAvailable && $0.expiresAt > now }
+    }
+
+    /// With reminders off, removes queued events once calendar access allows it. Runs on data updates and when
+    /// the settings page appears or the app becomes active.
+    func retryPendingRemovals(now: Date = Date()) {
+        guard !self.isEnabled, !Self.isSuppressedForTestLaunch, self.hasPendingRemovals(now: now) else { return }
+        self.refreshAccessState()
+        guard self.accessState == .granted else { return }
+        let result = ResetCreditCalendarPlanner.removeFutureEvents(
+            state: self.loadState(),
+            now: now,
+            store: self.store,
+            draft: self.makeDraft)
+        self.saveState(result.state)
     }
 
     /// Whether the detail card can say its resets are in the calendar.

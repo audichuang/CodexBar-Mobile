@@ -16,13 +16,23 @@ public struct SyncResetCreditInventory: Codable, Sendable, Equatable {
     /// no expiry; a grant with several resets contributes one entry per reset.
     public let expirations: [Date?]
     public let updatedAt: Date
+    /// False when the Mac knows the list may omit an available reset (a malformed grant was dropped). The iPhone
+    /// may add reminders from it but never removes one. Encoded only when false; absent means complete.
+    public let isComplete: Bool
 
     /// Upper bound on decoded entries; larger inventories are treated as malformed.
     public static let maximumExpirations = 50
 
-    public init(expirations: [Date?], updatedAt: Date) {
+    private enum CodingKeys: String, CodingKey {
+        case expirations
+        case updatedAt
+        case isComplete
+    }
+
+    public init(expirations: [Date?], updatedAt: Date, isComplete: Bool = true) {
         self.expirations = Self.sorted(expirations)
         self.updatedAt = updatedAt
+        self.isComplete = isComplete
     }
 
     public init(from decoder: Decoder) throws {
@@ -36,6 +46,16 @@ public struct SyncResetCreditInventory: Codable, Sendable, Equatable {
         }
         self.expirations = Self.sorted(expirations)
         self.updatedAt = try container.decode(Date.self, forKey: .updatedAt)
+        self.isComplete = try container.decodeIfPresent(Bool.self, forKey: .isComplete) ?? true
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.expirations, forKey: .expirations)
+        try container.encode(self.updatedAt, forKey: .updatedAt)
+        if !self.isComplete {
+            try container.encode(false, forKey: .isComplete)
+        }
     }
 
     /// Resets still available at `date`, soonest first; resets without an expiry sort last.

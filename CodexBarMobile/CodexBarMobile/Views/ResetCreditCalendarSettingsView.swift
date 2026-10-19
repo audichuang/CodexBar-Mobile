@@ -42,7 +42,7 @@ struct ResetCreditCalendarSettingsView: View {
                 Section {
                     Text(
                         String(
-                            localized: "Some upcoming events could not be removed. Turn Calendar Reminders on and off again to retry."))
+                            localized: "Some upcoming events could not be removed yet. CodexBar removes them once it can use your calendar."))
                         .font(.caption)
                         .foregroundStyle(.orange)
                 }
@@ -91,9 +91,14 @@ struct ResetCreditCalendarSettingsView: View {
             }
         }
         .navigationTitle(String(localized: "Calendar Reminders"))
-        .onAppear { self.sync.refreshAccessState() }
+        .onAppear {
+            self.sync.refreshAccessState()
+            self.sync.retryPendingRemovals()
+        }
         .onChange(of: self.scenePhase) { _, phase in
-            if phase == .active { self.sync.refreshAccessState() }
+            guard phase == .active else { return }
+            self.sync.refreshAccessState()
+            self.sync.retryPendingRemovals()
         }
     }
 
