@@ -14,6 +14,24 @@
 | iOS 新增测试 | `-only-testing:CodexBarMobileTests/V077ResetCreditCalendarTests` + `V077ResetCreditEventKitTests` | 23 项通过（含真实 EventKit 往返：建日历、写事件、改标题、删事件、清理日历） | `ios-test-v077-3.log`、`v077-3.xcresult` |
 | CloudKit 审计 | `docs/cloudkit-deploy-audit.md` 第 1–4 步 | `NO_DEPLOY` | 见审计文档 v0.76.0.2 节 |
 
+## 合并前全量（PR #195 最终 head `8645c542e`）
+
+| 项目 | 命令 | 结果 | 证据 |
+|---|---|---|---|
+| Mac 全量分片 0 | `CODEXBAR_TEST_SHARD_INDEX=0 CODEXBAR_TEST_SHARD_COUNT=2 Scripts/test.sh` | 退出码 0：79 组一次通过，Timed out 0，Isolated retries 0 | `mac-shard0.log` |
+| Mac 全量分片 1 | 同上 index 1 | 退出码 0：78 组一次通过，Timed out 0，Isolated retries 0 | `mac-shard1.log` |
+| iOS 全量单测 | `xcodebuild test -only-testing:CodexBarMobileTests`（iOS 27 模拟器） | TEST SUCCEEDED：Swift Testing 1141 项 / 69 个 suite + XCTest 60 项 | `ios-full-final.log`、`full-final.xcresult` |
+| PR review 门禁 | `Scripts/check_pr_review_gate.sh 195` | 通过：head `8645c542e`，6 轮，未解决线程 0；第 5 轮后写了架构审计（移除卡片上的"已在日历中"提示） | PR #195 |
+
+说明：中途一次未分片的裸 `swift test`（与 iOS 测试、review 子任务并行，负载很高）出现约 1000 个超时 / Keychain / TTY 计数类失败，均不在本次改动模块，已中止；以仓库标准的分片 `Scripts/test.sh` 结果为准。
+
+## 发布（2026-10-18）
+
+- PR #195 合并为 `7bc120faf`（merge commit）。
+- Mac：在 `mobile-dev`（`7bc120faf`）运行 `./Scripts/release.sh` 第一阶段；lint 0 violations，签名并公证 **Accepted**，生成 Draft release `v0.76.0.2-mobile.2.10.0`（tag 指向 `7bc120faf`），资产 `CodexBar-0.76.0.2-mobile.2.10.0.zip`（89.0 MB）与 `.dSYM.zip`（71.6 MB）。未运行 `--finalize`：未公开发布、appcast 未更新。日志 `release-phase1.log`。
+- iOS：在同一提交运行 `Scripts/upload_ios_testflight.sh`，2.10.0 (243) 上传成功；ASC build `e8dcc26f-b9c9-45ab-9090-9b1cb452e188` 处理为 **VALID**，内测 `IN_BETA_TESTING`。archive：`/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/TestFlight-20261018-200144/CodexBarMobile.xcarchive`。日志 `ios-upload.log`。
+- 已知验证缺口：真机上的日历权限与事件、真实 Claude / Grok 账号用掉 credit 后的端到端删除、实体 2 Mac × 2 iPhone 矩阵，待 TestFlight 实测。
+
 ## 模拟器实测（简体中文）
 
 - 首次启动的更新说明显示 2.10.0 条目与"需要的 Mac 版本"。
