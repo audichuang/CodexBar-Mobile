@@ -23,8 +23,6 @@ struct ResetCreditCalendarState: Codable, Equatable, Sendable {
     /// Newest observation applied per provider account. An observation that is not newer is ignored as a whole,
     /// so a stale writer can neither resurrect a reset that was used early nor remove one a newer read lists.
     var scopeObservedAt: [String: Date] = [:]
-    /// Stable identities seen per scope; an observation sharing any of them reuses that scope.
-    var scopeIdentities: [String: [String]] = [:]
 
     init(calendarIdentifier: String? = nil) {
         self.calendarIdentifier = calendarIdentifier
@@ -35,8 +33,6 @@ struct ResetCreditCalendarState: Codable, Equatable, Sendable {
         self.calendarIdentifier = try container.decodeIfPresent(String.self, forKey: .calendarIdentifier)
         self.entries = try container.decodeIfPresent([String: ResetCreditCalendarEntry].self, forKey: .entries) ?? [:]
         self.scopeObservedAt = try container.decodeIfPresent([String: Date].self, forKey: .scopeObservedAt) ?? [:]
-        self.scopeIdentities = try container.decodeIfPresent([String: [String]].self, forKey: .scopeIdentities)
-            ?? [:]
     }
 }
 
@@ -129,7 +125,7 @@ enum ResetCreditCalendarPlanner {
         var state = state
         var appliedScopes: Set<String> = []
         for observation in observations {
-            let scope = Self.resolveScope(for: observation, in: &state)
+            let scope = observation.scopeKey
             appliedScopes.insert(scope)
             if let applied = state.scopeObservedAt[scope], observation.observedAt <= applied {
                 continue
@@ -171,24 +167,7 @@ enum ResetCreditCalendarPlanner {
         }
         let liveScopes = appliedScopes.union(state.entries.values.map(\.scopeKey))
         state.scopeObservedAt = state.scopeObservedAt.filter { liveScopes.contains($0.key) }
-        state.scopeIdentities = state.scopeIdentities.filter { liveScopes.contains($0.key) }
         return state
-    }
-
-    /// Reuses a known scope of the same provider that shares an identity with the observation, so a Mac that
-    /// reports fewer identities (for example no email) does not split one account into two sets of events.
-    private static func resolveScope(
-        for observation: ResetCreditObservation,
-        in state: inout ResetCreditCalendarState) -> String
-    {
-        let identities = Set(observation.identities)
-        let prefix = "\(observation.providerID)|"
-        let known = state.scopeIdentities
-            .filter { $0.key.hasPrefix(prefix) && !identities.isDisjoint(with: $0.value) }
-            .map(\.key)
-        let scope = known.contains(observation.scopeKey) ? observation.scopeKey : known.min() ?? observation.scopeKey
-        state.scopeIdentities[scope] = Array(identities.union(state.scopeIdentities[scope] ?? [])).sorted()
-        return scope
     }
 
     /// Applies observations and reconciles the calendar. Returns the new state and what changed.

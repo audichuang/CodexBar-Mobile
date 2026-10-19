@@ -145,8 +145,6 @@ final class ResetCreditCalendarSync {
     private(set) var lastSyncAt: Date?
     private(set) var lastSummary: ResetCreditCalendarSyncSummary?
     private(set) var lastSyncFailed = false
-    /// Turning reminders off could not remove some future events; they are retried the next time it is on.
-    private(set) var lastRemovalFailed = false
 
     @ObservationIgnored private let defaults: UserDefaults
     @ObservationIgnored private let eventStore = EKEventStore()
@@ -204,7 +202,6 @@ final class ResetCreditCalendarSync {
                     store: self.store,
                     draft: self.makeDraft)
                 self.saveState(result.state)
-                self.lastRemovalFailed = result.failures > 0
             }
             self.updateEnabled(false)
             self.lastSummary = nil
@@ -222,7 +219,6 @@ final class ResetCreditCalendarSync {
             return
         }
         self.updateEnabled(true)
-        self.lastRemovalFailed = false
         self.sync(providers: self.latestProviders)
     }
 
@@ -246,6 +242,12 @@ final class ResetCreditCalendarSync {
             self.lastSyncFailed = true
         }
         self.lastSyncAt = now
+    }
+
+    /// Turning reminders off left future events it could not remove; they are retried the next time it is on.
+    /// Derived from the saved state so the notice survives a relaunch.
+    func hasPendingRemovals(now: Date = Date()) -> Bool {
+        !self.isEnabled && self.loadState().entries.values.contains { !$0.isAvailable && $0.expiresAt > now }
     }
 
     /// Whether the detail card can say its resets are in the calendar.

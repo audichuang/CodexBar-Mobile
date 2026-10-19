@@ -13,12 +13,9 @@ struct ResetCreditObservation: Equatable, Sendable {
         let count: Int
     }
 
-    /// Stable per provider account across Macs: the merger's account identity, never a per-install record key
-    /// when a real identity exists.
+    /// Per provider account, derived only from the synced card so every device computes the same value; see
+    /// `scopeKey(for:)`.
     let scopeKey: String
-    /// Every stable identity of the account (merger identities without per-install record keys). Lets the
-    /// calendar keep one scope when Macs report overlapping but different identity sets.
-    let identities: [String]
     let providerID: String
     let providerName: String
     let accountLabel: String?
@@ -58,7 +55,6 @@ struct ResetCreditObservation: Equatable, Sendable {
 
         return ResetCreditObservation(
             scopeKey: Self.scopeKey(for: provider),
-            identities: CloudSyncReader.effectiveIdentifiers(for: provider).sorted(),
             providerID: provider.providerID,
             providerName: provider.providerName,
             accountLabel: provider.accountEmail,
@@ -69,23 +65,51 @@ struct ResetCreditObservation: Equatable, Sendable {
 
     private static let knownCodexStatuses: Set<String> = ["available", "redeeming", "redeemed", "expired"]
 
-    /// The merged card's `accountRecordKey` comes from whichever Mac published last and is per install, so the
-    /// scope uses the merger's stable account identity instead, preferring the email identity.
+    static let anonymousScopeSuffix = "|single"
+
+    /// The account email (or a Mac's account label), else the record key, else a single anonymous account. Never the
+    /// organization identity: teammates share it. Only the card's own fields are used, so every device that shares
+    /// the calendar derives the same scope; the merged card's record key is per install and can change with the
+    /// publishing Mac, so it is only a fallback for accounts without any email or label.
     static func scopeKey(for provider: ProviderUsageSnapshot) -> String {
-        let identities = CloudSyncReader.effectiveIdentifiers(for: provider)
-        let identity = identities.first { $0.contains(":email:") } ?? identities.sorted().first ?? ""
-        return "\(provider.providerID)|\(identity)"
+        if let email = AccountIdentityNormalize.normalize(provider.accountEmail) {
+            return "\(provider.providerID)|email:\(email)"
+        }
+        if let record = AccountIdentityNormalize.normalize(provider.accountRecordKey) {
+            return "\(provider.providerID)|record:\(record)"
+        }
+        return provider.providerID + Self.anonymousScopeSuffix
     }
 
-    /// Observations eligible for the user's calendar. Synthetic mock providers never reach it, and neither does an
-    /// account without any identity: two such accounts would share a scope and could remove each other's events.
+    /// Observations eligible for the user's calendar. Synthetic mock providers never reach it. Cards that share a
+    /// scope (for example two Codex workspaces under one email) are told apart by their organization identity; cards
+    /// that still collide are left out, since they would remove each other's events.
     static func observations(from providers: [ProviderUsageSnapshot]) -> [ResetCreditObservation] {
-        var seen: Set<String> = []
-        return providers
+        let candidates = providers
             .filter { !MockProviderDetector.isMock($0) }
-            .compactMap(Self.make(from:))
-            .filter { !$0.scopeKey.hasSuffix(":legacy-no-identity") }
-            .filter { seen.insert($0.scopeKey).inserted }
+            .compactMap { provider in Self.make(from: provider).map { (provider, $0) } }
+        let baseCounts = Dictionary(grouping: candidates, by: { $0.1.scopeKey }).mapValues(\.count)
+        let refined = candidates.map { provider, observation -> ResetCreditObservation in
+            guard baseCounts[observation.scopeKey, default: 0] > 1,
+                  !observation.scopeKey.hasSuffix(Self.anonymousScopeSuffix),
+                  let organization = CloudSyncReader.effectiveIdentifiers(for: provider)
+                      .first(where: { $0.contains(":account:") })
+            else { return observation }
+            return observation.withScopeKey("\(observation.scopeKey)|\(organization)")
+        }
+        let refinedCounts = Dictionary(grouping: refined, by: \.scopeKey).mapValues(\.count)
+        return refined.filter { refinedCounts[$0.scopeKey] == 1 }
+    }
+
+    private func withScopeKey(_ scopeKey: String) -> ResetCreditObservation {
+        ResetCreditObservation(
+            scopeKey: scopeKey,
+            providerID: self.providerID,
+            providerName: self.providerName,
+            accountLabel: self.accountLabel,
+            observedAt: self.observedAt,
+            expirations: self.expirations,
+            isComplete: self.isComplete)
     }
 
     /// Resets still available at `date`, grouped by identical expiry, soonest first.

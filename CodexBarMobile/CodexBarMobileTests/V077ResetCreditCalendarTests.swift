@@ -255,45 +255,35 @@ struct V077ResetCreditCalendarTests {
         #expect(store.events.count == 1)
     }
 
-    @Test func `Macs reporting overlapping identities share one account scope`() throws {
-        let store = FakeCalendarStore()
-        let expiry = self.now.addingTimeInterval(self.day)
-        func claude(_ identities: [String], _ email: String?, observedAt: Date, _ expirations: [Date?])
-            -> ProviderUsageSnapshot
-        {
+    @Test func `Two Codex workspaces under one email keep separate scopes`() {
+        func workspace(_ org: String, _ expiry: Date) -> ProviderUsageSnapshot {
             ProviderUsageSnapshot(
-                providerID: "claude",
-                providerName: "Claude",
+                providerID: "codex",
+                providerName: "Codex",
                 primary: nil,
                 secondary: nil,
-                accountEmail: email,
+                accountEmail: "user@example.com",
                 loginMethod: nil,
                 statusMessage: nil,
                 isError: false,
-                lastUpdated: observedAt,
-                accountIdentities: identities,
-                resetCreditInventory: SyncResetCreditInventory(expirations: expirations, updatedAt: observedAt))
+                lastUpdated: self.now,
+                accountIdentities: ["codex:account:\(org)", "codex:email:user@example.com"],
+                codexResetCredits: SyncCodexResetCredits(
+                    availableCount: 1,
+                    nextExpiresAt: expiry,
+                    credits: [self.codexCredit(org, status: "available", expiresAt: expiry)],
+                    updatedAt: self.now))
         }
-        var state = try self.reconcile(
-            ResetCreditCalendarState(),
-            [claude(
-                ["claude:account:X", "claude:email:user@example.com"],
-                "user@example.com",
-                observedAt: self.now,
-                [expiry])],
-            store: store).state
-        // A Mac without the email publishes later for the same account.
-        state = try self.reconcile(
-            state,
-            [claude(["claude:account:X"], nil, observedAt: self.now.addingTimeInterval(60), [expiry])],
-            store: store).state
-        #expect(store.events.count == 1)
-        // It then reports the reset used early; the original event goes away.
-        _ = try self.reconcile(
-            state,
-            [claude(["claude:account:X"], nil, observedAt: self.now.addingTimeInterval(120), [])],
-            store: store)
-        #expect(store.events.isEmpty)
+        let personal = workspace("personal", self.now.addingTimeInterval(self.day))
+        let team = workspace("team", self.now.addingTimeInterval(2 * self.day))
+        let observations = ResetCreditObservation.observations(from: [personal, team])
+        #expect(Set(observations.map(\.scopeKey)) == [
+            "codex|email:user@example.com|codex:account:personal",
+            "codex|email:user@example.com|codex:account:team",
+        ])
+        // Alone, the same workspace keeps the plain email scope.
+        #expect(ResetCreditObservation.observations(from: [personal])
+            .map(\.scopeKey) == ["codex|email:user@example.com"])
     }
 
     @Test func `A Mac clock running ahead cannot freeze an account`() throws {
@@ -309,13 +299,15 @@ struct V077ResetCreditCalendarTests {
         #expect(store.events.isEmpty)
     }
 
-    @Test func `Accounts without any identity stay out of the calendar`() {
-        let anonymous = self.provider(
-            "codex",
-            email: nil,
-            codex: SyncCodexResetCredits(availableCount: 0, nextExpiresAt: nil, credits: [], updatedAt: self.now))
-        #expect(ResetCreditObservation.make(from: anonymous) != nil)
-        #expect(ResetCreditObservation.observations(from: [anonymous]).isEmpty)
+    @Test func `A single anonymous account is used but two are left out`() {
+        func anonymous(_ count: Int) -> ProviderUsageSnapshot {
+            self.provider(
+                "codex",
+                email: nil,
+                codex: SyncCodexResetCredits(availableCount: 0, nextExpiresAt: nil, credits: [], updatedAt: self.now))
+        }
+        #expect(ResetCreditObservation.observations(from: [anonymous(0)]).map(\.scopeKey) == ["codex|single"])
+        #expect(ResetCreditObservation.observations(from: [anonymous(0), anonymous(1)]).isEmpty)
     }
 
     @Test func `Every device keeps the same duplicate`() throws {
@@ -434,7 +426,7 @@ struct V077ResetCreditCalendarTests {
             resetCreditInventory: SyncResetCreditInventory(expirations: [expiry], updatedAt: self.now))
         let scopeA = try #require(ResetCreditObservation.make(from: macA)?.scopeKey)
         #expect(scopeA == ResetCreditObservation.make(from: macB)?.scopeKey)
-        #expect(scopeA == "claude|claude:email:user@example.com")
+        #expect(scopeA == "claude|email:user@example.com")
     }
 
     @Test func `Grok hides the generic reset row only when the structured card covers it`() {

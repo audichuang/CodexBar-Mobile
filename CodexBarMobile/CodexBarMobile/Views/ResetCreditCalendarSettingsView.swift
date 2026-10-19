@@ -38,7 +38,7 @@ struct ResetCreditCalendarSettingsView: View {
                 }
             }
 
-            if !self.sync.isEnabled, self.sync.lastRemovalFailed {
+            if !self.sync.isEnabled, self.sync.hasPendingRemovals() {
                 Section {
                     Text(
                         String(
@@ -73,7 +73,7 @@ struct ResetCreditCalendarSettingsView: View {
                     Text(String(localized: "No reset credits reported yet."))
                         .foregroundStyle(.secondary)
                 } else {
-                    ForEach(self.observations, id: \.scopeKey) { observation in
+                    ForEach(Array(self.observations.enumerated()), id: \.offset) { _, observation in
                         self.observationRows(observation)
                     }
                 }
@@ -132,7 +132,10 @@ struct ResetCreditCalendarSettingsView: View {
     }
 
     private var observations: [ResetCreditObservation] {
-        ResetCreditObservation.observations(from: self.usageData.snapshot?.providers ?? [])
+        // Every reported inventory, including accounts the calendar leaves out because they cannot be told apart.
+        (self.usageData.snapshot?.providers ?? [])
+            .filter { !MockProviderDetector.isMock($0) }
+            .compactMap(ResetCreditObservation.make(from:))
     }
 
     /// Supported providers synced from a Mac that did not report an inventory.
