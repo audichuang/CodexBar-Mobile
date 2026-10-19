@@ -1,6 +1,6 @@
 # 077 — Reset credit 到期时间详情与日历提醒（iOS 2.10.0 + Mac 0.76.0.2）
 
-Status: `in-progress`
+Status: `done`（代码、测试、文档与版本号完成；PR #195；Mac draft release 与 iOS TestFlight 见 03-testing）
 Date: 2026-10-18
 
 ## 需求（用户确认，2026-10-18）

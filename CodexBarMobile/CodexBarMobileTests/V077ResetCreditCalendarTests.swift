@@ -511,6 +511,36 @@ struct V077ResetCreditCalendarTests {
         #expect(pruned.scopeObservedAt.isEmpty)
     }
 
+    @Test func `The calendar note matches the card's own account`() throws {
+        let suite = "V077ResetCreditCalendarTests-badge"
+        let defaults = try #require(UserDefaults(suiteName: suite))
+        defaults.removePersistentDomain(forName: suite)
+        defer { defaults.removePersistentDomain(forName: suite) }
+        let expiry = Date().addingTimeInterval(self.day)
+        func entry(_ account: String?, scheduled: Bool) -> ResetCreditCalendarEntry {
+            ResetCreditCalendarEntry(
+                key: "\(account ?? "-")",
+                scopeKey: "claude|\(account ?? "-")",
+                providerID: "claude",
+                providerName: "Claude",
+                accountLabel: account,
+                expiresAt: expiry,
+                count: 1,
+                isAvailable: true,
+                eventIdentifier: scheduled ? "event" : nil,
+                eventSignature: nil)
+        }
+        var state = ResetCreditCalendarState(calendarIdentifier: "calendar")
+        state.entries = ["a": entry("a@example.com", scheduled: true), "b": entry("b@example.com", scheduled: false)]
+        try defaults.set(JSONEncoder().encode(state), forKey: ResetCreditCalendarSync.stateKey)
+
+        let sync = ResetCreditCalendarSync(defaults: defaults)
+        #expect(sync.hasScheduledEvent(providerID: "claude", account: "A@example.com", expirations: [expiry]))
+        #expect(!sync.hasScheduledEvent(providerID: "claude", account: "b@example.com", expirations: [expiry]))
+        #expect(!sync.hasScheduledEvent(providerID: "claude", account: nil, expirations: [expiry]))
+        #expect(!sync.hasScheduledEvent(providerID: "codex", account: "a@example.com", expirations: [expiry]))
+    }
+
     @Test func `Only dated resets are shown as being in the calendar`() throws {
         let undated = try #require(ResetCreditsCardPresentation.make(
             provider: self.claude([nil], observedAt: self.now),

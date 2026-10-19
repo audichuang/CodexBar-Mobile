@@ -175,7 +175,7 @@ final class ResetCreditCalendarSync {
     @ObservationIgnored private lazy var store = EventKitResetCreditCalendarStore(eventStore: self.eventStore)
     @ObservationIgnored private var latestInput = Input()
 
-    /// `providerID#expiry` of every future reset with an event in the calendar; drives the detail card's note.
+    /// `providerID#account#expiry` of every future reset with an event in the calendar; drives the card's note.
     private(set) var scheduledResets: Set<String> = []
 
     init(defaults: UserDefaults = .standard) {
@@ -185,19 +185,26 @@ final class ResetCreditCalendarSync {
         self.refreshAccessState()
     }
 
-    /// Whether this provider has a calendar event for any of the given expiries.
-    func hasScheduledEvent(providerID: String, expirations: [Date]) -> Bool {
-        expirations.contains { self.scheduledResets.contains(Self.scheduledKey(providerID: providerID, expiresAt: $0)) }
+    /// Whether this provider account has a calendar event for any of the given expiries. Accounts without an
+    /// email or label cannot be matched to a card, so they never claim coverage.
+    func hasScheduledEvent(providerID: String, account: String?, expirations: [Date]) -> Bool {
+        expirations.contains { expiresAt in
+            Self.scheduledKey(providerID: providerID, account: account, expiresAt: expiresAt)
+                .map { self.scheduledResets.contains($0) } ?? false
+        }
     }
 
-    private static func scheduledKey(providerID: String, expiresAt: Date) -> String {
-        "\(providerID)#\(ResetCreditCalendarPlanner.wholeSeconds(expiresAt))"
+    private static func scheduledKey(providerID: String, account: String?, expiresAt: Date) -> String? {
+        guard let account = AccountIdentityNormalize.normalize(account) else { return nil }
+        return "\(providerID)#\(account)#\(ResetCreditCalendarPlanner.wholeSeconds(expiresAt))"
     }
 
     private static func scheduledResets(in state: ResetCreditCalendarState, now: Date) -> Set<String> {
         Set(state.entries.values
             .filter { $0.isAvailable && $0.eventIdentifier != nil && $0.expiresAt > now }
-            .map { Self.scheduledKey(providerID: $0.providerID, expiresAt: $0.expiresAt) })
+            .compactMap {
+                Self.scheduledKey(providerID: $0.providerID, account: $0.accountLabel, expiresAt: $0.expiresAt)
+            })
     }
 
     /// Identity of the reset-credit data in a snapshot; drives the view task that calls `sync`.

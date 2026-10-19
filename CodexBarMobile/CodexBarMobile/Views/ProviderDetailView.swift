@@ -336,6 +336,7 @@ struct ProviderDetailView: View {
                             && ResetCreditCalendarSync.shared.isActive
                             && ResetCreditCalendarSync.shared.hasScheduledEvent(
                                 providerID: self.provider.providerID,
+                                account: self.provider.accountEmail,
                                 expirations: resetCredits.groups.compactMap(\.expiresAt))
                             && !self.isDemoMode
                             && !MockProviderDetector.isMock(self.provider))
