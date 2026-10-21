@@ -2,9 +2,10 @@
 
 All notable changes to the CodexBar iOS companion app will be documented in this file.
 
-## [2.10.0 (244)] — iPhone Duo workspaces
+## [3.0.0 (245)] — Calendar reminders and iPhone Duo
 
 ### Added
+- Redesigned update introduction with version-specific feature highlights, adaptive cards, a persistent Continue action, and expandable release history. 3.0 combines the unreleased 2.10 calendar/reset-credit features with iPhone Duo workspaces; there is no separate public 2.10 release entry.
 - Two report panes for Cost and share-card editing. Active fold regions and margins determine usable pane bounds; tabletop share editing places the preview above the controls. Both sections remain reachable in narrow windows and at accessibility text sizes.
 - Expanded Usage sidebar retains quota labels, reset information, balance details and source notices. Multi-account groups show their account count instead of presenting one account's quota as a total.
 
@@ -18,7 +19,7 @@ All notable changes to the CodexBar iOS companion app will be documented in this
 ### Notes
 - Built with Xcode 27.1 (27A9275); minimum iOS remains 17. No Mac, payload, or CloudKit schema changes. Validation and remaining evidence are tracked in Research/078.
 
-## [2.10.0 (243)] — Reset credit expiries and calendar reminders
+### Included from the unreleased 2.10 beta — Reset credit expiries and calendar reminders
 
 ### Added
 - Reset-credit inventory on the wire (Research 077): new optional `ProviderUsageSnapshot.resetCreditInventory` (`SyncResetCreditInventory { expirations: [Date?], updatedAt }`, `decodeIfPresent`, nil not encoded, lossy decode with a 50-entry cap; an optional `isComplete: false`, encoded only when false, marks a Claude inventory from which a malformed grant was dropped) published by Mac 0.76.0.2 for Claude (`cedar_ember` grants) and Grok (`GetRemainingResets` tokens). Expiry times only; grant and token identifiers never leave the Mac. Presence means a complete observation (an empty array confirms none are left); absence means unknown. Codex keeps using `codexResetCredits`. The merger keeps the newest inventory by its own `updatedAt`, including an empty one.

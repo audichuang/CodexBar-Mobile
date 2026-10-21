@@ -158,44 +158,46 @@ struct ContentView: View {
             ResetCreditCalendarSync.shared.sync(input: .make(from: self.usageData))
         }
         .onChange(of: self.scenePhase) { _, phase in
-            // Calendar access may have changed in Settings; reconcile (or finish queued removals) on return.
-            guard phase == .active, !self.isLayoutPreview, !self.isDemoMode else { return }
-            ResetCreditCalendarSync.shared.sync(input: .make(from: self.usageData))
-        }
-        .onReceive(NotificationCenter.default.publisher(for: UIApplication.significantTimeChangeNotification)) { _ in
-            self.readerTimeZoneIdentifier = TimeZone.current.identifier
-            self.costReferenceDate = Date()
-        }
-        .onOpenURL { url in
-            self.handleDeepLink(url)
-        }
-        .fullScreenCover(isPresented: .init(
-            get: { self.shouldShowReleaseNotes },
-            set: { if !$0 { self.releaseNotesSeenVersion = self.currentVersion } }))
-        {
-            NavigationStack {
-                ReleaseNotesView(
-                    showsHistory: false,
-                    onDone: { self.releaseNotesSeenVersion = self.currentVersion },
-                    onDemo: {
-                        self.releaseNotesSeenVersion = self.currentVersion
-                        self.isDemoMode = true
-                    })
+                // Calendar access may have changed in Settings; reconcile (or finish queued removals) on return.
+                guard phase == .active, !self.isLayoutPreview, !self.isDemoMode else { return }
+                ResetCreditCalendarSync.shared.sync(input: .make(from: self.usageData))
             }
-        }
-        .sheet(isPresented: self.$isWidgetSettingsPresented) {
-                NavigationStack {
-                    WidgetSettingsView(usageData: self.usageData)
-                        .toolbar {
-                            ToolbarItem(placement: .topBarTrailing) {
-                                Button("Done") {
-                                    self.isWidgetSettingsPresented = false
-                                }
-                                .fontWeight(.semibold)
-                            }
-                        }
+            .onReceive(NotificationCenter.default
+                .publisher(for: UIApplication.significantTimeChangeNotification))
+            { _ in
+                self.readerTimeZoneIdentifier = TimeZone.current.identifier
+                self.costReferenceDate = Date()
+            }
+            .onOpenURL { url in
+                    self.handleDeepLink(url)
                 }
-            }
+                .fullScreenCover(isPresented: .init(
+                    get: { self.shouldShowReleaseNotes },
+                    set: { if !$0 { self.releaseNotesSeenVersion = self.currentVersion } }))
+                {
+                    NavigationStack {
+                        ReleaseNotesView(
+                            showsHistory: false,
+                            onDone: { self.releaseNotesSeenVersion = self.currentVersion },
+                            onDemo: {
+                                self.releaseNotesSeenVersion = self.currentVersion
+                                self.isDemoMode = true
+                            })
+                    }
+                }
+                .sheet(isPresented: self.$isWidgetSettingsPresented) {
+                        NavigationStack {
+                            WidgetSettingsView(usageData: self.usageData)
+                                .toolbar {
+                                    ToolbarItem(placement: .topBarTrailing) {
+                                        Button("Done") {
+                                            self.isWidgetSettingsPresented = false
+                                        }
+                                        .fontWeight(.semibold)
+                                    }
+                                }
+                        }
+                    }
     }
 
     private func tabs() -> some View {
@@ -260,7 +262,7 @@ struct ContentView: View {
     }
 }
 
-private struct SetupGuideSheet: View {
+struct SetupGuideSheet: View {
     let onDismiss: () -> Void
     var onDemo: (() -> Void)?
 
@@ -4904,37 +4906,27 @@ private struct NSEInvocationLogSection: View {
     }
 }
 
-private struct ReleaseNotesVersion: Identifiable {
-    struct Section: Identifiable {
-        let title: String
-        let items: [String]
-
-        var id: String {
-            self.title
-        }
-    }
-
-    let version: String
-    let status: String
-    let summary: String
-    let sections: [Section]
-
-    var id: String {
-        self.version
-    }
-}
-
-private enum MobileReleaseNotesCatalog {
+enum MobileReleaseNotesCatalog {
     static let versions: [ReleaseNotesVersion] = [
         ReleaseNotesVersion(
-            version: "2.10.0",
+            version: "3.0.0",
             status: String(localized: "Latest"),
             summary: String(
-                localized: "CodexBar 2.10 shows when each reset credit expires and can add those times to your calendar."),
+                localized: "Your credits, right on time. Your workspace, ready to unfold."),
+            highlights: [
+                .init(
+                    id: "calendar", symbol: "calendar.badge.clock",
+                    title: String(localized: "Never miss a reset credit"),
+                    detail: String(
+                        localized: "See when your reset credits expire. Add them to your calendar and get reminded one day and one hour before.")),
+                .init(
+                    id: "duo", symbol: "rectangle.split.2x1",
+                    title: String(localized: "Made for iPhone Duo"),
+                    detail: String(
+                        localized: "Accounts beside usage. Costs beside trends. Share controls beside a live preview. Fold or unfold and keep your place.")),
+            ],
             sections: [
-                .init(title: String(localized: "What's New"), items: [
-                    String(
-                        localized: "Open CodexBar on iPhone Duo to browse accounts beside their usage details, explore costs in two panels, and edit share cards beside a live preview. Your selection stays with you as the window changes."),
+                .init(title: String(localized: "More in 3.0"), items: [
                     String(
                         localized: "Claude, Codex, and Grok details list every available reset credit with its exact expiry date and time."),
                     String(
@@ -5907,169 +5899,6 @@ private enum MobileReleaseNotesCatalog {
                     ]),
             ]),
     ]
-}
-
-private struct ReleaseNotesView: View {
-    private let versions = MobileReleaseNotesCatalog.versions
-    var showsHistory = true
-    var onDone: (() -> Void)?
-    var onDemo: (() -> Void)?
-    @State private var showingSetupGuide = false
-
-    private var latestVersion: ReleaseNotesVersion? {
-        self.versions.first
-    }
-
-    private var historicalVersions: ArraySlice<ReleaseNotesVersion> {
-        self.versions.dropFirst()
-    }
-
-    var body: some View {
-        List {
-            if let latestVersion = self.latestVersion {
-                Section("Latest") {
-                    ReleaseNotesCard(version: latestVersion)
-                }
-            }
-
-            if self.showsHistory {
-                Section("History") {
-                    if self.historicalVersions.isEmpty {
-                        Text("Older iOS release notes will appear here as new versions ship.")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                    } else {
-                        ForEach(Array(self.historicalVersions)) { version in
-                            DisclosureGroup {
-                                ReleaseNotesContent(version: version)
-                                    .padding(.top, 8)
-                            } label: {
-                                VStack(alignment: .leading, spacing: 4) {
-                                    HStack(spacing: 8) {
-                                        Text("\(String(localized: "Version")) \(version.version)")
-                                            .fontWeight(.semibold)
-                                        ReleaseNotesBadge(title: version.status)
-                                    }
-
-                                    Text(version.summary)
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
-                                }
-                                .padding(.vertical, 4)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        .navigationTitle("Release Notes")
-        .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
-                Button {
-                    self.showingSetupGuide = true
-                } label: {
-                    Text("Setup")
-                }
-                .accessibilityIdentifier("release-notes-setup")
-            }
-            if let onDone = self.onDone {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done", action: onDone)
-                        .fontWeight(.semibold)
-                        .accessibilityIdentifier("release-notes-done")
-                }
-            }
-        }
-        .sheet(isPresented: self.$showingSetupGuide) {
-            SetupGuideSheet(
-                onDismiss: { self.showingSetupGuide = false },
-                onDemo: self.setupGuideDemoAction)
-        }
-    }
-
-    private var setupGuideDemoAction: (() -> Void)? {
-        guard let onDemo = self.onDemo else { return nil }
-        return {
-            self.showingSetupGuide = false
-            onDemo()
-        }
-    }
-}
-
-private struct ReleaseNotesCard: View {
-    let version: ReleaseNotesVersion
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text("\(String(localized: "Version")) \(self.version.version)")
-                        .font(.headline)
-                    Text(self.version.summary)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-
-                Spacer(minLength: 12)
-
-                ReleaseNotesBadge(title: self.version.status)
-            }
-
-            ReleaseNotesContent(version: self.version)
-        }
-        .padding(.vertical, 8)
-    }
-}
-
-private struct ReleaseNotesContent: View {
-    let version: ReleaseNotesVersion
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            ForEach(self.version.sections) { section in
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(section.title)
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-
-                    VStack(alignment: .leading, spacing: 8) {
-                        ForEach(section.items, id: \.self) { item in
-                            HStack(alignment: .top, spacing: 8) {
-                                Image(systemName: "circle.fill")
-                                    .font(.system(size: 5))
-                                    .foregroundStyle(.secondary)
-                                    .padding(.top, 7)
-
-                                // Use LocalizedStringKey init so markdown
-                                // (specifically `[label](url)` links) renders
-                                // as tappable, with bold / italic also
-                                // honored. Existing items without markdown
-                                // syntax continue to render as plain text.
-                                Text(.init(item))
-                                    .font(.subheadline)
-                                    .foregroundStyle(.secondary)
-                                    .tint(.accentColor)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-private struct ReleaseNotesBadge: View {
-    let title: String
-
-    var body: some View {
-        Text(self.title)
-            .font(.caption2)
-            .fontWeight(.semibold)
-            .foregroundStyle(.tint)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
-            .background(.tint.opacity(0.12), in: Capsule())
-    }
 }
 
 private struct UsageSettingsView: View {

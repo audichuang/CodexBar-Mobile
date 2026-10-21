@@ -1,6 +1,202 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "Continue": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continue"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "继续"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "繼續"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "続ける"
+          }
+        }
+      }
+    },
+    "More in 3.0": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "More in 3.0"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3.0 的更多更新"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3.0 的更多更新"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "3.0 のその他の更新"
+          }
+        }
+      }
+    },
+    "Accounts beside usage. Costs beside trends. Share controls beside a live preview. Fold or unfold and keep your place.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accounts beside usage. Costs beside trends. Share controls beside a live preview. Fold or unfold and keep your place."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "账号与用量、成本与趋势并排查看，分享时边编辑边预览。展开或合上，接着刚才的操作。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "帳號與用量、成本與趨勢並排查看，分享時邊編輯邊預覽。展開或闔上，接著剛才的操作。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アカウントと使用量、コストと推移を並べて表示。共有カードはプレビューを見ながら編集。開閉しても作業を続けられます。"
+          }
+        }
+      }
+    },
+    "Made for iPhone Duo": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Made for iPhone Duo"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "为 iPhone Duo 而设计"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "為 iPhone Duo 而設計"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iPhone Duo に合わせた使い心地"
+          }
+        }
+      }
+    },
+    "See when your reset credits expire. Add them to your calendar and get reminded one day and one hour before.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "See when your reset credits expire. Add them to your calendar and get reminded one day and one hour before."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查看重置额度何时到期，添加到日历，在到期前一天和一小时收到提醒。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查看重置額度何時到期，加入行事曆，在到期前一天和一小時收到提醒。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リセットクレジットの有効期限を確認してカレンダーに追加。1日前と1時間前に通知します。"
+          }
+        }
+      }
+    },
+    "Never miss a reset credit": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Never miss a reset credit"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "别错过重置额度的有效期"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "別錯過重置額度的有效期"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リセットクレジットの期限を忘れずに"
+          }
+        }
+      }
+    },
+    "Your credits, right on time. Your workspace, ready to unfold.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your credits, right on time. Your workspace, ready to unfold."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "额度到期，及时提醒。展开屏幕，从容掌握。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "額度到期，及時提醒。展開螢幕，從容掌握。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "クレジットの期限を忘れずに。広がる画面で、もっと見やすく。"
+          }
+        }
+      }
+    },
     "Open CodexBar on iPhone Duo to browse accounts beside their usage details, explore costs in two panels, and edit share cards beside a live preview. Your selection stays with you as the window changes.": {"localizations": {"en": {"stringUnit": {"state": "translated", "value": "Open CodexBar on iPhone Duo to browse accounts beside their usage details, explore costs in two panels, and edit share cards beside a live preview. Your selection stays with you as the window changes."}}, "zh-Hans": {"stringUnit": {"state": "translated", "value": "在 iPhone Duo 上展开 CodexBar，可并排查看账号与用量详情、分区浏览费用，并在编辑分享卡片时实时预览。窗口变化时会保留当前选择。"}}, "zh-Hant": {"stringUnit": {"state": "translated", "value": "在 iPhone Duo 上展開 CodexBar，可並排查看帳號與用量詳情、分區瀏覽費用，並在編輯分享卡片時即時預覽。視窗變化時會保留目前選擇。"}}, "ja": {"stringUnit": {"state": "translated", "value": "iPhone DuoでCodexBarを開くと、アカウントと使用状況の詳細を並べて確認し、コストを2つのパネルで表示し、プレビューを見ながら共有カードを編集できます。ウインドウのサイズが変わっても選択内容は保持されます。"}}}},
     "Some upcoming events could not be removed yet. CodexBar removes them once it can use your calendar.": {"extractionState": "manual", "localizations": {"en": {"stringUnit": {"state": "translated", "value": "Some upcoming events could not be removed yet. CodexBar removes them once it can use your calendar."}}, "zh-Hans": {"stringUnit": {"state": "translated", "value": "部分即将到期的事件暂时无法删除。CodexBar 获得日历权限后会自动删除。"}}, "zh-Hant": {"stringUnit": {"state": "translated", "value": "部分即將到期的事件暫時無法刪除。CodexBar 取得行事曆權限後會自動刪除。"}}, "ja": {"stringUnit": {"state": "translated", "value": "これからのイベントの一部をまだ削除できていません。CodexBar がカレンダーを使えるようになると自動で削除します。"}}}},
     "CodexBar adds each reset credit's expiration to a calendar named CodexBar, with reminders one day and one hour before. If you use a reset early, its event is removed once your Mac reports the change and you open CodexBar on your iPhone. Turning this off removes upcoming events from the shared calendar; another device with this on adds them back.": {"extractionState": "manual", "localizations": {"en": {"stringUnit": {"state": "translated", "value": "CodexBar adds each reset credit's expiration to a calendar named CodexBar, with reminders one day and one hour before. If you use a reset early, its event is removed once your Mac reports the change and you open CodexBar on your iPhone. Turning this off removes upcoming events from the shared calendar; another device with this on adds them back."}}, "zh-Hans": {"stringUnit": {"state": "translated", "value": "CodexBar 会把每个重置额度的到期时间添加到名为 CodexBar 的日历，并在到期前 1 天和 1 小时提醒。如果提前用掉了重置，Mac 报告这一变化、且你在 iPhone 上打开 CodexBar 后，对应事件会被删除。关闭此开关会从共享的日历中删除即将到期的事件；其他开启了此功能的设备会再把它们加回来。"}}, "zh-Hant": {"stringUnit": {"state": "translated", "value": "CodexBar 會把每個重置額度的到期時間加入名為 CodexBar 的行事曆，並在到期前 1 天和 1 小時提醒。如果提前用掉了重置，Mac 回報這項變化、且你在 iPhone 上打開 CodexBar 後，對應事件會被刪除。關閉此開關會從共享的行事曆中刪除即將到期的事件；其他開啟了此功能的裝置會再把它們加回來。"}}, "ja": {"stringUnit": {"state": "translated", "value": "CodexBar は各リセットクレジットの有効期限を「CodexBar」という名前のカレンダーに追加し、1 日前と 1 時間前に通知します。リセットを早めに使った場合、Mac がその変化を報告し、iPhone で CodexBar を開いたときにそのイベントを削除します。オフにすると共有カレンダーからこれからのイベントを削除しますが、この機能がオンのほかのデバイスが再び追加します。"}}}},
