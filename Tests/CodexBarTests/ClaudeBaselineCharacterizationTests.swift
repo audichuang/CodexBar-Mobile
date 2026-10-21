@@ -503,20 +503,25 @@ struct ClaudeBaselineCharacterizationTests {
         defer { try? FileManager.default.removeItem(at: profile.root) }
         let env = ["CLAUDE_CLI_PATH": stubCLIPath].merging(profile.environment) { current, _ in current }
 
-        await ClaudeOAuthKeychainReadStrategyPreference.withTaskOverrideForTesting(.securityCLIExperimental) {
-            await ClaudeOAuthKeychainPromptPreference.withTaskOverrideForTesting(.onlyOnUserAction) {
-                await self.withNoOAuthCredentials {
-                    let outcome = await self.fetchOutcome(
-                        runtime: .app,
-                        sourceMode: .auto,
-                        env: env,
-                        settings: settings)
-                    // The identified test profile reaches the deadlock-breaker's explicit background opt-in
-                    // guard. OAuth credentials are confirmed absent here (`withNoOAuthCredentials`), but a
-                    // confirmed absence of CodexBar-readable credentials does not by itself prove the CLI is
-                    // safe to launch. With the stored policy left at `.onlyOnUserAction`, the pipeline stops at web.
-                    #expect(outcome.attempts.map(\.strategyID) == ["claude.oauth", "claude.cli", "claude.web"])
-                    #expect(outcome.attempts.map(\.wasAvailable) == [true, false, false])
+        // Exercise the enabled-Keychain prompt policy independently of the runner's disable flag.
+        // Credential and file reads remain isolated by withNoOAuthCredentials.
+        await self.withBackgroundKeychainAccess {
+            await ClaudeOAuthKeychainReadStrategyPreference.withTaskOverrideForTesting(.securityCLIExperimental) {
+                await ClaudeOAuthKeychainPromptPreference.withTaskOverrideForTesting(.onlyOnUserAction) {
+                    await self.withNoOAuthCredentials {
+                        let outcome = await self.fetchOutcome(
+                            runtime: .app,
+                            sourceMode: .auto,
+                            env: env,
+                            settings: settings)
+                        // The identified test profile reaches the deadlock-breaker's explicit background opt-in
+                        // guard. OAuth credentials are confirmed absent here (`withNoOAuthCredentials`), but a
+                        // confirmed absence of CodexBar-readable credentials does not by itself prove the CLI is
+                        // safe to launch. With the stored policy left at `.onlyOnUserAction`, the pipeline stops at
+                        // web.
+                        #expect(outcome.attempts.map(\.strategyID) == ["claude.oauth", "claude.cli", "claude.web"])
+                        #expect(outcome.attempts.map(\.wasAvailable) == [true, false, false])
+                    }
                 }
             }
         }

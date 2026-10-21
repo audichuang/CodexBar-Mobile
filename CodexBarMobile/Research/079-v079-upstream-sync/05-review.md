@@ -29,3 +29,7 @@ Reviewer第4轮曾怀疑hasUsableSignal遗漏clear；实际基线已包含costSu
 ## 尚待闭环
 
 Mac完整测试终态、Macdraft、iOS实现/测试与最终diff review均未完成，不能提前声称Goal done。
+
+## 全量回归暴露的测试隔离
+
+全量第28组的 Claude onlyOnUserAction characterization 连续失败。独立只读审查确认 runner 显式 CODEXBAR_DISABLE_KEYCHAIN_ACCESS=1 合法触发上游 cold-profile owner CLI fallback，原测试未固定其所需的 enabled gate。测试增加已有 withBackgroundKeychainAccess task override，凭证读取仍通过 isolated memory/file/keychain stub 与底层 test safety。产品 guard 不改。最终全量使用标准 Scripts/test.sh 的 CODEXBAR_SUPPRESS_TEST_KEYCHAIN_ACCESS=1，不把“禁止真实SecItem”混同于产品的“用户禁用Keychain”开关。
