@@ -6,10 +6,14 @@ import Foundation
 @main
 struct Harness {
     static let now = Date(timeIntervalSince1970: 1_792_612_346)
-    static let ids = ["claude", "gemini", "futureagi", "munito", "plugin:fixture", "claude-cost"]
+    static let ids = ["claude", "gemini", "futureagi", "munito", "munito-organization", "munito-other", "plugin:fixture", "claude-cost"]
 
     static func provider(_ id: String, new: Bool, device: String) -> ProviderUsageSnapshot? {
-        if ["futureagi", "munito", "claude-cost"].contains(id), !new { return nil }
+        if ["futureagi", "munito", "munito-organization", "munito-other", "claude-cost"].contains(id), !new { return nil }
+        if id == "munito-other", device != "mac-a" { return nil }
+        let organization = id.hasPrefix("munito-")
+        let providerID = organization ? "munito" : id
+        let organizationKey = id == "munito-other" ? "organization-fixture-distinct" : "organization-fixture-shared"
         if id == "claude-cost" {
             return ProviderUsageSnapshot(
                 providerID: "claude", providerName: "Claude", primary: nil, secondary: nil,
@@ -28,11 +32,16 @@ struct Harness {
             #endif
         }
         return ProviderUsageSnapshot(
-            providerID: id, providerName: id, primary: window, secondary: nil,
+            providerID: providerID, providerName: id, primary: window, secondary: nil,
             accountEmail: nil, loginMethod: nil, statusMessage: nil, isError: false,
-            lastUpdated: now, rateWindows: [window],
+            lastUpdated: now,
+            costSummary: organization ? SyncCostSummary(
+                sessionCostUSD: nil, sessionTokens: nil, last30DaysCostUSD: id == "munito-other" ? 7 : 5,
+                last30DaysTokens: nil, daily: [], sourceUpdatedAt: now) : nil,
+            rateWindows: [window],
             accountIdentities: id == "claude" ? ["claude:email:fixture@example.test"] : nil,
-            accountRecordKey: ["futureagi", "munito"].contains(id) ? "device-" + device : nil,
+            accountRecordKey: organization ? organizationKey : (["futureagi", "munito"].contains(id) ? "device-" + device : nil),
+            accountOrganization: organization ? "Same editable organization name" : nil,
             details: rows.isEmpty ? [] : [.init(title: "Status", rows: rows)])
     }
 
@@ -97,7 +106,7 @@ struct Harness {
             return
         }
         let b = try envelopes(args[3])
-        for id in ids {
+        for id in ["claude", "gemini", "futureagi", "munito", "plugin:fixture"] {
             let sources = (a + b).filter { $0.provider.providerID == id }.map {
                 SyncedUsageSnapshot(providers: [$0.provider], syncTimestamp: $0.syncTimestamp,
                     deviceName: $0.deviceName, deviceID: $0.deviceID)
@@ -108,8 +117,17 @@ struct Harness {
                 let costOwners = sources.flatMap(\.providers).filter {
                     $0.accountRecordKey?.hasPrefix("claude-local-cost:") == true
                 }.count
-                let expected = ["futureagi", "munito"].contains(id) ? sources.count : 1 + costOwners
+                let expected = ["futureagi", "munito"].contains(id)
+                    ? Set(sources.flatMap(\.providers).compactMap(\.accountRecordKey)).count : 1 + costOwners
                 precondition(merged.providers.count == expected, "\(id) expected \(expected) accounts")
+                if id == "munito" {
+                    let organizations = merged.providers.filter { $0.accountRecordKey?.hasPrefix("organization-") == true }
+                    let shared = sources.flatMap(\.providers).contains { $0.accountRecordKey == "organization-fixture-shared" }
+                    let distinct = sources.flatMap(\.providers).contains { $0.accountRecordKey == "organization-fixture-distinct" }
+                    precondition(organizations.count == (shared ? 1 : 0) + (distinct ? 1 : 0))
+                    precondition(organizations.compactMap { $0.costSummary?.last30DaysCostUSD }.reduce(0, +)
+                        == (shared ? 5 : 0) + (distinct ? 7 : 0), "organization spend must not double across Macs")
+                }
                 precondition(merged.providers.allSatisfy {
                     $0.primary?.usedPercent == 30 || $0.costSummaryCleared == true
                 })

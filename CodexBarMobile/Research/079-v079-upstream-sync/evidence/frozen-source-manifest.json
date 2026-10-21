@@ -1,7 +1,7 @@
 {
   "oldRef": "v0.76.0.2-mobile.2.10.0",
   "oldCommit": "7bc120faf0f9eadfe624afcfe377beb01aae5427",
-  "newCommit": "833483854c0dc95a7a5b414b097fae5ca8976d31",
+  "newCommit": "85d053bb0a00147bf364e6aeaaaef8e8907d6372",
   "files": [
     {
       "path": "Shared/Models/DeviceLifecycleEvent.swift",
@@ -99,5 +99,5 @@
       "newSHA256": "29f2593e76069560d809acf178bfd8b66b3133540c61fb799b3fcdfe71a951da"
     }
   ],
-  "harnessSHA256": "b1473910b055b69d55a1d722ce7a33c086bf08c624ec53b076ad25df93443adf"
+  "harnessSHA256": "1ffd315dc3dbdc5f3fadb51dd21c9e3ab2a5828a26dd1a07a7d42b7f6965efa3"
 }

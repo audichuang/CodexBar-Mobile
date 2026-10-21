@@ -469,10 +469,11 @@ build_widget_extension() {
   derived_dir=$(codexbar_widget_derived_data_dir "$ROOT" "$LOWER_CONF")
   local project_dir="$ROOT/WidgetExtension/CodexBarWidgetExtension.xcodeproj"
   local build_log="$derived_dir/xcodebuild.log"
+  local result_bundle="$derived_dir/Results/widget-$(date -u +%Y%m%dT%H%M%SZ)-$$.xcresult"
   local timeout_seconds="${CODEXBAR_WIDGET_EXTENSION_TIMEOUT_SECONDS:-900}"
   local archs="${ARCH_LIST[*]}"
 
-  mkdir -p "$derived_dir"
+  mkdir -p "$derived_dir/Results"
   echo "Building CodexBarWidget Xcode extension (${xcode_conf}, ${archs})." >&2
   xcodebuild \
     -project "$project_dir" \
@@ -480,6 +481,7 @@ build_widget_extension() {
     -configuration "$xcode_conf" \
     -destination "generic/platform=macOS" \
     -derivedDataPath "$derived_dir" \
+    -resultBundlePath "$result_bundle" \
     -skipPackageUpdates \
     -disableAutomaticPackageResolution \
     -packageAuthorizationProvider netrc \

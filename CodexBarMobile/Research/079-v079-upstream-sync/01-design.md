@@ -51,3 +51,7 @@ Research078记录3.0.0(245)仅本地验证，2.10.0(243)为既有VALID beta，�
 - Repeated finding pattern: nil标识会跨Mac合并不同账号；只按device隔离又会把同一组织算成两份。
 - Root design/requirements problem: 新provider的身份能力必须根据实际API字段决定，不能把“旧AccountIdentityComputer未提取”当作“来源未提供”。
 - Revised approach: Future AGI只提供plan，无已验证ID，仍device fallback。Munito plugin经真实mapper保留organization.id到identity.accountID；sync record key使用其trim+NFC+case-preserving SHA256，同org跨Mac相同，不同org/改名保持正确；ID缺失时才device fallback。显式requested key保留。通用record identity已有旧reader支持，不加wire/schema，不把组织名或API key当身份。新增同org跨Mac/异org同Mac/改名/无ID单测，并在iOS真实merger测去重与不串号。
+
+## iOS迁移窗口的成本权威性
+
+独立复查发现旧quota-owner记录在Mac两次成功清理前可与新Claude独立cost owner共存；新owner clear不能被旧summary覆盖，新owner summary不能与旧summary重复计费。消费者在每台设备内先按provider publication timestamp选取权威成本：独立owner更新或同时间时优先；用户关闭adapter后，明确更新的legacy summary可回切，并抑制滞留owner。额度、账号、预算、sourceReport保持完整。SwiftDataBridge在incoming keys/迁移/upsert之前使用同一成本视图；有效owner出现时迁移旧history，clear时只隐藏、不删除。aggregate按设备与provider抑制withdrawn来源，dashboard/activity跳过clear；普通nil保留历史fallback。新copy/helper放iOS WidgetShared，不改Mac二进制输入。增加legacy→独立→legacy、clear/restore、两Mac四quota、预算与raw ledger保留测试。

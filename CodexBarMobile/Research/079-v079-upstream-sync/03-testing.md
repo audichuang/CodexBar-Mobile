@@ -84,3 +84,7 @@ v079-all-tests-clean.log 前130组通过后ProviderArchitectureGatekeeperTests�
 ## Mac完整回归验收通过
 
 `v079-all-tests-acceptance.log`：exit0，1791 selections /160 groups，4 direct workers，160组first-pass成功，0 failure/0 retry/0 timeout；discovery146.2秒、execution520.4秒、total672.4秒。测试与静态审查对应staged tree `8f3b05e6f4f9151b0571a2f040e569206fa57bf2`；测试期间没有改编译源码/测试。环境脱敏测试的14个known issues是故意触发expectation来检查日志脱敏的fixture，不是14个产品缺陷。完整覆盖widget、UsageStore、账号/设备、成本缓存/性能与provider回归。此后仅整理CHANGELOG标题/措辞及证据，不改变测试逻辑或Mac产品代码。
+
+## 组织身份矩阵补强
+
+`v079-compat-org.log` exit0：16 masks /64 reads /32 merges；在缺ID设备fallback之外，增加同org跨Mac和同名异org fixture，真实old/new merger均去重共享org成本5美元、保留独立org7美元。已更新frozen-source-manifest/matrix-wire证据。上述仍是替代验证，不代表CloudKit或实机矩阵。

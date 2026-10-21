@@ -73,9 +73,8 @@ chmod 600 "$API_KEY_PATH"
 # Allow building a universal binary if ARCHES is provided; default to universal (arm64 + x86_64).
 ARCHES_VALUE=${ARCHES:-"arm64 x86_64"}
 ARCH_LIST=( ${ARCHES_VALUE} )
-for ARCH in "${ARCH_LIST[@]}"; do
-  swift build -c release --arch "$ARCH"
-done
+# package_app builds and validates every architecture with the explicit SDK/minimum OS
+# before staging. A second build without those flags only invalidates the same caches.
 CODEXBAR_STAGED_APP_PATH="$STAGED_APP_BUNDLE" \
   CODEXBAR_APP_FINAL_PATH="$RELEASE_STAGE_DIR/CodexBar-packaged.app" \
   CODEXBAR_PACKAGE_STAGE_ROOT="$RELEASE_STAGE_BASE" \

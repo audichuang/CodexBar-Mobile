@@ -22,3 +22,9 @@ Status: `in-progress`；尚未构建/签名公证/创建 Draft。
 - 签名严格校验、公证Accepted+staple、distribution policy、隔离HOME/禁用Keychain/禁止网络的resource与launch smoke。
 - ZIP/dSYM SHA256与draft asset digest/size对应；draft published_at=null、draft=true，local与origin refs/tags均不存在。
 - 使用完整下载tag URL在SSD生成签名appcast候选，保存候选证据后恢复已发布feed原字节，不发布候选feed。校验candidate enclosure长度、URL、edSignature与真实ZIP，并再次检查Sparkle单调递增。
+
+## 首轮打包失败与恢复
+
+`v079-mac-draft.log`：双架构Release与显式SDK产品构建均通过（378.39/373.62/329.01/328.26秒），Widget依赖解析失败：Xcode的SweetCookieKit cached bare repository缺少锁定5b0aead7093a067c61a2b17bfd2b6560fbc71ef3对象。官方远端v0.5.9 annotated tag peel正是该SHA，未更新依赖版本；仅对本轮SSD SourcePackages repository/checkout按锁定SHA fetch补齐缓存。失败时Xcode自动error result落入系统临时目录，已给widget build显式唯一-resultBundlePath到derived_dir/Results，防止重试回退。此轮无签名公证/draft成功声明。
+
+- 独立review确认以上resultBundle修复与增强org矩阵阻塞0。移除sign-and-notarize中未使用产物的重复无SDK前置编译；package_app仍逐arch显式SDK完整build→stage→arch/minos验证，保留ARCH_LIST供dSYM处理，不跳过构建/校验。package signing(16 entitlements/profile cases)、product path/SDK metadata、Info.plist回归均通过。
