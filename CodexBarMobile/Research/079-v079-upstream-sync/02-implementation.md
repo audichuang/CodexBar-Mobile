@@ -49,3 +49,9 @@ parserLogicVersion 22→23，生成 parser hash bf8c2cb80c247dd9。Hash 兼容�
 第5轮独立审查确认：按“scoped仅Mac、Mobile仅combined”的范围，Mac/bridge 无新阻塞。iOS阶段必须修复 ContentView.fromLedger 对costSummaryCleared的遗漏，抑制旧CWL回填但不删历史；combined→mapped→combined补集成回归。
 
 本checkpoint保留完整upstream merge与设计，不表示release完成。产品编译已通过，最终focused测试目标仍在编译；full tests、lint终态和draft待完成，记录在03/04。只提交本地任务分支，不合并mobile-dev、不push。
+
+## 新 provider 身份补充审查
+
+独立iOS contract审查确认：nil身份并不会自动按设备分组，实际进入legacy-no-identity固定bucket；新Future AGI只有loginMethod，Munito的accountID未获稳定身份审计，因此两个新provider在无token account key时会混合不同Mac组织。已在syncAccountRecordKey仅为futureagi/munito添加requested key优先、否则device-local key的回退；Wayfinder和所有旧provider行为保持不变。
+
+补静态key/identity定向测试（两设备不同，同设备稳定，配置key不覆盖）与冻结wire矩阵内新provider的两Mac账号保留。完整回归正在以481544bc7的二进制执行；此隔离分支修复后补focused测试与重新编译，明确记录两份证据，不把旧full run谎称成新head二进制。

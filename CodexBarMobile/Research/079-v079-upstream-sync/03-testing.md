@@ -51,3 +51,9 @@ Status: `in-progress`；以下只记录实际完成的证据，Mac完整测试/l
 - `Scripts/lint.sh lint` 最终exit0（v079-lint-complete.log）：portable/CI/README/release guard、JS/TS、SwiftFormat、SwiftLint、所有catalog四语、433个iOS源key、parser版本/hash都通过。
 - 完整 `Scripts/test.sh`：发现1791 test selections / 160 groups，运行中；未计为通过。
 - 16组合harness在最终Shared合同重新运行：exit0，64 reads / 32 merges，新增cost clear-only envelope分类验证：新reader识别cost owner；旧reader保留但不识别分类，符合已披露额外卡风险。
+
+## 新 provider 设备隔离（833483854）
+
+- 独立review确认修复准确，SwiftLint严格检查exit0；frozen wire在此head重跑16/16，Future AGI/Munito由两writer时保留两个账号，旧reader同样读取既有accountRecordKey。
+- matrix-wire.json / frozen-source-manifest.json已保存到evidence，绑定实际冻结源文件SHA256与harnessSHA256。
+- 当前完整回归仍使用此前编译的481544bc7产品（旧provider路径未变）；新helper与两Mac不同组织内容的定向回归待随后执行，不将旧binary结果当新head全量。
