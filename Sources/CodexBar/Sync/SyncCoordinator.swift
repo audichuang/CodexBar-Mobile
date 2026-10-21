@@ -10,6 +10,7 @@
 // used in MockProviderInjector.
 import CodexBarCore
 import CodexBarSync
+import CryptoKit
 import Foundation
 import Observation
 
@@ -1270,7 +1271,8 @@ final class SyncCoordinator {
         let accountRecordKey = Self.syncAccountRecordKey(
             provider: provider,
             requested: requestedAccountRecordKey,
-            deviceID: self.deviceID)
+            deviceID: self.deviceID,
+            identity: snapshot?.identity)
         let accountIdentities = accountIdentityOverrides ?? Self.syncAccountIdentities(
             provider: provider,
             identity: snapshot?.identity,
@@ -1349,6 +1351,7 @@ final class SyncCoordinator {
             ?? Self.mapMistralCostSummary(provider: provider, snapshot: snapshot)
             ?? Self.mapXAICostSummary(provider: provider, snapshot: snapshot)
         var details = Self.mapSyncedDetails(snapshot?.details ?? [], provider: provider)
+        // Provider-specific by design: Mobile cannot store Claude directory-scoped history in its machine-wide ledger.
         if provider == .claude, self.hasScopedClaudeCostPublication {
             details = Array(details.prefix(SyncProviderDetailSection.maximumSectionsPerSnapshot - 1))
             details.append(SyncProviderDetailSection(
@@ -1368,6 +1371,7 @@ final class SyncCoordinator {
             isError: error != nil,
             lastUpdated: snapshot?.updatedAt ?? Date(),
             costSummary: resolvedCostSummary,
+            // Provider-specific by design: Claude directory scope withdraws the previous combined cost publication.
             costSummaryCleared: (clearSharedCostOwnership || (provider == .claude && self.shouldClearClaudeCostSummary))
                 && resolvedCostSummary == nil ? true : nil,
             budget: budgetSnap,
@@ -1429,15 +1433,30 @@ final class SyncCoordinator {
         return "adapter:\(deviceID):\(account.id.source):\(account.id.opaqueID):\(owner)"
     }
 
-    static func syncAccountRecordKey(provider: UsageProvider, requested: String?, deviceID: String) -> String? {
+    static func syncAccountRecordKey(
+        provider: UsageProvider,
+        requested: String?,
+        deviceID: String,
+        identity: ProviderIdentitySnapshot? = nil) -> String?
+    {
+        // Provider-specific by design: source-owned organization IDs merge Munito; unverified sources stay
+        // device-scoped.
         switch provider {
         case .wayfinder:
-            "device-\(deviceID.lowercased())"
-        case .futureagi, .munito:
-            // Neither source exposes a verified cross-Mac account identity. Keep different organizations separate.
-            requested ?? "device-\(deviceID.lowercased())"
+            return "device-\(deviceID.lowercased())"
+        case .munito:
+            if let requested { return requested }
+            if let raw = identity?.accountID?.trimmingCharacters(in: .whitespacesAndNewlines), !raw.isEmpty {
+                // Names are editable; hash only the API-issued ID, preserving its case and full length.
+                let bytes = Data(raw.precomposedStringWithCanonicalMapping.utf8)
+                let digest = SHA256.hash(data: bytes).map { String(format: "%02x", $0) }.joined()
+                return "organization-\(digest)"
+            }
+            return "device-\(deviceID.lowercased())"
+        case .futureagi:
+            return requested ?? "device-\(deviceID.lowercased())"
         default:
-            requested
+            return requested
         }
     }
 
@@ -2123,6 +2142,7 @@ final class SyncCoordinator {
         }
 
         for tokenProvider in Self.tokenBasedMultiAccountProviders {
+            // Provider-specific by design: cached Claude adapter records already own these quotas.
             if tokenProvider == .claude, adapterOwnsClaude { continue }
             guard enabledSet.contains(tokenProvider) else {
                 // Provider disabled — purge any cached entries so a
@@ -2505,6 +2525,7 @@ final class SyncCoordinator {
 
     /// Mobile's persisted Claude ledger is machine-wide. A directory-scoped publication
     /// must never enter that contract: old readers would add its days to unrelated history.
+    /// Provider-specific by design: only Claude maps config directories; Mobile accepts its combined machine history.
     private var hasScopedClaudeCostPublication: Bool {
         self.store.claudeTokenCostConfigDirectory != nil
             || self.store.tokenSnapshotPublications[UsageProvider.claude.instanceID]?

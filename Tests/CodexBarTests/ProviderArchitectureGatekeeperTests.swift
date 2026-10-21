@@ -4362,14 +4362,6 @@ struct ProviderArchitectureGatekeeperTests {
             reason: "The Mac-to-iOS bridge maps provider-owned account identity, quota, cost, and details into stable optional payload fields."),
         AllowedProviderConstruct(
             path: "Sources/CodexBar/Sync/SyncCoordinator.swift",
-            line: 1062,
-            anchor: "let accountRecordKey = provider == .wayfinder",
-            expectedProviderIDs: ["wayfinder"],
-            expectedReferenceCount: 1,
-            expectedReferenceFingerprint: ["wayfinder@0"],
-            reason: "The Mac-to-iOS bridge maps provider-owned account identity, quota, cost, and details into stable optional payload fields."),
-        AllowedProviderConstruct(
-            path: "Sources/CodexBar/Sync/SyncCoordinator.swift",
             line: 1081,
             anchor: "let bedrockRegion: String? = provider == .bedrock ? {",
             expectedProviderIDs: ["bedrock"],
@@ -4761,6 +4753,7 @@ struct ProviderArchitectureGatekeeperTests {
                 "fal",
                 "fireworks",
                 "flora",
+                "futureagi",
                 "gitkraken",
                 "helmcode",
                 "huggingface",
@@ -4772,6 +4765,7 @@ struct ProviderArchitectureGatekeeperTests {
                 "llmman",
                 "longcat",
                 "muse",
+                "munito",
                 "museai",
                 "neuralwatt",
                 "notion",
@@ -4797,7 +4791,7 @@ struct ProviderArchitectureGatekeeperTests {
                 "zenmux",
                 "zoommate",
             ],
-            expectedReferenceCount: 49,
+            expectedReferenceCount: 51,
             expectedReferenceFingerprint: [
                 "clinepass@0",
                 "deepinfra@0",
@@ -4836,7 +4830,7 @@ struct ProviderArchitectureGatekeeperTests {
                 "workbuddy@16", "langdock@18",
                 "aerostack@21", "cosmic@21", "exa@21", "linkup@21", "tavily@21", "tinyapi@21", "xapi@21",
                 "sailresearch@22", "sofya@22",
-                "claudeplatform@25", "fal@25", "flora@25", "parallel@25",
+                "claudeplatform@25", "fal@25", "flora@25", "futureagi@25", "munito@25", "parallel@25",
             ],
             reason: "Account identity keys follow provider-specific credential scope contracts."),
         AllowedProviderConstruct(

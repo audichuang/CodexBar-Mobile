@@ -15,3 +15,10 @@ Status: `in-progress`；尚未构建/签名公证/创建 Draft。
 
 - evidence/version-plan.json：数字比较确认新 Sparkle 大于当前 appcast 所有条目。
 - 原始 appcast 保持已发布 fork 数据，尚未生成或发布新 feed。
+
+## 待执行的包验收
+
+- 实包CFBundleShortVersionString/CFBundleVersion/CodexGitCommit、universal app与CLI的arm64/x86_64架构、dSYM UUID对应。
+- 签名严格校验、公证Accepted+staple、distribution policy、隔离HOME/禁用Keychain/禁止网络的resource与launch smoke。
+- ZIP/dSYM SHA256与draft asset digest/size对应；draft published_at=null、draft=true，local与origin refs/tags均不存在。
+- 使用完整下载tag URL在SSD生成签名appcast候选，保存候选证据后恢复已发布feed原字节，不发布候选feed。校验candidate enclosure长度、URL、edSignature与真实ZIP，并再次检查Sparkle单调递增。

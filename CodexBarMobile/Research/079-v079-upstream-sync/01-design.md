@@ -40,3 +40,14 @@ Adapter 的 combined history使用独立稳定device cost owner，clear时保留
 - Future AGI meter display_name/display_unit是动态API内容，不把碰巧名为Balance/Session的meter强制本地化。Munito已知Today/This month金额中的`of`与stopped-until日期在消费端本地化，动态organization/region/tier/status未知值原样保留。
 - severity仅warning/critical添加符号+系统颜色+四语可访问性，normal/nil/unknown保留旧观感。full与teaser共用presentation，不用颜色单独表达异常。
 - 使用生产ProviderDetailsView/Teaser的native render attachment检查四语/Light-Dark/长文本；它只证明静态布局，不当作VoiceOver实际朗读或真实CloudKit同步证据。
+
+## 未发布 iOS 内容合并
+
+Research078记录3.0.0(245)仅本地验证，2.10.0(243)为既有VALID beta，正式App Store当时2.9.0。新train准备3.1.0(246)，将未发布3.0的日历+Duo highlights/说明合入同一个3.1条目，不把3.0伪造为已发布历史。Mac companion沿用最近已提供的2.10 beta，与已发布Mac tag一致；3.1未上传不提前写入Mac配套版本。此处依据repo发布记录，无新增ASC上传或credential请求。
+
+## 身份合同根因复核（不是继续加fallback补丁）
+
+- Head: 23d678f1b + identity/specificity working diff。
+- Repeated finding pattern: nil标识会跨Mac合并不同账号；只按device隔离又会把同一组织算成两份。
+- Root design/requirements problem: 新provider的身份能力必须根据实际API字段决定，不能把“旧AccountIdentityComputer未提取”当作“来源未提供”。
+- Revised approach: Future AGI只提供plan，无已验证ID，仍device fallback。Munito plugin经真实mapper保留organization.id到identity.accountID；sync record key使用其trim+NFC+case-preserving SHA256，同org跨Mac相同，不同org/改名保持正确；ID缺失时才device fallback。显式requested key保留。通用record identity已有旧reader支持，不加wire/schema，不把组织名或API key当身份。新增同org跨Mac/异org同Mac/改名/无ID单测，并在iOS真实merger测去重与不串号。

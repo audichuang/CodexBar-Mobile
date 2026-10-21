@@ -33,8 +33,8 @@ public enum AccountIdentityComputer {
     /// Compute the identifier set for a provider snapshot.
     ///
     /// Returns nil for providers that don't have a stable account model
-    /// (most quota-only providers): iOS will fall back to the legacy
-    /// per-device bucket for those — current behavior, no regression.
+    /// (most quota-only providers): the bridge/reader uses source-scoped
+    /// record keys or its legacy identity fallback for those.
     ///
     /// Returns `[]` only when this provider DOES participate (Tier-A) but
     /// no identifier could be derived (e.g. user signed out, fetch failed).
@@ -109,13 +109,12 @@ public enum AccountIdentityComputer {
              // cross-Mac account identifier used by the mobile merger.
              .xapi, .tavily, .linkup, .tinyapi, .exa, .cosmic, .aerostack,
              .sailresearch, .sofya,
-             // Upstream v0.75.0–v0.76.0 API-key / browser-session providers
-             // expose no cross-Mac account identifier used by the mobile merger.
+             // Upstream v0.75.0–v0.77.0 providers use no Tier-A extraction here.
+             // The bridge supplies source-scoped record keys, including Munito organization IDs.
              .fal, .flora, .parallel, .claudeplatform, .futureagi, .munito:
-            // Non-Tier-A providers: no stable account model required by
-            // iOS today. Return nil → iOS falls back to per-device legacy
-            // bucket. If a future provider needs cross-Mac merging, add
-            // a case here with its identifier sources.
+            // Source-scoped record keys may still provide a stable identity in
+            // the bridge. Do not synthesize cross-Mac aliases from editable labels.
+            // Add Tier-A extraction here only for a verified account contract.
             nil
         }
     }

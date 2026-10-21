@@ -1,11 +1,12 @@
+# Changelog
+
 ## 0.79.0.1 — 2026-10-21
 
 ### Highlights — Mobile 2.10.0
 - Sync upstream v0.77.0–v0.79.0 in one release: Future AGI and Munito, Gemini app quotas, Claude desktop/tcr accounts, safer local-only Agent Sessions, and lower CPU, memory and cost-cache disk I/O.
 - Keep existing Codex history and checkpoints when upgrading the fork cost cache; keep account-specific Claude local history on the Mac so it cannot contaminate the iPhone’s combined history.
-- Sync cached claude-swap/tcr account quotas and plugin warning details to iPhone through the existing Production payload. iOS 3.1.0 is prepared separately; the published companion version remains 2.10.0.
+- Sync cached claude-swap/tcr account quotas and plugin warning details to iPhone through the existing Production payload. iOS 3.1.0 is prepared separately; the available companion beta remains 2.10.0.
 
-# Changelog
 
 ## 0.79.0 — 2026-10-20
 

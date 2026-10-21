@@ -1986,6 +1986,7 @@ enum MockProviderInjector {
                 resetsInSeconds: 0,
                 resetDescription: "$44.00 of $50.00 left · Expires Dec 31 (UTC)"),
             thirtyDayCostUSD: nil, sessionCostUSD: nil),
+        // Provider-specific by design: these fixtures preserve Future AGI billing windows and Munito spend windows.
         .init(
             providerID: "futureagi", providerName: "Future AGI",
             accountLocal: "billing", loginMethod: "API key",

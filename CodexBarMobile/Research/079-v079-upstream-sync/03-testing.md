@@ -73,3 +73,14 @@ Status: `in-progress`；以下只记录实际完成的证据，Mac完整测试/l
 双worker全量在第109组发现MockProviderAdvancedScenariosTests/MockProviderInjectorIntegrationTests仍使用114 borrowed /119 snapshots /109 IDs旧断言，前108组通过，retry仍失败。新fixture形状与基础mock测试已通过，遗漏的是集成数量与标题；补为116/121/111，并搜索全部Mock测试清理当前计数文案（历史增长注释保留）。保留失败日志v079-all-tests-final.log，不将其计为全量PASS。只修改测试，Mac产品输入未变。
 
 - v079-mock-integration-tests.log：75 tests / 4 suites，exit0，包含全部mock集成路径与跨设备场景。最终完整回归使用支持的`--direct-workers 4`（本机12core/32GB，独立HOME），仅本地并行度，不改CI策略。
+
+## 架构守卫补齐
+
+v079-all-tests-clean.log 前130组通过后ProviderArchitectureGatekeeperTests阻塞：新provider fixture与Claude合同分支缺少明确reason，旧Wayfinder allowlist anchor已迁移，nil-identity组的49→51 fingerprint过期。未删除守卫或扩大扫描豁免；给实际合同分支写具体业务理由，移除失效旧anchor，审计更新两provider清单。另通过实际Munito API mapper复核，新增stable orgID散列record key，避免同org双Mac费用重复。需要最终build/定向/完整回归与独立审查；之前失败日志保留，不计PASS。
+
+- v079-identity-contract-verified.log：97 tests / 4 suites，exit0；含48项架构守卫、新provider生产snapshot发布、Munito同org跨Mac/异org同Mac/改名/trim/NFC/case/长ID/缺ID，以及原账号身份测试。前一次fixture缺少显式nil参数导致编译失败，已修正；失败日志不计PASS。
+- Matrix的Munito device-key fixture明确仅覆盖缺ID fallback；有效orgID去重由上述Mac合同与下一阶段iOS实际merger测试共同验证。
+
+## Mac完整回归验收通过
+
+`v079-all-tests-acceptance.log`：exit0，1791 selections /160 groups，4 direct workers，160组first-pass成功，0 failure/0 retry/0 timeout；discovery146.2秒、execution520.4秒、total672.4秒。测试与静态审查对应staged tree `8f3b05e6f4f9151b0571a2f040e569206fa57bf2`；测试期间没有改编译源码/测试。环境脱敏测试的14个known issues是故意触发expectation来检查日志脱敏的fixture，不是14个产品缺陷。完整覆盖widget、UsageStore、账号/设备、成本缓存/性能与provider回归。此后仅整理CHANGELOG标题/措辞及证据，不改变测试逻辑或Mac产品代码。

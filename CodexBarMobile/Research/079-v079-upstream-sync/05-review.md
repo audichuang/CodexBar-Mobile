@@ -37,3 +37,11 @@ Mac完整测试终态、Macdraft、iOS实现/测试与最终diff review均未完
 ## Mac draft流程独立审查
 
 8111cb956 + make_appcast scratch diff静态审查阻塞0：draft-no-tag-push跳过tag/push/旧draft删除，只创建fork draft，target mobile-dev占位并记录local SHA；不会进入finalize。版本172.1.2.10.0单调递增，Production entitlement保留。make_appcast复制ZIP暂存从/tmp改至已验证SSD BuildScratch；实际签名命令显式export RELEASE_STAGE_BASE与widget root，不依赖默认/tmp。
+
+## 新provider身份根因修订复审
+
+独立review重新核对Munito实际plugin→mapper→sync record key：组织ID存在，前次把“未提取”当成“没有ID”已纠正。当前同组织跨Mac/不同组织/改名/缺ID合同无实现阻塞，wire不含API key。ID trim/NFC/case/长ID区别与实际全snapshot publication补测均通过。当前新provider不支持tokenAccountSupport；未来若增加该能力，显式requested keys优先的边界需重新设计，不能把本轮验证扩大到尚不存在的多token路径。
+
+## 最终Mac实现review
+
+原Mac reviewer独立检查staged tree `8f3b05e6f4f9151b0571a2f040e569206fa57bf2`，剩余实现阻塞0；组织身份、实际push测试、架构guard特定reason与旧anchor迁移均认可，没有放宽守卫。完整回归随后160/160 first-pass通过。下一阶段为打包与iOS，不能把本地review扩称未来GitHub exact-head gate通过。

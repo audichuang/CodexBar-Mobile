@@ -1,0 +1,12 @@
+{
+  "stagedTree": "8f3b05e6f4f9151b0571a2f040e569206fa57bf2",
+  "log": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079-all-tests-acceptance.log",
+  "exitCode": 0,
+  "selections": 1791,
+  "groups": 160,
+  "firstPassPassed": 160,
+  "retries": 0,
+  "timeouts": 0,
+  "workers": 4,
+  "seconds": 672.4
+}

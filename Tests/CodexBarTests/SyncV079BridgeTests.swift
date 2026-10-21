@@ -23,6 +23,68 @@ struct SyncV079BridgeTests {
     }
 
     @Test
+    func `Munito groups verified organizations across Macs without grouping different organizations`() throws {
+        let org = ProviderIdentitySnapshot(
+            providerID: .munito,
+            accountEmail: nil,
+            accountOrganization: "Editable name",
+            loginMethod: nil,
+            accountID: "org-A")
+        let renamed = ProviderIdentitySnapshot(
+            providerID: .munito,
+            accountEmail: nil,
+            accountOrganization: "Renamed",
+            loginMethod: nil,
+            accountID: "org-A")
+        let other = ProviderIdentitySnapshot(
+            providerID: .munito,
+            accountEmail: nil,
+            accountOrganization: "Editable name",
+            loginMethod: nil,
+            accountID: "org-B")
+        let key = try #require(SyncCoordinator.syncAccountRecordKey(
+            provider: .munito, requested: nil, deviceID: "MAC-A", identity: org))
+        #expect(key == SyncCoordinator.syncAccountRecordKey(
+            provider: .munito, requested: nil, deviceID: "MAC-B", identity: renamed))
+        #expect(key != SyncCoordinator.syncAccountRecordKey(
+            provider: .munito, requested: nil, deviceID: "MAC-A", identity: other))
+        #expect(!key.contains("org-A"))
+        #expect(SyncCoordinator.syncAccountIdentities(provider: .munito, identity: org, accountRecordKey: key)
+            == ["munito:record:\(key)"])
+        #expect(SyncCoordinator.syncAccountRecordKey(
+            provider: .munito, requested: "explicit", deviceID: "MAC-A", identity: org) == "explicit")
+        let noID = ProviderIdentitySnapshot(
+            providerID: .munito,
+            accountEmail: nil,
+            accountOrganization: "Editable name",
+            loginMethod: nil,
+            accountID: " ")
+        #expect(SyncCoordinator.syncAccountRecordKey(
+            provider: .munito, requested: nil, deviceID: "MAC-A", identity: noID) == "device-mac-a")
+    }
+
+    @Test
+    func `organization identity preserves opaque ID distinctions and canonical Unicode`() {
+        func key(_ raw: String) -> String? {
+            SyncCoordinator.syncAccountRecordKey(
+                provider: .munito,
+                requested: nil,
+                deviceID: "MAC-A",
+                identity: .init(
+                    providerID: .munito,
+                    accountEmail: nil,
+                    accountOrganization: nil,
+                    loginMethod: nil,
+                    accountID: raw))
+        }
+        #expect(key("  org-A\n") == key("org-A"))
+        #expect(key("org-e\u{301}") == key("org-é"))
+        #expect(key("org-A") != key("org-a"))
+        let longPrefix = String(repeating: "synthetic-organization-", count: 30)
+        #expect(key(longPrefix + "A") != key(longPrefix + "B"))
+    }
+
+    @Test
     func `plugin warning metadata survives the bridge and unknown severity preserves the row`() throws {
         let row = try ProviderDetailSection.Row(label: "Queue", value: "Nearly full", severity: .warning)
         let mapped = try SyncCoordinator.mapDetails([.init(rows: [row])])
@@ -45,7 +107,7 @@ struct SyncV079BridgeTests {
             userDefaults: InMemoryUserDefaults(),
             config: testConfigWithAllProvidersDisabled(),
             keychainAccessPolicy: .init(setDisabled: { _ in }, isExplicitlyDisabled: { false }))
-        enableTestProviders([.claude], settings: settings)
+        enableTestProviders([.claude, .munito, .futureagi], settings: settings)
         settings.iCloudSyncEnabled = true
         settings.costUsageEnabled = true
         settings.claudeSwapEnabled = true
@@ -59,6 +121,28 @@ struct SyncV079BridgeTests {
             widgetSnapshotURL: env.root.appendingPathComponent("widget.json"),
             widgetTimelineReloader: {})
         let now = Date()
+        let organization = ProviderIdentitySnapshot(
+            providerID: .munito,
+            accountEmail: nil,
+            accountOrganization: "Fixture organization",
+            loginMethod: "Admin API key",
+            accountID: "fixture-org")
+        let newProviderFixtures: [(UsageProvider, ProviderIdentitySnapshot?)] = [
+            (.munito, organization), (.futureagi, nil),
+        ]
+        for (provider, identity) in newProviderFixtures {
+            store._setSnapshotForTesting(
+                UsageSnapshot(
+                    primary: RateWindow(
+                        usedPercent: 15,
+                        windowMinutes: 1440,
+                        resetsAt: nil,
+                        resetDescription: nil),
+                    secondary: nil,
+                    updatedAt: now,
+                    identity: identity),
+                provider: provider)
+        }
         store.claudeSwapAccountSnapshots = (1...2).map { slot in
             ProviderAccountUsageSnapshot(
                 id: .init(source: source, opaqueID: "\(slot)"),
@@ -97,6 +181,13 @@ struct SyncV079BridgeTests {
         let pusher = MockSyncPusher()
         let sync = SyncCoordinator(store: store, settings: settings, syncManager: pusher)
         await sync.pushCurrentSnapshot()
+        let munito = try #require(pusher.lastSnapshot?.providers.first { $0.providerID == "munito" })
+        let expectedOrgKey = SyncCoordinator.syncAccountRecordKey(
+            provider: .munito, requested: nil, deviceID: "unused-for-verified-identity", identity: organization)
+        #expect(munito.accountRecordKey == expectedOrgKey)
+        #expect(munito.accountIdentities == expectedOrgKey.map { ["munito:record:\($0)"] })
+        let futureAGI = try #require(pusher.lastSnapshot?.providers.first { $0.providerID == "futureagi" })
+        #expect(try futureAGI.accountRecordKey == "device-\(#require(pusher.lastSnapshot?.deviceID).lowercased())")
         let providers = try #require(pusher.lastSnapshot?.providers.filter { $0.providerID == "claude" })
         #expect(providers.count == 3)
         #expect(Set(providers.compactMap { $0.primary?.usedPercent }) == [20, 40])
