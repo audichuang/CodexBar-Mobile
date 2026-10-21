@@ -1,0 +1,32 @@
+{
+  "verifiedAtUTC": "2026-10-21T22:08:38.570483+00:00",
+  "branch": "upstream-sync/v0.79.0-mobile.3.1.0",
+  "implementationCommit": "34cb9a01e12ef23664604b421ed424aa1a875a3e",
+  "reviewedTree": "962fdab2ee0b282d2a1eec4e39d7e13677c52712",
+  "localReviewBlockers": 0,
+  "macArtifactSource": "4f66415b1ed50fa3327ad363365a21242f530287",
+  "macArtifactInputsDiff": [],
+  "latestOfficialUpstream": "v0.79.0",
+  "openUpstreamSyncIssues": [
+    196
+  ],
+  "draftURL": "https://github.com/o1xhack/CodexBar-Mobile/releases/tag/untagged-3b25e34f5a865b165d53",
+  "draft": true,
+  "publishedAt": null,
+  "remoteTaskBranchExists": false,
+  "localTagExists": false,
+  "remoteTagExists": false,
+  "cloudKitSchemaVerdict": "NO_DEPLOY",
+  "compatibilityMatrix": {
+    "cases": 16,
+    "result": "substituted",
+    "wireReads": 64,
+    "realConsumerMergeProcesses": 32,
+    "physicalPass": 0
+  },
+  "sourcePushed": false,
+  "merged": false,
+  "testFlightUploaded": false,
+  "liveReleasePublished": false,
+  "publishedAppcastChanged": false
+}

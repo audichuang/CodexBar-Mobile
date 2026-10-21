@@ -57,3 +57,7 @@ Mac完整测试、draft、iOS实现/测试均已完成，最终结果与风险�
 独立Mac reviewer实时读取GitHub release420093277：draft=true/published_at=null、两资产uploaded，digest/size与本地相同；检查实包0.79.0.1 /172.1.2.10.0/source4f66415b1，Mac ARTIFACT_INPUTS相对实包来源零diff，iOS widgetshared不被Mac WidgetExtension/Package引用。local/origin拟tag均不存在，root appcast与4f零diff，签名候选对应ZIP。NO_DEPLOY成立，阻塞0。
 
 自查当前全diff及index whitespace检查通过；独立review指出的旧Research“待完成”措辞已改成终态并保留失败历史。未来公开发布仍须授权push/PR/Exact-head review/Final CI以及正式tag/feed流程；本地阻塞0不授权这些操作。
+
+## 提交后最终核对
+
+最终独立复核HEAD `34cb9a01e12ef23664604b421ed424aa1a875a3e` / tree `962fdab2ee0b282d2a1eec4e39d7e13677c52712`：相对已审查tree仅Research/evidence变更，产品及测试源码diff为空，7项关键源SHA256完全对应，工作区干净，新阻塞0。终态风险没有把substituted写成实体PASS，也没有把本地review写成GitHub审查。此后只追加本段和closeout证据，不修改产品/测试。
