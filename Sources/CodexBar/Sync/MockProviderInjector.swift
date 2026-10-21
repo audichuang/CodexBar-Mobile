@@ -1991,11 +1991,11 @@ enum MockProviderInjector {
             accountLocal: "billing", loginMethod: "API key",
             primaryUsage: 25, primaryLabel: "AI credits",
             primaryWindowMinutes: 43200,
-            primaryResetsInSeconds: 604800,
+            primaryResetsInSeconds: 604_800,
             primaryResetDescription: "",
             secondary: .init(
                 label: "Gateway requests", usedPercent: 40,
-                windowMinutes: 43200, resetsInSeconds: 604800, resetDescription: ""),
+                windowMinutes: 43200, resetsInSeconds: 604_800, resetDescription: ""),
             thirtyDayCostUSD: nil, sessionCostUSD: nil),
         .init(
             providerID: "munito", providerName: "Munito",
@@ -2006,7 +2006,7 @@ enum MockProviderInjector {
             primaryResetDescription: "",
             secondary: .init(
                 label: "This month", usedPercent: 50,
-                windowMinutes: 43200, resetsInSeconds: 604800, resetDescription: ""),
+                windowMinutes: 43200, resetsInSeconds: 604_800, resetDescription: ""),
             thirtyDayCostUSD: nil, sessionCostUSD: nil),
         // Phase G — multi-account second-tab mocks. Each entry below
         // produces a SECOND ProviderUsageSnapshot for an already-
@@ -2391,8 +2391,10 @@ enum MockProviderInjector {
         case "munito":
             return V026MockExtras(details: [SyncProviderDetailSection(
                 title: "Spend limits",
-                rows: [.init(label: "Today", value: "$3.00 of $10.00", progress: .init(used: 3, total: 10)),
-                       .init(label: "This month", value: "$50.00 of $100.00", progress: .init(used: 50, total: 100))])])
+                rows: [
+                    .init(label: "Today", value: "$3.00 of $10.00", progress: .init(used: 3, total: 10)),
+                    .init(label: "This month", value: "$50.00 of $100.00", progress: .init(used: 50, total: 100)),
+                ])])
         case "fal":
             var extras = V026MockExtras(details: [SyncProviderDetailSection(
                 title: "Account balance",
