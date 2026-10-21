@@ -8,9 +8,9 @@ Status: `done`（本地验收完成；16组合均为有边界的替代验证，�
 |---|---|
 | Mac build / packaged regression | PASS：arm64+x86_64 显式SDK Release，Widget双架构；实包签名、公证、staple、launch/resource probes、dSYM UUID全部通过。04记录细节。 |
 | Mac完整单测 | PASS：1791 selections /160 groups，160组first-pass，0失败/重试/超时；`v079-all-tests-acceptance.log`，672.4秒。 |
-| 最终完整lint | PASS：`v079-lint-final-ios.log` exit0，3143文件0 SwiftLint violations；portable/CI/README/release guards、SwiftFormat、JS/TS、parser hash/revision、四语catalog、436个iOS源key通过。 |
-| iOS完整单测及Widget回归 | PASS：`v079-ios-full-final.log` / `ios-full-final.xcresult`，1151 Swift Testing /72 suites，66 XCTest，0失败；包含WidgetSnapshotBuilder、WidgetRenderMatrix和本轮所有SwiftData/ledger/details用例。 |
-| iOS设备Release build | PASS：generic/platform=iOS Release，CODE_SIGNING_ALLOWED=NO；`v079-ios-release.log` / `ios-release.xcresult`。主app及3个extension的实产物均3.1.0 (246)。未archive/upload。 |
+| 最终完整lint | PASS：PR修复后的`v079-pr199-r1-lint.log` exit0，3143文件0 SwiftLint violations；portable/CI/README/release guards、SwiftFormat、JS/TS、parser hash/revision、四语catalog、436个iOS源key通过。 |
+| iOS完整单测及Widget回归 | PASS：PR修复后的`v079-pr199-r1-ios.log` / `pr199-r1-ios.xcresult`，1152 Swift Testing /72 suites，67 XCTest，0失败；包含WidgetSnapshotBuilder、WidgetRenderMatrix和本轮所有SwiftData/ledger/details用例。 |
+| iOS设备Release build | PASS：generic/platform=iOS Release，CODE_SIGNING_ALLOWED=NO；PR修复后的`v079-pr199-r1-ios-release.log` / `pr199-r1-ios-release.xcresult`。主app及3个extension的实产物均3.1.0 (246)。未archive/upload。 |
 | iOS引导交互 | PASS：Duo模拟器两条XCUITest，Duo27.1和iOS26.5均通过，首次notes→Setup→Continue、同版本重启不重复展示、Demo跳过notes；`v079-ios-intro-ui.log` / `ios-intro-ui.xcresult`。 |
 | 四语/深浅色/辅助字号视觉 | PASS：生产details/full+teaser四语×Light/Dark共8图，日文accessibility3另1图，最终逐张目视验收。第一版大字号拆行已改竖排并复跑。证据`evidence/ios-validation.json`绑定截图SHA256。 |
 | Mac draft与appcast候选 | PASS：04链接与digest/size/source/签名证据；仅draft，原发布feed未改。 |
@@ -78,3 +78,9 @@ Status: `done`（本地验收完成；16组合均为有边界的替代验证，�
 - 初次lint需provider文档生成和social.png缓存token同步，已单独事实审计、保持fork入口并通过最终lint；没有用改hash绕过README规则。
 - Mac首次draft的锁定依赖缓存缺对象、Xcode隐式result路径问题已修，精确版本未变，最终显式SDK打包/签名公证通过，详04。
 - iOS先有1150Swift+66XCTest成功，独立review又补机器clear/账号disown区分和冷启动测试；最终1151+66全部通过。第一版大字号截图过密，改辅助字号竖排及浅色告警色后，最终9图重新渲染目视检查。
+
+## PR #199 首轮审查修复与复测
+
+用户随后授权push/PR及循环review。分支已推送、PR面向mobile-dev；初始head8de535ee3。Codex指出Vercel personal-budget新增两条稳定语义文案未进入iOS本地化allowlist/catalog，造成中文/日文仍为英文（discussion_r4342646390）。修复只增加既有第一方语义路由的两条label与四语条目，插件自定义文案保持原样，不改wire/schema/Mac产品输入。
+
+复测：1152SwiftTesting/72suites +67XCTest，0失败；全量含新四语参数化路由测试和Vercel完整/teaser实际生产视图ImageRenderer。新增四张截图逐张目视验收，无缺翻译/裁切；通用设备Release构建与完整lint均exit0。轻量证据见evidence/pr199-round1.json；Mac draft/原16组合可复用，因为Mac产品/Shared模型/merger均无变动。已有3.1同版本Vercel更新说明覆盖该功能，未重复追加release block；开发者CHANGELOG补充具体翻译修复。外部CR终态以PR的当前head审查与check_pr_review_gate.sh为准。

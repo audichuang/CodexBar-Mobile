@@ -8,6 +8,25 @@ import XCTest
 
 @Suite("v0.79 translated provider details")
 struct V079DetailsTests {
+    @Test(arguments: ["en", "zh-Hans", "zh-Hant", "ja"])
+    func `Vercel personal budget labels localize without translating custom plugin text`(language: String) {
+        let expected = [
+            "en": ["Personal budget", "No personal budget configured"],
+            "zh-Hans": ["个人预算", "未配置个人预算"],
+            "zh-Hant": ["個人預算", "未設定個人預算"],
+            "ja": ["個人予算", "個人予算が設定されていません"],
+        ]
+        let locale = Locale(identifier: language)
+        for (index, label) in ["Personal budget", "No personal budget configured"].enumerated() {
+            #expect(ProviderDetailLocalization.localized(label, providerID: "vercel", locale: locale)
+                == expected[language]?[index])
+            #expect(ProviderDetailLocalization.localized(
+                label, providerID: "vercel", context: .rowLabel(sectionTitle: "Personal budget"), locale: locale)
+                == expected[language]?[index])
+            #expect(ProviderDetailLocalization.localized(label, providerID: "plugin:fixture", locale: locale) == label)
+        }
+    }
+
     @Test func `first party labels and severity are localized while user defined meter names stay verbatim`() throws {
         let warning = ["en": "Warning", "zh-Hans": "警告", "zh-Hant": "警告", "ja": "警告"]
         let critical = ["en": "Critical", "zh-Hans": "严重警告", "zh-Hant": "嚴重警告", "ja": "重大な警告"]
@@ -78,6 +97,27 @@ struct V079DetailsTests {
 
 @MainActor
 final class V079DetailsRenderTests: XCTestCase {
+    func testVercelPersonalBudgetFullAndTeaserInFourLanguages() throws {
+        let section = SyncProviderDetailSection(title: "Personal budget", rows: [
+            .init(label: "No personal budget configured", value: "—"),
+        ])
+        for language in ["en", "zh-Hans", "zh-Hant", "ja"] {
+            let content = VStack(spacing: 16) {
+                ProviderDetailsView(providerID: "vercel", sections: [section], tintColor: .primary)
+                ProviderDetailsTeaserView(providerID: "vercel", section: section)
+            }
+            .padding(16).frame(width: 390).background(Color.white)
+            .environment(\.locale, Locale(identifier: language)).environment(\.colorScheme, .light)
+            let renderer = ImageRenderer(content: content)
+            renderer.scale = 2
+            let image = try XCTUnwrap(renderer.uiImage)
+            let attachment = XCTAttachment(image: image)
+            attachment.name = "v079-vercel-personal-budget-\(language)"
+            attachment.lifetime = .keepAlways
+            self.add(attachment)
+        }
+    }
+
     func testDetailsAndTeaserInFourLanguagesAppearancesAndLargeText() throws {
         let section = SyncProviderDetailSection(title: "Spend limits", rows: [
             .init(label: "Today", value: "$2.00 of $10.00", severity: .warning),

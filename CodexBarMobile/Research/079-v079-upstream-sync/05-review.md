@@ -61,3 +61,7 @@ Mac完整测试、draft、iOS实现/测试均已完成，最终结果与风险�
 ## 提交后最终核对
 
 最终独立复核HEAD `34cb9a01e12ef23664604b421ed424aa1a875a3e` / tree `962fdab2ee0b282d2a1eec4e39d7e13677c52712`：相对已审查tree仅Research/evidence变更，产品及测试源码diff为空，7项关键源SHA256完全对应，工作区干净，新阻塞0。终态风险没有把substituted写成实体PASS，也没有把本地review写成GitHub审查。此后只追加本段和closeout证据，不修改产品/测试。
+
+## 用户授权后的 GitHub PR review
+
+用户进一步授权推送分支、开PR并修复复测至通过（未授权merge/live/tag/TF）。PR #199：https://github.com/o1xhack/CodexBar-Mobile/pull/199 。首轮审查head8de535ee3，P1为Vercel个人预算标题与未配置状态缺少四语routing/catalog；已补两个稳定semantic label及四语翻译、参数化路由/自定义插件边界回归、完整与teaser生产视图四语渲染。1152+67全量、Release、lint均通过，03与pr199-round1.json记录证据。将以修复提交回复并显式resolve该线程，再请求当前head复审。最终外部审查结论和线程状态以PR及仓库gate脚本为准，本文件不提前宣称GitHub clean。

@@ -85,6 +85,7 @@ enum ProviderDetailLocalization {
         "Data region", "Status", "Today organization limit", "Today account limit", "Today stopped until",
         "This month organization limit", "This month account limit", "This month stopped until",
         "Local cost history", "Account-specific history",
+        "Personal budget", "No personal budget configured",
     ]
 
     /// These sections deliberately use provider-returned account, team, model,
