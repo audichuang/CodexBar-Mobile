@@ -1,15 +1,15 @@
 # Mac draft release 证据
 
-Status: `done`（仅 draft；live release、tag、push 未授权）。
+Status: `done`（signed/notarized draft已刷新；后续用户授权的任务分支push/PR已完成，未merge/tag/live/TF）。
 
 ## 发布方案
 
 - 目标 Mac 0.79.0.1 / BUILD_NUMBER 172.1 / companion 2.10.0；Sparkle 172.1.2.10.0，拟用 tag v0.79.0.1-mobile.2.10.0。
 - iOS 3.1.0 (246) 是本轮准备版本，未上传/发布，不能提前写成已发布的 Mac companion。已有 version.env 文档中的旧三段规则示例与四段规则冲突时，遵循顶部明确的四段规则。
-- 使用 fork `Scripts/release.sh --draft-no-tag-push`。它在 origin 创建 Draft 和上传 zip/dSYM，跳过 tag 创建/推送及 appcast publication；目标 mobile-dev 只作 GitHub 已知 ref 占位，release notes 明确记录本地源码 SHA。今后用户授权发布前须改成 clean-reviewed 的正式提交。
+- 首次使用 fork `Scripts/release.sh --draft-no-tag-push` 创建 Draft并上传zip/dSYM，跳过tag与appcast publication；当时mobile-dev只作GitHub已知ref占位。PR修复后对同一release ID重签并替换资产，target已更新为clean-reviewed的18ccdefb2，见下方当前实包段。未来live仍须另行授权。
 - 所有签名/公证 staging、widget Xcode builds、大型 logs 使用 /Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/；不输出 credential 值。
 - Mac product inputs 修改后必须重打包，不能把先前 draft 的二进制当成后续修复已生效。
-- 不调用 finalize，不创建 tag、不 push、不 merge、不上传 TestFlight。#196 维持 open，按仓库规则仅 live release 后才能关闭。
+- 不调用 finalize，不创建或推送 tag、不 merge、不上传 TestFlight；只按后续用户授权推送任务分支。#196 维持 open，按仓库规则仅 live release 后才能关闭。
 
 ## 当前完成证据
 
@@ -29,7 +29,7 @@ Status: `done`（仅 draft；live release、tag、push 未授权）。
 
 - 独立review确认以上resultBundle修复与增强org矩阵阻塞0。移除sign-and-notarize中未使用产物的重复无SDK前置编译；package_app仍逐arch显式SDK完整build→stage→arch/minos验证，保留ARCH_LIST供dSYM处理，不跳过构建/校验。package signing(16 entitlements/profile cases)、product path/SDK metadata、Info.plist回归均通过。
 
-## 实包验收完成
+## 历史首次实包验收完成
 
 - `v079-mac-draft-retry.log` exit0；完整lint通过；显式SDK arm64/x86_64 build 328.77/325.51秒，Widget双架构Xcode build通过，结果包在本轮SSD widget-derived/.../Results/。
 - Apple notarization `d8371ece-9515-45e2-9af6-79aa9bb032e3`：Accepted，staple+validate、distribution policy均通过；隔离HOME、禁止网络/Keychain、checkout不可读条件下，helper CLI、symlink CLI、app资源probe及app存活2秒通过。
@@ -41,4 +41,13 @@ Status: `done`（仅 draft；live release、tag、push 未授权）。
 
 ## PR修复后的artifact刷新
 
-前述4f实包是历史成功证据；PR修复修改了Gemini插件和sync产品输入，必须刷新同一个draft。ca源第一次刷新中双archRelease通过，错误使用未带CODEXBAR_前缀的widget root导致新缓存缺锁定SweetCookieKit commit；改为已验证的CODEXBAR_WIDGET_DERIVED_DATA_ROOT。之后独立审查发现Gemini Web身份P1，主动中断该旧源重试并终止其本任务编译子进程，不将未完成产物上传。下一次完整签名/公证与asset替换将绑定修复后的正式commit，保留原draft URL、无tag/live/feed publication。
+前述4f实包是历史成功证据；PR修复修改了Gemini插件和sync产品输入，必须刷新同一个draft。ca源第一次刷新中双archRelease通过，错误使用未带CODEXBAR_前缀的widget root导致新缓存缺锁定SweetCookieKit commit；改为已验证的CODEXBAR_WIDGET_DERIVED_DATA_ROOT。之后独立审查发现Gemini Web身份P1，主动中断该旧源重试并终止其本任务编译子进程，不将未完成产物上传。随后完整签名/公证与asset替换已绑定修复后的18ccdefb2，保留同一release ID；GitHub编辑后draft URL以最新API为准，无tag/live/feed publication。
+
+## PR修复后最终实包（当前）
+
+- 同release ID **420093277**，当前draft：https://github.com/o1xhack/CodexBar-Mobile/releases/tag/untagged-0715b4300e9fa77195ee 。编辑target后GitHub重新生成untagged URL，未创建第二个release；draft=true/published_at=null。
+- 源码与target均`18ccdefb2eb29ea148e7823da221a8739d683015`，已获GitHub第四轮clean review。版本0.79.0.1 / Sparkle172.1.2.10.0，Widget CFBundleVersion按既有脚本为172.1。Mac companion metadata保留version.env基线2.10.0，不声称最新手机beta版本。
+- `v079-pr199-r4-mac-package.log` exit0：arm64/x86_64显式SDK Release 460.20/379.07秒、Widget双架构；Apple公证1401733b-8fa7-4338-b908-43016cc4cc1e Accepted，staple与隔离HOME/禁网/禁Keychain/checkout不可读的resource+launch probes全部通过。
+- ZIP 90,774,579 bytes / sha256:b459031f7a6d1b57e39bede3766c780c6bfdf728f0d6ba8f4fc47984cf100db2；dSYM ZIP 72,677,888 bytes / sha256:5f5a1ed342b4df2654e044e43ae16ac739627df88bae04c06a1e966a00200380，GitHub asset digest/size逐一一致。
+- `v079-pr199-r4-mac-verification.log`：严格codesign、spctl、stapler、app/CLI/widget arm64+x86_64、dSYM逐arch UUID、Production entitlement、包内三份gemini-web.js逐字节匹配源码均通过。local/origin拟tag均不存在。
+- `v079-pr199-r4-appcast.log`：候选完整tag URL、长度90,774,579、172.1.2.10.0单调递增、EdDSA验证通过；root appcast恢复原字节，未发布feed。evidence四份当前artifact/appcast文件已替换旧4f证据。

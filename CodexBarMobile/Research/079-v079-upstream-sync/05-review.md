@@ -1,6 +1,6 @@
 # 循环 review 证据
 
-Status: `done`；本地最终实现和Mac实包阻塞0，未代替未来GitHub PR exact-head gate。
+Status: `done`；实现、测试和新Mac实包阻塞0；PR #199最终exact-head receipt与gate记录在PR。以下保留按阶段的历史审查记录。
 
 ## 范围
 
@@ -75,3 +75,9 @@ head6fb718610的P2（discussion_r4342697183）为Gemini窗口标签没有从plug
 GitHub在ca2d92f8dd上返回“Didn't find any major issues”，但独立iOS审查进一步发现Gemini Web只提供套餐名、无email/accountID，nil身份在Shared的全局legacy bucket合并不同Mac账号。原CLI通常有真实邮箱，不能把Web误当成相同账号。采用明确settings.source==.web的device/source record key；不借用OAuth身份、不按label/分钟数推断。旧reader已支持key，schema无增量。Web同账号跨Mac保守分开，同Mac账号切换仅保留当前来源槽位。
 
 独立Mac复审确认来源选择、CLI保留、deviceID注入及既有identity drift清理合同无阻塞，架构guard仅增加该switch的精确4引用指纹。新增真实双engine plugin→双设备实际push、iOS merger同/不同CLI邮箱与混合来源、旧新consumer矩阵。实际运行结论按03后续终态记录，当前不提前宣称新head clean。此前ca源打包因新P1主动停止，必须用修复提交重新打包，旧draft资产不代表修复已生效。
+
+## GitHub第四轮与最终证据闭环
+
+18ccdefb2eb29ea148e7823da221a8739d683015已推送，2026-10-21T23:21:05Z获“Didn't find any major issues”，两个历史thread均isResolved=true，PR Fast Checks通过。独立Mac reviewer再次确认原initializer签名完整保留、测试注入不读标准defaults、CLI→Web→CLI真实记录清理无阻塞。完整Mac160/160 first-pass、iOS1156+67、lint0、16组替代矩阵、新签名公证实包和远端digest均已通过。
+
+最终提交只更新Research/evidence，Mac/iOS产品和测试源码相对18cc零diff；该证据提交单独请求第五轮current-head Codex review并运行check_pr_review_gate.sh，最终精确head与输出保存在PR评论，不为写回receipt反复改变review head。未将本地独立审查替代GitHub gate。push/PR已获用户授权；merge/tag/live/TF未执行。

@@ -28,6 +28,6 @@
     "CodexBarMobile/CodexBarMobileTests/V079DetailsTests.swift": "61a45af7fbefa2ff48cd2e9da4fa88326f258e95a4ef251fd664a9bf35959112"
   },
   "generatedJSMatchesFocusedInput": true,
-  "macFullRegression": "running; not counted as pass yet",
-  "macDraft": "refresh required; previous artifact source4f is superseded for product inputs"
+  "macFullRegression": "PASS at ca2d92f8dd: v079-pr199-r2-all-tests.log exit0, 1791 selections/160 first-pass groups, 0 failures/retries/timeouts, 570.3s; superseded by R4 full regression",
+  "macDraft": "R2 source attempt superseded by identity fix 18ccdefb2; final artifact/provenance in mac-draft-verification.json"
 }

@@ -1,12 +1,33 @@
 {
-  "stagedTree": "8f3b05e6f4f9151b0571a2f040e569206fa57bf2",
-  "log": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079-all-tests-acceptance.log",
+  "sourceCommit": "18ccdefb2eb29ea148e7823da221a8739d683015",
+  "sourceTree": "a6aeeeb011118fee42f370c810d030b542935a79",
+  "log": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079-pr199-r4-all-tests.log",
   "exitCode": 0,
   "selections": 1791,
   "groups": 160,
   "firstPassPassed": 160,
+  "firstPassFailed": 0,
   "retries": 0,
   "timeouts": 0,
   "workers": 4,
-  "seconds": 672.4
+  "discoverySeconds": 128.2,
+  "executionSeconds": 596.9,
+  "seconds": 729.0,
+  "runtimeMethods": 15800,
+  "defaultGatedSkipRecords": 13,
+  "defaultGatedSkips": [
+    "➜ Test \"large synthetic history scan timing\" skipped.",
+    "➜ Test \"render synthetic period controls without launching the app\" skipped.",
+    "➜ Test \"synthetic two hundred thousand row saves\" skipped.",
+    "➜ Test \"warm large cache with one appended line\" skipped.",
+    "➜ Test \"large history refresh CPU writes and retained memory\" skipped.",
+    "➜ Test \"synthetic WebKit leases release their owners\" skipped.",
+    "➜ Test \"fixed corpus refreshes over thirty minutes\" skipped.",
+    "➜ Test \"synthetic artifact decode benchmark\" skipped.",
+    "➜ Test \"measure identical pricing refetch and warm report\" skipped.",
+    "➜ Test \"concurrent override writes, resets, and reads are race-free\" skipped.",
+    "➜ Test \"signed native card shows the asynchronously attached subscription date\" skipped.",
+    "➜ Test \"native close notifications settle and a retained window can be dismissed again\" skipped.",
+    "➜ Test \"concurrent stub handler writes and reads are race-free\" skipped."
+  ]
 }

@@ -6,23 +6,23 @@ Status: `done`（本地验收完成；16组合均为有边界的替代验证，�
 
 | Gate | 结果与证据 |
 |---|---|
-| Mac build / packaged regression | PASS：arm64+x86_64 显式SDK Release，Widget双架构；实包签名、公证、staple、launch/resource probes、dSYM UUID全部通过。04记录细节。 |
-| Mac完整单测 | PASS：1791 selections /160 groups，160组first-pass，0失败/重试/超时；`v079-all-tests-acceptance.log`，672.4秒。 |
-| 最终完整lint | PASS：PR修复后的`v079-pr199-r1-lint.log` exit0，3143文件0 SwiftLint violations；portable/CI/README/release guards、SwiftFormat、JS/TS、parser hash/revision、四语catalog、436个iOS源key通过。 |
-| iOS完整单测及Widget回归 | PASS：PR修复后的`v079-pr199-r1-ios.log` / `pr199-r1-ios.xcresult`，1152 Swift Testing /72 suites，67 XCTest，0失败；包含WidgetSnapshotBuilder、WidgetRenderMatrix和本轮所有SwiftData/ledger/details用例。 |
-| iOS设备Release build | PASS：generic/platform=iOS Release，CODE_SIGNING_ALLOWED=NO；PR修复后的`v079-pr199-r1-ios-release.log` / `pr199-r1-ios-release.xcresult`。主app及3个extension的实产物均3.1.0 (246)。未archive/upload。 |
+| Mac build / packaged regression | PASS：R4显式SDK arm64/x86_64 Release（460.20/379.07秒）及Widget双架构，源码18ccdefb2；签名、公证、staple、launch/resource probes及dSYM UUID通过，详见04。 |
+| Mac完整单测 | PASS：R4 1791 selections /160 groups，160组first-pass，0失败/重试/超时；`v079-pr199-r4-all-tests.log`，729.0秒（discovery128.2/execution596.9），15800 runtime methods；13条默认关闭的性能/TSAN/native proof skip，新增用例无跳过。 |
+| 最终完整lint | PASS：`v079-pr199-r4-lint-final.log` exit0，3143文件0 violations；portable/CI/README/release guards、SwiftFormat、JS/TS、parser hash/revision、四语catalog和436个iOS源key通过。 |
+| iOS完整单测及Widget回归 | PASS：`v079-pr199-r4-ios.log` / `pr199-r4-ios.xcresult`，1156 Swift Testing /73 suites +67 XCTest，0失败；含新增Gemini真实merger正反序回归和已有ledger/details/Widget测试。 |
+| iOS设备Release build | PASS：复用R2 generic/platform=iOS Release（CODE_SIGNING_ALLOWED=NO，3.1.0/246）；R4仅改Mac及测试，iOS产品/Shared/project输入相对ca2d92f8dd零diff。未archive/upload。 |
 | iOS引导交互 | PASS：Duo模拟器两条XCUITest，Duo27.1和iOS26.5均通过，首次notes→Setup→Continue、同版本重启不重复展示、Demo跳过notes；`v079-ios-intro-ui.log` / `ios-intro-ui.xcresult`。 |
 | 四语/深浅色/辅助字号视觉 | PASS：生产details/full+teaser四语×Light/Dark共8图，日文accessibility3另1图，最终逐张目视验收。第一版大字号拆行已改竖排并复跑。证据`evidence/ios-validation.json`绑定截图SHA256。 |
-| Mac draft与appcast候选 | PASS：04链接与digest/size/source/签名证据；仅draft，原发布feed未改。 |
+| Mac draft与appcast候选 | PASS：同release ID420093277已刷新为源码18ccdefb2；远端digest/size、签名、三份Gemini资源及appcast签名/单调性全部对应；已发布feed未改，04含最新draft链接。 |
 | CloudKit Production schema | NO_DEPLOY：见下；未执行live schema export/写入。 |
 | 2Mac×2iPhone gate | COMPLETE WITH SUBSTITUTIONS：16/16列出，64读取和32真实old/new consumer合并进程全部通过；不是16实体PASS。 |
-| 循环review | 本地阻塞0，详见05；未创建PR，未替代未来GitHub exact-head gate。 |
+| 循环review | 实现head18ccdefb2已获GitHub第四轮clean，两个线程resolved；最终证据提交的exact-head clean与仓库gate记录在PR #199，详见05。 |
 
 日志根目录：`/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/`；xcresult、渲染附件与临时fixture位于其`v079/`子目录。轻量机器可读证据保存在本目录evidence。
 
 ## 命令与源码绑定
 
-- Mac：`TMPDIR=.../v079/tmp bash Scripts/test.sh --direct-workers 4`；`Scripts/lint.sh lint`。全量测试时源码固定，审查tree `8f3b05e6f4f9151b0571a2f040e569206fa57bf2`。之后发布脚本的resultBundle路径/重复编译修复通过定向回归、独立review和完整实包流程；Mac产品输入自`4f66415b1ed50fa3327ad363365a21242f530287`起未变化。
+- Mac：`TMPDIR=.../v079/tmp bash Scripts/test.sh --direct-workers 4`，源码18ccdefb2；`Scripts/lint.sh lint`。完整runner在隔离snapshot runtime执行，实包从同一源码签名公证。首次4f实包的历史结果由R4产品修复与新实包取代。
 - iOS：`DEVELOPER_DIR=/Volumes/StudioSSD/Developer/Xcode/Xcode-27.1-RC.app/Contents/Developer`，27.1 RC /27A9275；无安装或全局xcode-select变更。`xcodebuild -project CodexBarMobile/CodexBarMobile.xcodeproj -scheme CodexBarMobile -destination 'platform=iOS Simulator,id=FA6BFB39-3400-472B-8ED0-CD10A87F629E' -derivedDataPath .../v079/ios-derived -resultBundlePath .../v079/ios-full-final.xcresult -parallel-testing-enabled NO -only-testing:CodexBarMobileTests CODE_SIGNING_ALLOWED=NO test`。
 - UI使用相同项目/destination/derivedData，仅选择`testVersionUpdateShowsReleaseNotesAndSetupGuideOnDemand`和`testChoosingDemoFromSetupGuideDismissesFirstLaunchReleaseNotes`，结果写入独立`ios-intro-ui.xcresult`。
 - Release改destination为`generic/platform=iOS`、configuration Release、独立`ios-release`派生目录及result；全程SSD、无签名上传。
@@ -96,10 +96,14 @@ Codex在head6fb718610指出Gemini Web五小时/每周窗口未携带label，sync
 - 独立静态复审当前TS/JS、桥接测试与窗口翻译diff无阻塞；生成JS与focused编译输入字节一致。
 - Mac完整回归此时运行中（1791selections/160groups），不将未完成运行记PASS。插件属于Mac产品输入，旧4f draft尚不能代表此修复；将重新打包、签名公证及验包后更新04/evidence。
 
-## PR独立Gemini身份回归（新提交验证中）
+## PR独立Gemini身份回归（阶段记录，终态见下）
 
 冻结矩阵`compat-pr199-r4`已exit0：16/16 substituted、64独立读写、32真实old/new consumer合并进程；加入Web设备key与不同额度、CLI同/不同邮箱、混合来源，正反顺序均通过。新增record key使用旧wire既有字段，CloudKit仍NO_DEPLOY。Mac focused/full、iOS full、device Release、lint以及Mac实包在本轮重新执行，最终记录随后追加；旧结果不冒充新源码验证。
 
 新身份修复的iOS全量`v079-pr199-r4-ios.log` / `pr199-r4-ios.xcresult`：1156 Swift Testing /73 suites +67 XCTest，全部通过。iOS app/Shared/widget/extension/project构建输入相对ca2d92f8dd无diff，因此复用R2 generic-device Release和渲染验收，无需对未变更的iOS产品重复生成同一二进制。新测试明确覆盖双writer正反序的Web/CLI合并，Mac端真实push还单独验证旧记录删除。旧writer Gemini CLI若无email仍保留旧全局legacy bucket，旧payload不含身份时无法恢复区分；newWeb不会与其臆造合并。
 
-Mac focused retry：60 tests /3 suites PASS，含双JS engine、真实双设备publish、CLI→Web→CLI旧记录删除、CLI metadata、精确architecture guard；`v079-pr199-r4-focused-retry.log`。首次focused因initializer接口与增量对象不一致而link失败，保留原convenience接口、增加独立必填deviceID入口后重新编译通过；首轮lint四处参数换行已修，定向SwiftLint通过，完整lint-final继续执行。Mac full使用标准隔离runner执行，签名实包需绑定本次正式提交，未完成项不计PASS。
+Mac focused retry：60 tests /3 suites PASS，含双JS engine、真实双设备publish、CLI→Web→CLI旧记录删除、CLI metadata、精确architecture guard；`v079-pr199-r4-focused-retry.log`。首次focused因initializer接口与增量对象不一致而link失败，保留原convenience接口、增加独立必填deviceID入口后重新编译通过；首轮lint四处参数换行已修，定向SwiftLint通过，当时完整lint-final继续执行，最终已通过，见下方终态。Mac full使用标准隔离runner执行，最终签名实包绑定18ccdefb2；阶段中尚未完成的项目当时未计PASS。
+
+## PR最终测试与实包终态
+
+`pr199-round4.json`、`mac-full-tests.json`和`mac-draft-verification.json`绑定18ccdefb2：60项Mac focused、完整Mac160/160 first-pass、1156+67 iOS、完整lint、16组合替代矩阵与新Mac signed/notarized draft全部通过。代码head GitHub R4 clean /两个thread resolved，最终证据提交继续接受exact-head review与gate；结果在PR评论记录，避免写入receipt再改变已审查head。Mac产品及测试此后不改，最终只有Research/evidence更新。CloudKit仍NO_DEPLOY；没有live release/tag/merge/TF，也没有把13条opt-in skip或16组substituted写成实体PASS。

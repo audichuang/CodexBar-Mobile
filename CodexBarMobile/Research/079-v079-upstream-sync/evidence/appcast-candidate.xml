@@ -4,7 +4,7 @@
         <title>CodexBar</title>
         <item>
             <title>0.79.0.1</title>
-            <pubDate>Wed, 21 Oct 2026 14:54:57 -0700</pubDate>
+            <pubDate>Wed, 21 Oct 2026 16:38:40 -0700</pubDate>
             <link>https://raw.githubusercontent.com/o1xhack/CodexBar-Mobile/mobile-dev/appcast.xml</link>
             <sparkle:version>172.1.2.10.0</sparkle:version>
             <sparkle:shortVersionString>0.79.0.1</sparkle:shortVersionString>
@@ -14,11 +14,11 @@
 <ul>
 <li>Sync upstream v0.77.0–v0.79.0 in one release: Future AGI and Munito, Gemini app quotas, Claude desktop/tcr accounts, safer local-only Agent Sessions, and lower CPU, memory and cost-cache disk I/O.</li>
 <li>Keep existing Codex history and checkpoints when upgrading the fork cost cache; keep account-specific Claude local history on the Mac so it cannot contaminate the iPhone’s combined history.</li>
-<li>Sync cached claude-swap/tcr account quotas and plugin warning details to iPhone through the existing Production payload. iOS 3.1.0 is prepared separately; the available companion beta remains 2.10.0.</li>
+<li>Sync cached claude-swap/tcr account quotas and plugin warning details to iPhone through the existing Production payload. Keep Gemini app five-hour and weekly window names distinct from CLI model quotas, with device-scoped Web identities to preserve different accounts across Macs. iOS 3.1.0 is prepared separately; the Mac companion metadata retains the version.env baseline of 2.10.0.</li>
 </ul>
 <p><a href="https://github.com/o1xhack/CodexBar-Mobile/blob/mobile-dev/CHANGELOG.md">View full changelog</a></p>
 ]]></description>
-            <enclosure url="https://github.com/o1xhack/CodexBar-Mobile/releases/download/v0.79.0.1-mobile.2.10.0/CodexBar-0.79.0.1-mobile.2.10.0.zip" length="90773292" type="application/octet-stream" sparkle:edSignature="1CN2nM6M0FX4KeM3OFYFaiqYO1xkBpAO3XJMmsghgbm8ARw+v5kmngtql90dd3MXllQt0V+sTWIjlhDIvqzdBA=="/>
+            <enclosure url="https://github.com/o1xhack/CodexBar-Mobile/releases/download/v0.79.0.1-mobile.2.10.0/CodexBar-0.79.0.1-mobile.2.10.0.zip" length="90774579" type="application/octet-stream" sparkle:edSignature="cF6T3+Bg5EpbZmDYownt+ysnreW71HodsBiYAanIPQ7yqKUvO2GJSV2dLT22Lwhd8ZYo6ceVTvvCwYgeMW68Dg=="/>
         </item>
         <item>
             <title>0.76.0.2</title>

@@ -1,19 +1,19 @@
 {
-  "verifiedAtUTC": "2026-10-21T22:08:38.570483+00:00",
+  "verifiedAtUTC": "2026-10-21T23:39:21.722295+00:00",
   "branch": "upstream-sync/v0.79.0-mobile.3.1.0",
-  "implementationCommit": "34cb9a01e12ef23664604b421ed424aa1a875a3e",
-  "reviewedTree": "962fdab2ee0b282d2a1eec4e39d7e13677c52712",
+  "implementationCommit": "18ccdefb2eb29ea148e7823da221a8739d683015",
+  "reviewedTree": "a6aeeeb011118fee42f370c810d030b542935a79",
   "localReviewBlockers": 0,
-  "macArtifactSource": "4f66415b1ed50fa3327ad363365a21242f530287",
+  "macArtifactSource": "18ccdefb2eb29ea148e7823da221a8739d683015",
   "macArtifactInputsDiff": [],
   "latestOfficialUpstream": "v0.79.0",
   "openUpstreamSyncIssues": [
     196
   ],
-  "draftURL": "https://github.com/o1xhack/CodexBar-Mobile/releases/tag/untagged-3b25e34f5a865b165d53",
+  "draftURL": "https://github.com/o1xhack/CodexBar-Mobile/releases/tag/untagged-0715b4300e9fa77195ee",
   "draft": true,
   "publishedAt": null,
-  "remoteTaskBranchExists": false,
+  "remoteTaskBranchExists": true,
   "localTagExists": false,
   "remoteTagExists": false,
   "cloudKitSchemaVerdict": "NO_DEPLOY",
@@ -24,9 +24,16 @@
     "realConsumerMergeProcesses": 32,
     "physicalPass": 0
   },
-  "sourcePushed": false,
+  "sourcePushed": true,
   "merged": false,
   "testFlightUploaded": false,
   "liveReleasePublished": false,
-  "publishedAppcastChanged": false
+  "publishedAppcastChanged": false,
+  "pullRequest": "https://github.com/o1xhack/CodexBar-Mobile/pull/199",
+  "codeReview": {
+    "sourceCommit": "18ccdefb2eb29ea148e7823da221a8739d683015",
+    "result": "clean",
+    "unresolvedThreads": 0
+  },
+  "finalHeadGateEvidence": "Final evidence commit receives its own Codex review and check_pr_review_gate.sh result, recorded on PR #199 so recording the receipt does not change the reviewed head."
 }
