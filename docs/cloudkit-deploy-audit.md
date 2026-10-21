@@ -140,4 +140,4 @@ git diff $LAST_TAG..HEAD -- Shared/Models/UsageSnapshot.swift | grep -E "^\+.*pu
 
 ## 2026-10-21：v0.79.0.1 draft 准备审计
 
-**NO_DEPLOY**。相对最近 published `v0.76.0.2-mobile.2.10.0`，CloudConstants.swift 无变化、payload version仍为1；severity 只是已有 opaque payload 内的可选字段，Claude adapter fan-out/cost owner 使用现有 DeviceProviderSnapshot，Future AGI/Munito 只增加既有状态 type 的运行时 zone 实例。无新 CKRecord type、直接 field、index、predicate 或 subscription schema。Mac/iOS entitlements 均为 Production。未执行 schema deploy，也未声称 live export；证据与16组合替代验证在 [Research 079](../CodexBarMobile/Research/079-v079-upstream-sync/03-testing.md)。
+**NO_DEPLOY**。相对最近 published `v0.76.0.2-mobile.2.10.0`，CloudConstants.swift 无变化、payload version仍为1；severity 只是已有 opaque payload 内的可选字段，Claude adapter fan-out/cost owner 使用现有 DeviceProviderSnapshot，Future AGI/Munito 只增加既有状态 type 的运行时 zone 实例。无新 CKRecord type、直接 field、index、predicate 或 subscription schema。Mac/iOS entitlements 均为 Production。未执行 schema deploy，也未声称 live export；证据与16组合替代验证在 `CodexBarMobile/Research/079-v079-upstream-sync/03-testing.md`。

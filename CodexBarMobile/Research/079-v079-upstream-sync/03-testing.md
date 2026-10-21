@@ -44,3 +44,10 @@ Status: `in-progress`；以下只记录实际完成的证据，Mac完整测试/l
 - lint 初次要求新 provider 文档生成，第二次发现 social.png cache token 不匹配（fork README先保留原字节导致）；已在主动事实审计后修复，最终 lint待重跑。
 - 版本数字比较：evidence/version-plan.json，172.1.2.10.0 大于现有 appcast。
 - upstream-checks.json 保存 tag b49d42eb5 的已完成 CI/release checks；没有触发 fork 远端 CI。
+
+## Mac 最终定向 gate（ff931049f）
+
+- `Scripts/test_fast.sh --filter 'SyncV079BridgeTests|ClaudeTokenAccountCostTests|CostUsageStoreTests|QuotaProviderListTests|MockProviderInjectorTests|AccountIdentity|MultiAccount|DualZoneReader'`：exit0。259项 / 18 suites + dashboard 11项 / 1 suite，全通过；包含新provider/metadata、adapter删slot两周期、tcr无active成本保留、scoped拒绝、cache原地迁移、多账号/多设备。
+- `Scripts/lint.sh lint` 最终exit0（v079-lint-complete.log）：portable/CI/README/release guard、JS/TS、SwiftFormat、SwiftLint、所有catalog四语、433个iOS源key、parser版本/hash都通过。
+- 完整 `Scripts/test.sh`：发现1791 test selections / 160 groups，运行中；未计为通过。
+- 16组合harness在最终Shared合同重新运行：exit0，64 reads / 32 merges，新增cost clear-only envelope分类验证：新reader识别cost owner；旧reader保留但不识别分类，符合已披露额外卡风险。

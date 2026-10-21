@@ -6,10 +6,17 @@ import Foundation
 @main
 struct Harness {
     static let now = Date(timeIntervalSince1970: 1_792_612_346)
-    static let ids = ["claude", "gemini", "futureagi", "munito", "plugin:fixture"]
+    static let ids = ["claude", "gemini", "futureagi", "munito", "plugin:fixture", "claude-cost"]
 
-    static func provider(_ id: String, new: Bool) -> ProviderUsageSnapshot? {
-        if ["futureagi", "munito"].contains(id), !new { return nil }
+    static func provider(_ id: String, new: Bool, device: String) -> ProviderUsageSnapshot? {
+        if ["futureagi", "munito", "claude-cost"].contains(id), !new { return nil }
+        if id == "claude-cost" {
+            return ProviderUsageSnapshot(
+                providerID: "claude", providerName: "Claude", primary: nil, secondary: nil,
+                accountEmail: nil, loginMethod: nil, statusMessage: nil, isError: false,
+                lastUpdated: now, costSummaryCleared: true, rateWindows: [],
+                accountRecordKey: "claude-local-cost:" + device)
+        }
         let window = SyncRateWindow(id: "primary", label: id == "futureagi" ? "AI credits" : "Session",
             usedPercent: 30, windowMinutes: 300, resetsAt: now.addingTimeInterval(3600), resetDescription: nil)
         var rows: [SyncProviderDetailSection.Row] = []
@@ -37,7 +44,17 @@ struct Harness {
             let roundtrip = try CloudSyncConstants.makeJSONEncoder().encode(value)
             let restored = try CloudSyncConstants.makeJSONDecoder().decode(ProviderUsageEnvelope.self, from: roundtrip)
             precondition(restored == value)
-            precondition(value.provider.rateWindows.first?.usedPercent == 30)
+            let isCostOwner = value.provider.accountRecordKey?.hasPrefix("claude-local-cost:") == true
+            if isCostOwner {
+                precondition(value.provider.costSummaryCleared == true && value.provider.hasUsableSignal)
+                #if NEW_WIRE
+                precondition(value.provider.isProviderLevelCostEnvelope)
+                #else
+                precondition(!value.provider.isProviderLevelCostEnvelope)
+                #endif
+            } else {
+                precondition(value.provider.rateWindows.first?.usedPercent == 30)
+            }
             return value
         }
     }
@@ -51,7 +68,7 @@ struct Harness {
         #endif
         if args[1] == "write" {
             for id in ids {
-                guard let provider = provider(id, new: new) else { continue }
+                guard let provider = provider(id, new: new, device: args[3]) else { continue }
                 let value = ProviderUsageEnvelope(deviceID: args[3], deviceName: args[3], appVersion: "fixture",
                     mobileVersion: nil, syncTimestamp: now, notificationPushEnabled: false, provider: provider)
                 let path = URL(fileURLWithPath: args[2]).appendingPathComponent(id + ".json")
@@ -87,9 +104,14 @@ struct Harness {
             guard !sources.isEmpty else { continue }
             for ordering in [sources, Array(sources.reversed())] {
                 guard let merged = ProviderSnapshotMerger.mergeSnapshots(ordering) else { fatalError("merge failed") }
-                let expected = 1
+                let costOwners = sources.flatMap(\.providers).filter {
+                    $0.accountRecordKey?.hasPrefix("claude-local-cost:") == true
+                }.count
+                let expected = 1 + costOwners
                 precondition(merged.providers.count == expected, "\(id) expected \(expected) accounts")
-                precondition(merged.providers.allSatisfy { $0.primary?.usedPercent == 30 })
+                precondition(merged.providers.allSatisfy {
+                    $0.primary?.usedPercent == 30 || $0.costSummaryCleared == true
+                })
             }
         }
         print("PASS two-writer merge in both orders: stable Claude identity and legacy provider fallback")
