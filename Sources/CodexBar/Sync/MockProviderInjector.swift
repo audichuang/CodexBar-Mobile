@@ -245,7 +245,7 @@ enum MockProviderInjector {
         "aerostack", "cosmic", "tavily", "exa", "linkup", "tinyapi",
         "sailresearch", "sofya", "xapi",
         // Provider-specific by design: upstream v0.75.0–v0.76.0 bundled-plugin providers borrowed by mocks.
-        "fal", "flora", "parallel", "claudeplatform",
+        "fal", "flora", "parallel", "claudeplatform", "futureagi", "munito",
     ]
 
     /// Synthetic providerIDs unique to mocks. Always prefixed `_mock_`.
@@ -1986,6 +1986,28 @@ enum MockProviderInjector {
                 resetsInSeconds: 0,
                 resetDescription: "$44.00 of $50.00 left · Expires Dec 31 (UTC)"),
             thirtyDayCostUSD: nil, sessionCostUSD: nil),
+        .init(
+            providerID: "futureagi", providerName: "Future AGI",
+            accountLocal: "billing", loginMethod: "API key",
+            primaryUsage: 25, primaryLabel: "AI credits",
+            primaryWindowMinutes: 43200,
+            primaryResetsInSeconds: 604800,
+            primaryResetDescription: "",
+            secondary: .init(
+                label: "Gateway requests", usedPercent: 40,
+                windowMinutes: 43200, resetsInSeconds: 604800, resetDescription: ""),
+            thirtyDayCostUSD: nil, sessionCostUSD: nil),
+        .init(
+            providerID: "munito", providerName: "Munito",
+            accountLocal: "organization", loginMethod: "Admin API key",
+            primaryUsage: 30, primaryLabel: "Today",
+            primaryWindowMinutes: 1440,
+            primaryResetsInSeconds: 3600,
+            primaryResetDescription: "",
+            secondary: .init(
+                label: "This month", usedPercent: 50,
+                windowMinutes: 43200, resetsInSeconds: 604800, resetDescription: ""),
+            thirtyDayCostUSD: nil, sessionCostUSD: nil),
         // Phase G — multi-account second-tab mocks. Each entry below
         // produces a SECOND ProviderUsageSnapshot for an already-
         // present providerID (same provider, different accountLocal
@@ -2362,6 +2384,15 @@ enum MockProviderInjector {
                 observedAt: now)
             return extras
         // Provider-specific by design: upstream v0.75.0–v0.76.0 balance-only providers mirror their plugin sections.
+        case "futureagi":
+            return V026MockExtras(details: [SyncProviderDetailSection(
+                title: "Billing period",
+                rows: [.init(label: "Estimated usage cost", value: "$12.50")])])
+        case "munito":
+            return V026MockExtras(details: [SyncProviderDetailSection(
+                title: "Spend limits",
+                rows: [.init(label: "Today", value: "$3.00 of $10.00", progress: .init(used: 3, total: 10)),
+                       .init(label: "This month", value: "$50.00 of $100.00", progress: .init(used: 50, total: 100))])])
         case "fal":
             var extras = V026MockExtras(details: [SyncProviderDetailSection(
                 title: "Account balance",

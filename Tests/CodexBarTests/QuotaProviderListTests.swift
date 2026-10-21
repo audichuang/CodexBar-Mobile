@@ -15,7 +15,7 @@ import Testing
 @Suite("QuotaProviderList contract")
 struct QuotaProviderListTests {
     @Test
-    func `Provider list has expected count (88 after v0.76 catch-up)`() {
+    func `Provider list has expected count (90 after v0.79 catch-up)`() {
         // 25 base → 27 in iOS 1.5.0 (Abacus + Mistral) → 38 in iOS 1.6.0
         // (11 new from Mac v0.24+v0.25) → 40 in iOS 1.7.0 (Moonshot +
         // AWS Bedrock from upstream v0.26.0) → 45 in iOS 1.8.0 (Grok,
@@ -35,7 +35,7 @@ struct QuotaProviderListTests {
         // (xKiro, Raycast, and Aixy from Mac v0.67).
         // Must stay synced with
         // iOS-side test in CodexBarMobileTests/QuotaProviderListTests.swift.
-        #expect(QuotaProviderList.providers.count == 88)
+        #expect(QuotaProviderList.providers.count == 90)
     }
 
     @Test
@@ -99,7 +99,7 @@ struct QuotaProviderListTests {
     }
 
     @Test
-    func `iOS subscription count is 88 × 3 = 264 (depleted + restored + warning)`() {
+    func `iOS subscription count is 90 × 3 = 270 (depleted + restored + warning)`() {
         // 54 → 76 in iOS 1.5.x → 114 in iOS 1.6.0 (38 × 3 after adding
         // the "warning" state for pre-depletion threshold pushes) →
         // 120 in iOS 1.7.0 (40 × 3 after the v0.26 catch-up) →
@@ -126,7 +126,7 @@ struct QuotaProviderListTests {
         // `QuotaTransitionSubscriptions.makeConfigs()`.
         let states = ["depleted", "restored", "warning"]
         let subscriptionCount = QuotaProviderList.providers.count * states.count
-        #expect(subscriptionCount == 264)
+        #expect(subscriptionCount == 270)
     }
 
     @Test

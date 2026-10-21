@@ -23,3 +23,13 @@ Future AGI / Munito 品牌、generic quota/spend/details 和四语；新增语�
 - iOS xcodegen、Simulator/Release 编译和完整单测，特别 WidgetSnapshotBuilderTests；只改数据而不改 widget rendering 不触发真实 widget 配置 gate。
 - 16 个 2 Mac × 2 iPhone 组合逐格列出；不能实际组织四设备时使用冻结旧 wire、多 writer/reader/cache 合并 harness，标 substituted 和风险，不能称实体 PASS。
 - 自查 + 独立 review，修复复测后重新 review，阻塞为零才完成。draft 绑定最终 Mac 源码，修 review 后若二进制输入变更需重打。
+
+## 第四轮根因审计：Claude 成本来源合同
+
+问题：上游新增 per-token-account config directory，但 Mobile 的 CWL/SwiftData 历史仍是 machine-wide、逐日 upsert。仅验证当前 publication 或新增 scope key，不能让旧 iOS 正确隔离目录；可能把 A 的 day1 和 B 的 day2 相加。
+
+本轮选择：**Mobile 只继续接收原有 combined machine history，不发送 directory-scoped Claude cost**。Mac 原功能完整保留。启用映射目录或仍持有该目录的 publication 时，中央 mapper 发送 costSummaryCleared=true，并附可本地化的“在 Mac 查看账号专属成本”详情；主路径、token expansion、adapter cost owner 都遵循同一判断。未配置映射时，只有当前有效 combined publication 才被同步。其余 provider 不受影响。
+
+这不是把缺陷留给以后：避免在当前版本写入不兼容的历史数据，明确声明该上游功能的 iOS 支持边界；若将来支持 scoped history，必须独立设计旧读者隔离和 ledger source migration，再允许 scoped数据上wire。当前不新增 scope字段或CloudKit schema。
+
+Adapter 的 combined history使用独立稳定device cost owner，clear时保留同key tombstone。`hasUsableSignal` 在基线已包含 costSummaryCleared=true，无需修改；旧读者也可通过普通details接收说明。新 Usage/widget通过isProviderLevelCostEnvelope过滤成本账号。实际16组合的历史store/UI限制仍需如实报告。

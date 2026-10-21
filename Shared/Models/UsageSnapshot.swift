@@ -910,6 +910,10 @@ public struct SyncProviderDetailSection: Codable, Sendable, Equatable {
     public static let maximumStringLength = 120
 
     public struct Row: Codable, Sendable, Equatable {
+        public enum Severity: String, Codable, Sendable {
+            case normal, warning, critical
+        }
+
         /// Numeric ratio behind a row (Mac 0.72+). Invalid values are dropped on decode so
         /// an otherwise valid row still reaches older and newer readers.
         public struct Progress: Codable, Sendable, Equatable {
@@ -943,6 +947,7 @@ public struct SyncProviderDetailSection: Codable, Sendable, Equatable {
         public let label: String
         public let value: String
         public let secondaryValue: String?
+        public let severity: Severity?
         public let progress: Progress?
         /// Numeric usage behind the row when known (Mac 0.72+), independent of `progress`.
         public let usageValue: Double?
@@ -953,12 +958,14 @@ public struct SyncProviderDetailSection: Codable, Sendable, Equatable {
             value: String,
             secondaryValue: String? = nil,
             progress: Progress? = nil,
+            severity: Severity? = nil,
             usageValue: Double? = nil)
         {
             self.id = id
             self.label = label
             self.value = value
             self.secondaryValue = secondaryValue
+            self.severity = severity
             self.progress = progress
             self.usageValue = usageValue.flatMap { $0.isFinite ? $0 : nil }
         }
@@ -968,6 +975,7 @@ public struct SyncProviderDetailSection: Codable, Sendable, Equatable {
             case label
             case value
             case secondaryValue
+            case severity
             case progress
             case usageValue
         }
@@ -987,6 +995,8 @@ public struct SyncProviderDetailSection: Codable, Sendable, Equatable {
             self.id = (try? container.decodeIfPresent(String.self, forKey: .id)).flatMap {
                 try? SyncProviderDetailSection.optionalString($0, path: "row.id")
             }
+            self.severity = (try? container.decodeIfPresent(String.self, forKey: .severity))
+                .flatMap(Severity.init(rawValue:))
             self.progress = try? container.decodeIfPresent(Progress.self, forKey: .progress)
             self.usageValue = (try? container.decodeIfPresent(Double.self, forKey: .usageValue))
                 .flatMap { $0.isFinite ? $0 : nil }
@@ -1623,9 +1633,11 @@ public struct ProviderUsageSnapshot: Codable, Sendable, Equatable {
     /// The cost dashboard consumes this envelope, but the Usage tab suppresses
     /// it so users do not see a duplicate, cost-only OpenRouter account card.
     public var isProviderLevelCostEnvelope: Bool {
-        // Provider-specific by design: only OpenRouter publishes a separate management-cost pseudo-account.
-        self.providerID == "openrouter"
-            && self.accountRecordKey == Self.openRouterManagementCostRecordKey
+        // Provider-specific by design: these records own device/provider costs, not another quota account.
+        (self.providerID == "openrouter"
+            && self.accountRecordKey == Self.openRouterManagementCostRecordKey)
+            || (self.providerID == "claude"
+                && self.accountRecordKey?.hasPrefix("claude-local-cost:") == true)
     }
 
     public init(

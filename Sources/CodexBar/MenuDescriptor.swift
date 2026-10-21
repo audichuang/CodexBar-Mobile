@@ -757,7 +757,7 @@ struct MenuDescriptor {
         } else if provider == .alibabatokenplan {
             AlibabaTokenPlanProviderDescriptor.secondaryLabel(window: snapshot.secondary) ?? metadata.weeklyLabel
         } else {
-            metadata.weeklyLabel
+            presentation.rateWindowLabels(metadata: metadata, snapshot: snapshot).secondary
         }
         return (
             L(primaryLabel),

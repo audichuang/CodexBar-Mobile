@@ -1,0 +1,212 @@
+[
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39508312192/job/118945659783",
+    "name": "publish",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39508312192/job/118945467232",
+    "name": "assemble",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39508312192/job/118923021187",
+    "name": "desktop / build (x86_64, ubuntu-24.04)",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39508312192/job/118923021120",
+    "name": "desktop / build (aarch64, ubuntu-24.04-arm)",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39508312192/job/118923021091",
+    "name": "cli / build-cli (macos-x86_64, xcode-27, macos, macos, x86_64, x86_64, false)",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39508312192/job/118923021031",
+    "name": "cli / build-cli (linux-musl-arm64, ubuntu-24.04-arm, linux, linux-musl, aarch64, false, swift-6.3.3-REL...",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39508312192/job/118923020968",
+    "name": "cli / build-cli (linux-x64, ubuntu-24.04, linux, linux, x86_64, true, x86-64)",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39508312192/job/118923020953",
+    "name": "cli / build-cli (macos-arm64, xcode-27, macos, macos, arm64, arm64, false)",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39508312192/job/118923020942",
+    "name": "cli / build-cli (linux-musl-x64, ubuntu-24.04, linux, linux-musl, x86_64, false, swift-6.3.3-RELEASE_st...",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39508312192/job/118923020941",
+    "name": "cli / build-cli (linux-arm64, ubuntu-24.04-arm, linux, linux, aarch64, true, aarch64)",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39508312192/job/118923020933",
+    "name": "macos",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39508312192/job/118922930608",
+    "name": "availability",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39508312192/job/118922748555",
+    "name": "validate",
+    "status": "completed"
+  },
+  {
+    "conclusion": "skipped",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39502433750/job/118922100135",
+    "name": "publish",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39502433750/job/118921858849",
+    "name": "assemble",
+    "status": "completed"
+  },
+  {
+    "conclusion": "skipped",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39502433750/job/118903184447",
+    "name": "availability",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39502433750/job/118903183225",
+    "name": "cli / build-cli (linux-arm64, ubuntu-24.04-arm, linux, linux, aarch64, true, aarch64)",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39502433750/job/118903183220",
+    "name": "cli / build-cli (macos-arm64, xcode-27, macos, macos, arm64, arm64, false)",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39502433750/job/118903183152",
+    "name": "desktop / build (aarch64, ubuntu-24.04-arm)",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39502433750/job/118903183087",
+    "name": "cli / build-cli (linux-musl-arm64, ubuntu-24.04-arm, linux, linux-musl, aarch64, false, swift-6.3.3-REL...",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39502433750/job/118903183078",
+    "name": "cli / build-cli (linux-musl-x64, ubuntu-24.04, linux, linux-musl, x86_64, false, swift-6.3.3-RELEASE_st...",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39502433750/job/118903183066",
+    "name": "desktop / build (x86_64, ubuntu-24.04)",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39502433750/job/118903183044",
+    "name": "cli / build-cli (macos-x86_64, xcode-27, macos, macos, x86_64, x86_64, false)",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39502433750/job/118903183039",
+    "name": "cli / build-cli (linux-x64, ubuntu-24.04, linux, linux, x86_64, true, x86-64)",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39502433750/job/118903182745",
+    "name": "macos",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39502433750/job/118903020480",
+    "name": "validate",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39496261898/job/118902772043",
+    "name": "lint-build-test",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39496261898/job/118902772005",
+    "name": "prune-swiftpm-caches",
+    "status": "completed"
+  },
+  {
+    "conclusion": "skipped",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39496261898/job/118883067092",
+    "name": "build-linux-musl-cli",
+    "status": "completed"
+  },
+  {
+    "conclusion": "success",
+    "head_sha": "b49d42eb53bbf79785b344492d594760dd163eac",
+    "html_url": "https://github.com/steipete/CodexBar/actions/runs/39496261898/job/118883064046",
+    "name": "build-linux-cli (linux-x64, ubuntu-24.04)",
+    "status": "completed"
+  }
+]
