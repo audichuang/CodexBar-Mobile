@@ -95,3 +95,11 @@ Codex在head6fb718610指出Gemini Web五小时/每周窗口未携带label，sync
 - `v079-pr199-r2-compat.log`：增强Gemini old Pro/Flash vs new5-hour/Weekly fixture后16/16，64reads/32consumer merges通过，已更新evidence的matrix与source manifest。仍为substituted，不代表实体收敛。
 - 独立静态复审当前TS/JS、桥接测试与窗口翻译diff无阻塞；生成JS与focused编译输入字节一致。
 - Mac完整回归此时运行中（1791selections/160groups），不将未完成运行记PASS。插件属于Mac产品输入，旧4f draft尚不能代表此修复；将重新打包、签名公证及验包后更新04/evidence。
+
+## PR独立Gemini身份回归（新提交验证中）
+
+冻结矩阵`compat-pr199-r4`已exit0：16/16 substituted、64独立读写、32真实old/new consumer合并进程；加入Web设备key与不同额度、CLI同/不同邮箱、混合来源，正反顺序均通过。新增record key使用旧wire既有字段，CloudKit仍NO_DEPLOY。Mac focused/full、iOS full、device Release、lint以及Mac实包在本轮重新执行，最终记录随后追加；旧结果不冒充新源码验证。
+
+新身份修复的iOS全量`v079-pr199-r4-ios.log` / `pr199-r4-ios.xcresult`：1156 Swift Testing /73 suites +67 XCTest，全部通过。iOS app/Shared/widget/extension/project构建输入相对ca2d92f8dd无diff，因此复用R2 generic-device Release和渲染验收，无需对未变更的iOS产品重复生成同一二进制。新测试明确覆盖双writer正反序的Web/CLI合并，Mac端真实push还单独验证旧记录删除。旧writer Gemini CLI若无email仍保留旧全局legacy bucket，旧payload不含身份时无法恢复区分；newWeb不会与其臆造合并。
+
+Mac focused retry：60 tests /3 suites PASS，含双JS engine、真实双设备publish、CLI→Web→CLI旧记录删除、CLI metadata、精确architecture guard；`v079-pr199-r4-focused-retry.log`。首次focused因initializer接口与增量对象不一致而link失败，保留原convenience接口、增加独立必填deviceID入口后重新编译通过；首轮lint四处参数换行已修，定向SwiftLint通过，完整lint-final继续执行。Mac full使用标准隔离runner执行，签名实包需绑定本次正式提交，未完成项不计PASS。

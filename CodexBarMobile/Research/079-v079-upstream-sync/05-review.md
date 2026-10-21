@@ -69,3 +69,9 @@ Mac完整测试、draft、iOS实现/测试均已完成，最终结果与风险�
 ## GitHub第二轮与独立根因复核
 
 head6fb718610的P2（discussion_r4342697183）为Gemini窗口标签没有从plugin进入sync。选择在authoritative TS插件输出显式label，通过现有mapper/sync，而非改CLI静态metadata。独立审查发现JS生成源也需同步，已修TS并由正式生成器验证JS字节；同轮进一步查到Vercel quota-window resolver未接入已有译文，已补两个switch和四语断言。独立复审无实现阻塞。59项Mac focused、1153+67 iOS、Release、lint和16组合已通过，Mac完整/实包终态仍以03/04后续记录为准。
+
+## GitHub第三轮clean之后的独立P1根因修订
+
+GitHub在ca2d92f8dd上返回“Didn't find any major issues”，但独立iOS审查进一步发现Gemini Web只提供套餐名、无email/accountID，nil身份在Shared的全局legacy bucket合并不同Mac账号。原CLI通常有真实邮箱，不能把Web误当成相同账号。采用明确settings.source==.web的device/source record key；不借用OAuth身份、不按label/分钟数推断。旧reader已支持key，schema无增量。Web同账号跨Mac保守分开，同Mac账号切换仅保留当前来源槽位。
+
+独立Mac复审确认来源选择、CLI保留、deviceID注入及既有identity drift清理合同无阻塞，架构guard仅增加该switch的精确4引用指纹。新增真实双engine plugin→双设备实际push、iOS merger同/不同CLI邮箱与混合来源、旧新consumer矩阵。实际运行结论按03后续终态记录，当前不提前宣称新head clean。此前ca源打包因新P1主动停止，必须用修复提交重新打包，旧draft资产不代表修复已生效。

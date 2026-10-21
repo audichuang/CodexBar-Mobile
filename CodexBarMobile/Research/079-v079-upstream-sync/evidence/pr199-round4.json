@@ -1,0 +1,38 @@
+{
+  "finding": "Independent iOS contract audit after GitHub ca2d92f8dd clean review: Gemini Web identity-less cross-Mac quota collapse",
+  "focused": {
+    "tests": 60,
+    "suites": 3,
+    "failures": 0,
+    "log": "v079-pr199-r4-focused-retry.log"
+  },
+  "ios": {
+    "swiftTesting": 1156,
+    "suites": 73,
+    "xctest": 67,
+    "failures": 0,
+    "xcresult": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/pr199-r4-ios.xcresult"
+  },
+  "frozenMatrix": {
+    "cases": 16,
+    "reads": 64,
+    "merges": 32,
+    "result": "substituted",
+    "scratch": "v079/compat-pr199-r4"
+  },
+  "releaseBuild": "Reuse R2 generic-device Release: iOS product/Shared/project source inputs unchanged",
+  "schema": "NO_DEPLOY: existing accountRecordKey/accountIdentities only",
+  "fileSHA256": {
+    "Sources/CodexBar/Sync/SyncCoordinator.swift": "d610c29bbdaeeb78acd92e30d02a55d306b2f0ce5b3cddaea8de1e94d3aeb8cb",
+    "Tests/CodexBarTests/SyncV079BridgeTests.swift": "40ea7ff628ce491cf3af2afe070853914222d42361f397098114819c81ead1d2",
+    "Tests/CodexBarTests/ProviderArchitectureGatekeeperTests.swift": "9563945c03604871a60075a7e227514236dadba28de457154a6c16e5a5bb0842",
+    "CodexBarMobile/CodexBarMobileTests/V079CostAuthorityTests.swift": "9cfe1a62eae42a2c6c20dbd1df7ae4893e7e41cafad91ce7089d5623f52bfacf",
+    "CodexBarMobile/Research/079-v079-upstream-sync/tools/FrozenWireHarness.swift": "f61708e2a0e144af7f7a841b022133d455288248f7c42a342adaf5ce7f205bdc"
+  },
+  "failuresAndRecovery": [
+    "first focused link failed after initializer API change; original initializer preserved via convenience forwarding, full recompile/focused retry passed",
+    "initial lint had four multiline-argument violations; fixed, targeted SwiftLint passed; complete final lint running"
+  ],
+  "macFullRegression": "running; not counted as pass",
+  "macDraft": "refresh required from this source; old 4f artifact superseded"
+}

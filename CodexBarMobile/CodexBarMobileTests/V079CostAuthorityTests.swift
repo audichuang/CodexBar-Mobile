@@ -435,3 +435,86 @@ struct V079OrganizationIdentityTests {
         }
     }
 }
+
+@Suite("v0.79 Gemini source identities")
+struct V079GeminiIdentityTests {
+    private let now = Date(timeIntervalSince1970: 1_792_612_346)
+
+    private func web(_ device: String, hourly: Double, weekly: Double) -> ProviderUsageSnapshot {
+        let key = "web-device-" + device
+        let primary = SyncRateWindow(
+            id: "primary", label: "5-hour", usedPercent: hourly, windowMinutes: 300,
+            resetsAt: nil, resetDescription: nil)
+        let secondary = SyncRateWindow(
+            id: "secondary", label: "Weekly", usedPercent: weekly, windowMinutes: 10080,
+            resetsAt: nil, resetDescription: nil)
+        return ProviderUsageSnapshot(
+            providerID: "gemini", providerName: "Gemini", primary: primary, secondary: secondary,
+            accountEmail: nil, loginMethod: "Pro", statusMessage: nil, isError: false,
+            lastUpdated: self.now, rateWindows: [primary, secondary],
+            accountIdentities: ["gemini:record:" + key], accountRecordKey: key)
+    }
+
+    private func cli(_ email: String?, used: Double, at date: Date) -> ProviderUsageSnapshot {
+        let primary = SyncRateWindow(
+            id: "primary", label: "Pro", usedPercent: used, windowMinutes: 1440,
+            resetsAt: nil, resetDescription: nil)
+        let secondary = SyncRateWindow(
+            id: "secondary", label: "Flash", usedPercent: used, windowMinutes: 1440,
+            resetsAt: nil, resetDescription: nil)
+        return ProviderUsageSnapshot(
+            providerID: "gemini", providerName: "Gemini", primary: primary, secondary: secondary,
+            accountEmail: email, loginMethod: "Pro", statusMessage: nil, isError: false,
+            lastUpdated: date, rateWindows: [primary, secondary])
+    }
+
+    private func device(_ id: String, provider: ProviderUsageSnapshot) -> SyncedUsageSnapshot {
+        SyncedUsageSnapshot(
+            providers: [provider], syncTimestamp: provider.lastUpdated, deviceName: id, deviceID: id)
+    }
+
+    @Test func `unverified Web accounts keep both devices and their own hourly and weekly quotas`() throws {
+        let a = self.device("mac-a", provider: self.web("mac-a", hourly: 24, weekly: 4))
+        let b = self.device("mac-b", provider: self.web("mac-b", hourly: 90, weekly: 10))
+        for sources in [[a, b], [b, a]] {
+            let merged = try #require(ProviderSnapshotMerger.mergeSnapshots(sources))
+            #expect(merged.providers.count == 2)
+            let group = try #require(merged.providers.groupedByProvider().first)
+            #expect(group.accounts.count == 2)
+            for (device, hourly, weekly) in [("mac-a", 24.0, 4.0), ("mac-b", 90.0, 10.0)] {
+                let account = try #require(merged.providers.first { $0.accountRecordKey == "web-device-" + device })
+                #expect(account.accountEmail == nil)
+                #expect(account.rateWindows.compactMap(\.label) == ["5-hour", "Weekly"])
+                #expect(account.primary?.usedPercent == hourly && account.secondary?.usedPercent == weekly)
+            }
+        }
+    }
+
+    @Test func `CLI accounts retain email separation and same email merging`() throws {
+        let a = self.device("mac-a", provider: self.cli("first@example.invalid", used: 24, at: self.now))
+        for sameAccount in [false, true] {
+            let b = self.device("mac-b", provider: self.cli(
+                sameAccount ? "first@example.invalid" : "second@example.invalid",
+                used: 90, at: self.now.addingTimeInterval(60)))
+            for sources in [[a, b], [b, a]] {
+                let merged = try #require(ProviderSnapshotMerger.mergeSnapshots(sources))
+                #expect(merged.providers.count == (sameAccount ? 1 : 2))
+                #expect(merged.providers.allSatisfy { $0.rateWindows.compactMap(\.label) == ["Pro", "Flash"] })
+                if sameAccount { #expect(merged.providers.first?.primary?.usedPercent == 90) }
+            }
+        }
+    }
+
+    @Test func `Web quotas never acquire a CLI account identity even when both sources report Pro`() throws {
+        let web = self.device("mac-a", provider: self.web("mac-a", hourly: 24, weekly: 4))
+        for email in ["cli@example.invalid" as String?, nil] {
+            let cli = self.device("mac-b", provider: self.cli(email, used: 90, at: self.now.addingTimeInterval(60)))
+            for sources in [[web, cli], [cli, web]] {
+                let merged = try #require(ProviderSnapshotMerger.mergeSnapshots(sources))
+                #expect(merged.providers.count == 2)
+                #expect(merged.providers.first { $0.accountRecordKey == "web-device-mac-a" }?.primary?.usedPercent == 24)
+                #expect(merged.providers.first { $0.accountRecordKey == nil }?.primary?.usedPercent == 90)
+            }
+        }
+    }
+}

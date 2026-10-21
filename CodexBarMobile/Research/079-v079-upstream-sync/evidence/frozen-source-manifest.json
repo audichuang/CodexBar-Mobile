@@ -1,7 +1,7 @@
 {
-  "oldRef": "v0.76.0.2-mobile.2.10.0",
-  "oldCommit": "7bc120faf0f9eadfe624afcfe377beb01aae5427",
-  "newCommit": "6fb7186104485f409c050fdc99b76bd7c5c6447a",
+  "oldRef": "7fa778243f1a441a3d45dcfc561b89b16770449c",
+  "oldCommit": "7fa778243f1a441a3d45dcfc561b89b16770449c",
+  "newCommit": "ca2d92f8ddbaa59e6299c3f9a662235813e0a0bc",
   "files": [
     {
       "path": "Shared/Models/DeviceLifecycleEvent.swift",
@@ -99,6 +99,5 @@
       "newSHA256": "97d81a5087e6a0e25e1fd458bb169a7f801369237f465d354f435dc939675af0"
     }
   ],
-  "harnessSHA256": "b4db6fc2930f7305b4bb806922abb4c0bae32e64c3549aba8d10f61978ef9aa2",
-  "newCommitMeaning": "运行时Git HEAD；实际newSHA256及harnessSHA256绑定本轮编译输入（包括未提交修复）。"
+  "harnessSHA256": "f61708e2a0e144af7f7a841b022133d455288248f7c42a342adaf5ce7f205bdc"
 }

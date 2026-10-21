@@ -38,3 +38,7 @@ Status: `done`（仅 draft；live release、tag、push 未授权）。
 - ZIP 90,773,292 bytes / SHA256 e060a4a6095369b0187dfece9bab9a98efb11626da27d8c062d6863d956f7c5d；dSYM ZIP 72,676,818 bytes / SHA256 06655d13f4112fff5a7c101fb8ed8c4d83bb44eaaaf27a77304a2d96f8c59dee；GitHub asset digest/size完全对应。
 - 本地candidate appcast使用完整tag download URL，172.1.2.10.0单调递增、enclosure长度与真实ZIP对应，EdDSA验证exit0；原appcast已恢复原字节，无feed publication。
 - 小型可复核证据见evidence/mac-draft-verification.json、mac-draft-release.json、appcast-candidate.xml、appcast-verification.json；详细验包日志在BuildScratch/v079/mac-qa/verification.log。
+
+## PR修复后的artifact刷新
+
+前述4f实包是历史成功证据；PR修复修改了Gemini插件和sync产品输入，必须刷新同一个draft。ca源第一次刷新中双archRelease通过，错误使用未带CODEXBAR_前缀的widget root导致新缓存缺锁定SweetCookieKit commit；改为已验证的CODEXBAR_WIDGET_DERIVED_DATA_ROOT。之后独立审查发现Gemini Web身份P1，主动中断该旧源重试并终止其本任务编译子进程，不将未完成产物上传。下一次完整签名/公证与asset替换将绑定修复后的正式commit，保留原draft URL、无tag/live/feed publication。

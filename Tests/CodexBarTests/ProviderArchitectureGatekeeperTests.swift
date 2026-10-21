@@ -4378,6 +4378,13 @@ struct ProviderArchitectureGatekeeperTests {
             reason: "The Mac-to-iOS bridge maps provider-owned account identity, quota, cost, and details into stable optional payload fields."),
         AllowedProviderConstruct(
             path: "Sources/CodexBar/Sync/SyncCoordinator.swift",
+            anchor: "case .wayfinder:",
+            expectedProviderIDs: ["futureagi", "gemini", "munito", "wayfinder"],
+            expectedReferenceCount: 4,
+            expectedReferenceFingerprint: ["wayfinder@0", "munito@2", "futureagi@11", "gemini@13"],
+            reason: "Sync record ownership follows verified Munito organization IDs, device-local unverified sources, and explicit Gemini Web source isolation while preserving CLI identity behavior."),
+        AllowedProviderConstruct(
+            path: "Sources/CodexBar/Sync/SyncCoordinator.swift",
             line: 1267,
             anchor: "case .neuralwatt, .zenmux, .lithosai:",
             expectedProviderIDs: [

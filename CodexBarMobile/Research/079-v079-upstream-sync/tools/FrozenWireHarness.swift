@@ -6,13 +6,17 @@ import Foundation
 @main
 struct Harness {
     static let now = Date(timeIntervalSince1970: 1_792_612_346)
-    static let ids = ["claude", "gemini", "futureagi", "munito", "munito-organization", "munito-other", "plugin:fixture", "claude-cost"]
+    static let ids = ["claude", "gemini", "gemini-cli-shared", "gemini-cli-distinct", "futureagi", "munito", "munito-organization", "munito-other", "plugin:fixture", "claude-cost"]
 
     static func provider(_ id: String, new: Bool, device: String) -> ProviderUsageSnapshot? {
         if ["futureagi", "munito", "munito-organization", "munito-other", "claude-cost"].contains(id), !new { return nil }
         if id == "munito-other", device != "mac-a" { return nil }
         let organization = id.hasPrefix("munito-")
-        let providerID = organization ? "munito" : id
+        let gemini = id == "gemini" || id.hasPrefix("gemini-cli-")
+        let geminiWeb = id == "gemini" && new
+        let providerID = organization ? "munito" : (gemini ? "gemini" : id)
+        let email = id == "gemini-cli-shared" ? "shared@example.invalid"
+            : (id == "gemini-cli-distinct" ? device + "@example.invalid" : nil)
         let organizationKey = id == "munito-other" ? "organization-fixture-distinct" : "organization-fixture-shared"
         if id == "claude-cost" {
             return ProviderUsageSnapshot(
@@ -21,11 +25,13 @@ struct Harness {
                 lastUpdated: now, costSummaryCleared: true, rateWindows: [],
                 accountRecordKey: "claude-local-cost:" + device)
         }
-        let window = SyncRateWindow(id: "primary", label: id == "gemini" ? (new ? "5-hour" : "Pro")
+        let window = SyncRateWindow(id: "primary", label: gemini ? (geminiWeb ? "5-hour" : "Pro")
             : (id == "futureagi" ? "AI credits" : "Session"),
-            usedPercent: 30, windowMinutes: id == "gemini" && !new ? 1440 : 300, resetsAt: now.addingTimeInterval(3600), resetDescription: nil)
-        let windows = id == "gemini" ? [window, SyncRateWindow(id: "secondary", label: new ? "Weekly" : "Flash",
-            usedPercent: 4, windowMinutes: new ? 10080 : 1440, resetsAt: now.addingTimeInterval(3600), resetDescription: nil)] : [window]
+            usedPercent: geminiWeb ? (device == "mac-a" ? 24 : 90) : 30,
+            windowMinutes: gemini && !geminiWeb ? 1440 : 300, resetsAt: now.addingTimeInterval(3600), resetDescription: nil)
+        let windows = gemini ? [window, SyncRateWindow(id: "secondary", label: geminiWeb ? "Weekly" : "Flash",
+            usedPercent: geminiWeb && device == "mac-b" ? 10 : 4,
+            windowMinutes: geminiWeb ? 10080 : 1440, resetsAt: now.addingTimeInterval(3600), resetDescription: nil)] : [window]
         var rows: [SyncProviderDetailSection.Row] = []
         if id == "plugin:fixture" {
             #if NEW_WIRE
@@ -36,14 +42,15 @@ struct Harness {
         }
         return ProviderUsageSnapshot(
             providerID: providerID, providerName: id, primary: window, secondary: windows.dropFirst().first,
-            accountEmail: nil, loginMethod: nil, statusMessage: nil, isError: false,
+            accountEmail: email, loginMethod: nil, statusMessage: nil, isError: false,
             lastUpdated: now,
             costSummary: organization ? SyncCostSummary(
                 sessionCostUSD: nil, sessionTokens: nil, last30DaysCostUSD: id == "munito-other" ? 7 : 5,
                 last30DaysTokens: nil, daily: [], sourceUpdatedAt: now) : nil,
             rateWindows: windows,
             accountIdentities: id == "claude" ? ["claude:email:fixture@example.test"] : nil,
-            accountRecordKey: organization ? organizationKey : (["futureagi", "munito"].contains(id) ? "device-" + device : nil),
+            accountRecordKey: geminiWeb ? "web-device-" + device
+                : (organization ? organizationKey : (["futureagi", "munito"].contains(id) ? "device-" + device : nil)),
             accountOrganization: organization ? "Same editable organization name" : nil,
             details: rows.isEmpty ? [] : [.init(title: "Status", rows: rows)])
     }
@@ -66,10 +73,13 @@ struct Harness {
                 precondition(!value.provider.isProviderLevelCostEnvelope)
                 #endif
             } else {
-                precondition(value.provider.rateWindows.first?.usedPercent == 30)
                 if value.provider.providerID == "gemini" {
                     let appQuota = value.provider.rateWindows.first?.windowMinutes == 300
                     precondition(value.provider.rateWindows.compactMap(\.label) == (appQuota ? ["5-hour", "Weekly"] : ["Pro", "Flash"]))
+                    precondition(value.provider.primary?.usedPercent == (appQuota ? (value.deviceID == "mac-a" ? 24 : 90) : 30))
+                    if appQuota { precondition(value.provider.accountRecordKey == "web-device-" + value.deviceID) }
+                } else {
+                    precondition(value.provider.rateWindows.first?.usedPercent == 30)
                 }
             }
             return value
@@ -124,9 +134,25 @@ struct Harness {
                 let costOwners = sources.flatMap(\.providers).filter {
                     $0.accountRecordKey?.hasPrefix("claude-local-cost:") == true
                 }.count
-                let expected = ["futureagi", "munito"].contains(id)
-                    ? Set(sources.flatMap(\.providers).compactMap(\.accountRecordKey)).count : 1 + costOwners
+                let expected: Int
+                if id == "gemini" {
+                    expected = Set(sources.flatMap(\.providers).map { provider in
+                        provider.accountRecordKey.map { "record:" + $0 }
+                            ?? provider.accountEmail.map { "email:" + $0 } ?? "legacy"
+                    }).count
+                } else {
+                    expected = ["futureagi", "munito"].contains(id)
+                        ? Set(sources.flatMap(\.providers).compactMap(\.accountRecordKey)).count : 1 + costOwners
+                }
                 precondition(merged.providers.count == expected, "\(id) expected \(expected) accounts")
+                if id == "gemini" {
+                    for source in sources.flatMap(\.providers) {
+                        let account = merged.providers.first {
+                            $0.accountRecordKey == source.accountRecordKey && $0.accountEmail == source.accountEmail
+                        }
+                        precondition(account?.rateWindows == source.rateWindows, "Gemini source quotas must remain separate")
+                    }
+                }
                 if id == "munito" {
                     let organizations = merged.providers.filter { $0.accountRecordKey?.hasPrefix("organization-") == true }
                     let shared = sources.flatMap(\.providers).contains { $0.accountRecordKey == "organization-fixture-shared" }
@@ -135,9 +161,11 @@ struct Harness {
                     precondition(organizations.compactMap { $0.costSummary?.last30DaysCostUSD }.reduce(0, +)
                         == (shared ? 5 : 0) + (distinct ? 7 : 0), "organization spend must not double across Macs")
                 }
-                precondition(merged.providers.allSatisfy {
-                    $0.primary?.usedPercent == 30 || $0.costSummaryCleared == true
-                })
+                if id != "gemini" {
+                    precondition(merged.providers.allSatisfy {
+                        $0.primary?.usedPercent == 30 || $0.costSummaryCleared == true
+                    })
+                }
             }
         }
         print("PASS two-writer merge in both orders: stable Claude identity and legacy provider fallback")

@@ -17,7 +17,7 @@ Status: `done`（Goal 已确认单版本方案）
 |---|---|---|
 | Mac MARKETING_VERSION | 0.79.0.1 | 新上游 + fork 首个补丁，四段规则优先于文档遗留示例 |
 | BUILD_NUMBER | 172.1 | v0.79.0 的整数 172，加 fork .1 |
-| MOBILE_VERSION | 2.10.0 | 未上传/发布新 iOS，保留当前已发布 Mac 配套值 |
+| MOBILE_VERSION | 2.10.0 | 保留version.env基线Mac配套值；不声称是当前手机/最新beta版本 |
 | Sparkle / CFBundleVersion | 172.1.2.10.0 | 大于现有 169.2.2.10.0 |
 | 拟用 Mac tag | v0.79.0.1-mobile.2.10.0 | 仅 draft 名称，不创建或发布 tag |
 | iOS | 3.1.0 (246) | 在项目 3.0.0 (245) 后准备一个功能版本，全部 targets 一致 |
@@ -33,3 +33,5 @@ Status: `done`（Goal 已确认单版本方案）
 Mac完整回归、最终lint、签名公证draft和appcast候选校验完成；iOS3.1.0(246)四语功能、单测/Widget/render/引导与设备Release编译通过；本地循环review阻塞0。16组合均以冻结old/new真实consumer和定向生产入口测试替代，gate按文档完成；没有实体CloudKit/APNs/cache收敛证据，具体风险见03。
 
 Draft：[Mac 0.79.0.1](https://github.com/o1xhack/CodexBar-Mobile/releases/tag/untagged-3b25e34f5a865b165d53)。Mac二进制来源4f66415b1；后续仅iOS/Research变更，Mac产品输入未变。未push/merge/创建tag/发布live/feed/TestFlight。#196保持open，无新PR；历史issue处理规则和未来发布限制未改变。
+
+发布边界：本轮保留已确认的Mac companion metadata基线2.10.0，iOS3.1.0独立准备。任何未来live发布前须按versioning文档重新核对实际配套手机版本；本轮没有TestFlight或live发布。

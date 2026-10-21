@@ -170,17 +170,32 @@ final class SyncCoordinator {
     /// the real app. Tests that exercise mock activation pass
     /// `{ MockProviderInjector.allMocks() }` to bypass the global
     /// activation check entirely.
-    init(
+    convenience init(
         store: UsageStore,
         settings: SettingsStore,
         syncManager: any SyncPushing = CloudSyncManager.shared,
+        mockInjector: @escaping @MainActor () -> [ProviderUsageSnapshot] = { [] })
+    {
+        self.init(
+            store: store,
+            settings: settings,
+            syncManager: syncManager,
+            deviceID: Self.stableDeviceID(),
+            mockInjector: mockInjector)
+    }
+
+    init(
+        store: UsageStore,
+        settings: SettingsStore,
+        syncManager: any SyncPushing,
+        deviceID: String,
         mockInjector: @escaping @MainActor () -> [ProviderUsageSnapshot] = { [] })
     {
         self.store = store
         self.settings = settings
         self.syncManager = syncManager
         self.mockInjector = mockInjector
-        self.deviceID = Self.stableDeviceID()
+        self.deviceID = deviceID
     }
 
     /// Starts observing `UsageStore` snapshot changes.
@@ -1272,7 +1287,8 @@ final class SyncCoordinator {
             provider: provider,
             requested: requestedAccountRecordKey,
             deviceID: self.deviceID,
-            identity: snapshot?.identity)
+            identity: snapshot?.identity,
+            sourceMode: self.settings.providerConfig(for: provider)?.source)
         let accountIdentities = accountIdentityOverrides ?? Self.syncAccountIdentities(
             provider: provider,
             identity: snapshot?.identity,
@@ -1437,7 +1453,8 @@ final class SyncCoordinator {
         provider: UsageProvider,
         requested: String?,
         deviceID: String,
-        identity: ProviderIdentitySnapshot? = nil) -> String?
+        identity: ProviderIdentitySnapshot? = nil,
+        sourceMode: ProviderSourceMode? = nil) -> String?
     {
         // Provider-specific by design: source-owned organization IDs merge Munito; unverified sources stay
         // device-scoped.
@@ -1455,6 +1472,11 @@ final class SyncCoordinator {
             return "device-\(deviceID.lowercased())"
         case .futureagi:
             return requested ?? "device-\(deviceID.lowercased())"
+        case .gemini:
+            // The explicit Web source exposes no verified Google account identity. Keep its quotas
+            // separate across Macs and from OAuth CLI accounts; never borrow a CLI email for Web.
+            guard sourceMode == .web else { return requested }
+            return requested ?? "web-device-\(deviceID.lowercased())"
         default:
             return requested
         }

@@ -73,3 +73,7 @@ Research078记录3.0.0(245)仅本地验证，2.10.0(243)为既有VALID beta，�
 Producer冷启动可以先重发adapter quota clear，同时尚无成本publication且shouldClear=false，不会重发独立owner。`adapter:<device>:<source>:<slot>:<fingerprint>`已是本轮producer的明确账号namespace，因此其nil+clear只表示该账号不拥有机器成本，不能竞选机器成本权威，也不能让aggregate撤回整个来源。统一hasMachineCostClaim同时用于winner/map/ledger suppression：独立owner clear和普通legacy clear仍是机器级claim；adapter账号nil+clear不是。新增旧owner+较新adapter-clear仍$3/300、尚缺owner记录时ledger仍保留、明确owner clear才只剩Mac B $2/200。无需wire/schema更改。
 
 首轮完整iOS单测在上一staged tree通过；后续scope与辅助字号/图标对比度修复将重跑。warning/critical使用既有动态readable颜色处理，Light加深以保持符号与背景对比，Dark保留系统色。
+
+## PR阶段 Gemini Web 身份根因修订
+
+双Mac不同Google账号的Web插件只返回loginMethod，不提供可验证email/accountID；原nil身份进入全局gemini:legacy-no-identity，较新额度覆盖另一账号。现在只对实际配置显式.web生成web-device-<稳定设备ID> record key及现有record identity，来源是非凭证身份；不借用OAuth CLI邮箱、不按套餐名或窗口分钟数猜测来源。CLI的auto/api及原nil兼容路径保留，真正同邮箱CLI继续跨Mac合并。现有旧reader已识别accountRecordKey，无新增wire/schema。Web同账号跨Mac无法验证，保守显示两个账号；同Mac切换Web账号复用本设备来源槽位，以最新数据替换，并清理此前发布记录。这是来源隔离，不宣称识别Google账号。

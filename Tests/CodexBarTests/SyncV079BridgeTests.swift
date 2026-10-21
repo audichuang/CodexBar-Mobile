@@ -28,13 +28,21 @@ struct SyncV079BridgeTests {
             widgetSnapshotURL: env.root.appendingPathComponent("widget.json"),
             widgetTimelineReloader: {})
         let pusher = MockSyncPusher()
-        let sync = SyncCoordinator(store: store, settings: settings, syncManager: pusher)
+        let sync = SyncCoordinator(store: store, settings: settings, syncManager: pusher, deviceID: "MAC-A")
+        store._setSnapshotForTesting(UsageSnapshot(
+            primary: RateWindow(usedPercent: 10, windowMinutes: 1440, resetsAt: nil, resetDescription: nil),
+            secondary: nil,
+            updatedAt: Date()), provider: .gemini)
+        await sync.pushCurrentSnapshot()
+        #expect(pusher.lastSnapshot?.providers.first { $0.providerID == "gemini" }?.accountRecordKey == nil)
+        #expect(pusher.deletedRecordNamesAcrossCalls.isEmpty)
+        settings.updateProviderConfig(provider: .gemini) { $0.source = .web }
         let hourly = #"{"poolType":"GXU_FIVE_HOURLY","percentageUsed":0.24}"#
         let weekly = #"{"poolType":"GXU_WEEKLY","percentageUsed":0.04}"#
-        for (pools, expected) in [
-            ([hourly, weekly], ["5-hour", "Weekly"]),
-            ([hourly], ["5-hour"]),
-            ([weekly], ["Weekly"]),
+        for (pools, expected, usedPercent) in [
+            ([hourly, weekly], ["5-hour", "Weekly"], 24.0),
+            ([hourly], ["5-hour"], 24.0),
+            ([weekly], ["Weekly"], 4.0),
         ] {
             let body = "[{\"data\":{\"viewer\":{\"rpcs\":{\"getUsageInfo\":{\"pools\":["
                 + pools.joined(separator: ",") + "]}}}}}]"
@@ -50,16 +58,59 @@ struct SyncV079BridgeTests {
             await sync.pushCurrentSnapshot()
             let published = try #require(pusher.lastSnapshot?.providers.first { $0.providerID == "gemini" })
             #expect(published.rateWindows.compactMap(\.label) == expected)
+            #expect(published.rateWindows.first?.usedPercent == usedPercent)
+            #expect(published.accountRecordKey == "web-device-mac-a")
+            #expect(pusher.deletedRecordNamesAcrossCalls.flatMap(\.self).contains { $0.hasSuffix("|gemini|_") })
+            #expect(published.accountIdentities == ["gemini:record:web-device-mac-a"])
             let data = try CloudSyncConstants.makeJSONEncoder().encode(published)
             let decoded = try CloudSyncConstants.makeJSONDecoder().decode(ProviderUsageSnapshot.self, from: data)
             #expect(decoded.rateWindows.compactMap(\.label) == expected)
+            let otherRuntime = try BundledPluginTestSupport.runtime(
+                "gemini-web", engine: engine, transport: ProviderHTTPTransportHandler { request in
+                    try CookiePluginFixtures.response(
+                        request, body: body.replacingOccurrences(of: "0.24", with: "0.90")
+                            .replacingOccurrences(of: "0.04", with: "0.10"))
+                })
+            let otherSnapshot = try await otherRuntime.fetchUsage(
+                cookieSource: .manual, cookieResolver: { _, _ in "SID=other-fixture" })
+            store._setSnapshotForTesting(otherSnapshot, provider: .gemini)
+            let otherSync = SyncCoordinator(store: store, settings: settings, syncManager: pusher, deviceID: "MAC-B")
+            await otherSync.pushCurrentSnapshot()
+            let other = try #require(pusher.lastSnapshot?.providers.first { $0.providerID == "gemini" })
+            #expect(other.accountRecordKey == "web-device-mac-b")
+            #expect(other.accountIdentities == ["gemini:record:web-device-mac-b"])
+            #expect(other.accountEmail == nil)
+            #expect(other.rateWindows.first?.usedPercent == (usedPercent == 24 ? 90 : 10))
+            #expect(other.accountRecordKey != decoded.accountRecordKey)
         }
+        settings.updateProviderConfig(provider: .gemini) { $0.source = .api }
         let cliWindow = RateWindow(usedPercent: 10, windowMinutes: 1440, resetsAt: nil, resetDescription: nil)
         store._setSnapshotForTesting(UsageSnapshot(
             primary: cliWindow, secondary: cliWindow, tertiary: cliWindow, updatedAt: Date()), provider: .gemini)
         await sync.pushCurrentSnapshot()
         let cli = try #require(pusher.lastSnapshot?.providers.first { $0.providerID == "gemini" })
         #expect(cli.rateWindows.compactMap(\.label) == ["Pro", "Flash", "Flash Lite"])
+        #expect(cli.accountRecordKey == nil)
+        #expect(cli.accountIdentities == nil)
+        #expect(pusher.deletedRecordNamesAcrossCalls.flatMap(\.self).contains {
+            $0.hasSuffix("|gemini|web-device-mac-a")
+        })
+    }
+
+    @Test
+    func `only explicit Gemini web isolates unidentified accounts by device`() {
+        let first = SyncCoordinator.syncAccountRecordKey(
+            provider: .gemini, requested: nil, deviceID: "MAC-A", sourceMode: .web)
+        let second = SyncCoordinator.syncAccountRecordKey(
+            provider: .gemini, requested: nil, deviceID: "MAC-B", sourceMode: .web)
+        #expect(first == "web-device-mac-a")
+        #expect(second == "web-device-mac-b")
+        for source in [ProviderSourceMode.auto, .api, .cli] {
+            #expect(SyncCoordinator.syncAccountRecordKey(
+                provider: .gemini, requested: nil, deviceID: "MAC-A", sourceMode: source) == nil)
+        }
+        #expect(SyncCoordinator.syncAccountRecordKey(
+            provider: .gemini, requested: "configured", deviceID: "MAC-A", sourceMode: .web) == "configured")
     }
 
     @Test(arguments: [UsageProvider.futureagi, .munito])
