@@ -33,3 +33,10 @@ Future AGI / Munito 品牌、generic quota/spend/details 和四语；新增语�
 这不是把缺陷留给以后：避免在当前版本写入不兼容的历史数据，明确声明该上游功能的 iOS 支持边界；若将来支持 scoped history，必须独立设计旧读者隔离和 ledger source migration，再允许 scoped数据上wire。当前不新增 scope字段或CloudKit schema。
 
 Adapter 的 combined history使用独立稳定device cost owner，clear时保留同key tombstone。`hasUsableSignal` 在基线已包含 costSummaryCleared=true，无需修改；旧读者也可通过普通details接收说明。新 Usage/widget通过isProviderLevelCostEnvelope过滤成本账号。实际16组合的历史store/UI限制仍需如实报告。
+
+## iOS消费端补充验收
+
+- Clear必须在source-device/provider聚合之前抑制local-cost旧行，之后dashboard和TokenActivity也拒绝clear回填；不删除持久ledger。同一device另有有效combined owner时保留它，另一Mac有效金额不得被全局clear误删。普通nil没有撤回含义。
+- Future AGI meter display_name/display_unit是动态API内容，不把碰巧名为Balance/Session的meter强制本地化。Munito已知Today/This month金额中的`of`与stopped-until日期在消费端本地化，动态organization/region/tier/status未知值原样保留。
+- severity仅warning/critical添加符号+系统颜色+四语可访问性，normal/nil/unknown保留旧观感。full与teaser共用presentation，不用颜色单独表达异常。
+- 使用生产ProviderDetailsView/Teaser的native render attachment检查四语/Light-Dark/长文本；它只证明静态布局，不当作VoiceOver实际朗读或真实CloudKit同步证据。

@@ -67,3 +67,9 @@ Status: `in-progress`；以下只记录实际完成的证据，Mac完整测试/l
 - 新Mac + 旧iOS的额外限制：旧CWL reader收到clear后可能仍回填以前combined历史。它不接收scoped金额，避免新目录历史混入；新iOS会在aggregate/dashboard/activity三层按来源抑制clear，保留原始历史供恢复。上述16组合wire替代不能验证旧SwiftData展示。
 
 - v079-lint-policy.log：完整lint exit0，433 source keys齐全，parser version/hash、106 providers、fork policy/README等全部通过。
+
+## 完整回归第二次发现并修复的遗漏
+
+双worker全量在第109组发现MockProviderAdvancedScenariosTests/MockProviderInjectorIntegrationTests仍使用114 borrowed /119 snapshots /109 IDs旧断言，前108组通过，retry仍失败。新fixture形状与基础mock测试已通过，遗漏的是集成数量与标题；补为116/121/111，并搜索全部Mock测试清理当前计数文案（历史增长注释保留）。保留失败日志v079-all-tests-final.log，不将其计为全量PASS。只修改测试，Mac产品输入未变。
+
+- v079-mock-integration-tests.log：75 tests / 4 suites，exit0，包含全部mock集成路径与跨设备场景。最终完整回归使用支持的`--direct-workers 4`（本机12core/32GB，独立HOME），仅本地并行度，不改CI策略。
