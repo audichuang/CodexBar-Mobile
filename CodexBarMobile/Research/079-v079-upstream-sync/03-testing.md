@@ -57,3 +57,13 @@ Status: `in-progress`；以下只记录实际完成的证据，Mac完整测试/l
 - 独立review确认修复准确，SwiftLint严格检查exit0；frozen wire在此head重跑16/16，Future AGI/Munito由两writer时保留两个账号，旧reader同样读取既有accountRecordKey。
 - matrix-wire.json / frozen-source-manifest.json已保存到evidence，绑定实际冻结源文件SHA256与harnessSHA256。
 - 当前完整回归仍使用此前编译的481544bc7产品（旧provider路径未变）；新helper与两Mac不同组织内容的定向回归待随后执行，不将旧binary结果当新head全量。
+
+## 最终回归补充（8111cb956）
+
+- v079-policy-identity-tests.log：30 tests / 2 suites，exit0；覆盖最新新provider设备identity与Claude策略测试隔离。
+- 首轮完整回归在第28组因测试未固定Keychain gate而失败；保留v079-all-tests.log，不计PASS。具体根因/修复见05。
+- 最终全量改用仓库标准安全环境与双worker：`TMPDIR=.../v079/tmp bash Scripts/test.sh --direct-workers 2`，v079-all-tests-final.log。底层KeychainTestSafety仍禁止真实凭证读取。
+- 上游检查快照30项中27 success / 3 skipped，无failure；依据ci-policy严格条件，**不把含skipped的快照声称为可复用的全部heavy CI通过**。未来获准merge时由Final CI脚本重新判断，必要时回退本fork完整矩阵；本轮未dispatch远端CI或push。
+- 新Mac + 旧iOS的额外限制：旧CWL reader收到clear后可能仍回填以前combined历史。它不接收scoped金额，避免新目录历史混入；新iOS会在aggregate/dashboard/activity三层按来源抑制clear，保留原始历史供恢复。上述16组合wire替代不能验证旧SwiftData展示。
+
+- v079-lint-policy.log：完整lint exit0，433 source keys齐全，parser version/hash、106 providers、fork policy/README等全部通过。

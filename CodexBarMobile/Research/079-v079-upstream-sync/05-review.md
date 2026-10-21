@@ -33,3 +33,7 @@ Mac完整测试终态、Macdraft、iOS实现/测试与最终diff review均未完
 ## 全量回归暴露的测试隔离
 
 全量第28组的 Claude onlyOnUserAction characterization 连续失败。独立只读审查确认 runner 显式 CODEXBAR_DISABLE_KEYCHAIN_ACCESS=1 合法触发上游 cold-profile owner CLI fallback，原测试未固定其所需的 enabled gate。测试增加已有 withBackgroundKeychainAccess task override，凭证读取仍通过 isolated memory/file/keychain stub 与底层 test safety。产品 guard 不改。最终全量使用标准 Scripts/test.sh 的 CODEXBAR_SUPPRESS_TEST_KEYCHAIN_ACCESS=1，不把“禁止真实SecItem”混同于产品的“用户禁用Keychain”开关。
+
+## Mac draft流程独立审查
+
+8111cb956 + make_appcast scratch diff静态审查阻塞0：draft-no-tag-push跳过tag/push/旧draft删除，只创建fork draft，target mobile-dev占位并记录local SHA；不会进入finalize。版本172.1.2.10.0单调递增，Production entitlement保留。make_appcast复制ZIP暂存从/tmp改至已验证SSD BuildScratch；实际签名命令显式export RELEASE_STAGE_BASE与widget root，不依赖默认/tmp。
