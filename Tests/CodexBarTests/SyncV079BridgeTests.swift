@@ -6,6 +6,22 @@ import Testing
 
 @MainActor
 struct SyncV079BridgeTests {
+    @Test(arguments: [UsageProvider.futureagi, .munito])
+    func `new providers retain configured keys and isolate unverified accounts by device`(provider: UsageProvider) {
+        let first = SyncCoordinator.syncAccountRecordKey(provider: provider, requested: nil, deviceID: "MAC-A")
+        let second = SyncCoordinator.syncAccountRecordKey(provider: provider, requested: nil, deviceID: "MAC-B")
+        #expect(first == "device-mac-a")
+        #expect(first != second)
+        #expect(first == SyncCoordinator.syncAccountRecordKey(provider: provider, requested: nil, deviceID: "MAC-A"))
+        #expect(SyncCoordinator.syncAccountRecordKey(
+            provider: provider,
+            requested: "configured-account",
+            deviceID: "MAC-A")
+            == "configured-account")
+        #expect(SyncCoordinator.syncAccountIdentities(provider: provider, identity: nil, accountRecordKey: first)
+            == ["\(provider.rawValue):record:device-mac-a"])
+    }
+
     @Test
     func `plugin warning metadata survives the bridge and unknown severity preserves the row`() throws {
         let row = try ProviderDetailSection.Row(label: "Queue", value: "Nearly full", severity: .warning)

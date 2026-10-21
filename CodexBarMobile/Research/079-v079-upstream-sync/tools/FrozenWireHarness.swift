@@ -32,6 +32,7 @@ struct Harness {
             accountEmail: nil, loginMethod: nil, statusMessage: nil, isError: false,
             lastUpdated: now, rateWindows: [window],
             accountIdentities: id == "claude" ? ["claude:email:fixture@example.test"] : nil,
+            accountRecordKey: ["futureagi", "munito"].contains(id) ? "device-" + device : nil,
             details: rows.isEmpty ? [] : [.init(title: "Status", rows: rows)])
     }
 
@@ -107,7 +108,7 @@ struct Harness {
                 let costOwners = sources.flatMap(\.providers).filter {
                     $0.accountRecordKey?.hasPrefix("claude-local-cost:") == true
                 }.count
-                let expected = 1 + costOwners
+                let expected = ["futureagi", "munito"].contains(id) ? sources.count : 1 + costOwners
                 precondition(merged.providers.count == expected, "\(id) expected \(expected) accounts")
                 precondition(merged.providers.allSatisfy {
                     $0.primary?.usedPercent == 30 || $0.costSummaryCleared == true

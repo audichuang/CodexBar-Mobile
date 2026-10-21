@@ -1267,9 +1267,10 @@ final class SyncCoordinator {
 
         // Per-account stable identifier set for cross-Mac union-find merging.
         // See `Research/019-account-identity-multi-version-merge.md`.
-        let accountRecordKey = provider == .wayfinder
-            ? "device-\(self.deviceID.lowercased())"
-            : requestedAccountRecordKey
+        let accountRecordKey = Self.syncAccountRecordKey(
+            provider: provider,
+            requested: requestedAccountRecordKey,
+            deviceID: self.deviceID)
         let accountIdentities = accountIdentityOverrides ?? Self.syncAccountIdentities(
             provider: provider,
             identity: snapshot?.identity,
@@ -1426,6 +1427,18 @@ final class SyncCoordinator {
     static func adapterAccountRecordKey(_ account: ProviderAccountUsageSnapshot, deviceID: String) -> String {
         let owner = ClaudeSwapRetainedUsageStore.ownershipFingerprint(for: account) ?? "unidentified"
         return "adapter:\(deviceID):\(account.id.source):\(account.id.opaqueID):\(owner)"
+    }
+
+    static func syncAccountRecordKey(provider: UsageProvider, requested: String?, deviceID: String) -> String? {
+        switch provider {
+        case .wayfinder:
+            "device-\(deviceID.lowercased())"
+        case .futureagi, .munito:
+            // Neither source exposes a verified cross-Mac account identity. Keep different organizations separate.
+            requested ?? "device-\(deviceID.lowercased())"
+        default:
+            requested
+        }
     }
 
     static func syncAccountIdentities(
