@@ -140,6 +140,8 @@ enum ProviderColorPalette {
         if normalized == "fal" { return "7C3AED" }
         if normalized == "flora" { return "111111" }
         if normalized == "parallel" { return "1D1C1A" }
+        if normalized == "futureagi" { return "7857FC" }
+        if normalized == "munito" { return "702CF6" }
         return nil
     }
 

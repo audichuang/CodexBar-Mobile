@@ -2,10 +2,13 @@
 
 All notable changes to the CodexBar iOS companion app will be documented in this file.
 
-## [3.0.0 (245)] — Calendar reminders and iPhone Duo
+## [3.1.0 (246)] — Unreleased
 
 ### Added
-- Redesigned update introduction with version-specific feature highlights, adaptive cards, a persistent Continue action, and expandable release history. 3.0 combines the unreleased 2.10 calendar/reset-credit features with iPhone Duo workspaces; there is no separate public 2.10 release entry.
+- Future AGI and Munito quota subscriptions, brand colors, billing/spend details and four-language labels. The catalog is append-only at 90 providers / 270 state zones; verified Munito organization keys merge across Macs while unknown identities remain device-separated.
+- Cached Claude claude-swap/tcr quota accounts from Mac 0.79.0.1, keeping workspaces distinct and counting each Mac's independent local-cost owner once.
+- Plugin detail warning/critical symbols with system colors and four-language VoiceOver labels in full details and teaser cards. Unknown severity remains compatible with older payloads.
+- Redesigned update introduction with version-specific feature highlights, adaptive cards, a persistent Continue action, and expandable release history. 3.1 includes the previously unshipped 3.0 iPhone Duo workspaces and 2.10 calendar/reset-credit features; neither has a separate public release entry.
 - Two report panes for Cost and share-card editing. Active fold regions and margins determine usable pane bounds; tabletop share editing places the preview above the controls. Both sections remain reachable in narrow windows and at accessibility text sizes.
 - Expanded Usage sidebar retains quota labels, reset information, balance details and source notices. Multi-account groups show their account count instead of presenting one account's quota as a total.
 
@@ -14,10 +17,11 @@ All notable changes to the CodexBar iOS companion app will be documented in this
 - Cost panes scroll independently when expanded and form a continuous page when narrow, retaining subtree identity and chart scroll selection. Share options and preview remain in the same editing session during resizing. The full preview scales to its pane height, including the upper half of a tabletop fold.
 
 ### Fixed
+- Resolve coexisting legacy and independent Claude cost owners by publication time before merging or persisting. Preserve and migrate longer ledger history, hide explicitly withdrawn machine sources from Cost/Token Activity/widgets, and restore without duplicate spend; valid budgets remain visible.
 - Expanding Usage to preview an account no longer changes the preferred compact navigation column. Provider detail selection uses account identity instead of an array index, so reordered sync results preserve the selected account.
 
 ### Notes
-- Built with Xcode 27.1 (27A9275); minimum iOS remains 17. No Mac, payload, or CloudKit schema changes. Validation and remaining evidence are tracked in Research/078.
+- Built with Xcode 27.1 RC (27A9275); minimum iOS remains 17. Upstream v0.77–v0.79 is consolidated in Mac 0.79.0.1. Optional row severity uses the existing opaque JSON payload; payload version stays 1 and the CloudKit Production schema audit is NO_DEPLOY. Account-specific Claude directory costs stay on Mac. Evidence and substituted compatibility risks are in Research/079-v079-upstream-sync/03-testing.md.
 
 ### Included from the unreleased 2.10 beta — Reset credit expiries and calendar reminders
 

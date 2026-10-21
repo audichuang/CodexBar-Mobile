@@ -141,11 +141,14 @@ final class CodexBarMobileUITests: XCTestCase {
         XCTAssertTrue(setup.waitForExistence(timeout: 8))
         XCTAssertEqual(setup.label, "Setup")
         XCTAssertTrue(app.navigationBars["Release Notes"].exists)
-        XCTAssertEqual(app.staticTexts["release-notes-version"].label, "CodexBar 3.0.0")
-        XCTAssertTrue(app.staticTexts["release-highlight-calendar"].exists)
-        app.swipeUp()
-        XCTAssertTrue(app.staticTexts["release-highlight-duo"].waitForExistence(timeout: 3))
-        self.captureScreen(app, name: "3.0 release highlights")
+        XCTAssertEqual(app.staticTexts["release-notes-version"].label, "CodexBar 3.1.0")
+        XCTAssertTrue(app.staticTexts["release-highlight-providers"].exists)
+        for id in ["calendar", "duo"] {
+            let highlight = app.staticTexts["release-highlight-" + id]
+            for _ in 0..<6 where !highlight.exists || !highlight.isHittable { app.swipeUp() }
+            XCTAssertTrue(highlight.waitForExistence(timeout: 3))
+        }
+        self.captureScreen(app, name: "3.1 release highlights")
         setup.tap()
         XCTAssertTrue(app.navigationBars["Setup Guide"].waitForExistence(timeout: 5))
         self.captureScreen(app, name: "Setup Guide opened from update notes")

@@ -1,6 +1,6 @@
 # 实现记录
 
-Status: `in-progress`
+Status: `done`
 
 ## 合并与冲突
 
@@ -14,7 +14,7 @@ Status: `in-progress`
 
 ## Bridge
 
-- Future AGI / Munito 新增到 AccountIdentityComputer 的无稳定跨 Mac 身份分支；没有证据时不拼接 token/hash 伪造账号身份。
+- Future AGI 缺少稳定账号 ID 时按设备隔离；Munito 从实际 API 组织 ID 经 trim/NFC 和 case-preserving SHA256 派生 record key，同组织跨 Mac 去重，无 ID 时按设备隔离。AccountIdentityComputer 不从 token/邮箱伪造身份。
 - QuotaProviderList 尾追加两个 provider：88→90（264→270 个状态订阅），不改变已发布订阅 ID 顺序。
 - mock 119→121 snapshots / 109→111 IDs；两个新 provider 的窗口与详情形状按上游插件构造，23 locale 只同步数字。
 - details.Row.severity 是现有 opaque JSON 的可选枚举，unknown/missing 非致命回退；Mac mapDetails 透传，旧读者忽略。
@@ -23,7 +23,7 @@ Status: `in-progress`
 
 ## Review 1
 
-独立 reviewer 找到两个 P1，均已修代码并增加回归，实际测试待 03 回填：
+独立 reviewer 找到两个 P1，均已修代码并增加回归，实际测试已通过，见 03：
 1. published fork hash a5aa8ea108856b6d 未列 compatible predecessor，会重建历史 store。登记该 hash，并复用删除原 JSONL 后比较完整 SQLite snapshot 的参数化回归。
 2. Claude 目录切换后 Mobile 直接读取旧 token publication，绕过上游 scope guard。已改用当前 scope reader，并扩展 A→B→A→unmapped 切换的 sync 前后断言。
 
@@ -48,10 +48,18 @@ parserLogicVersion 22→23，生成 parser hash bf8c2cb80c247dd9。Hash 兼容�
 
 第5轮独立审查确认：按“scoped仅Mac、Mobile仅combined”的范围，Mac/bridge 无新阻塞。iOS阶段必须修复 ContentView.fromLedger 对costSummaryCleared的遗漏，抑制旧CWL回填但不删历史；combined→mapped→combined补集成回归。
 
-本checkpoint保留完整upstream merge与设计，不表示release完成。产品编译已通过，最终focused测试目标仍在编译；full tests、lint终态和draft待完成，记录在03/04。只提交本地任务分支，不合并mobile-dev、不push。
+该 checkpoint 当时只完成设计与产品编译。最终 Mac 全量、lint、签名公证 draft、iOS 构建/测试结果见 03/04；始终只提交本地任务分支。
 
 ## 新 provider 身份补充审查
 
 独立iOS contract审查确认：nil身份并不会自动按设备分组，实际进入legacy-no-identity固定bucket；新Future AGI只有loginMethod，Munito的accountID未获稳定身份审计，因此两个新provider在无token account key时会混合不同Mac组织。已在syncAccountRecordKey仅为futureagi/munito添加requested key优先、否则device-local key的回退；Wayfinder和所有旧provider行为保持不变。
 
-补静态key/identity定向测试（两设备不同，同设备稳定，配置key不覆盖）与冻结wire矩阵内新provider的两Mac账号保留。完整回归正在以481544bc7的二进制执行；此隔离分支修复后补focused测试与重新编译，明确记录两份证据，不把旧full run谎称成新head二进制。
+补静态key/identity定向测试（两设备不同，同设备稳定，配置key不覆盖）与冻结wire矩阵内新provider的两Mac账号保留。该阶段481544bc7的旧二进制不作为最终证据；后续已重新编译、完成定向及完整回归，见03。
+
+## iOS 最终实现
+
+- 机器成本先按来源和 publication timestamp 归一化，再进入 merger、SwiftData 和 ledger。adapter quota 的 clear 仅撤销该账号的成本归属；机器 owner 的 clear 才隐藏该设备历史，保留原始 ledger 供 combined 恢复。普通 nil 不撤回历史。
+- 迁移同机旧 owner 与 ledger-only 历史，保留超过30天的历史和预算；支持 combined → adapter → combined 正反切换、两Mac合计、冷启动只有 quota clear 时的保留，以及幂等读取。
+- Future AGI/Munito 第一方详情、告警严重度、窗口标签、日期、状态、scoped 成本说明均支持四语。动态 API meter/plan 名不机械翻译。告警保留符号和 VoiceOver 描述，辅助字号竖排避免数值拆字，浅色使用可读颜色。
+- 全部五个 target 为 3.1.0 (246)，由 project.yml + xcodegen 生成工程；单一 3.1 release notes 保留未发布3.0的 calendar/Duo 内容。MOBILE_VERSION 仍为已发布 companion2.10.0。
+- 未修改 PreviewData 的既有 Kiro/通用详情样本：其 rateWindows/details/budget 形状已覆盖新 provider 的通用卡片；新 severity 和四语完整/teaser 布局由生产视图渲染测试覆盖，不增加重复 demo 账号。

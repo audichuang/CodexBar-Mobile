@@ -1,19 +1,45 @@
 # 测试与兼容证据
 
-Status: `in-progress`；以下只记录实际完成的证据，Mac完整测试/lint、draft、iOS gate仍待完成。
+Status: `done`（本地验收完成；16组合均为有边界的替代验证，无实体同步通过声明）。
+
+## 最终结果
+
+| Gate | 结果与证据 |
+|---|---|
+| Mac build / packaged regression | PASS：arm64+x86_64 显式SDK Release，Widget双架构；实包签名、公证、staple、launch/resource probes、dSYM UUID全部通过。04记录细节。 |
+| Mac完整单测 | PASS：1791 selections /160 groups，160组first-pass，0失败/重试/超时；`v079-all-tests-acceptance.log`，672.4秒。 |
+| 最终完整lint | PASS：`v079-lint-final-ios.log` exit0，3143文件0 SwiftLint violations；portable/CI/README/release guards、SwiftFormat、JS/TS、parser hash/revision、四语catalog、436个iOS源key通过。 |
+| iOS完整单测及Widget回归 | PASS：`v079-ios-full-final.log` / `ios-full-final.xcresult`，1151 Swift Testing /72 suites，66 XCTest，0失败；包含WidgetSnapshotBuilder、WidgetRenderMatrix和本轮所有SwiftData/ledger/details用例。 |
+| iOS设备Release build | PASS：generic/platform=iOS Release，CODE_SIGNING_ALLOWED=NO；`v079-ios-release.log` / `ios-release.xcresult`。主app及3个extension的实产物均3.1.0 (246)。未archive/upload。 |
+| iOS引导交互 | PASS：Duo模拟器两条XCUITest，Duo27.1和iOS26.5均通过，首次notes→Setup→Continue、同版本重启不重复展示、Demo跳过notes；`v079-ios-intro-ui.log` / `ios-intro-ui.xcresult`。 |
+| 四语/深浅色/辅助字号视觉 | PASS：生产details/full+teaser四语×Light/Dark共8图，日文accessibility3另1图，最终逐张目视验收。第一版大字号拆行已改竖排并复跑。证据`evidence/ios-validation.json`绑定截图SHA256。 |
+| Mac draft与appcast候选 | PASS：04链接与digest/size/source/签名证据；仅draft，原发布feed未改。 |
+| CloudKit Production schema | NO_DEPLOY：见下；未执行live schema export/写入。 |
+| 2Mac×2iPhone gate | COMPLETE WITH SUBSTITUTIONS：16/16列出，64读取和32真实old/new consumer合并进程全部通过；不是16实体PASS。 |
+| 循环review | 本地阻塞0，详见05；未创建PR，未替代未来GitHub exact-head gate。 |
+
+日志根目录：`/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/`；xcresult、渲染附件与临时fixture位于其`v079/`子目录。轻量机器可读证据保存在本目录evidence。
+
+## 命令与源码绑定
+
+- Mac：`TMPDIR=.../v079/tmp bash Scripts/test.sh --direct-workers 4`；`Scripts/lint.sh lint`。全量测试时源码固定，审查tree `8f3b05e6f4f9151b0571a2f040e569206fa57bf2`。之后发布脚本的resultBundle路径/重复编译修复通过定向回归、独立review和完整实包流程；Mac产品输入自`4f66415b1ed50fa3327ad363365a21242f530287`起未变化。
+- iOS：`DEVELOPER_DIR=/Volumes/StudioSSD/Developer/Xcode/Xcode-27.1-RC.app/Contents/Developer`，27.1 RC /27A9275；无安装或全局xcode-select变更。`xcodebuild -project CodexBarMobile/CodexBarMobile.xcodeproj -scheme CodexBarMobile -destination 'platform=iOS Simulator,id=FA6BFB39-3400-472B-8ED0-CD10A87F629E' -derivedDataPath .../v079/ios-derived -resultBundlePath .../v079/ios-full-final.xcresult -parallel-testing-enabled NO -only-testing:CodexBarMobileTests CODE_SIGNING_ALLOWED=NO test`。
+- UI使用相同项目/destination/derivedData，仅选择`testVersionUpdateShowsReleaseNotesAndSetupGuideOnDemand`和`testChoosingDemoFromSetupGuideDismissesFirstLaunchReleaseNotes`，结果写入独立`ios-intro-ui.xcresult`。
+- Release改destination为`generic/platform=iOS`、configuration Release、独立`ios-release`派生目录及result；全程SSD、无签名上传。
+- iOS最终测试源码与独立review tree `beb4dc146badfd207830acdd9eccf6647e542877`一致；之后仅补Research证据。`ios-validation.json`记录关键源SHA256、结果路径、截图hash；frozen manifest逐文件绑定实际编译输入，newCommit是运行时Git HEAD而非声称未提交改动已在其中。
 
 ## CloudKit Production schema 审计
 
-- 对比最近 published fork tag `v0.76.0.2-mobile.2.10.0`；Shared/iCloud/CloudConstants.swift 零 diff，providerPayloadVersion 保持1。
-- CK recordType/直接字段/index/predicate/subscription 写法无新增；severity 在现有 DeviceProviderSnapshot.payload opaque JSON 内，adapter 只是既有记录的更多实例，两个 provider 只是既有状态 zone 的运行时实例。
-- Mac package_app.sh 与 iOS entitlement 都显式 Production。无需 Dashboard deploy；结论 **NO_DEPLOY**。未执行 Production schema 写入，未把代码审计声称为 live schema export。
+- 对比最近published fork tag `v0.76.0.2-mobile.2.10.0`，Shared/iCloud/CloudConstants.swift零diff、payloadVersion仍1；recordType/直接字段/index/predicate/subscription无新增。
+- Row.severity是现有opaque JSON内可选字段；adapter更多既有record实例，新provider是状态zone的运行时实例，原88项订阅ID前缀不变，尾追加到90项/270zones。
+- 实包Mac entitlement与iOS源码entitlement均显式Production；无需Dashboard deploy，结论NO_DEPLOY。代码审计未冒称live schema export或跨设备写入验证。
 
 ## 2 Mac × 2 iPhone 兼容矩阵
 
-- old Mac：published 0.76.0.2；old Shared/consumer 源码从该 release tag 冻结。mobile-dev 3.0.0 的 Shared 与该 tag 零 diff。new 是当前工作分支。
-- CoreDevice 实时 inventory：两个 iPhone tunnel connected，另一个 unavailable；本轮未组织可分别切换 old/new 的两台 Mac + 两台 iPhone完整环境，因此所有组合采用替代验证，没有实体 PASS。
-- 替代路径：tools/check_frozen_wire.py 编译新旧 Shared 与真实 ProviderSnapshotMerger，各 writer 独立 deviceID、reader 独立进程，验证64次读取/roundtrip和32次双 writer正反顺序合并；新 provider、Gemini额度、Claude identity、plugin severity 兼容。
-- 限制：这个 harness 不运行 SwiftData / iCloud / APNs /后台/真实UI，不验证系统缓存/推送收敛、真实账户或网络异常。adapter身份、删账号、scope guard还需定向单测和 iOS merger tests 补足。
+- old Mac：published0.76.0.2；old Shared/consumer从该tag冻结，mobile-dev3.0.0 Shared与其零diff。new为本轮最终工作源码。
+- CoreDevice inventory有两台iPhone tunnel connected，另一台unavailable；本轮没有可独立切换old/new的两台Mac+两台iPhone完整环境，因此全部substituted，没有实体PASS。
+- `tools/check_frozen_wire.py --help`列出可复跑参数。最终运行scratch为`.../v079/compat-final`，日志`v079-compat-final.log` exit0：16 masks、64独立读取/roundtrip、32双writer正反顺序真实old/new merger进程。
+- fixture覆盖新provider、Gemini窗口、Claude多账号/独立成本owner/clear分类、unknown severity、有效Munito同org跨Mac去重和同名异org分离、缺ID设备fallback。`evidence/matrix-wire.json`与`frozen-source-manifest.json`为最终证据；此前org-only矩阵已被最终矩阵覆盖。
 
 | Case | Mac A | Mac B | iPhone A | iPhone B | Result | Evidence | Notes |
 |---:|---|---|---|---|---|---|---|
@@ -34,57 +60,21 @@ Status: `in-progress`；以下只记录实际完成的证据，Mac完整测试/l
 | 15 | new | new | new | old | substituted | compat/matrix-wire.json mask=14；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 旧 iOS 可能多显示一张无额度 Claude 本地成本卡；新 metadata 被忽略但基础金额/额度可读。 |
 | 16 | new | new | new | new | substituted | compat/matrix-wire.json mask=15；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 |
 
-当前 wire + pure merge 替代 gate：PASS（16/16）；完整同步 gate 仍待其余单测与风险汇总，不能据此声称实体矩阵或整轮发布完成。
 
-## 命令与日志
+## 替代验证的剩余风险
 
-- `swift build` 首次产品编译通过（v079-build.log，48.75秒）；后续 bridge/review改动需要最终重新编译。
-- 中间测试编译暴露新增 fixture 的缺失 secondary 参数，已修复；不得计为测试通过。并发 build 的数据库锁只发生于一次独立检查，已改为串行 SwiftPM。
-- 最终定向测试：v079-focused.log，运行中。
-- lint 初次要求新 provider 文档生成，第二次发现 social.png cache token 不匹配（fork README先保留原字节导致）；已在主动事实审计后修复，最终 lint待重跑。
-- 版本数字比较：evidence/version-plan.json，172.1.2.10.0 大于现有 appcast。
-- upstream-checks.json 保存 tag b49d42eb5 的已完成 CI/release checks；没有触发 fork 远端 CI。
+- 冻结wire/consumer不执行CloudKit/APNs、真实reader缓存、后台或SwiftData，因此不能证明两个iPhone的网络收敛、静默推送、系统cache清理、真实账号权限与旧UI呈现。SwiftData迁移/ledger/widget使用新iOS实际实现的in-memory生产入口测试补足，仍不能替代实体收敛。
+- old iOS不识别独立Claude cost owner隐藏规则，可能多一张无额度成本卡；旧CWL可能在clear后回填以前combined历史。Mac从未发送目录scoped金额，防止把不同目录daily混入machine历史。新iOS对明确机器撤回抑制展示、不删除原始ledger，普通nil与账号disown保留fallback。
+- JSON时间以秒编码。同一秒内快速切换所有权可能并列；独立owner有确定性tie优先、旧record两次成功publication后清理，但不保证亚秒排序/瞬时UI消失。下一次完整publication可收敛，未声称实时实体验证。
+- 当前Duo XCUITest的两张屏幕附件全黑；simctl复核同样全黑，open_sim工具返回成功也未改善。逻辑交互断言与9张生产视图ImageRenderer证据独立成立，黑图不作视觉PASS。随后在独立iOS26.5模拟器（F7DF92DB-2C2F-4475-8F19-615225381DB7）重复两条UI测试，2/2通过、41.47秒，`v079-ios-intro-ui-265.log` / `ios-intro-ui-265.xcresult`。正常导出两张notes/setup系统截图并逐张目视核对，补足完整引导界面证据；不扩大为Duo framebuffer修复。
+- 上游tag checks快照27success/3skipped/0failure，不满足严格“全部heavy CI成功”复用条件。本轮无push/远端CI；未来获准merge时Final CI须重新判断，必要时运行fork矩阵。GitHubPR审查也尚未运行。
+- 没有live provider probe、cookie import、真实Keychain读取或真实账号历史金额QA；使用标准Scripts/test.sh安全环境、stubs和合成数据。
 
-## Mac 最终定向 gate（ff931049f）
+## 关键回归与失败修复记录
 
-- `Scripts/test_fast.sh --filter 'SyncV079BridgeTests|ClaudeTokenAccountCostTests|CostUsageStoreTests|QuotaProviderListTests|MockProviderInjectorTests|AccountIdentity|MultiAccount|DualZoneReader'`：exit0。259项 / 18 suites + dashboard 11项 / 1 suite，全通过；包含新provider/metadata、adapter删slot两周期、tcr无active成本保留、scoped拒绝、cache原地迁移、多账号/多设备。
-- `Scripts/lint.sh lint` 最终exit0（v079-lint-complete.log）：portable/CI/README/release guard、JS/TS、SwiftFormat、SwiftLint、所有catalog四语、433个iOS源key、parser版本/hash都通过。
-- 完整 `Scripts/test.sh`：发现1791 test selections / 160 groups，运行中；未计为通过。
-- 16组合harness在最终Shared合同重新运行：exit0，64 reads / 32 merges，新增cost clear-only envelope分类验证：新reader识别cost owner；旧reader保留但不识别分类，符合已披露额外卡风险。
-
-## 新 provider 设备隔离（833483854）
-
-- 独立review确认修复准确，SwiftLint严格检查exit0；frozen wire在此head重跑16/16，Future AGI/Munito由两writer时保留两个账号，旧reader同样读取既有accountRecordKey。
-- matrix-wire.json / frozen-source-manifest.json已保存到evidence，绑定实际冻结源文件SHA256与harnessSHA256。
-- 当前完整回归仍使用此前编译的481544bc7产品（旧provider路径未变）；新helper与两Mac不同组织内容的定向回归待随后执行，不将旧binary结果当新head全量。
-
-## 最终回归补充（8111cb956）
-
-- v079-policy-identity-tests.log：30 tests / 2 suites，exit0；覆盖最新新provider设备identity与Claude策略测试隔离。
-- 首轮完整回归在第28组因测试未固定Keychain gate而失败；保留v079-all-tests.log，不计PASS。具体根因/修复见05。
-- 最终全量改用仓库标准安全环境与双worker：`TMPDIR=.../v079/tmp bash Scripts/test.sh --direct-workers 2`，v079-all-tests-final.log。底层KeychainTestSafety仍禁止真实凭证读取。
-- 上游检查快照30项中27 success / 3 skipped，无failure；依据ci-policy严格条件，**不把含skipped的快照声称为可复用的全部heavy CI通过**。未来获准merge时由Final CI脚本重新判断，必要时回退本fork完整矩阵；本轮未dispatch远端CI或push。
-- 新Mac + 旧iOS的额外限制：旧CWL reader收到clear后可能仍回填以前combined历史。它不接收scoped金额，避免新目录历史混入；新iOS会在aggregate/dashboard/activity三层按来源抑制clear，保留原始历史供恢复。上述16组合wire替代不能验证旧SwiftData展示。
-
-- v079-lint-policy.log：完整lint exit0，433 source keys齐全，parser version/hash、106 providers、fork policy/README等全部通过。
-
-## 完整回归第二次发现并修复的遗漏
-
-双worker全量在第109组发现MockProviderAdvancedScenariosTests/MockProviderInjectorIntegrationTests仍使用114 borrowed /119 snapshots /109 IDs旧断言，前108组通过，retry仍失败。新fixture形状与基础mock测试已通过，遗漏的是集成数量与标题；补为116/121/111，并搜索全部Mock测试清理当前计数文案（历史增长注释保留）。保留失败日志v079-all-tests-final.log，不将其计为全量PASS。只修改测试，Mac产品输入未变。
-
-- v079-mock-integration-tests.log：75 tests / 4 suites，exit0，包含全部mock集成路径与跨设备场景。最终完整回归使用支持的`--direct-workers 4`（本机12core/32GB，独立HOME），仅本地并行度，不改CI策略。
-
-## 架构守卫补齐
-
-v079-all-tests-clean.log 前130组通过后ProviderArchitectureGatekeeperTests阻塞：新provider fixture与Claude合同分支缺少明确reason，旧Wayfinder allowlist anchor已迁移，nil-identity组的49→51 fingerprint过期。未删除守卫或扩大扫描豁免；给实际合同分支写具体业务理由，移除失效旧anchor，审计更新两provider清单。另通过实际Munito API mapper复核，新增stable orgID散列record key，避免同org双Mac费用重复。需要最终build/定向/完整回归与独立审查；之前失败日志保留，不计PASS。
-
-- v079-identity-contract-verified.log：97 tests / 4 suites，exit0；含48项架构守卫、新provider生产snapshot发布、Munito同org跨Mac/异org同Mac/改名/trim/NFC/case/长ID/缺ID，以及原账号身份测试。前一次fixture缺少显式nil参数导致编译失败，已修正；失败日志不计PASS。
-- Matrix的Munito device-key fixture明确仅覆盖缺ID fallback；有效orgID去重由上述Mac合同与下一阶段iOS实际merger测试共同验证。
-
-## Mac完整回归验收通过
-
-`v079-all-tests-acceptance.log`：exit0，1791 selections /160 groups，4 direct workers，160组first-pass成功，0 failure/0 retry/0 timeout；discovery146.2秒、execution520.4秒、total672.4秒。测试与静态审查对应staged tree `8f3b05e6f4f9151b0571a2f040e569206fa57bf2`；测试期间没有改编译源码/测试。环境脱敏测试的14个known issues是故意触发expectation来检查日志脱敏的fixture，不是14个产品缺陷。完整覆盖widget、UsageStore、账号/设备、成本缓存/性能与provider回归。此后仅整理CHANGELOG标题/措辞及证据，不改变测试逻辑或Mac产品代码。
-
-## 组织身份矩阵补强
-
-`v079-compat-org.log` exit0：16 masks /64 reads /32 merges；在缺ID设备fallback之外，增加同org跨Mac和同名异org fixture，真实old/new merger均去重共享org成本5美元、保留独立org7美元。已更新frozen-source-manifest/matrix-wire证据。上述仍是替代验证，不代表CloudKit或实机矩阵。
+- Mac定向259tests/18suites+11dashboard；身份/架构97tests/4suites；mock75/4；策略身份30/2均通过。覆盖parser前驱hash原地迁移、scope切换、tcr无active、slot删账号两周期、组织ID规范化/同org去重、quota订阅尾追加及旧功能。
+- iOS实际SwiftDataBridge→ledger→Insights/TokenActivity/WidgetProjection验证：两Mac各两quota+一个owner不重复；40天ledger-only历史迁移；clear一台不影响另一台；保留预算；combined→adapter→combined；reverse clear；冷启动adapter账号clear不撤回机器history；幂等、普通nil、别名和unknown详情兼容。
+- 首次全量第28组暴露Keychain产品gate与测试安全开关混用，增加已有task override固定测试产品状态，底层仍禁止真实SecItem；第二次第109组发现mock计数未更新，补116/121/111；第三次第130组架构guard缺具体reason/旧anchor/fingerprint，修真实合同并审计清单。失败日志均保留，不计PASS；最终160组first-pass覆盖这些修复。14known issues为故意触发expectation的脱敏fixture，不是产品失败。
+- 初次lint需provider文档生成和social.png缓存token同步，已单独事实审计、保持fork入口并通过最终lint；没有用改hash绕过README规则。
+- Mac首次draft的锁定依赖缓存缺对象、Xcode隐式result路径问题已修，精确版本未变，最终显式SDK打包/签名公证通过，详04。
+- iOS先有1150Swift+66XCTest成功，独立review又补机器clear/账号disown区分和冷启动测试；最终1151+66全部通过。第一版大字号截图过密，改辅助字号竖排及浅色告警色后，最终9图重新渲染目视检查。

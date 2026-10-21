@@ -17,7 +17,7 @@ This directory contains research documents for features being considered for Cod
 
 | # | Feature | Status | Blocker | File | Date |
 |---|---------|--------|---------|------|------|
-| 079 | v0.77.0–v0.79.0 单版本上游同步（#196）+ iOS 3.1.0 (246)：Future AGI/Munito、Gemini App、Claude Desktop/tcr、成本缓存与详情告警 | `in-progress` | Mac build 首轮通过；最终测试/draft/iOS gate 运行中；CloudKit NO_DEPLOY，16组合 wire替代验证通过 | [079-v079-upstream-sync/00-overview.md](079-v079-upstream-sync/00-overview.md) | 2026-10-21 |
+| 079 | v0.77.0–v0.79.0 单版本上游同步（#196）+ iOS 3.1.0 (246)：Future AGI/Munito、Gemini App、Claude Desktop/tcr、成本缓存与详情告警 | `done` | Mac全量160组、签名公证draft；iOS1151+66测试/Release/四语；本地review阻塞0；NO_DEPLOY，16组合substituted及风险已记录；未push/tag/live/TF | [079-v079-upstream-sync/00-overview.md](079-v079-upstream-sync/00-overview.md) | 2026-10-21 |
 | 078 | iPhone Duo：Usage 账号与额度详情、Cost 总览与趋势、分享预览与编辑分区；折叠、拖动和输入连续性 | `done` | Xcode 27.1 / 27A9275；原生展开/半折叠交互完成，修复半屏预览裁切，最终 UI 回归 5 项通过 | [078-iphone-duo-experience.md](078-iphone-duo-experience.md) | 2026-10-20 |
 | 077 | Reset credit 到期时间详情与日历提醒（Claude / Codex / Grok 每次 credit 的精确到期时间；可选写入 CodexBar 日历，提前用掉自动删除；Mac 0.76.0.2 同步 Claude / Grok 库存，只含到期时间） | `done` | PR #195（分支 `feature/reset-credit-calendar`）；iOS 2.10.0 (243) + Mac 0.76.0.2 / 169.2；CloudKit `NO_DEPLOY`；16 组合为替代验证 | [077-reset-credit-calendar/00-overview.md](077-reset-credit-calendar/00-overview.md) | 2026-10-18 |
 | 076 | CodexBar 小组件概览统一显示每周窗口（不再在 Session / Weekly / Fable only 之间按用量切换） | `done` | 随 iOS 2.9.0 (242) 一起发布；`overviewFigures` 对所有模式先取账号级每周窗口 | [076-widget-overview-weekly-window.md](076-widget-overview-weekly-window.md) | 2026-10-16 |

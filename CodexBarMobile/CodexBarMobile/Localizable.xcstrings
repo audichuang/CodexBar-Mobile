@@ -23561,7 +23561,875 @@
     "Not selected": {"extractionState":"manual","comment":"An unused provider slot; leaving every slot unused selects providers automatically.","localizations":{"en":{"stringUnit":{"state":"translated","value":"Not selected"}},"zh-Hans":{"stringUnit":{"state":"translated","value":"未选择"}},"zh-Hant":{"stringUnit":{"state":"translated","value":"未選擇"}},"ja":{"stringUnit":{"state":"translated","value":"未選択"}}}},
     "Default (Weekly)": {"extractionState":"manual","comment":"Quota pace widget window choice that follows the weekly quota when the provider has one.","localizations":{"en":{"stringUnit":{"state":"translated","value":"Default (Weekly)"}},"zh-Hans":{"stringUnit":{"state":"translated","value":"默认（每周）"}},"zh-Hant":{"stringUnit":{"state":"translated","value":"預設（每週）"}},"ja":{"stringUnit":{"state":"translated","value":"デフォルト（週次）"}}}},
     "On iOS 27 or later, four widgets in the widget gallery are new versions: CodexBar Widget, Quota pace, Token Activity, and Token Activity Comparison.": {"extractionState":"manual","localizations":{"en":{"stringUnit":{"state":"translated","value":"On iOS 27 or later, four widgets in the widget gallery are new versions: CodexBar Widget, Quota pace, Token Activity, and Token Activity Comparison."}},"zh-Hans":{"stringUnit":{"state":"translated","value":"在 iOS 27 及以上，小组件库中的 4 个小组件换成了新版：CodexBar 小组件、额度消耗趋势、Token 活动、Token 活动对比。"}},"zh-Hant":{"stringUnit":{"state":"translated","value":"在 iOS 27 及以上，小工具庫中的 4 個小工具換成了新版：CodexBar 小工具、額度消耗趨勢、Token 活動、Token 活動比較。"}},"ja":{"stringUnit":{"state":"translated","value":"iOS 27 以降では、ウィジェットギャラリーの 4 つのウィジェットが新しいバージョンになりました：CodexBar ウィジェット、クォータ消費の推移、トークンアクティビティ、トークンアクティビティの比較。"}}}},
-    "Widgets you have already placed keep working. To use the new versions, add them again from the widget gallery; options added to them later will usually appear in widgets you have already added.": {"extractionState":"manual","localizations":{"en":{"stringUnit":{"state":"translated","value":"Widgets you have already placed keep working. To use the new versions, add them again from the widget gallery; options added to them later will usually appear in widgets you have already added."}},"zh-Hans":{"stringUnit":{"state":"translated","value":"已放好的小组件仍可继续使用；如需新版，请从小组件库重新添加。新版小组件以后增加的选项，通常会直接出现在已添加的小组件里。"}},"zh-Hant":{"stringUnit":{"state":"translated","value":"已放好的小工具仍可繼續使用；如需新版，請從小工具庫重新加入。新版小工具日後增加的選項，通常會直接出現在已加入的小工具裡。"}},"ja":{"stringUnit":{"state":"translated","value":"配置済みのウィジェットはそのまま使えます。新しいバージョンを使うには、ウィジェットギャラリーから追加し直してください。新しいバージョンのウィジェットに今後追加される項目は、通常、追加済みのウィジェットにもそのまま表示されます。"}}}}
+    "Widgets you have already placed keep working. To use the new versions, add them again from the widget gallery; options added to them later will usually appear in widgets you have already added.": {"extractionState":"manual","localizations":{"en":{"stringUnit":{"state":"translated","value":"Widgets you have already placed keep working. To use the new versions, add them again from the widget gallery; options added to them later will usually appear in widgets you have already added."}},"zh-Hans":{"stringUnit":{"state":"translated","value":"已放好的小组件仍可继续使用；如需新版，请从小组件库重新添加。新版小组件以后增加的选项，通常会直接出现在已添加的小组件里。"}},"zh-Hant":{"stringUnit":{"state":"translated","value":"已放好的小工具仍可繼續使用；如需新版，請從小工具庫重新加入。新版小工具日後增加的選項，通常會直接出現在已加入的小工具裡。"}},"ja":{"stringUnit":{"state":"translated","value":"配置済みのウィジェットはそのまま使えます。新しいバージョンを使うには、ウィジェットギャラリーから追加し直してください。新しいバージョンのウィジェットに今後追加される項目は、通常、追加済みのウィジェットにもそのまま表示されます。"}}}},
+    "Account-specific history": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Account-specific history"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "账号专属历史"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "帳號專屬歷史"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アカウント別の履歴"
+          }
+        }
+      }
+    },
+    "View account-specific local costs on your Mac.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "View account-specific local costs on your Mac."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请在 Mac 查看账号专属的本地成本。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請在 Mac 查看帳號專屬的本機成本。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "アカウント別のローカルコストは Mac で確認できます。"
+          }
+        }
+      }
+    },
+    "AI credits": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AI credits"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AI 点数"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AI 點數"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AI クレジット"
+          }
+        }
+      }
+    },
+    "Gateway requests": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gateway requests"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "网关请求"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "閘道請求"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ゲートウェイリクエスト"
+          }
+        }
+      }
+    },
+    "Used / free allowance": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Used / free allowance"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已用 / 免费额度"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已用 / 免費額度"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用量 / 無料枠"
+          }
+        }
+      }
+    },
+    "Billing period": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Billing period"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "账单周期"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "帳單週期"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請求期間"
+          }
+        }
+      }
+    },
+    "Estimated usage cost": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estimated usage cost"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "预估使用成本"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "預估使用成本"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "推定利用コスト"
+          }
+        }
+      }
+    },
+    "Spend limits": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spend limits"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "支出上限"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "支出上限"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "支出上限"
+          }
+        }
+      }
+    },
+    "Usage tier": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Usage tier"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用等级"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用等級"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "利用レベル"
+          }
+        }
+      }
+    },
+    "Data region": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Data region"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "数据区域"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "資料區域"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "データリージョン"
+          }
+        }
+      }
+    },
+    "Today organization limit": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today organization limit"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今日组织上限"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今日組織上限"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今日の組織上限"
+          }
+        }
+      }
+    },
+    "Today account limit": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today account limit"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今日账号上限"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今日帳號上限"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今日のアカウント上限"
+          }
+        }
+      }
+    },
+    "Today stopped until": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Today stopped until"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今日暂停至"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今日暫停至"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今日の停止期限"
+          }
+        }
+      }
+    },
+    "This month organization limit": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This month organization limit"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "本月组织上限"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "本月組織上限"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今月の組織上限"
+          }
+        }
+      }
+    },
+    "This month account limit": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This month account limit"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "本月账号上限"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "本月帳號上限"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今月のアカウント上限"
+          }
+        }
+      }
+    },
+    "This month stopped until": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This month stopped until"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "本月暂停至"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "本月暫停至"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今月の停止期限"
+          }
+        }
+      }
+    },
+    "Warning": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Warning"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "警告"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "警告"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "警告"
+          }
+        }
+      }
+    },
+    "Critical": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Critical"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "严重警告"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "嚴重警告"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重大な警告"
+          }
+        }
+      }
+    },
+    "More providers and clearer account details.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "More providers and clearer account details."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更多服务，账号详情更清晰。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更多服務，帳號詳情更清晰。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "対応サービスが増え、アカウント情報も見やすく。"
+          }
+        }
+      }
+    },
+    "See Future AGI and Munito": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "See Future AGI and Munito"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查看 Future AGI 和 Munito"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查看 Future AGI 和 Munito"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Future AGI と Munito に対応"
+          }
+        }
+      }
+    },
+    "See Future AGI allowances and Munito spend limits from your Mac, with translated details.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "See Future AGI allowances and Munito spend limits from your Mac, with translated details."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查看 Mac 同步的 Future AGI 额度和 Munito 支出上限，详情也有翻译。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查看 Mac 同步的 Future AGI 額度和 Munito 支出上限，詳情也有翻譯。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac から同期した Future AGI の利用枠と Munito の支出上限を、翻訳された詳細とともに確認できます。"
+          }
+        }
+      }
+    },
+    "More Claude accounts": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "More Claude accounts"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更多 Claude 账号"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更多 Claude 帳號"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "複数の Claude アカウント"
+          }
+        }
+      }
+    },
+    "View cached claude-swap and tcr accounts from your Mac, with separate workspaces and local costs counted once.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "View cached claude-swap and tcr accounts from your Mac, with separate workspaces and local costs counted once."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查看 Mac 缓存的 claude-swap 和 tcr 账号，工作区分别展示，本地成本不会重复计算。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查看 Mac 快取的 claude-swap 和 tcr 帳號，工作區分別顯示，本機成本不會重複計算。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac に保存された claude-swap と tcr のアカウントをワークスペースごとに表示し、ローカルコストの重複を防ぎます。"
+          }
+        }
+      }
+    },
+    "Plugin warnings are easier to spot": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plugin warnings are easier to spot"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "插件警告更醒目"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "外掛警告更醒目"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "プラグインの警告を見つけやすく"
+          }
+        }
+      }
+    },
+    "Provider details show warning symbols and colors when a plugin reports a problem.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Provider details show warning symbols and colors when a plugin reports a problem."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "插件报告问题时，服务详情会显示警告图标和颜色。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "外掛回報問題時，服務詳情會顯示警告圖示和顏色。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "プラグインが問題を報告すると、詳細に警告のアイコンと色が表示されます。"
+          }
+        }
+      }
+    },
+    "Update CodexBar on Mac to 0.79.0.1 or later for these providers and account details.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Update CodexBar on Mac to 0.79.0.1 or later for these providers and account details."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请将 Mac 版 CodexBar 更新至 0.79.0.1 或更高版本，以使用这些服务和账号详情。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請將 Mac 版 CodexBar 更新至 0.79.0.1 或更新版本，以使用這些服務和帳號詳情。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "これらのサービスとアカウント情報には、Mac 版 CodexBar 0.79.0.1 以降が必要です。"
+          }
+        }
+      }
+    },
+    "%@ of %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ of %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ / %@"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ / %@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ / %@"
+          }
+        }
+      }
+    },
+    "See Gemini app quotas and updated Cursor, Vercel, and Antigravity usage from your Mac.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "See Gemini app quotas and updated Cursor, Vercel, and Antigravity usage from your Mac."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查看 Mac 同步的 Gemini 应用额度，以及更新后的 Cursor、Vercel 和 Antigravity 用量。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查看 Mac 同步的 Gemini 應用程式額度，以及更新後的 Cursor、Vercel 和 Antigravity 用量。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gemini アプリの利用枠と、更新された Cursor、Vercel、Antigravity の使用状況を Mac から確認できます。"
+          }
+        }
+      }
+    },
+    "Claude Cowork and OpenCode Go history are included when your Mac reports them.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude Cowork and OpenCode Go history are included when your Mac reports them."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac 提供相应数据时，历史记录也包含 Claude Cowork 和 OpenCode Go。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac 提供相應資料時，歷史記錄也包含 Claude Cowork 和 OpenCode Go。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mac から報告される Claude Cowork と OpenCode Go の履歴も確認できます。"
+          }
+        }
+      }
+    },
+    "Account-specific Claude local costs stay on your Mac. Shared local history is counted once.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Account-specific Claude local costs stay on your Mac. Shared local history is counted once."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude 账号专属的本地成本请在 Mac 查看；共享的本地历史不会重复计算。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude 帳號專屬的本機成本請在 Mac 查看；共用的本機歷史不會重複計算。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claude のアカウント別ローカルコストは Mac で確認できます。共通のローカル履歴は重複して集計されません。"
+          }
+        }
+      }
+    },
+    "Active": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Active"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正常"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正常"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "有効"
+          }
+        }
+      }
+    }
   },
   "version": "1.0"
 }

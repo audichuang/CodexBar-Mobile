@@ -1,6 +1,6 @@
 # 循环 review 证据
 
-Status: `in-progress`；Mac阶段阻塞0，iOS修复/最终review待执行。
+Status: `done`；本地最终实现和Mac实包阻塞0，未代替未来GitHub PR exact-head gate。
 
 ## 范围
 
@@ -26,9 +26,9 @@ Reviewer第4轮曾怀疑hasUsableSignal遗漏clear；实际基线已包含costSu
 - 发现Future AGI/Munito第一方mapper不会复用custom-plugin设备隔离，nil身份会落legacy跨Macbucket。修复833483854只为这两个新provider补device fallback，并保留requested key、Wayfinder和其他provider行为。独立复审实际diff阻塞0。
 - 833483854后的冻结wire矩阵（含新provider双Mac两账号）通过；Mac新helper定向测试将在当前full regression结束后运行。
 
-## 尚待闭环
+## 本地闭环
 
-Mac完整测试终态、Macdraft、iOS实现/测试与最终diff review均未完成，不能提前声称Goal done。
+Mac完整测试、draft、iOS实现/测试均已完成，最终结果与风险见03/04。没有push/PR/merge/tag/live/TF；#196按仓库规则留待live release后关闭。
 
 ## 全量回归暴露的测试隔离
 
@@ -45,3 +45,15 @@ Mac完整测试终态、Macdraft、iOS实现/测试与最终diff review均未完
 ## 最终Mac实现review
 
 原Mac reviewer独立检查staged tree `8f3b05e6f4f9151b0571a2f040e569206fa57bf2`，剩余实现阻塞0；组织身份、实际push测试、架构guard特定reason与旧anchor迁移均认可，没有放宽守卫。完整回归随后160/160 first-pass通过。下一阶段为打包与iOS，不能把本地review扩称未来GitHub exact-head gate通过。
+
+## iOS 最终循环审查
+
+独立 reviewer逐轮指出并复核：fromLedger/TokenActivity/source ledger三处clear回填；最新legacy clear被旧独立owner覆盖；adapter账号disown被当机器撤回；辅助字号换行与浅色告警对比度。修复以一个hasMachineCostClaim和按设备publication归一化为核心，不删除ledger、不丢budget、不把普通nil变成clear；历史迁移和正反切换共用同一入口。根因审计的Head/Repeated finding pattern/Root design/requirements problem/Revised approach已在01记录。
+
+最终静态review准确绑定暂存tree `beb4dc146badfd207830acdd9eccf6647e542877`，阻塞0；reviewer明确未自行构建。主agent随后1151Swift+66XCTest、Release build、两条UI交互、9张最终渲染目视验收及16组合wire均通过。没有用静态review替代运行验证。
+
+## Mac实包闭环复审
+
+独立Mac reviewer实时读取GitHub release420093277：draft=true/published_at=null、两资产uploaded，digest/size与本地相同；检查实包0.79.0.1 /172.1.2.10.0/source4f66415b1，Mac ARTIFACT_INPUTS相对实包来源零diff，iOS widgetshared不被Mac WidgetExtension/Package引用。local/origin拟tag均不存在，root appcast与4f零diff，签名候选对应ZIP。NO_DEPLOY成立，阻塞0。
+
+自查当前全diff及index whitespace检查通过；独立review指出的旧Research“待完成”措辞已改成终态并保留失败历史。未来公开发布仍须授权push/PR/Exact-head review/Final CI以及正式tag/feed流程；本地阻塞0不授权这些操作。

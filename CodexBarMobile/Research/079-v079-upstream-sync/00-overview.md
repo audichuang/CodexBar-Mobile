@@ -1,6 +1,6 @@
 # v0.77.0–v0.79.0 一次性上游同步
 
-Status: `in-progress`（Goal 已确认单版本方案）
+Status: `done`（Goal 已确认单版本方案）
 
 ## 范围与来源
 
@@ -27,3 +27,9 @@ Status: `in-progress`（Goal 已确认单版本方案）
 先调研设计、完整 Mac merge、bridge 审计、Mac 测试/draft，再 iOS 展示/本地化/测试和循环 review。成本缓存重构必须保留 fork parser revision/hash 和原地迁移，避免全量重扫或历史金额下降。上游 HTTP server 只跟随显式配置；不启动真实 provider 测试或导入 cookie。凭证问题、CloudKit deploy 或无法判断的 iOS scope 需要用户输入；live release/TF/tag/push/merge 均未获授权。
 
 本机 SSD 已校验 UUID `9D5FE511-B66C-4765-BB8F-61E5ACB3969D`，逻辑入口和项目 realpath 正确；构建与 evidence 临时大文件统一 BuildScratch。本目录保留小型可复核证据。
+
+## 本轮验收结果
+
+Mac完整回归、最终lint、签名公证draft和appcast候选校验完成；iOS3.1.0(246)四语功能、单测/Widget/render/引导与设备Release编译通过；本地循环review阻塞0。16组合均以冻结old/new真实consumer和定向生产入口测试替代，gate按文档完成；没有实体CloudKit/APNs/cache收敛证据，具体风险见03。
+
+Draft：[Mac 0.79.0.1](https://github.com/o1xhack/CodexBar-Mobile/releases/tag/untagged-3b25e34f5a865b165d53)。Mac二进制来源4f66415b1；后续仅iOS/Research变更，Mac产品输入未变。未push/merge/创建tag/发布live/feed/TestFlight。#196保持open，无新PR；历史issue处理规则和未来发布限制未改变。

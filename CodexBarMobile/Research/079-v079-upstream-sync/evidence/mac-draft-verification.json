@@ -1,0 +1,50 @@
+{
+  "sourceCommit": "4f66415b1ed50fa3327ad363365a21242f530287",
+  "version": "0.79.0.1",
+  "sparkleVersion": "172.1.2.10.0",
+  "draftURL": "https://github.com/o1xhack/CodexBar-Mobile/releases/tag/untagged-3b25e34f5a865b165d53",
+  "releaseID": 420093277,
+  "isDraft": true,
+  "publishedAt": null,
+  "draftTargetPlaceholder": "mobile-dev",
+  "localTagAbsent": true,
+  "remoteTagAbsent": true,
+  "architectures": {
+    "Contents/MacOS/CodexBar": [
+      "x86_64",
+      "arm64"
+    ],
+    "Contents/Helpers/CodexBarCLI": [
+      "x86_64",
+      "arm64"
+    ],
+    "Contents/PlugIns/CodexBarWidget.appex/Contents/MacOS/CodexBarWidget": [
+      "x86_64",
+      "arm64"
+    ]
+  },
+  "binaryUUIDs": {
+    "x86_64": "ACF13417-2170-3865-A4AC-21616D4560F9",
+    "arm64": "DBFBCC55-EE6B-33E4-AAB9-F66E191D029A"
+  },
+  "dSYMUUIDs": {
+    "x86_64": "ACF13417-2170-3865-A4AC-21616D4560F9",
+    "arm64": "DBFBCC55-EE6B-33E4-AAB9-F66E191D029A"
+  },
+  "cloudKitEnvironment": "Production",
+  "codesign": "pass",
+  "spctl": "accepted",
+  "staple": "validated",
+  "assets": [
+    {
+      "name": "CodexBar-0.79.0.1-mobile.2.10.0.zip",
+      "size": 90773292,
+      "digest": "sha256:e060a4a6095369b0187dfece9bab9a98efb11626da27d8c062d6863d956f7c5d"
+    },
+    {
+      "name": "CodexBar-0.79.0.1-mobile.2.10.0.dSYM.zip",
+      "size": 72676818,
+      "digest": "sha256:06655d13f4112fff5a7c101fb8ed8c4d83bb44eaaaf27a77304a2d96f8c59dee"
+    }
+  ]
+}

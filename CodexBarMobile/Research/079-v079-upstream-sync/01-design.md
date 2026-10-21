@@ -1,6 +1,6 @@
 # 合并、桥接与 iOS 设计
 
-Status: `ready`；用户 Goal 已确认。
+Status: `done`；用户 Goal 已确认。
 
 ## Mac 合并
 
@@ -55,3 +55,21 @@ Research078记录3.0.0(245)仅本地验证，2.10.0(243)为既有VALID beta，�
 ## iOS迁移窗口的成本权威性
 
 独立复查发现旧quota-owner记录在Mac两次成功清理前可与新Claude独立cost owner共存；新owner clear不能被旧summary覆盖，新owner summary不能与旧summary重复计费。消费者在每台设备内先按provider publication timestamp选取权威成本：独立owner更新或同时间时优先；用户关闭adapter后，明确更新的legacy summary可回切，并抑制滞留owner。额度、账号、预算、sourceReport保持完整。SwiftDataBridge在incoming keys/迁移/upsert之前使用同一成本视图；有效owner出现时迁移旧history，clear时只隐藏、不删除。aggregate按设备与provider抑制withdrawn来源，dashboard/activity跳过clear；普通nil保留历史fallback。新copy/helper放iOS WidgetShared，不改Mac二进制输入。增加legacy→独立→legacy、clear/restore、两Mac四quota、预算与raw ledger保留测试。
+
+## Cost authority architecture audit（iOS复查后的完整状态模型）
+
+- Head: `4f66415b1ed50fa3327ad363365a21242f530287` + iOS staged tree `a39d4d2f7d7fadf8ddb06f1ac86d215e7a44b088`。
+- Repeated finding pattern: 成本owner迁移中逐一补上legacy/独立、summary/clear、inert/claim分支，会遗漏反向撤回或破坏二次normalize幂等性。
+- Root design/requirements problem: 需要区分unknown（不是声明）、summary（有成本声明）、clear（撤回声明）；只在两个来源family之间比较非空金额不能表达完整要求。
+- Revised approach: 在单台Mac内统一比较所有明确cost claims的publication time，选唯一winner；同时间独立owner优先，再按stable key排序；获胜clear撤销所有旧金额，获胜summary撤销其余cost claims；所有inert行原样保留。Bridge只在唯一有效owner时迁移machine-wide长历史，没有owner就不迁移/删除。加反向clear+另一台Mac仍有效、更新inert普通quota、二次normalize、旧history与budget断言。真实Mac producer完整provider diff包含Date，active adapter每次push重发owner，同批quota clear与owner publication相同，因此tie优先owner保留正常成本。
+- 协议边界：现有JSON日期为秒精度，同秒切换可暂时tie；按确定性owner优先，旧owner随后按两次成功cleanup删除。不能声称具备亚秒切换顺序保证，不为本轮改日期编码破坏old reader。scoped新金额始终不发送；16组合仍披露真实cache/CloudKit收敛未实测。
+
+## 原生渲染自查
+
+首轮9张实际图片中四语Light/Dark正常；日文accessibility3把日期与Business拆得过碎。已把详情/teaser的辅助字号改为上下布局、整行VoiceOver合并，待重渲染。普通字号保持两列。PreviewData已主动确认Kiro generic detail/预算/额度样例覆盖卡片类型；severity新variant由专门production-view render fixture验证，不新增重复provider demo。
+
+## 明确account-disown与machine-withdraw的scope
+
+Producer冷启动可以先重发adapter quota clear，同时尚无成本publication且shouldClear=false，不会重发独立owner。`adapter:<device>:<source>:<slot>:<fingerprint>`已是本轮producer的明确账号namespace，因此其nil+clear只表示该账号不拥有机器成本，不能竞选机器成本权威，也不能让aggregate撤回整个来源。统一hasMachineCostClaim同时用于winner/map/ledger suppression：独立owner clear和普通legacy clear仍是机器级claim；adapter账号nil+clear不是。新增旧owner+较新adapter-clear仍$3/300、尚缺owner记录时ledger仍保留、明确owner clear才只剩Mac B $2/200。无需wire/schema更改。
+
+首轮完整iOS单测在上一staged tree通过；后续scope与辅助字号/图标对比度修复将重跑。warning/critical使用既有动态readable颜色处理，Light加深以保持符号与背景对比，Dark保留系统色。
