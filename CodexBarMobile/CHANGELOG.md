@@ -2,6 +2,22 @@
 
 All notable changes to the CodexBar iOS companion app will be documented in this file.
 
+## [2.10.0 (244)] — iPhone Duo workspaces
+
+### Added
+- Two report panes for Cost and share-card editing. Active fold regions and margins determine usable pane bounds; tabletop share editing places the preview above the controls. Both sections remain reachable in narrow windows and at accessibility text sizes.
+- Expanded Usage sidebar retains quota labels, reset information, balance details and source notices. Multi-account groups show their account count instead of presenting one account's quota as a total.
+
+### Changed
+- Native tab and navigation bars adapt to iPhone Duo; wide portrait windows can use account/detail and settings/detail navigation. Removed the illustrative custom trailing tab rail.
+- Cost panes scroll independently when expanded and form a continuous page when narrow, retaining subtree identity and chart scroll selection. Share options and preview remain in the same editing session during resizing.
+
+### Fixed
+- Expanding Usage to preview an account no longer changes the preferred compact navigation column. Provider detail selection uses account identity instead of an array index, so reordered sync results preserve the selected account.
+
+### Notes
+- Built with Xcode 27.1 (27A9275); minimum iOS remains 17. No Mac, payload, or CloudKit schema changes. Validation and remaining evidence are tracked in Research/078.
+
 ## [2.10.0 (243)] — Reset credit expiries and calendar reminders
 
 ### Added

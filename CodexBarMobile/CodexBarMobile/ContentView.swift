@@ -76,14 +76,6 @@ struct ContentView: View {
                 .bool(forKey: MobileSettingsKeys.openCostByDefault) ? .cost : .usage))
     }
 
-    private var allowsPreviewTrailingNavigation: Bool {
-        #if DEBUG
-        self.isLayoutPreview
-        #else
-        false
-        #endif
-    }
-
     private var currentVersion: String {
         Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0.0"
     }
@@ -120,38 +112,9 @@ struct ContentView: View {
             let layout = MobileAdaptiveLayout(
                 width: self.layoutContainerSize == .zero ? geometry.size.width : self.layoutContainerSize.width,
                 height: self.layoutContainerSize == .zero ? geometry.size.height : self.layoutContainerSize.height,
-                largeText: self.dynamicTypeSize.isAccessibilitySize,
-                allowsTrailingNavigation: self.allowsPreviewTrailingNavigation)
-            HStack(spacing: 0) {
-                self.tabs(trailingNavigation: layout.usesTrailingNavigation)
-                    .environment(\.horizontalSizeClass, .compact)
-                if layout.usesTrailingNavigation {
-                    VStack(spacing: 12) {
-                        ForEach(MobileRootTab.allCases, id: \.self) { tab in
-                            Button {
-                                self.selectedTab = tab
-                            } label: {
-                                Label(tab.title, systemImage: tab.symbol)
-                                    .labelStyle(.iconOnly)
-                                    .font(.title2)
-                                    .frame(minWidth: 52, minHeight: 52)
-                                    .background(
-                                        self.selectedTab == tab ? Color.accentColor.opacity(0.16) : .clear,
-                                        in: RoundedRectangle(cornerRadius: 16))
-                            }
-                            .accessibilityLabel(tab.title)
-                            .accessibilityAddTraits(self.selectedTab == tab ? .isSelected : [])
-                            .accessibilityIdentifier("adaptive-tab-" + tab.rawValue)
-                        }
-                    }
-                    .padding(8)
-                    .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 24))
-                    .padding(.trailing, 12)
-                    .accessibilityElement(children: .contain)
-                    .accessibilityIdentifier("adaptive-trailing-navigation")
-                }
-            }
-            .environment(\.mobileAdaptiveLayout, layout)
+                largeText: self.dynamicTypeSize.isAccessibilitySize)
+            self.tabs()
+                .environment(\.mobileAdaptiveLayout, layout)
         }
         .background {
             // Measure the window proposal without keyboard occlusion. Content still
@@ -235,28 +198,25 @@ struct ContentView: View {
             }
     }
 
-    private func tabs(trailingNavigation: Bool) -> some View {
+    private func tabs() -> some View {
         TabView(selection: self.$selectedTab) {
             UsageTab(
                 usageData: self.usageData,
                 isDemoMode: self.$isDemoMode,
                 costReferenceDate: self.costReferenceDate,
                 cardPreferences: self.isDemoMode ? self.demoCardPreferences : self.liveCardPreferences)
-                .toolbar(trailingNavigation ? .hidden : .visible, for: .tabBar)
                 .tag(MobileRootTab.usage)
                 .tabItem {
                     Label("Usage", systemImage: "chart.bar.fill")
                 }
 
             CostTab(usageData: self.usageData, isDemoMode: self.$isDemoMode)
-                .toolbar(trailingNavigation ? .hidden : .visible, for: .tabBar)
                 .tag(MobileRootTab.cost)
                 .tabItem {
                     Label("Cost", systemImage: "dollarsign.circle.fill")
                 }
 
             SettingsTab(usageData: self.usageData)
-                .toolbar(trailingNavigation ? .hidden : .visible, for: .tabBar)
                 .tag(MobileRootTab.settings)
                 .tabItem {
                     Label("Setting", systemImage: "gearshape")
@@ -458,6 +418,7 @@ private struct UsageTab: View {
                         onDemo: { self.isDemoMode = true })
                 }
             }
+            .navigationSplitViewColumnWidth(min: 300, ideal: 340, max: 400)
             .navigationTitle(self.isDemoMode ? String(localized: "CodexBar (Demo)") : String(localized: "CodexBar"))
             .toolbar {
                 if self.isDemoMode {
@@ -465,9 +426,7 @@ private struct UsageTab: View {
                         Button {
                             self.isDemoMode = false
                         } label: {
-                            Text("Exit Demo")
-                                .font(.subheadline)
-                                .fontWeight(.medium)
+                            Label(String(localized: "Exit Demo"), systemImage: "xmark.circle")
                         }
                     }
                 }
@@ -503,6 +462,7 @@ private struct UsageTab: View {
                             },
                             onOpenSettings: { self.settingsProviderID = card.providerID }))
                         .id(card.id)
+                        .accessibilityIdentifier("usage-selected-detail-" + card.providerID)
                 }
             }
         }
@@ -510,8 +470,8 @@ private struct UsageTab: View {
             if self.layout.usesListDetail, self.selectedCardKey == nil,
                let first = self.arrangedCards.first
             {
+                // A wide-screen preview is not a request to navigate on the outer display.
                 self.select(first.id)
-                self.compactColumn = .detail
             }
         }
         .task(id: self.sortClockKey) {
@@ -741,28 +701,31 @@ private struct ProviderListView: View {
                     self.onSelect(card.id)
                 } label: {
                     if self.layout.usesListDetail, candidate == nil, activeLinkage == nil {
-                        HStack(spacing: 10) {
-                            Circle().fill(ProviderColorPalette.color(for: card.snapshot))
-                                .frame(width: 10, height: 10)
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(card.snapshot.providerName).font(.headline)
-                                if let subtitle = UsageCardPresentation.accountSubtitle(
-                                    for: card,
-                                    hidePersonalInfo: self.hidePersonalInfo)
-                                {
-                                    Text(subtitle).font(.caption).foregroundStyle(.secondary).lineLimit(1)
+                        VStack(alignment: .leading, spacing: 10) {
+                            HStack(spacing: 10) {
+                                Circle().fill(ProviderColorPalette.color(for: card.snapshot))
+                                    .frame(width: 10, height: 10)
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text(card.snapshot.providerName).font(.headline)
+                                    if let subtitle = UsageCardPresentation.accountSubtitle(
+                                        for: card,
+                                        hidePersonalInfo: self.hidePersonalInfo)
+                                    {
+                                        Text(subtitle).font(.caption).foregroundStyle(.secondary).lineLimit(1)
+                                    }
+                                }
+                                Spacer()
+                                if isPinned {
+                                    Image(systemName: "pin.fill")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                        .accessibilityLabel(Text("Pinned"))
+                                }
+                                if self.selectedCardKey == card.id {
+                                    Image(systemName: "checkmark").foregroundStyle(Color.accentColor)
                                 }
                             }
-                            Spacer()
-                            if isPinned {
-                                Image(systemName: "pin.fill")
-                                    .font(.caption)
-                                    .foregroundStyle(.secondary)
-                                    .accessibilityLabel(Text("Pinned"))
-                            }
-                            if self.selectedCardKey == card.id {
-                                Image(systemName: "checkmark").foregroundStyle(Color.accentColor)
-                            }
+                            UsageSidebarSummary(provider: card.snapshot, accountCount: card.detailGroup.accounts.count)
                         }
                         .padding(12)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -1242,9 +1205,7 @@ private struct CostTab: View {
                         Button {
                             self.isDemoMode = false
                         } label: {
-                            Text("Exit Demo")
-                                .font(.subheadline)
-                                .fontWeight(.medium)
+                            Label(String(localized: "Exit Demo"), systemImage: "xmark.circle")
                         }
                     }
                 }
@@ -1253,7 +1214,7 @@ private struct CostTab: View {
                         Button {
                             self.showShareSheet = true
                         } label: {
-                            Image(systemName: "square.and.arrow.up")
+                            Label(String(localized: "Create Share Card"), systemImage: "square.and.arrow.up")
                         }
                         .accessibilityLabel(String(localized: "Create Share Card"))
                         .accessibilityIdentifier("cost-share-button")
@@ -1309,13 +1270,14 @@ private struct CostDashboardView: View {
     @AppStorage(MobileSettingsKeys.dashboardCostChartStyle) private var chartStyleRawValue = CostChartStyle.line
         .rawValue
     @State private var selectedDay: Date?
+    @State private var chartScrollDate: Date?
 
     private var chartStyle: CostChartStyle {
         CostChartStyle(rawValue: self.chartStyleRawValue) ?? .line
     }
 
     var body: some View {
-        ScrollView {
+        AdaptiveReportPanes {
             VStack(alignment: .leading, spacing: 18) {
                 MockProviderBanner(snapshot: self.usageData.snapshot)
                 Text(self.insights.cwlWindowDays == nil
@@ -1335,58 +1297,27 @@ private struct CostDashboardView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
-                let columns = self.layout.usesTwoColumns
-                    ? AnyLayout(HStackLayout(alignment: .top, spacing: 20))
-                    : AnyLayout(VStackLayout(alignment: .leading, spacing: 18))
-                columns {
-                    VStack(alignment: .leading, spacing: 18) {
-                        self.summarySection
-
-                        if !self.insights.spendProviderRows.isEmpty {
-                            self.contributionSection(
-                                title: "Provider Share",
-                                subtitle: self.providerShareSubtitle,
-                                rows: self.insights.spendProviderRows.map {
-                                    // `identityOverride: $0.id` carries the
-                                    // `providerID|accountEmail` composite key so
-                                    // multi-account scenarios (e.g. two Codex
-                                    // accounts surfaced by Mac ≥ 0.25 once email
-                                    // extraction lands) render as distinct rows
-                                    // instead of one row drawn twice.
-                                    CostBreakdownRow(
-                                        label: $0.provider.providerName,
-                                        amountUSD: self.insights.historyCostUSD(for: $0),
-                                        subtitle: self.providerSubtitle(for: $0),
-                                        color: providerTint(for: $0.provider),
-                                        identityOverride: $0.id)
-                                },
-                                total: self.insights.displayHistoryCostUSD)
-                        }
-                    }
-                    .frame(maxWidth: .infinity, alignment: .topLeading)
-                    VStack(alignment: .leading, spacing: 18) {
-                        TokenActivitySection(
-                            providers: self.isDemoMode ? self.insights.providerRows.map(\.provider)
-                                : self.usageData.snapshot
-                                .map { MockProviderDetector.filteredProviders(from: $0) } ?? [],
-                            sourceSnapshots: self.usageData.deviceSnapshots,
-                            isOverview: true,
-                            isDemoMode: self.isDemoMode)
-
-                        if !self.insights.costDailyPoints.isEmpty {
-                            self.trendSection
-                        }
-                    }
-                    .frame(maxWidth: .infinity, alignment: .topLeading)
+                self.summarySection
+                if !self.insights.spendProviderRows.isEmpty {
+                    self.contributionSection(
+                        title: "Provider Share",
+                        subtitle: self.providerShareSubtitle,
+                        rows: self.insights.spendProviderRows.map {
+                            // `identityOverride: $0.id` carries the
+                            // `providerID|accountEmail` composite key so
+                            // multi-account scenarios (e.g. two Codex
+                            // accounts surfaced by Mac ≥ 0.25 once email
+                            // extraction lands) render as distinct rows
+                            // instead of one row drawn twice.
+                            CostBreakdownRow(
+                                label: $0.provider.providerName,
+                                amountUSD: self.insights.historyCostUSD(for: $0),
+                                subtitle: self.providerSubtitle(for: $0),
+                                color: providerTint(for: $0.provider),
+                                identityOverride: $0.id)
+                        },
+                        total: self.insights.displayHistoryCostUSD)
                 }
-
-                // Subscription Utilization — independent section
-                if let snapshot = self.usageData.snapshot {
-                    UtilizationAggregateView(
-                        providers: MockProviderDetector.filteredProviders(from: snapshot))
-                        .padding(.top, 4)
-                }
-
                 if !self.insights.modelRows.isEmpty {
                     self.contributionSection(
                         title: "Model Mix",
@@ -1397,6 +1328,27 @@ private struct CostDashboardView: View {
 
                 if !self.insights.budgetRows.isEmpty {
                     self.budgetSection
+                }
+            }
+            .padding(20)
+        } secondary: {
+            VStack(alignment: .leading, spacing: 18) {
+                if !self.insights.costDailyPoints.isEmpty {
+                    self.trendSection
+                }
+                TokenActivitySection(
+                    providers: self.isDemoMode ? self.insights.providerRows.map(\.provider)
+                        : self.usageData.snapshot
+                        .map { MockProviderDetector.filteredProviders(from: $0) } ?? [],
+                    sourceSnapshots: self.usageData.deviceSnapshots,
+                    isOverview: true,
+                    isDemoMode: self.isDemoMode)
+
+                // Subscription Utilization — independent section
+                if let snapshot = self.usageData.snapshot {
+                    UtilizationAggregateView(
+                        providers: MockProviderDetector.filteredProviders(from: snapshot))
+                        .padding(.top, 4)
                 }
 
                 if self.isDemoMode {
@@ -1413,9 +1365,7 @@ private struct CostDashboardView: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
             }
-            .padding(.horizontal, 20)
-            .padding(.top, 8)
-            .padding(.bottom, 24)
+            .padding(20)
         }
         .refreshable {
             await self.usageData.refresh()
@@ -1617,7 +1567,9 @@ private struct CostDashboardView: View {
             // The latest data is always on the right, so left-anchored labels
             // never clip regardless of how close the last bar is to the edge.
             .chartXVisibleDomain(length: self.visibleDayCount * 24 * 60 * 60)
-            .chartScrollPosition(initialX: self.chartScrollInitialDate)
+            .chartScrollPosition(x: Binding(
+                get: { self.chartScrollDate ?? self.chartScrollInitialDate },
+                set: { self.chartScrollDate = $0 }))
             .chartXAxis {
                 // Adaptive weekly→monthly stride (see `axisStrideDays`): a
                 // 30-day window keeps the 7-day cadence that matches the
@@ -4977,9 +4929,12 @@ private enum MobileReleaseNotesCatalog {
         ReleaseNotesVersion(
             version: "2.10.0",
             status: String(localized: "Latest"),
-            summary: String(localized: "CodexBar 2.10 shows when each reset credit expires and can add those times to your calendar."),
+            summary: String(
+                localized: "CodexBar 2.10 shows when each reset credit expires and can add those times to your calendar."),
             sections: [
                 .init(title: String(localized: "What's New"), items: [
+                    String(
+                        localized: "Open CodexBar on iPhone Duo to browse accounts beside their usage details, explore costs in two panels, and edit share cards beside a live preview. Your selection stays with you as the window changes."),
                     String(
                         localized: "Claude, Codex, and Grok details list every available reset credit with its exact expiry date and time."),
                     String(

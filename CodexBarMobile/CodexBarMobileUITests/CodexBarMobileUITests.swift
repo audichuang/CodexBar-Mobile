@@ -19,7 +19,7 @@ final class CodexBarMobileUITests: XCTestCase {
                 "-cwlEnabled", "NO", "-AppleLanguages", "(\(language))", "-AppleLocale", language,
             ]
             app.launch()
-            let cost = app.tabBars.buttons.element(boundBy: 1)
+            let cost = app.nativeTab("Cost")
             XCTAssertTrue(cost.waitForExistence(timeout: 10))
             cost.tap()
             let explanation = app.staticTexts["cost-data-scope"]
@@ -199,8 +199,8 @@ final class CodexBarMobileUITests: XCTestCase {
         }
         provider.tap()
         XCTAssertTrue(app.navigationBars["Codex"].waitForExistence(timeout: 5))
-        app.tabBars.buttons["Cost"].tap()
-        app.tabBars.buttons["Usage"].tap()
+        app.nativeTab("Cost").tap()
+        app.nativeTab("Usage").tap()
         XCTAssertTrue(app.navigationBars["Codex"].waitForExistence(timeout: 5))
         app.navigationBars.buttons.firstMatch.tap()
         XCTAssertTrue(app.searchFields.firstMatch.waitForExistence(timeout: 5))
@@ -224,24 +224,25 @@ final class CodexBarMobileUITests: XCTestCase {
         }
         let footer = app.otherElements["usage-scroll-footer"].firstMatch
         XCTAssertTrue(footer.exists)
-        XCTAssertLessThanOrEqual(footer.frame.maxY, app.tabBars.buttons["Usage"].frame.minY)
+        XCTAssertFalse(footer.frame.intersects(app.nativeTab("Usage").frame))
+        XCTAssertLessThanOrEqual(footer.frame.maxY, app.frame.maxY)
         self.captureNavigation(app, name: "Phone Usage bottom clearance")
-        app.tabBars.buttons["Setting"].tap()
+        app.nativeTab("Setting").tap()
         app.staticTexts["Usage Setting"].tap()
         XCTAssertTrue(app.switches["show-remaining-usage-toggle"].waitForExistence(timeout: 5))
         app.navigationBars.buttons.firstMatch.tap()
         app.staticTexts["Cost Setting"].tap()
         self.captureNavigation(app, name: "Phone Cost settings")
         app.navigationBars.buttons.firstMatch.tap()
-        app.tabBars.buttons["Cost"].tap()
+        app.nativeTab("Cost").tap()
         let overview = app.buttons["token-overview-link"]
         for _ in 0..<8 where !overview.isHittable {
             app.swipeUp()
         }
         overview.tap()
         XCTAssertTrue(app.navigationBars["Token Activity"].waitForExistence(timeout: 5))
-        app.tabBars.buttons["Setting"].tap()
-        app.tabBars.buttons["Cost"].tap()
+        app.nativeTab("Setting").tap()
+        app.nativeTab("Cost").tap()
         XCTAssertTrue(app.navigationBars["Token Activity"].exists)
         app.navigationBars.buttons.firstMatch.tap()
         self.captureNavigation(app, name: "Phone Cost restored")
@@ -255,15 +256,16 @@ final class CodexBarMobileUITests: XCTestCase {
         app.launchArguments += ["-cwlEnabled", "NO"]
         app.launch()
         try XCTSkipUnless(app.frame.width >= 600, "Requires an iPad")
-        // Default order is name A to Z: ChatGPT and Claude share the second row.
+        // Wide portrait keeps one readable account list beside the detail.
         let chatGPT = app.buttons["provider-group-chatgpt"]
         let claude = app.buttons["provider-group-claude"]
         let codex = app.buttons["provider-group-codex"]
         XCTAssertTrue(claude.waitForExistence(timeout: 8))
-        XCTAssertEqual(chatGPT.frame.minY, claude.frame.minY, accuracy: 4)
-        XCTAssertLessThan(chatGPT.frame.maxX, claude.frame.minX)
-        self.assertBottomTabs(app)
-        self.captureNavigation(app, name: "iPad portrait two columns")
+        XCTAssertLessThan(chatGPT.frame.minY, claude.frame.minY)
+        XCTAssertEqual(chatGPT.frame.minX, claude.frame.minX, accuracy: 4)
+        XCTAssertLessThan(claude.frame.width, app.frame.width * 0.6)
+        self.assertNativeTabs(app)
+        self.captureNavigation(app, name: "iPad portrait account list and detail")
         let search = app.searchFields.firstMatch
         search.tap()
         search.typeText("Codex")
@@ -274,7 +276,7 @@ final class CodexBarMobileUITests: XCTestCase {
         XCTAssertTrue(app.keyboards.firstMatch.waitForNonExistence(timeout: 5))
         XCUIDevice.shared.orientation = .landscapeLeft
         self.waitForOrientation(app, landscape: true)
-        self.assertBottomTabs(app)
+        self.assertNativeTabs(app)
         XCTAssertTrue(app.navigationBars["Codex"].exists)
         self.captureNavigation(app, name: "iPad landscape selected Codex")
         app.searchFields.firstMatch.tap()
@@ -285,8 +287,8 @@ final class CodexBarMobileUITests: XCTestCase {
         self.captureNavigation(app, name: "iPad landscape keyboard keeps navigation")
         app.buttons["provider-group-codex"].tap()
         XCTAssertTrue(app.keyboards.firstMatch.waitForNonExistence(timeout: 5))
-        self.assertBottomTabs(app)
-        app.tabBars.buttons["Setting"].tap()
+        self.assertNativeTabs(app)
+        app.nativeTab("Setting").tap()
         app.staticTexts["Usage Setting"].tap()
         let toggle = app.switches["show-remaining-usage-toggle"]
         XCTAssertTrue(toggle.waitForExistence(timeout: 5))
@@ -295,29 +297,27 @@ final class CodexBarMobileUITests: XCTestCase {
         self.waitForOrientation(app, landscape: false)
         XCTAssertTrue(toggle.waitForExistence(timeout: 5))
         self.captureNavigation(app, name: "iPad portrait retained Settings detail")
-        app.navigationBars.buttons.firstMatch.tap()
         XCTAssertTrue(app.staticTexts["Cost Setting"].waitForExistence(timeout: 5))
-        app.tabBars.buttons["Cost"].tap()
+        app.nativeTab("Cost").tap()
         self.captureNavigation(app, name: "iPad portrait Cost")
         XCUIDevice.shared.orientation = .landscapeLeft
         self.waitForOrientation(app, landscape: true)
-        self.assertBottomTabs(app)
+        self.assertNativeTabs(app)
         self.captureNavigation(app, name: "iPad landscape Cost")
     }
 
     @MainActor
-    private func assertBottomTabs(_ app: XCUIApplication) {
-        let usage = app.tabBars.buttons["Usage"]
-        let cost = app.tabBars.buttons["Cost"]
-        let setting = app.tabBars.buttons["Setting"]
+    private func assertNativeTabs(_ app: XCUIApplication) {
+        let usage = app.nativeTab("Usage")
+        let cost = app.nativeTab("Cost")
+        let setting = app.nativeTab("Setting")
         XCTAssertTrue(setting.waitForExistence(timeout: 5))
         XCTAssertFalse(app.buttons["adaptive-tab-cost"].exists)
         XCTAssertFalse(app.otherElements["adaptive-trailing-navigation"].exists)
-        XCTAssertGreaterThan(usage.frame.midY, app.frame.minY + app.frame.height * 0.8)
-        XCTAssertEqual(usage.frame.midY, cost.frame.midY, accuracy: 4)
-        XCTAssertEqual(cost.frame.midY, setting.frame.midY, accuracy: 4)
-        XCTAssertLessThan(usage.frame.midX, cost.frame.midX)
-        XCTAssertLessThan(cost.frame.midX, setting.frame.midX)
+        for tab in [usage, cost, setting] {
+            XCTAssertTrue(tab.isHittable)
+            XCTAssertTrue(app.frame.contains(tab.frame))
+        }
     }
 
     @MainActor
@@ -351,7 +351,7 @@ final class CodexBarMobileUITests: XCTestCase {
         let landscape = NSPredicate { _, _ in app.frame.width > app.frame.height }
         expectation(for: landscape, evaluatedWith: app)
         waitForExpectations(timeout: 5)
-        self.assertBottomTabs(app)
+        self.assertNativeTabs(app)
         let provider = app.buttons["provider-group-codex"]
         XCTAssertTrue(provider.waitForExistence(timeout: 5))
         provider.tap()
@@ -362,15 +362,15 @@ final class CodexBarMobileUITests: XCTestCase {
         waitForExpectations(timeout: 5)
         XCTAssertFalse(app.buttons["adaptive-tab-cost"].exists)
         XCTAssertTrue(app.navigationBars["Codex"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.tabBars.buttons["Setting"].waitForExistence(timeout: 5))
-        app.tabBars.buttons["Setting"].tap()
+        XCTAssertTrue(app.nativeTab("Setting").waitForExistence(timeout: 5))
+        app.nativeTab("Setting").tap()
         app.staticTexts["Usage Setting"].tap()
         XCTAssertTrue(app.switches["show-remaining-usage-toggle"].waitForExistence(timeout: 5))
         XCUIDevice.shared.orientation = .landscapeLeft
         expectation(for: landscape, evaluatedWith: app)
         waitForExpectations(timeout: 5)
-        self.assertBottomTabs(app)
-        app.tabBars.buttons["Cost"].tap()
+        self.assertNativeTabs(app)
+        app.nativeTab("Cost").tap()
         XCTAssertTrue(app.staticTexts["Overview"].waitForExistence(timeout: 5))
         let shot = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         shot.name = "Generic iPad resize validation - not a Duo device"
@@ -383,7 +383,7 @@ final class CodexBarMobileUITests: XCTestCase {
         let app = self.makeApp()
         app.launch()
 
-        app.tabBars.buttons["Setting"].tap()
+        app.nativeTab("Setting").tap()
         app.staticTexts["Usage Setting"].tap()
         let remainingToggle = app.switches["show-remaining-usage-toggle"]
         XCTAssertTrue(remainingToggle.waitForExistence(timeout: 5))
@@ -402,7 +402,7 @@ final class CodexBarMobileUITests: XCTestCase {
         let app = self.makeApp()
         app.launch()
 
-        app.tabBars.buttons["Cost"].tap()
+        app.nativeTab("Cost").tap()
 
         XCTAssertTrue(app.staticTexts["Daily Spend"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["(USD)"].waitForExistence(timeout: 5))
@@ -413,7 +413,7 @@ final class CodexBarMobileUITests: XCTestCase {
         let app = self.makeApp()
         app.launch()
 
-        app.tabBars.buttons["Cost"].tap()
+        app.nativeTab("Cost").tap()
 
         XCTAssertTrue(app.staticTexts["Provider Share"].waitForExistence(timeout: 5))
         XCTAssertTrue(app.staticTexts["Model Mix"].waitForExistence(timeout: 5))
@@ -428,7 +428,7 @@ final class CodexBarMobileUITests: XCTestCase {
     func testCostShareEditorUsesPreviewFirstTemplatesAndHeatmapControls() {
         let app = self.makeApp()
         app.launch()
-        app.tabBars.buttons["Cost"].tap()
+        app.nativeTab("Cost").tap()
         let share = app.buttons["cost-share-button"]
         XCTAssertTrue(share.waitForExistence(timeout: 10))
         share.tap()
@@ -464,7 +464,7 @@ final class CodexBarMobileUITests: XCTestCase {
         app.launch()
         try XCTSkipUnless(app.frame.width >= 700, "Requires a wide iPad window")
 
-        app.tabBars.buttons["Cost"].tap()
+        app.nativeTab("Cost").tap()
         let share = app.buttons["cost-share-button"]
         XCTAssertTrue(share.waitForExistence(timeout: 10))
         share.tap()
@@ -563,7 +563,7 @@ final class CodexBarMobileUITests: XCTestCase {
     func testSettingsDeveloperContactAndMoreApps() {
         let app = self.makeApp()
         app.launch()
-        app.tabBars.buttons["Setting"].tap()
+        app.nativeTab("Setting").tap()
         let contact = app.descendants(matching: .any)["settings-contact-email"].firstMatch
         let moreApps = app.descendants(matching: .any)["settings-more-apps"].firstMatch
         // More Apps sits below Contact; scroll until it clears the tab bar.
@@ -597,7 +597,7 @@ final class CodexBarMobileUITests: XCTestCase {
         // Preview snapshots are intentionally not persisted to the real ledger.
         app.launchArguments += ["-cwlEnabled", "NO"]
         app.launch()
-        app.tabBars.buttons["Cost"].tap()
+        app.nativeTab("Cost").tap()
         let overview = app.buttons["token-overview-link"]
         for _ in 0..<5 where !overview.isHittable {
             app.swipeUp()

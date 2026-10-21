@@ -17,6 +17,7 @@ This directory contains research documents for features being considered for Cod
 
 | # | Feature | Status | Blocker | File | Date |
 |---|---------|--------|---------|------|------|
+| 078 | iPhone Duo：Usage 账号与额度详情、Cost 总览与趋势、分享预览与编辑分区；折叠、拖动和输入连续性 | `in-progress` | Xcode 27.1 / 27A9275；本地实现和自动化验收完成，原生折叠姿态验收受系统组件初始化阻塞 | [078-iphone-duo-experience.md](078-iphone-duo-experience.md) | 2026-10-20 |
 | 077 | Reset credit 到期时间详情与日历提醒（Claude / Codex / Grok 每次 credit 的精确到期时间；可选写入 CodexBar 日历，提前用掉自动删除；Mac 0.76.0.2 同步 Claude / Grok 库存，只含到期时间） | `done` | PR #195（分支 `feature/reset-credit-calendar`）；iOS 2.10.0 (243) + Mac 0.76.0.2 / 169.2；CloudKit `NO_DEPLOY`；16 组合为替代验证 | [077-reset-credit-calendar/00-overview.md](077-reset-credit-calendar/00-overview.md) | 2026-10-18 |
 | 076 | CodexBar 小组件概览统一显示每周窗口（不再在 Session / Weekly / Fable only 之间按用量切换） | `done` | 随 iOS 2.9.0 (242) 一起发布；`overviewFigures` 对所有模式先取账号级每周窗口 | [076-widget-overview-weekly-window.md](076-widget-overview-weekly-window.md) | 2026-10-16 |
 | 075 | v0.75.0–v0.76.0 单版本上游同步（#193 + 上游最新 v0.76.0）+ iOS 2.9.0 (242)：Claude Platform、fal、FLORA、Parallel，Claude Platform Console 余额与 grant 到期日，Claude 登录邮箱身份，Auto-review $0 不再估算 | `done` | 分支 `upstream-sync/v0.76.0-mobile.2.9.0`（未推送）；Mac 0.76.0.1 / 169.1 全量测试与 lint 通过，签名公证 Draft 已生成（无 tag）；iOS 2.9.0 (242) 单测通过；CloudKit `NO_DEPLOY`；16 组合替代验证 PASS；两轮 review 阻塞为 0；另修复上游 revision 13 迁移导致的成本下降 | [075-v076-upstream-sync/00-overview.md](075-v076-upstream-sync/00-overview.md) | 2026-10-15 |

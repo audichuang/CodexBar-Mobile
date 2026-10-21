@@ -9,7 +9,6 @@ struct CostShareSheet: View {
     let isDemoMode: Bool
     @Environment(\.dismiss) private var dismiss
     @Environment(\.colorScheme) private var colorScheme
-    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var selectedPeriod: SharePeriod = .month
     @State private var selectedStyle: ShareCardStyleOption = .classic
     @State private var heatmapWindow: HeatmapShareWindow = .days365
@@ -34,7 +33,7 @@ struct CostShareSheet: View {
     }
 
     private var heatmapData: HeatmapShareData? {
-        if (self.isDemoMode || ProcessInfo.processInfo.arguments.contains("UI_TEST_PREVIEW_DATA")),
+        if self.isDemoMode || ProcessInfo.processInfo.arguments.contains("UI_TEST_PREVIEW_DATA"),
            self.tokenSeries.isEmpty
         {
             return .preview
@@ -53,47 +52,27 @@ struct CostShareSheet: View {
 
     var body: some View {
         NavigationStack {
-            GeometryReader { proxy in
-                if Self.usesSideBySideLayout(width: proxy.size.width, dynamicTypeSize: self.dynamicTypeSize) {
-                    HStack(alignment: .top, spacing: 24) {
-                        self.preview
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        ScrollView { self.controls.padding(.bottom, 90) }
-                            .frame(width: min(360, proxy.size.width * 0.38))
-                    }
-                    .padding(24)
-                } else {
-                    ScrollView {
-                        VStack(spacing: 20) {
-                            self.preview
-                            self.controls
-                        }
-                        .padding(.horizontal, 20)
-                        .padding(.top, 12)
-                        .padding(.bottom, 90)
-                    }
+            AdaptiveReportPanes(allowsVerticalSplit: true) {
+                self.preview
+                    .frame(maxWidth: 560)
+                    .frame(maxWidth: .infinity)
+                    .padding(20)
+            } secondary: {
+                VStack(alignment: .leading, spacing: 24) {
+                    self.controls
+                    self.shareButton
                 }
+                .padding(20)
             }
             .navigationTitle(String(localized: "Create Share Card"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(String(localized: "Close")) { self.dismiss() }
+                    Button { self.dismiss() } label: {
+                        Label(String(localized: "Close"), systemImage: "xmark")
+                    }
+                    .accessibilityIdentifier("share-card-close")
                 }
-            }
-            .safeAreaInset(edge: .bottom) {
-                Button { self.renderImage() } label: {
-                    Label(String(localized: "Share Image"), systemImage: "square.and.arrow.up")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 5)
-                }
-                .buttonStyle(.borderedProminent)
-                .disabled(self.selectedStyle == .heatmap && self.heatmapData == nil)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 10)
-                .background(.bar)
-                .accessibilityIdentifier("share-card-action")
             }
             .sheet(item: self.$activityPresentation) { presentation in
                 ActivityViewController(activityItems: [presentation.image])
@@ -107,6 +86,21 @@ struct CostShareSheet: View {
             .task { await self.loadTokenSeries() }
         }
         .presentationDetents([.large])
+    }
+
+    private var shareButton: some View {
+        Button { self.renderImage() } label: {
+            Label(String(localized: "Share Image"), systemImage: "square.and.arrow.up")
+                .font(.headline)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 5)
+        }
+        .buttonStyle(.borderedProminent)
+        .disabled(self.selectedStyle == .heatmap && self.heatmapData == nil)
+        .padding(.horizontal, 20)
+        .padding(.vertical, 10)
+        .background(.bar)
+        .accessibilityIdentifier("share-card-action")
     }
 
     @ViewBuilder

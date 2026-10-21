@@ -13,30 +13,27 @@ final class MobileAdaptiveLayoutTests: XCTestCase {
     }
 
     func testContentBreakpointsKeepPhoneLandscapeCompactAndLargeTypeReadable() {
-        XCTAssertFalse(MobileAdaptiveLayout(width: 844, height: 390).roomy)
-        XCTAssertEqual(MobileAdaptiveLayout(width: 768, height: 1024).providerColumns, 2)
-        XCTAssertFalse(MobileAdaptiveLayout(width: 768, height: 1024).usesTrailingNavigation)
+        XCTAssertFalse(MobileAdaptiveLayout(width: 844, height: 390).usesListDetail)
+        XCTAssertTrue(MobileAdaptiveLayout(width: 768, height: 1024).usesListDetail)
+        XCTAssertEqual(MobileAdaptiveLayout(width: 768, height: 1024).providerColumns, 1)
         XCTAssertTrue(MobileAdaptiveLayout(width: 1024, height: 768).usesListDetail)
         XCTAssertFalse(MobileAdaptiveLayout(width: 600, height: 768).usesListDetail)
         XCTAssertFalse(MobileAdaptiveLayout(width: 1024, height: 768, largeText: true).usesTwoColumns)
     }
 
-    func testShippingWideWindowsKeepBottomTabsIndependentlyOfContentColumns() {
-        for size in [CGSize(width: 1024, height: 768), CGSize(width: 1376, height: 1032)] {
+    func testWidePortraitAndLandscapeBothUseAccountNavigation() {
+        for size in [CGSize(width: 800, height: 1000), CGSize(width: 1000, height: 800)] {
             let layout = MobileAdaptiveLayout(width: size.width, height: size.height)
-            XCTAssertFalse(layout.usesTrailingNavigation)
             XCTAssertTrue(layout.usesListDetail)
-            XCTAssertTrue(layout.usesTwoColumns)
+            XCTAssertEqual(layout.providerColumns, 1, "The sidebar must not become a grid inside a split view")
         }
-        let preview = MobileAdaptiveLayout(width: 1024, height: 768, allowsTrailingNavigation: true)
-        XCTAssertTrue(preview.usesTrailingNavigation)
-        XCTAssertTrue(preview.usesListDetail)
-        XCTAssertFalse(MobileAdaptiveLayout(width: 768, height: 1024, allowsTrailingNavigation: true)
-            .usesTrailingNavigation)
     }
 
     func testRenderActualPagesAtIllustrativeContainerSizes() async throws {
-        let directory = URL(fileURLWithPath: "/tmp/cbm-adaptive-previews", isDirectory: true)
+        let directory = URL(
+            fileURLWithPath: ProcessInfo.processInfo.environment["MOBILE_LAYOUT_ARTIFACTS"]
+                ?? "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/LayoutPreviews",
+            isDirectory: true)
         try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         let sizes: [(String, CGSize)] = [
             ("outer-portrait", CGSize(width: 390, height: 844)),
