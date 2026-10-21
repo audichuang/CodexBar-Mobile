@@ -90,7 +90,7 @@ defineProvider({
       );
       if (!usage || !Array.isArray(usage.pools)) return invalid();
       const pools = usage.pools;
-      const window = (type, minutes) => {
+      const window = (type, minutes, label) => {
         const pool = pools
           .map(object)
           .find((pool) => _optionalChain([pool, "optionalAccess", (_5) => _5.poolType]) === type);
@@ -112,10 +112,10 @@ defineProvider({
             void error;
           }
         }
-        return { usedPercent: Math.min(100, percent * 100), windowMinutes: minutes, resetsAt };
+        return { usedPercent: Math.min(100, percent * 100), windowMinutes: minutes, resetsAt, label };
       };
-      const primary = window("GXU_FIVE_HOURLY", 300);
-      const secondary = window("GXU_WEEKLY", 10080);
+      const primary = window("GXU_FIVE_HOURLY", 300, "5-hour");
+      const secondary = window("GXU_WEEKLY", 10080, "Weekly");
       if (!primary && !secondary) {
         throw ctx.fail.providerUnavailable("This Google account reports no Gemini app usage windows.");
       }

@@ -43,22 +43,22 @@ Status: `done`（本地验收完成；16组合均为有边界的替代验证，�
 
 | Case | Mac A | Mac B | iPhone A | iPhone B | Result | Evidence | Notes |
 |---:|---|---|---|---|---|---|---|
-| 1 | old | old | old | old | substituted | compat/matrix-wire.json mask=0；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 |
-| 2 | old | old | old | new | substituted | compat/matrix-wire.json mask=1；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 |
-| 3 | old | old | new | old | substituted | compat/matrix-wire.json mask=2；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 |
-| 4 | old | old | new | new | substituted | compat/matrix-wire.json mask=3；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 |
-| 5 | old | new | old | old | substituted | compat/matrix-wire.json mask=4；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 旧 iOS 可能多显示一张无额度 Claude 本地成本卡；新 metadata 被忽略但基础金额/额度可读。 |
-| 6 | old | new | old | new | substituted | compat/matrix-wire.json mask=5；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 旧 iOS 可能多显示一张无额度 Claude 本地成本卡；新 metadata 被忽略但基础金额/额度可读。 |
-| 7 | old | new | new | old | substituted | compat/matrix-wire.json mask=6；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 旧 iOS 可能多显示一张无额度 Claude 本地成本卡；新 metadata 被忽略但基础金额/额度可读。 |
-| 8 | old | new | new | new | substituted | compat/matrix-wire.json mask=7；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 |
-| 9 | new | old | old | old | substituted | compat/matrix-wire.json mask=8；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 旧 iOS 可能多显示一张无额度 Claude 本地成本卡；新 metadata 被忽略但基础金额/额度可读。 |
-| 10 | new | old | old | new | substituted | compat/matrix-wire.json mask=9；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 旧 iOS 可能多显示一张无额度 Claude 本地成本卡；新 metadata 被忽略但基础金额/额度可读。 |
-| 11 | new | old | new | old | substituted | compat/matrix-wire.json mask=10；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 旧 iOS 可能多显示一张无额度 Claude 本地成本卡；新 metadata 被忽略但基础金额/额度可读。 |
-| 12 | new | old | new | new | substituted | compat/matrix-wire.json mask=11；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 |
-| 13 | new | new | old | old | substituted | compat/matrix-wire.json mask=12；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 旧 iOS 可能多显示一张无额度 Claude 本地成本卡；新 metadata 被忽略但基础金额/额度可读。 |
-| 14 | new | new | old | new | substituted | compat/matrix-wire.json mask=13；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 旧 iOS 可能多显示一张无额度 Claude 本地成本卡；新 metadata 被忽略但基础金额/额度可读。 |
-| 15 | new | new | new | old | substituted | compat/matrix-wire.json mask=14；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 旧 iOS 可能多显示一张无额度 Claude 本地成本卡；新 metadata 被忽略但基础金额/额度可读。 |
-| 16 | new | new | new | new | substituted | compat/matrix-wire.json mask=15；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 |
+| 1 | old | old | old | old | substituted | evidence/matrix-wire.json mask=0；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 |
+| 2 | old | old | old | new | substituted | evidence/matrix-wire.json mask=1；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 |
+| 3 | old | old | new | old | substituted | evidence/matrix-wire.json mask=2；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 |
+| 4 | old | old | new | new | substituted | evidence/matrix-wire.json mask=3；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 |
+| 5 | old | new | old | old | substituted | evidence/matrix-wire.json mask=4；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 旧 iOS 可能多显示一张无额度 Claude 本地成本卡；新 metadata 被忽略但基础金额/额度可读。 |
+| 6 | old | new | old | new | substituted | evidence/matrix-wire.json mask=5；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 旧 iOS 可能多显示一张无额度 Claude 本地成本卡；新 metadata 被忽略但基础金额/额度可读。 |
+| 7 | old | new | new | old | substituted | evidence/matrix-wire.json mask=6；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 旧 iOS 可能多显示一张无额度 Claude 本地成本卡；新 metadata 被忽略但基础金额/额度可读。 |
+| 8 | old | new | new | new | substituted | evidence/matrix-wire.json mask=7；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 |
+| 9 | new | old | old | old | substituted | evidence/matrix-wire.json mask=8；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 旧 iOS 可能多显示一张无额度 Claude 本地成本卡；新 metadata 被忽略但基础金额/额度可读。 |
+| 10 | new | old | old | new | substituted | evidence/matrix-wire.json mask=9；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 旧 iOS 可能多显示一张无额度 Claude 本地成本卡；新 metadata 被忽略但基础金额/额度可读。 |
+| 11 | new | old | new | old | substituted | evidence/matrix-wire.json mask=10；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 旧 iOS 可能多显示一张无额度 Claude 本地成本卡；新 metadata 被忽略但基础金额/额度可读。 |
+| 12 | new | old | new | new | substituted | evidence/matrix-wire.json mask=11；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 |
+| 13 | new | new | old | old | substituted | evidence/matrix-wire.json mask=12；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 旧 iOS 可能多显示一张无额度 Claude 本地成本卡；新 metadata 被忽略但基础金额/额度可读。 |
+| 14 | new | new | old | new | substituted | evidence/matrix-wire.json mask=13；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 旧 iOS 可能多显示一张无额度 Claude 本地成本卡；新 metadata 被忽略但基础金额/额度可读。 |
+| 15 | new | new | new | old | substituted | evidence/matrix-wire.json mask=14；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 旧 iOS 可能多显示一张无额度 Claude 本地成本卡；新 metadata 被忽略但基础金额/额度可读。 |
+| 16 | new | new | new | new | substituted | evidence/matrix-wire.json mask=15；4 reads + 2 merges 均 exit0 | CloudKit/APNs/SwiftData/UI 未实测。 |
 
 
 ## 替代验证的剩余风险
@@ -84,3 +84,14 @@ Status: `done`（本地验收完成；16组合均为有边界的替代验证，�
 用户随后授权push/PR及循环review。分支已推送、PR面向mobile-dev；初始head8de535ee3。Codex指出Vercel personal-budget新增两条稳定语义文案未进入iOS本地化allowlist/catalog，造成中文/日文仍为英文（discussion_r4342646390）。修复只增加既有第一方语义路由的两条label与四语条目，插件自定义文案保持原样，不改wire/schema/Mac产品输入。
 
 复测：1152SwiftTesting/72suites +67XCTest，0失败；全量含新四语参数化路由测试和Vercel完整/teaser实际生产视图ImageRenderer。新增四张截图逐张目视验收，无缺翻译/裁切；通用设备Release构建与完整lint均exit0。轻量证据见evidence/pr199-round1.json；Mac draft/原16组合可复用，因为Mac产品/Shared模型/merger均无变动。已有3.1同版本Vercel更新说明覆盖该功能，未重复追加release block；开发者CHANGELOG补充具体翻译修复。外部CR终态以PR的当前head审查与check_pr_review_gate.sh为准。
+
+## PR #199 第二轮：Gemini / Vercel 窗口语义
+
+Codex在head6fb718610指出Gemini Web五小时/每周窗口未携带label，sync退回CLI的Pro/Flash。修复在TypeScript插件源给两个真实窗口显式label，经仓库生成器同步JS，复用mapper/sync已存在的显式label优先；不改全局metadata。独立review复核同类新增动态window，另补Vercel Personal budget的窗口翻译入口。CLI模型名不变，原3.1更新说明已覆盖Gemini/Vercel功能，不新建版本或重复release block。
+
+- `v079-pr199-r2-focused.log`：59 tests /3 suites，exit0；含双JS engine真实plugin→snapshot→MockSyncPusher→JSON读回，覆盖双窗口/仅五小时/仅每周、CLI Pro/Flash/Flash Lite，及架构守卫。
+- `v079-pr199-r2-ios.log`：1153SwiftTesting/72suites +67XCTest，全通过；包括Gemini四语时间标签和CLI原样、Vercel四语窗口名回归。`pr199-r2-ios.xcresult`。
+- `v079-pr199-r2-ios-release.log`：generic iOS Release BUILD SUCCEEDED；`v079-pr199-r2-lint.log`完整lint exit0，0 violations、四语/source436keys/parser guards通过。
+- `v079-pr199-r2-compat.log`：增强Gemini old Pro/Flash vs new5-hour/Weekly fixture后16/16，64reads/32consumer merges通过，已更新evidence的matrix与source manifest。仍为substituted，不代表实体收敛。
+- 独立静态复审当前TS/JS、桥接测试与窗口翻译diff无阻塞；生成JS与focused编译输入字节一致。
+- Mac完整回归此时运行中（1791selections/160groups），不将未完成运行记PASS。插件属于Mac产品输入，旧4f draft尚不能代表此修复；将重新打包、签名公证及验包后更新04/evidence。

@@ -9,6 +9,22 @@ import XCTest
 @Suite("v0.79 translated provider details")
 struct V079DetailsTests {
     @Test(arguments: ["en", "zh-Hans", "zh-Hant", "ja"])
+    func `Gemini app time windows translate while CLI model names stay verbatim`(language: String) {
+        let expected = [
+            "en": ["5-hour", "Weekly"], "zh-Hans": ["5 小时", "每周"],
+            "zh-Hant": ["5 小時", "每週"], "ja": ["5時間", "週次"],
+        ]
+        let locale = Locale(identifier: language)
+        for (index, label) in ["5-hour", "Weekly"].enumerated() {
+            #expect(ProviderWindowLabel.localized(label, fallback: "", providerID: "gemini", locale: locale)
+                == expected[language]?[index])
+        }
+        for model in ["Pro", "Flash", "Flash Lite"] {
+            #expect(ProviderWindowLabel.localized(model, fallback: "", providerID: "gemini", locale: locale) == model)
+        }
+    }
+
+    @Test(arguments: ["en", "zh-Hans", "zh-Hant", "ja"])
     func `Vercel personal budget labels localize without translating custom plugin text`(language: String) {
         let expected = [
             "en": ["Personal budget", "No personal budget configured"],
@@ -17,6 +33,8 @@ struct V079DetailsTests {
             "ja": ["個人予算", "個人予算が設定されていません"],
         ]
         let locale = Locale(identifier: language)
+        #expect(ProviderWindowLabel.localized("Personal budget", fallback: "", providerID: "vercel", locale: locale)
+            == expected[language]?[0])
         for (index, label) in ["Personal budget", "No personal budget configured"].enumerated() {
             #expect(ProviderDetailLocalization.localized(label, providerID: "vercel", locale: locale)
                 == expected[language]?[index])

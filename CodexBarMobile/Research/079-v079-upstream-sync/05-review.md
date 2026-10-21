@@ -65,3 +65,7 @@ Mac完整测试、draft、iOS实现/测试均已完成，最终结果与风险�
 ## 用户授权后的 GitHub PR review
 
 用户进一步授权推送分支、开PR并修复复测至通过（未授权merge/live/tag/TF）。PR #199：https://github.com/o1xhack/CodexBar-Mobile/pull/199 。首轮审查head8de535ee3，P1为Vercel个人预算标题与未配置状态缺少四语routing/catalog；已补两个稳定semantic label及四语翻译、参数化路由/自定义插件边界回归、完整与teaser生产视图四语渲染。1152+67全量、Release、lint均通过，03与pr199-round1.json记录证据。将以修复提交回复并显式resolve该线程，再请求当前head复审。最终外部审查结论和线程状态以PR及仓库gate脚本为准，本文件不提前宣称GitHub clean。
+
+## GitHub第二轮与独立根因复核
+
+head6fb718610的P2（discussion_r4342697183）为Gemini窗口标签没有从plugin进入sync。选择在authoritative TS插件输出显式label，通过现有mapper/sync，而非改CLI静态metadata。独立审查发现JS生成源也需同步，已修TS并由正式生成器验证JS字节；同轮进一步查到Vercel quota-window resolver未接入已有译文，已补两个switch和四语断言。独立复审无实现阻塞。59项Mac focused、1153+67 iOS、Release、lint和16组合已通过，Mac完整/实包终态仍以03/04后续记录为准。

@@ -17,7 +17,8 @@ All notable changes to the CodexBar iOS companion app will be documented in this
 - Cost panes scroll independently when expanded and form a continuous page when narrow, retaining subtree identity and chart scroll selection. Share options and preview remain in the same editing session during resizing. The full preview scales to its pane height, including the upper half of a tabletop fold.
 
 ### Fixed
-- Translate Vercel personal-budget section titles and the unconfigured-budget state in English, Simplified Chinese, Traditional Chinese and Japanese, including teaser cards.
+- Preserve Gemini app five-hour/weekly window labels from Mac through sync instead of showing CLI model names; CLI Pro/Flash/Flash Lite labels stay unchanged.
+- Translate Vercel personal-budget section titles and the unconfigured-budget state in English, Simplified Chinese, Traditional Chinese and Japanese, including teaser cards and quota-window labels.
 - Resolve coexisting legacy and independent Claude cost owners by publication time before merging or persisting. Preserve and migrate longer ledger history, hide explicitly withdrawn machine sources from Cost/Token Activity/widgets, and restore without duplicate spend; valid budgets remain visible.
 - Expanding Usage to preview an account no longer changes the preferred compact navigation column. Provider detail selection uses account identity instead of an array index, so reordered sync results preserve the selected account.
 

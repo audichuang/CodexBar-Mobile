@@ -21,8 +21,11 @@ struct Harness {
                 lastUpdated: now, costSummaryCleared: true, rateWindows: [],
                 accountRecordKey: "claude-local-cost:" + device)
         }
-        let window = SyncRateWindow(id: "primary", label: id == "futureagi" ? "AI credits" : "Session",
-            usedPercent: 30, windowMinutes: 300, resetsAt: now.addingTimeInterval(3600), resetDescription: nil)
+        let window = SyncRateWindow(id: "primary", label: id == "gemini" ? (new ? "5-hour" : "Pro")
+            : (id == "futureagi" ? "AI credits" : "Session"),
+            usedPercent: 30, windowMinutes: id == "gemini" && !new ? 1440 : 300, resetsAt: now.addingTimeInterval(3600), resetDescription: nil)
+        let windows = id == "gemini" ? [window, SyncRateWindow(id: "secondary", label: new ? "Weekly" : "Flash",
+            usedPercent: 4, windowMinutes: new ? 10080 : 1440, resetsAt: now.addingTimeInterval(3600), resetDescription: nil)] : [window]
         var rows: [SyncProviderDetailSection.Row] = []
         if id == "plugin:fixture" {
             #if NEW_WIRE
@@ -32,13 +35,13 @@ struct Harness {
             #endif
         }
         return ProviderUsageSnapshot(
-            providerID: providerID, providerName: id, primary: window, secondary: nil,
+            providerID: providerID, providerName: id, primary: window, secondary: windows.dropFirst().first,
             accountEmail: nil, loginMethod: nil, statusMessage: nil, isError: false,
             lastUpdated: now,
             costSummary: organization ? SyncCostSummary(
                 sessionCostUSD: nil, sessionTokens: nil, last30DaysCostUSD: id == "munito-other" ? 7 : 5,
                 last30DaysTokens: nil, daily: [], sourceUpdatedAt: now) : nil,
-            rateWindows: [window],
+            rateWindows: windows,
             accountIdentities: id == "claude" ? ["claude:email:fixture@example.test"] : nil,
             accountRecordKey: organization ? organizationKey : (["futureagi", "munito"].contains(id) ? "device-" + device : nil),
             accountOrganization: organization ? "Same editable organization name" : nil,
@@ -64,6 +67,10 @@ struct Harness {
                 #endif
             } else {
                 precondition(value.provider.rateWindows.first?.usedPercent == 30)
+                if value.provider.providerID == "gemini" {
+                    let appQuota = value.provider.rateWindows.first?.windowMinutes == 300
+                    precondition(value.provider.rateWindows.compactMap(\.label) == (appQuota ? ["5-hour", "Weekly"] : ["Pro", "Flash"]))
+                }
             }
             return value
         }

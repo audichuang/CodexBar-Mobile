@@ -6,6 +6,62 @@ import Testing
 
 @MainActor
 struct SyncV079BridgeTests {
+    @Test(arguments: BundledPluginTestSupport.engines)
+    func `Gemini app plugin labels survive sync while CLI model labels stay unchanged`(
+        engine: ProviderPluginEngineKind) async throws
+    {
+        let env = try CostUsageTestEnvironment()
+        defer { env.cleanup() }
+        let settings = testSettingsStore(
+            suiteName: "SyncV079BridgeTests-gemini-\(engine)",
+            userDefaults: InMemoryUserDefaults(),
+            config: testConfigWithAllProvidersDisabled(),
+            keychainAccessPolicy: .init(setDisabled: { _ in }, isExplicitlyDisabled: { false }))
+        enableTestProviders([.gemini], settings: settings)
+        settings.iCloudSyncEnabled = true
+        let store = UsageStore(
+            fetcher: UsageFetcher(environment: [:]),
+            browserDetection: BrowserDetection(cacheTTL: 0),
+            settings: settings,
+            startupBehavior: .testing,
+            environmentBase: ["HOME": env.root.path],
+            widgetSnapshotURL: env.root.appendingPathComponent("widget.json"),
+            widgetTimelineReloader: {})
+        let pusher = MockSyncPusher()
+        let sync = SyncCoordinator(store: store, settings: settings, syncManager: pusher)
+        let hourly = #"{"poolType":"GXU_FIVE_HOURLY","percentageUsed":0.24}"#
+        let weekly = #"{"poolType":"GXU_WEEKLY","percentageUsed":0.04}"#
+        for (pools, expected) in [
+            ([hourly, weekly], ["5-hour", "Weekly"]),
+            ([hourly], ["5-hour"]),
+            ([weekly], ["Weekly"]),
+        ] {
+            let body = "[{\"data\":{\"viewer\":{\"rpcs\":{\"getUsageInfo\":{\"pools\":["
+                + pools.joined(separator: ",") + "]}}}}}]"
+            let runtime = try BundledPluginTestSupport.runtime(
+                "gemini-web", engine: engine, transport: ProviderHTTPTransportHandler { request in
+                    #expect(request.url?.host == "gemini.google.com")
+                    return try CookiePluginFixtures.response(request, body: body)
+                })
+            let snapshot = try await runtime.fetchUsage(
+                cookieSource: .manual, cookieResolver: { _, _ in "SID=fixture" })
+            #expect([snapshot.primary?.label, snapshot.secondary?.label].compactMap(\.self) == expected)
+            store._setSnapshotForTesting(snapshot, provider: .gemini)
+            await sync.pushCurrentSnapshot()
+            let published = try #require(pusher.lastSnapshot?.providers.first { $0.providerID == "gemini" })
+            #expect(published.rateWindows.compactMap(\.label) == expected)
+            let data = try CloudSyncConstants.makeJSONEncoder().encode(published)
+            let decoded = try CloudSyncConstants.makeJSONDecoder().decode(ProviderUsageSnapshot.self, from: data)
+            #expect(decoded.rateWindows.compactMap(\.label) == expected)
+        }
+        let cliWindow = RateWindow(usedPercent: 10, windowMinutes: 1440, resetsAt: nil, resetDescription: nil)
+        store._setSnapshotForTesting(UsageSnapshot(
+            primary: cliWindow, secondary: cliWindow, tertiary: cliWindow, updatedAt: Date()), provider: .gemini)
+        await sync.pushCurrentSnapshot()
+        let cli = try #require(pusher.lastSnapshot?.providers.first { $0.providerID == "gemini" })
+        #expect(cli.rateWindows.compactMap(\.label) == ["Pro", "Flash", "Flash Lite"])
+    }
+
     @Test(arguments: [UsageProvider.futureagi, .munito])
     func `new providers retain configured keys and isolate unverified accounts by device`(provider: UsageProvider) {
         let first = SyncCoordinator.syncAccountRecordKey(provider: provider, requested: nil, deviceID: "MAC-A")
