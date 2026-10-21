@@ -75,7 +75,7 @@ struct ProviderDetailView: View {
     /// Usage list, where there is no card to pin.
     var cardMenu: ProviderDetailCardMenu?
 
-    @State private var selectedAccountIndex: Int = 0
+    @State private var selectedAccountKey: String?
 
     @AppStorage(MobileSettingsKeys.usageCostChartStyle) private var chartStyleRawValue = CostChartStyle.bars.rawValue
     @State private var selectedDate: String?
@@ -114,10 +114,8 @@ struct ProviderDetailView: View {
     /// taps a different tab. Keeps the body code identical to the
     /// pre-refactor single-account version.
     private var provider: ProviderUsageSnapshot {
-        guard self.group.accounts.indices.contains(self.selectedAccountIndex) else {
-            return self.group.accounts[0]
-        }
-        return self.group.accounts[self.selectedAccountIndex]
+        self.group.accounts.first { $0.cardIdentityKey == self.selectedAccountKey }
+            ?? self.group.accounts[0]
     }
 
     private var chartStyle: CostChartStyle {
@@ -424,6 +422,12 @@ struct ProviderDetailView: View {
                 }
             }
         }
+        .onChange(of: self.group.accounts.map(\.cardIdentityKey), initial: true) { _, keys in
+            if self.selectedAccountKey == nil || !keys.contains(self.selectedAccountKey ?? "") {
+                self.selectedAccountKey = keys.first
+                self.selectedDate = nil
+            }
+        }
     }
 
     // MARK: - Mock Detail Banner
@@ -437,16 +441,16 @@ struct ProviderDetailView: View {
     private var accountTabBar: some View {
         Picker(
             selection: Binding(
-                get: { self.selectedAccountIndex },
-                set: { newIndex in
-                    self.selectedAccountIndex = newIndex
+                get: { self.provider.cardIdentityKey },
+                set: { key in
+                    self.selectedAccountKey = key
                     self.selectedDate = nil
                 }),
             label: Text(""))
         {
             ForEach(self.group.accounts.indices, id: \.self) { index in
                 Text(self.group.tabLabel(forIndex: index))
-                    .tag(index)
+                    .tag(self.group.accounts[index].cardIdentityKey)
                     .accessibilityIdentifier(
                         self.group.tabAccessibilityIdentifier(forIndex: index))
             }
