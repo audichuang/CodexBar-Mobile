@@ -10,7 +10,7 @@ All notable changes to the CodexBar iOS companion app will be documented in this
 
 ### Changed
 - Native tab and navigation bars adapt to iPhone Duo; wide portrait windows can use account/detail and settings/detail navigation. Removed the illustrative custom trailing tab rail.
-- Cost panes scroll independently when expanded and form a continuous page when narrow, retaining subtree identity and chart scroll selection. Share options and preview remain in the same editing session during resizing.
+- Cost panes scroll independently when expanded and form a continuous page when narrow, retaining subtree identity and chart scroll selection. Share options and preview remain in the same editing session during resizing. The full preview scales to its pane height, including the upper half of a tabletop fold.
 
 ### Fixed
 - Expanding Usage to preview an account no longer changes the preferred compact navigation column. Provider detail selection uses account identity instead of an array index, so reordered sync results preserve the selected account.

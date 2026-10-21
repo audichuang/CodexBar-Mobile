@@ -1277,7 +1277,7 @@ private struct CostDashboardView: View {
     }
 
     var body: some View {
-        AdaptiveReportPanes {
+        AdaptiveReportPanes { _ in
             VStack(alignment: .leading, spacing: 18) {
                 MockProviderBanner(snapshot: self.usageData.snapshot)
                 Text(self.insights.cwlWindowDays == nil

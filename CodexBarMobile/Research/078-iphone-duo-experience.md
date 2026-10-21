@@ -1,6 +1,6 @@
 # 078 — iPhone Duo：用量决策、成本分析与分享编辑
 
-- 状态：`in-progress` — 本地实现和自动化验收完成；原生展开/半折叠姿态验收受 Xcode 系统组件初始化阻塞。用户已明确授权实施，无需再次确认。
+- 状态：`done` — 本地适配、代表性原生折叠交互与修正回归完成；系统组件认证阻塞已解除。未覆盖的硬件/辅助功能及输入边界见验收记录。
 - 日期：2026-10-20
 - 分支：`feature/iphone-duo-experience`
 - 基线：`5f1d7ec9c`，iOS 2.10.0 (243)，最低 iOS 17.0，Swift 6。
@@ -151,7 +151,7 @@ Usage 用导航型双栏；Cost 用互补分析区域；分享编辑用预览与
 
 用户已确认并要求直接全部实施本方案：Usage 导航双栏、Cost 总览与趋势、分享预览与编辑分区，以及上述拖动与折叠连续性契约。用户后续指示已满足设计确认，继续实现及测试。
 
-本地代码、自动化测试和可查看的运行效果已完成；原生折叠姿态验收保留未闭环状态。上传、推送和公开发布不在本次交付范围。
+本地代码、自动化测试和可查看的运行效果已完成；后续原生折叠验收及修正见第 10 节。上传、推送和公开发布不在本次交付范围。
 
 
 ## 9. 实现与运行验证记录
@@ -173,3 +173,29 @@ Usage 用导航型双栏；Cost 用互补分析区域；分享编辑用预览与
 - 旧系统兼容的 2 项 UI 测试来自此前实现；最终滚动轴修正之后未重跑 iOS 26.5，不把此前通过归作最终二进制的完整兼容验收。
 - 最终截图：`/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Duo-078/review/README.md`；Usage 窗口名已检查为 Session / Weekly，另保留两栏独立滚动后的图。
 - 本地 Git 提交交付，未推送、上传或发布。仓库规则在 pushed commits 后更新 Todoist，因此本次不将看板移至已推送或已发布状态。
+
+## 10. 原生折叠验收及组件初始化修复
+
+用户完成 macOS 系统认证后，Xcode 27.1 / 27A9275 的 `-checkFirstLaunchStatus` 返回 0。此前“Waiting for other install tasks on the system”实际等待 `authd` 管理员认证；安装器只需更新其自带、Apple 签名的 `CoreTypes.pkg` 中 MobileDevices-0001.bundle。没有删除安装锁、重置模拟器或换用 27.2。新版 Device Hub 出现 Closed / Partially Open / Open 控件，以下全部由这些原生控件触发。
+
+| 场景 | 实际交互结果 |
+| --- | --- |
+| 外屏 Claude → 展开 → 选择 Codex → 部分折叠 → 收起 | 展开保留 Claude；选择后右区变为 Codex；收起仍为 Codex，78% / 55% 两个窗口保持一致 |
+| Cost 外屏 → 展开 | 总览与日费用趋势分别呈现，系统右侧原生导航和分享入口可用 |
+| 分享 → Heatmap → 半折叠 → 旋转为桌面姿态 | 模板保留，上方预览、下方模板/范围/账号/分享操作；发现初版预览高度过大，见下方修正 |
+| 半折叠改 Past 90 Days → 收起 → 展开 → 旋转 | 热图及 90 天范围保留；重新展开继续打开 Provider，选择 Codex 后预览显示 Past 90 Days · Codex |
+| 取消分享 | 返回 Cost，没有开启系统分享页或导出动作 |
+
+**实测修正**：分享预览最初只限制宽度，在上下分区中会超出半屏高度。`AdaptiveReportPanes` 现在把实际分区尺寸传给 primary 内容；分享卡片按其 3:4 比例、可用高度及边距等比缩放。子树身份和会话状态不变。修正后原生桌面姿态可完整看见卡片四边、内容及二维码；再次折叠/展开后可继续修改范围与账号。旧失败截图 `share-tabletop.png` 与修正截图 `share-tabletop-fixed.png` 均保留。
+
+原生证据目录：`/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Duo-078/native-fold/README.md`。`native-preview-build.log` 显示 TEST BUILD SUCCEEDED；最终版本继续是尚未发布的 2.10.0 (244)。仅增加预览适配修正，没有改变导出数据或模型。
+
+此前第 7/9 节“原生姿态未验证/受阻”记录描述当时状态，由本节已完成的具体流程替代。实体硬件、VoiceOver/RTL、折叠中拖动排序、精确像素阅读位置等未验证，不能将这组代表性 Simulator 交互扩大为全部设备/场景通过。
+
+### 修正版最终回归与边界
+
+- `preview-fit-ipad.xcresult`：3 项 UI 测试全通过（账号/草稿旋转连续性、Cost/分享入口可达、两栏独立滚动）。
+- `native-open-regression.xcresult`：Duo runtime 的 2 项 UI 测试通过，宽度不足的独立滚动测试按条件跳过 1 项；零失败，正常 TEST EXECUTE SUCCEEDED。文件名不表示测试内部执行过原生折叠；原生姿态转换由本节 Device Hub 操作单独提供证据。
+- 分享修正后的构建已在本任务 Duo 安装并复测上下分区、热图及 90 天草稿、收起/展开、继续选择 Codex、取消返回 Cost。
+- 追加搜索输入检查时，电脑工具虽然可读 Device Hub 截图和原生按钮，但设备内容 AX 树缺失，坐标点击返回 noWindowsAvailable。未完成新输入，不把该项记作通过；键盘捕获设置已恢复为 off。此前自动化搜索/输入/旋转测试仍有效，但不等同于真实折叠中的键盘/光标连续性。
+- 不因补充截图而重复运行全部模型测试；模型逻辑未改，沿用此前单元测试证据。本轮为视图尺寸输入修正，使用构建、相同视图消费者的 UI 回归和原生半折叠前后截图验证。

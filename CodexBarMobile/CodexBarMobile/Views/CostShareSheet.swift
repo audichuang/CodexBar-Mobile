@@ -52,9 +52,9 @@ struct CostShareSheet: View {
 
     var body: some View {
         NavigationStack {
-            AdaptiveReportPanes(allowsVerticalSplit: true) {
+            AdaptiveReportPanes(allowsVerticalSplit: true) { paneSize in
                 self.preview
-                    .frame(maxWidth: 560)
+                    .frame(maxWidth: paneSize.map { min(560, max(1, $0.height - 40) * 3 / 4) } ?? 560)
                     .frame(maxWidth: .infinity)
                     .padding(20)
             } secondary: {

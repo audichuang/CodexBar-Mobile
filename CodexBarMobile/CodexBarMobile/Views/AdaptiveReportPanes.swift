@@ -6,7 +6,8 @@ import SwiftUI
 /// would display only its primary view on the outer display.
 struct AdaptiveReportPanes<Primary: View, Secondary: View>: View {
     var allowsVerticalSplit = false
-    @ViewBuilder let primary: () -> Primary
+    /// A split viewport lets visual previews fit without changing subtree identity.
+    @ViewBuilder let primary: (CGSize?) -> Primary
     @ViewBuilder let secondary: () -> Secondary
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @State private var primaryHeight: CGFloat = 1
@@ -22,7 +23,7 @@ struct AdaptiveReportPanes<Primary: View, Secondary: View>: View {
             ScrollView(.vertical) {
                 ReportPaneLayout(plan: plan) {
                     ScrollView(.vertical) {
-                        self.primary()
+                        self.primary(plan.isSplit ? plan.first.size : nil)
                             .frame(maxWidth: .infinity, alignment: .topLeading)
                             .environment(\.isScrollEnabled, true)
                             .onGeometryChange(for: CGFloat.self) { $0.size.height } action: {
