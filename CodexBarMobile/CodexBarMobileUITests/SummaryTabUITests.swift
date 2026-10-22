@@ -25,92 +25,69 @@ final class SummaryTabUITests: XCTestCase {
     }
 
     @MainActor private func capture(_ name: String) {
-        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
-        attachment.name = name
-        attachment.lifetime = .keepAlways
-        self.add(attachment)
+        // Duo keeps the inactive outer display as main; preserve every screen so the
+        // active inner display is not replaced by a black outer-screen attachment.
+        for (index, screen) in XCUIScreen.screens.enumerated() {
+            let attachment = XCTAttachment(screenshot: screen.screenshot())
+            attachment.name = "\(name) screen \(index)"
+            attachment.lifetime = .keepAlways
+            self.add(attachment)
+        }
     }
 
-    @MainActor func testSummaryDefaultGridUsesFullWidthAcrossDuoOrientations() async {
-        XCUIDevice.shared.orientation = .portrait
-        defer { XCUIDevice.shared.orientation = .portrait }
+    /// Select the real inner-display pose in Device Hub before running either case.
+    /// XCUIDevice.orientation alone does not reliably rotate Duo's inner display.
+    @MainActor func testSummaryExpandedPortraitViewport() {
+        self.assertSummaryExpandedViewport(landscape: false)
+    }
+
+    @MainActor func testSummaryExpandedLandscapeViewport() {
+        self.assertSummaryExpandedViewport(landscape: true)
+    }
+
+    @MainActor private func assertSummaryExpandedViewport(landscape: Bool) {
         let app = self.launch()
-        let orientations: [(UIDeviceOrientation, String)] = [(.portrait, "portrait"), (.landscapeLeft, "landscape")]
-        var previousFrame: CGRect?
-        for (orientation, name) in orientations {
-            XCUIDevice.shared.orientation = orientation
-            let didRotate = await self.waitForSummaryGeometry(
-                app, landscape: orientation.isLandscape, previousFrame: previousFrame)
-            guard didRotate else {
-                XCTFail(
-                    "Requested \(name) but the app never reached that aspect ratio with changed geometry. "
-                        +
-                        "Observed app frame: \(app.frame). Rotation is unverified; no \(name) screenshot was captured.")
-                return
-            }
-            let grid = app.scrollViews["summary-grid"]
-            XCTAssertTrue(grid.waitForExistence(timeout: 8))
-            XCTAssertEqual(app.buttons["summary-edit"].label, "Edit", "Summary must open outside editing mode")
-            XCTAssertEqual(self.summaryDetails(app).count, 0, "Opening or rotating Summary must not select an account")
+        let grid = app.scrollViews["summary-grid"]
+        XCTAssertTrue(grid.waitForExistence(timeout: 8))
+        XCTAssertEqual(app.buttons["summary-edit"].label, "Edit", "Summary must open outside editing mode")
+        XCTAssertEqual(self.summaryDetails(app).count, 0, "Opening or rotating Summary must not select an account")
 
-            // Measure the app's current content container rather than the device model or
-            // orientation name: Duo can expose different window widths at the same orientation.
-            let width = grid.frame.width
-            XCTAssertGreaterThan(width, 0)
-            XCTAssertGreaterThanOrEqual(
-                width, app.frame.width * 0.82,
-                "Summary's grid must occupy the available window, not a split-view sidebar")
-            let columns = app.descendants(matching: .any)
-                .matching(NSPredicate(format: "identifier BEGINSWITH %@", "summary-grid-columns-")).firstMatch
-            XCTAssertTrue(columns.waitForExistence(timeout: 5))
-            // The native Duo rail contributes a safe area inside the full-window scroll view.
-            // LazyVGrid's frame is the actual card area; its parent adds 16pt padding per side.
-            let contentWidth = columns.frame.width
-            let expectedColumns = max(2, min(4, Int((contentWidth + 32) / 175)))
-            XCTAssertEqual(
-                columns.identifier, "summary-grid-columns-\(expectedColumns)",
-                "Columns must follow the actual safe-area content width")
+        // The root app frame may stay in fixed display coordinates on Duo; validate
+        // the actual card viewport rather than the requested device orientation.
+        XCTAssertEqual(
+            grid.frame.width > grid.frame.height, landscape,
+            "The actual viewport must match the pose selected in Device Hub")
+        let width = grid.frame.width
+        XCTAssertGreaterThan(width, 0)
+        XCTAssertGreaterThanOrEqual(
+            width, app.frame.width * 0.82,
+            "Summary's grid must occupy the available window, not a split-view sidebar")
+        let columns = app.descendants(matching: .any)
+            .matching(NSPredicate(format: "identifier BEGINSWITH %@", "summary-grid-columns-")).firstMatch
+        XCTAssertTrue(columns.waitForExistence(timeout: 5))
+        // The native Duo rail contributes a safe area inside the full-window scroll view.
+        // LazyVGrid's frame is the actual card area; its parent adds 16pt padding per side.
+        let contentWidth = columns.frame.width
+        let expectedColumns = max(2, min(4, Int((contentWidth + 32) / 175)))
+        XCTAssertEqual(
+            columns.identifier, "summary-grid-columns-\(expectedColumns)",
+            "Columns must follow the actual safe-area content width")
 
-            let visibleCards = self.cards(app).allElementsBoundByIndex.filter(\.isHittable)
-            XCTAssertGreaterThanOrEqual(visibleCards.count, expectedColumns)
-            if let firstY = visibleCards.map(\.frame.minY).min() {
-                let firstRow = visibleCards.filter { abs($0.frame.minY - firstY) < 4 }
-                XCTAssertEqual(firstRow.count, expectedColumns)
-                if let left = firstRow.map(\.frame.minX).min(),
-                   let right = firstRow.map(\.frame.maxX).max()
-                {
-                    XCTAssertEqual(
-                        right - left, contentWidth, accuracy: 4,
-                        "The first card row must span its full card container, excluding the native rail safe area")
-                }
+        let visibleCards = self.cards(app).allElementsBoundByIndex.filter(\.isHittable)
+        XCTAssertGreaterThanOrEqual(visibleCards.count, expectedColumns)
+        if let firstY = visibleCards.map(\.frame.minY).min() {
+            let firstRow = visibleCards.filter { abs($0.frame.minY - firstY) < 4 }
+            XCTAssertEqual(firstRow.count, expectedColumns)
+            if let left = firstRow.map(\.frame.minX).min(),
+               let right = firstRow.map(\.frame.maxX).max()
+            {
+                XCTAssertEqual(
+                    right - left, contentWidth, accuracy: 4,
+                    "The first card row must span its full card container, excluding the native rail safe area")
             }
-            // Capture the whole screen, including the system-owned Duo tab/navigation chrome.
-            self.capture("Summary Duo \(name) full-width grid with native chrome")
-            previousFrame = app.frame
         }
-    }
-
-    @MainActor private func waitForSummaryGeometry(
-        _ app: XCUIApplication,
-        landscape: Bool,
-        previousFrame: CGRect?) async -> Bool
-    {
-        let deadline = Date().addingTimeInterval(15)
-        while Date() < deadline {
-            let frame = app.frame
-            if frame.width > 0, frame.height > 0 {
-                let hasExpectedAspect = landscape ? frame.width > frame.height : frame.height > frame.width
-                let changedAspect = previousFrame.map { previous in
-                    abs(frame.width / frame.height - previous.width / previous.height) > 0.1
-                } ?? true
-                if hasExpectedAspect, changedAspect { return true }
-            }
-            // Await actual viewport geometry, not merely XCUIDevice's requested orientation.
-            // Async waiting keeps the main actor available for XCTest's accessibility updates.
-            do { try await Task.sleep(for: .milliseconds(100)) }
-            catch { return false }
-        }
-        return false
+        // Capture the whole screen, including the system-owned Duo tab/navigation chrome.
+        self.capture("Summary Duo \(landscape ? "landscape" : "portrait") full-width grid with native chrome")
     }
 
     @MainActor func testSummaryCardPushAndBackPreserveProviderFilter() {

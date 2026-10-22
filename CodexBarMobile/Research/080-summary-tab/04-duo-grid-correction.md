@@ -1,6 +1,6 @@
 # Duo 全宽网格与实际姿态验收修订
 
-- 状态：`in-progress`，实际展开内屏横竖屏尚未验收。
+- 状态：`done`，实际 Duo 模拟器展开内屏竖屏/横屏及完整 App 截图已验收。
 - 日期：2026-10-22；iOS 3.1.0 (248)，分支 `feature/summary-tab`。
 
 ## 用户最终要求
@@ -13,7 +13,7 @@ Summary 在 Duo 上初始只展示独立指标卡片，充分使用全部可用�
 
 Native TabView 仍由系统适配栏位，不能强制把任何 Duo 画面都做成侧边栏。技能参考指出完整内屏竖屏可保留水平栏；最终栏位须观察真实姿态，不以该描述冒充已观察结果。
 
-## 已完成与未完成的证据
+## 首轮验证记录（历史失败与当时边界）
 
 - build 248 正式 app 编译通过；最终严格方向测试源码也完成 `build-for-testing`，`Summary080-strict-geometry-build.xcresult` 成功。编译成功不代表横屏已运行通过。
 - `Summary080-grid-navigation.xcresult` 首轮暴露两个自动化假设错误：实际返回按钮位于原生 rail，AX ID 为 BackButton；ScrollView frame 包含 rail safe area，不能用它当卡片内容宽度。已改为实际返回控件和网格自身内容 frame。
@@ -34,9 +34,41 @@ Device Hub 27.1 的原生 hinge slider 显示范围 0–180，但 AX 设置、�
 
 另创建干净任务用 Duo 27.1：`3B24CA2E-557F-4484-864E-72CE583CE926`，bootstatus 成功；但 Device Hub 选择该设备仍超时。未重置任何已有用户设备。连续无进展后按 sim-use escalation 要求停止同类重试，请用户手动展开；其余源码、文档、测试修订继续推进。
 
-## 尚需完成
+## 续验检查清单
 
-1. 真实展开内屏并确认 active screen 与实际 App bounds。
-2. 竖屏、横屏各独立截图，断言实际方向变化，默认非编辑且无详情。
-3. 设计师验收两张实际图，补充当前证据；保留旧失败记录，不改写成通过。
-4. 收尾本地修订；不 push、PR、merge 或上传。
+- [x] 真实展开内屏并确认 active framebuffer 与 App 内容。
+- [x] 竖屏、横屏各独立截图，按实际子视口断言方向，默认非编辑且无详情。
+- [x] 设计师验收两张实际图；保留旧失败，不改写成通过。
+- [x] 本地修订与验证记录收尾；未 push、PR、merge 或上传。
+
+## 用户手动展开后的续验
+
+用户已手动展开干净 Duo，继续使用同一 build 248。Device Hub 的 Mac AX 查询仍超时，但 simctl 与 iOS XCTest 通道可用，不再反复重启控制器。
+
+首次默认截图黑屏，经逐 display 对照确认：primary 外屏已停用；inner framebuffer port `AF2068FF-C6AA-4266-BD10-984266406F63` 有实际展开桌面和 App，横屏原始像素为 2853×2007。这不是 App 黑屏或缺少 Tab。`XCUIScreen.main` 不能单独承担 Duo 完整截图，测试截图已按 SDK 公开的 `XCUIScreen.screens` 枚举所有屏幕保存。
+
+`Summary080-inner-poses.xcresult` 中 push/返回保留筛选通过；自动方向测试明确失败，根 app.frame 始终 669×951。保存的所谓 portrait 内屏图实际是横屏四列，不能沿用测试标签。设计师按实际画面审核该内屏横屏通过。没有声称 App 崩溃；Xcode 日志中的 runner 重启摘要与 App 生命周期另行区分。
+
+用户要求由代理继续操作，随后 Computer Use 重新连接 Device Hub 成功，确认正确设备和 hinge=180。先按 AX Rotate Left，再用实际按钮截图坐标点击；后者确认内屏真实像素从 2853×2007 变为 2007×2853。没有要求用户代操作旋转。
+
+改为两项按真实 Device Hub 姿态分别执行的 UI case：`testSummaryExpandedPortraitViewport` 与 `testSummaryExpandedLandscapeViewport`，用 summary-grid 子视口比例作硬断言，保留满宽、列数、首行跨度、非编辑和无详情检查。删除不可依赖的根 app.frame 自动方向等待，不放宽实际方向要求。截图仍保存全部屏幕，同时以 simctl 指定 inner port 保存原始完整画面。
+
+## 最终验收结果
+
+生产 App 仍为 build 248、源码 `114498c89` 的全宽网格实现；本次只修订 UI 测试与证据记录，不再改生产布局。Xcode 27.1 RC 构建，27.1 Duo runtime；27.2 beta 2 Device Hub 仅作宿主控制器。
+
+| 场景 | 实际结果 | 证据 |
+| --- | --- | --- |
+| 展开内屏竖屏 | 全宽三列，默认 Edit 按钮（非编辑态），无自动详情；底部原生 Tab，顶部原生操作栏；UI case 通过 | `Summary080-inner-portrait.xcresult` / `summary080-inner-portrait.log` |
+| 同一 Summary 从竖屏转横屏 | 由代理通过 Computer Use 点击原生 Rotate Left，卡片变四列，Tab/操作栏到右侧；页面与筛选保持，无自动详情；UI case 通过 | `Summary080-inner-landscape.xcresult` / `summary080-inner-landscape.log` |
+| 显式点卡 / 返回 | 展开内屏点击 Codex 卡片才 push，返回保留 Codex 筛选与非编辑态 | 首轮 `Summary080-inner-poses.xcresult` 的 navigation case 通过；该轮自动方向 case 失败保留 |
+| 独立设计 / review | 设计师逐张验收最终横竖图通过；reviewer 检查姿态独立 case、真实子视口断言与全部屏幕截图，无新增阻断 | 本任务协作记录 |
+
+### 给用户的完整 App 原图
+
+- [竖屏完整 App：2007×2853，三列与底部 Tab](evidence/native-duo-inner-portrait.png)
+- [横屏完整 App：2853×2007，四列与右侧 Tab](evidence/native-duo-inner-landscape.png)
+
+两张均由 simctl 对真实 active inner framebuffer 直接截图，未裁切、拼接或后期旋转，不是 HTML / hosting preview。保留系统栏、导航、Provider 筛选与所有当前固定卡片，显示演示数据标识。XCTest 内屏附件的方向 metadata 在部分查看器显示倒置，所以主交付采用上述直接 framebuffer 原图，不靠修改图像来模拟姿态。
+
+本次完成的范围是 Summary 在实际 Duo 模拟器展开横竖屏的适配、交互与原生截图；不声称物理折叠设备、完整姿态矩阵或发布验证。

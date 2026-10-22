@@ -1,6 +1,6 @@
 # Summary Tab 设计与官方图标研究
 
-- 状态：`in-progress`（官方资源研究完成；Duo 网格修订等待实际展开横竖屏验收）
+- 状态：`done`（官方资源与卡片设计完成；Duo 全宽网格横竖屏原生验收通过）
 - 查阅日期：2026-10-22（America/Los_Angeles）
 - 设计依据：本对话用户确认的单版 `codexbar-summary-compact.html`、[00-goal.md](00-goal.md)。
 - 当前环境：iOS 最低版本 17.0，Swift 6.0；不引入要求更高系统的新导航 API。
@@ -68,7 +68,7 @@ Summary 和 Usage 可以读同一份额度数据；不复制抓取、预测算�
 - 预测卡采用窗口先行短标题，长范围名称允许自然换行；日期和时间可读。默认演示账号不会在重置前用完时，忠实显示 Lasts until reset。
 - `SummaryInfoView` 提供官方资源归属及品牌指南入口；用户卡片配色不改变原始图标。
 
-早期静态卡片设计无阻断；当前 Duo 横竖屏验收仍未完成，见 [04-duo-grid-correction.md](04-duo-grid-correction.md)。精选原生截图位于 `evidence/`，测试、失败修复和合成数据的证据边界统一记录于 [03-validation.md](03-validation.md)。HTML 只保留为已确认设计依据，不充当原生验收。
+早期静态卡片设计无阻断；实际 Duo 模拟器展开横竖屏已完成验收，见 [04-duo-grid-correction.md](04-duo-grid-correction.md)。精选原生截图位于 `evidence/`，测试、失败修复和合成数据的证据边界统一记录于 [03-validation.md](03-validation.md)。HTML 只保留为已确认设计依据，不充当原生验收。
 
 ## 官方图标：已核实来源与本次使用结论
 
@@ -116,8 +116,8 @@ OpenAI 官方 ZIP SHA-256：`b2c4cd1e86bbe76bdc4946a72d014efa455240c177f4878fd68
 
 ## 设计结论
 
-可按已确认单版方案实施。官方图标有可行路径：OpenAI 与 OpenRouter 已取得可复核原始资源；Grok 条件明确但下载受阻，暂用 fallback。Claude、Meta/Muse 与未明确许可的资源采用中性文字，确保图标研究不拖住核心卡片/筛选/定制功能。卡片原生截图与基础交互已验证；Duo 姿态证明仍须补齐，不能以通用宽屏渲染代替。
+可按已确认单版方案实施。官方图标有可行路径：OpenAI 与 OpenRouter 已取得可复核原始资源；Grok 条件明确但下载受阻，暂用 fallback。Claude、Meta/Muse 与未明确许可的资源采用中性文字，确保图标研究不拖住核心卡片/筛选/定制功能。卡片原生截图与基础交互已验证；Duo 姿态证明已以真实内屏横竖图补齐，不能以通用宽屏渲染代替。
 
 ## 最终原生验收
 
-设计师已逐张检查四种卡片混排、手机/窄侧栏、浅深色与 AX 单列。早期双栏布局已废弃。预测短标签先给出窗口；较长日期自然增高；原生 editor 常驻标签区分账号别名与单卡名称。截图与测试边界见 [03-validation.md](03-validation.md)，基础卡片问题已修复；当前展开横竖屏与原生栏位仍待实际截图验收。
+设计师已逐张检查四种卡片混排、手机/窄侧栏、浅深色与 AX 单列。早期双栏布局已废弃。预测短标签先给出窗口；较长日期自然增高；原生 editor 常驻标签区分账号别名与单卡名称。截图与测试边界见 [03-validation.md](03-validation.md)，基础卡片问题已修复；当前展开横竖屏与原生栏位已按实际内屏截图通过验收，见 [04 修订记录](04-duo-grid-correction.md)。

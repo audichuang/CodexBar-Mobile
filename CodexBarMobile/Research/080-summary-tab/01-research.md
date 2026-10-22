@@ -1,6 +1,6 @@
 # Summary Tab 需求与实现研究
 
-- 状态：基础研究 `done`；用户于 2026-10-22 确认设计并授权实施。Duo 后续交互修订与工具问题的重新研究见 [04-duo-grid-correction.md](04-duo-grid-correction.md)，整体目标仍为 `in-progress`。
+- 状态：基础研究 `done`；用户于 2026-10-22 确认设计并授权实施。Duo 后续交互修订与工具问题的重新研究见 [04-duo-grid-correction.md](04-duo-grid-correction.md)，整体目标已完成模拟器横竖屏验收。
 - 目标与执行记录：[00-goal.md](00-goal.md)
 - 来源：[Issue #203](https://github.com/o1xhack/CodexBar-Mobile/issues/203)
 
