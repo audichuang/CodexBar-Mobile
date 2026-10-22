@@ -7,7 +7,9 @@ dispatch='\ncase "${1:-phase1}" in'
 assert release_source.count(dispatch)==1, 'release dispatcher changed; refuse to source executable entrypoint'
 source=release_source.split(dispatch)[0]
 results=[]
-for case in ['phase1-success-after-return','phase1-missing-stage','phase1-probe-failure','phase2-missing-stage','phase2-appcast-failure','phase2-post-verify-publish-failure','metadata-parse-failure']:
+expected_codes={'phase1-success-after-return':0,'phase1-missing-stage':1,'phase1-probe-failure':17,
+ 'phase2-missing-stage':1,'phase2-appcast-failure':18,'phase2-post-verify-publish-failure':19,'metadata-parse-failure':1}
+for case,expected_exit in expected_codes.items():
  with tempfile.TemporaryDirectory(prefix="release-cleanup-space'quote-",dir=root) as folder:
   b=Path(folder);s=b/'Scripts';s.mkdir();tmp=b/'tmp';tmp.mkdir();stage=b/'stage';bindir=b/'bin';bindir.mkdir()
   if not case.endswith('missing-stage'):stage.mkdir()
@@ -51,10 +53,11 @@ gh() { if [[ "$*" == *isDraft* ]]; then printf 'true\\n'; else printf 'https://e
    driver+='phase2\n'
   else:driver+='verify_local_appcast_artifact fixture.zip "$SPARKLE_PRIVATE_KEY_FILE"\n'
   (s/'driver.sh').write_text(driver)
-  env=dict(os.environ,TMPDIR=str(tmp),CODEXBAR_RELEASE_STAGE_BASE=str(stage),SPARKLE_PRIVATE_KEY_FILE=str(b/'key'),PATH=str(bindir)+':'+os.environ['PATH'])
+  env=dict(os.environ,RUN_SWIFT_TEST='0',TMPDIR=str(tmp),CODEXBAR_RELEASE_STAGE_BASE=str(stage),SPARKLE_PRIVATE_KEY_FILE=str(b/'key'),PATH=str(bindir)+':'+os.environ['PATH'])
   run=subprocess.run(['bash',str(s/'driver.sh')],env=env,capture_output=True,text=True)
-  assert (run.returncode==0)==(case=='phase1-success-after-return'),(case,run.returncode,run.stdout,run.stderr)
-  if case=='phase2-post-verify-publish-failure':assert run.returncode==19,(case,run.returncode,run.stdout,run.stderr)
+  assert run.returncode==expected_exit,(case,run.returncode,run.stdout,run.stderr)
+  if case.endswith('missing-stage'):assert 'mktemp' in run.stderr,(case,run.stderr)
+  if case=='metadata-parse-failure':assert 'No appcast entry found' in run.stderr,(case,run.stderr)
   assert not list(tmp.iterdir()),(case,'key outside workspace leaked')
   assert not stage.exists() or not list(stage.iterdir()),(case,'workspace/probe/metadata leaked',list(stage.iterdir()))
   assert (b/'key').read_text()=='synthetic-fixture-key\n'
