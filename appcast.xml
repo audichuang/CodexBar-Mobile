@@ -3,6 +3,24 @@
     <channel>
         <title>CodexBar</title>
         <item>
+            <title>0.79.0.1</title>
+            <pubDate>Wed, 21 Oct 2026 22:42:02 -0700</pubDate>
+            <link>https://raw.githubusercontent.com/o1xhack/CodexBar-Mobile/mobile-dev/appcast.xml</link>
+            <sparkle:version>172.1.3.1.0</sparkle:version>
+            <sparkle:shortVersionString>0.79.0.1</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[<h2>CodexBar 0.79.0.1-Mobile 3.1.0</h2>
+<h3>Highlights — Mobile 3.1.0</h3>
+<ul>
+<li>Sync upstream v0.77.0–v0.79.0 in one release: Future AGI and Munito, Gemini app quotas, Claude desktop/tcr accounts, safer local-only Agent Sessions, and lower CPU, memory and cost-cache disk I/O.</li>
+<li>Keep existing Codex history and checkpoints when upgrading the fork cost cache; keep account-specific Claude local history on the Mac so it cannot contaminate the iPhone’s combined history.</li>
+<li>Sync cached claude-swap/tcr account quotas and plugin warning details to iPhone through the existing Production payload. Keep Gemini app five-hour and weekly window names distinct from CLI model quotas, with device-scoped Web identities to preserve different accounts across Macs. The companion iOS 3.1.0 update includes the existing iPhone Duo layouts and calendar features.</li>
+</ul>
+<p><a href="https://github.com/o1xhack/CodexBar-Mobile/blob/mobile-dev/CHANGELOG.md">View full changelog</a></p>
+]]></description>
+            <enclosure url="https://github.com/o1xhack/CodexBar-Mobile/releases/download/v0.79.0.1-mobile.3.1.0/CodexBar-0.79.0.1-mobile.3.1.0.zip" length="90774554" type="application/octet-stream" sparkle:edSignature="1hvtItg2YrZFJCBXmnTIrWcwSH1/M8rvXB+FDUrTaBlePlC2QbZVWtAacO97CPEGRF2Ett2JUifiMGKpskhzCQ=="/>
+        </item>
+        <item>
             <title>0.76.0.2</title>
             <pubDate>Mon, 19 Oct 2026 08:45:18 -0700</pubDate>
             <link>https://raw.githubusercontent.com/o1xhack/CodexBar-Mobile/mobile-dev/appcast.xml</link>
@@ -60,37 +78,6 @@
 <p><a href="https://github.com/o1xhack/CodexBar-Mobile/blob/mobile-dev/CHANGELOG.md">View full changelog</a></p>
 ]]></description>
             <enclosure url="https://github.com/o1xhack/CodexBar-Mobile/releases/download/v0.76.0.1-mobile.2.9.0/CodexBar-0.76.0.1-mobile.2.9.0.zip" length="88965680" type="application/octet-stream" sparkle:edSignature="cT+X1PPaNQHKodVqNZaTf3nWnxINP7XrQG/US1I0UcSmXyPGR7gllJjZOaBkNvKnzx50U+p/R9oafwJbQHvAAA=="/>
-        </item>
-        <item>
-            <title>0.74.1.1</title>
-            <pubDate>Wed, 14 Oct 2026 04:59:10 -0700</pubDate>
-            <link>https://raw.githubusercontent.com/o1xhack/CodexBar-Mobile/mobile-dev/appcast.xml</link>
-            <sparkle:version>167.1.2.8.0</sparkle:version>
-            <sparkle:shortVersionString>0.74.1.1</sparkle:shortVersionString>
-            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
-            <description><![CDATA[<h2>CodexBar 0.74.1.1-Mobile 2.8.0</h2>
-<h3>Highlights</h3>
-<ul>
-<li>New providers: X API, Tavily, Linkup, TinyApi, Exa, Cosmic AI, Aerostack, Sail Research, and Sofya; Qwen Cloud shows Team Token Plan credits, Ollama API keys read the monthly allowance and credit balance, and JetBrains AI shows top-up credits.</li>
-<li>Codex: saved accounts show their own usage and refresh one at a time in Settings, and the Cost menu shows saved conversation titles.</li>
-<li>Claude: shows when the plan renews or expires, gives clear Refresh guidance after Claude Code signs in again, and keeps Plan Usage history across token rotations.</li>
-<li>Menu bar: optionally follow the frontmost Codex, Claude, Cursor, or Antigravity app, color icons by provider, mark estimated percentages with "~", and no blank Settings window at launch.</li>
-<li>The iPhone companion (Mobile 2.8) receives the new providers, the X API balance, Qwen Cloud team plans, Claude renewal dates, and estimated-usage markers.</li>
-</ul>
-<h3>Changed</h3>
-<ul>
-<li>Sync upstream v0.74.0 and v0.74.1 in one fork release, retaining the complete upstream provider, Codex account, Usage & Spend, menu bar, widget, localization, packaging, and Linux changes listed below.</li>
-<li>Codex cost caches written by 0.73.0.1 are kept and upgraded in place like upstream 0.73.0 caches instead of being rebuilt, so saved history and pricing stay visible while updated session logs are re-read in the background.</li>
-<li>Preserve fork CloudKit Production publishing, mobile payloads, download entrypoints, About links, and the fast PR / post-merge CI policy.</li>
-</ul>
-<h3>Fixed</h3>
-<ul>
-<li>Mobile snapshots publish the X API credit balance (including negative balances), keep Qwen Cloud's Team and Monthly window labels, and send date-only Claude renewal and expiry dates as a calendar day (a new optional field older iPhones ignore) so iPhones show the same day as the Mac in every time zone.</li>
-<li>A Settings refresh of one Codex account updates that account without counting as a complete Mac fleet sync publication, and a full refresh still counts as complete when more than six Codex accounts are saved.</li>
-</ul>
-<p><a href="https://github.com/o1xhack/CodexBar-Mobile/blob/mobile-dev/CHANGELOG.md">View full changelog</a></p>
-]]></description>
-            <enclosure url="https://github.com/o1xhack/CodexBar-Mobile/releases/download/v0.74.1.1-mobile.2.8.0/CodexBar-0.74.1.1-mobile.2.8.0.zip" length="86151101" type="application/octet-stream" sparkle:edSignature="gISwIx8W0lGFueMSJnOXw7sx5AImGbHProfTyoCWdXiSb8ZkKJqeg3bo4TcDt/K5ZZ2Rxn6tr8HPCEn5vQAuDQ=="/>
         </item>
         <item>
             <title>0.14.0</title>
