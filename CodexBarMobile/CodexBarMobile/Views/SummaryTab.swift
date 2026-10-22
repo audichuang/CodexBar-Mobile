@@ -6,12 +6,10 @@ struct SummaryTab: View {
     let usageData: SyncedUsageData
     @Binding var isDemoMode: Bool
     @ObservedObject var preferences: SummaryPreferencesStore
-    @Environment(\.mobileAdaptiveLayout) private var layout
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @AppStorage(MobileSettingsKeys.hidePersonalInfo) private var hidesPersonalInfo = false
     @State private var selectedProviderID: String?
-    @State private var selectedCardID: UUID?
-    @State private var compactColumn: NavigationSplitViewColumn = .sidebar
+    @State private var detailPath: [UUID] = []
     @State private var editing = false
     @State private var showingAdd = false
     @State private var showingOrder = false
@@ -62,7 +60,7 @@ struct SummaryTab: View {
         let cards = self.preferences.resolvedCards(accounts: self.accounts, now: now)
         let filtered = cards
             .filter { self.selectedProviderID == nil || $0.configuration.providerID == self.selectedProviderID }
-        return NavigationSplitView(preferredCompactColumn: self.$compactColumn) {
+        return NavigationStack(path: self.$detailPath) {
             VStack(spacing: 0) {
                 if self.isDemoMode || ProcessInfo.processInfo.arguments.contains("UI_TEST_PREVIEW_DATA") {
                     Label(String(localized: "Showing demo data"), systemImage: "sparkles")
@@ -96,7 +94,6 @@ struct SummaryTab: View {
                 }
             }
             .navigationTitle(String(localized: "Summary"))
-            .navigationSplitViewColumnWidth(min: 310, ideal: 440, max: 560)
             .background(Color(.systemGroupedBackground))
             .toolbar {
                 if self.isDemoMode {
@@ -131,12 +128,8 @@ struct SummaryTab: View {
                 }
             }
             .disabled(self.preferences.isReadOnly)
-        } detail: {
-            NavigationStack {
-                if let card = filtered.first(where: { $0.id == self.selectedCardID })
-                    ?? (self.layout.usesListDetail ? filtered.first(where: { $0.provider != nil }) : nil),
-                    let provider = card.provider
-                {
+            .navigationDestination(for: UUID.self) { id in
+                if let card = cards.first(where: { $0.id == id }), let provider = card.provider {
                     ProviderDetailView(
                         group: ProviderAccountGroup(
                             providerID: provider.providerID, providerName: provider.providerName, accounts: [provider]),
@@ -144,15 +137,9 @@ struct SummaryTab: View {
                         isDemoMode: self.isDemoMode)
                         .id(provider.cardIdentityKey)
                         .accessibilityIdentifier("summary-selected-detail-" + provider.providerID)
-                } else {
-                    ContentUnavailableView(
-                        String(localized: "Select a metric"), systemImage: "square.grid.2x2",
-                        description: Text(String(localized: "Open a card to see its account's full usage details.")))
                 }
             }
         }
-        .navigationSplitViewStyle(.balanced)
-        .environment(\.horizontalSizeClass, self.layout.usesListDetail ? .regular : .compact)
     }
 
     private func grid(cards: [SummaryResolvedCard], total: Int, now: Date) -> some View {
@@ -168,8 +155,7 @@ struct SummaryTab: View {
                                 if self.editing {
                                     self.editingCard = card.configuration
                                 } else if card.provider != nil {
-                                    self.selectedCardID = card.id
-                                    self.compactColumn = .detail
+                                    self.detailPath = [card.id]
                                 } else {
                                     self.editingCard = card.configuration
                                 }
@@ -189,6 +175,7 @@ struct SummaryTab: View {
                             }
                         }
                     }
+                    .accessibilityIdentifier("summary-grid-columns-\(count)")
                 }
                 .padding(.horizontal, 16).padding(.vertical, 10)
             }
@@ -240,13 +227,12 @@ struct SummaryTab: View {
         if let id = self.selectedProviderID, !cards.contains(where: { $0.providerID == id }) {
             self.selectedProviderID = nil
         }
-        if let id = self.selectedCardID,
+        if let id = self.detailPath.last,
            !resolved.contains(where: { $0.id == id && $0.provider != nil
                    && (self.selectedProviderID == nil || $0.configuration.providerID == self.selectedProviderID)
            })
         {
-            self.selectedCardID = nil
-            self.compactColumn = .sidebar
+            self.detailPath = []
         }
     }
 }

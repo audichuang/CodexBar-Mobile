@@ -1,6 +1,7 @@
 # Summary Tab 验证记录
 
-- 状态：`done`（本地交付）；日期：2026-10-22。
+- 状态：历史 build 247 验证记录；日期：2026-10-22。
+- 后续用户否决自动双栏与不完整 App 截图，目标已重新打开；当前 build 248 以 [04-duo-grid-correction.md](04-duo-grid-correction.md) 为准。
 - iOS 3.1.0 (247)，分支 `feature/summary-tab`。未改变 MARKETING_VERSION。
 - 本次范围为本地实现、构建、测试、设计与独立 review；未执行 push、PR、merge、TestFlight、App Review 或公开发布。
 
@@ -31,9 +32,9 @@
 
 ## 原生截图
 
-- [最终手机界面：百分比、倒计时、自定义紫色与默认白色](evidence/native-summary.png)
+- [历史编辑状态：百分比、倒计时、自定义紫色与默认白色；不作为默认页面证明](evidence/native-summary.png)
 - [最终编辑器：常驻字段标签、预览与颜色](evidence/native-editor.png)
-- [真实双栏：指标网格与选中账号详情](evidence/native-wide.png)
+- [已废弃的通用宽屏渲染：双栏；不是实际 Duo 姿态证明](evidence/native-wide.png)
 - [四种卡片混排：合成数据的日期、余额、百分比、倒计时](evidence/native-card-variants.png)
 - [窄侧栏深色](evidence/native-card-variants-dark.png)
 - [AX 大字单列](evidence/native-card-variants-accessibility.png)
@@ -46,7 +47,7 @@
 2. 稳定身份 merge/unmerge 的累计污染按目标规则先重新研究：`01-research.md` 记录根因与真值矩阵，再冻结首次稳定身份集合、学习弱 record token、将显式 linkage 作为可撤销投影。正式测试覆盖拆分后缺失与恢复，不凭名称改绑。
 3. 设计 review 修复色板溢出、大字主值、默认标题保留套餐后缀、装饰 monogram 缩成省略号、预测卡窗口名称被长前缀截掉，以及真正宽屏的 sizeClass 映射。
 4. 编辑器 LabeledContent 增量版本在真实 UI 回归中暴露行 label/输入框合并导致点按后无键盘焦点（`Summary080-polish2.xcresult` 的 UI 子测试失败，渲染子测试通过）。改成常驻 caption + 独立全宽输入框，未用测试坐标绕过；最终 `Summary080-editor-final.xcresult` 通过。新增渲染测试的初次参数标签编译错误已按现有 initializer 修正后运行通过。
-5. 设计师完成以上六张原生图片审查；独立 reviewer 最终增量复查无阻断，可以本地交付。
+5. 设计师完成以上六张原生图片审查；独立 reviewer 当时增量复查无阻断，首版可本地交付；当前不代表 Duo 修订验收。
 
 ## 可重复运行
 
