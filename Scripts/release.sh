@@ -103,9 +103,10 @@ require_remote_asset_matches_local() {
     err "Remote ${asset_name} digest does not match the local release artifact; rerun phase 1."
 }
 
-verify_local_appcast_artifact() {
+verify_local_appcast_artifact() (
   local zip=$1 key=$2 metadata expected_url signature expected_length actual_length
   metadata=$(mktemp "${CODEXBAR_RELEASE_STAGE_BASE:-${TMPDIR:-/tmp}}/codexbar-appcast-metadata.XXXXXX")
+  trap "$(printf 'rm -f -- %q' "$metadata")" EXIT
   python3 - "$APPCAST" "$MARKETING_VERSION" >"$metadata" <<'PY'
 import sys
 import xml.etree.ElementTree as ET
@@ -144,7 +145,7 @@ PY
     err "Generated appcast length does not match the local release artifact."
   sign_update --verify "$zip" "$signature" --ed-key-file "$key" >/dev/null || \
     err "Generated appcast signature does not verify against the local release artifact."
-}
+)
 
 require_finalize_checkout() {
   require_clean_worktree
@@ -209,13 +210,13 @@ phase1() {
     "$ROOT/Scripts/sign-and-notarize.sh"
   fi
 
-  local KEY_FILE NOTES_FILE
-  KEY_FILE=$(clean_key "$SPARKLE_PRIVATE_KEY_FILE")
-  NOTES_FILE=$(mktemp "${CODEXBAR_RELEASE_STAGE_BASE:-${TMPDIR:-/tmp}}/codexbar-notes.XXXXXX")
-  # Eager-expand paths into the trap so the cleanup still works after
-  # phase1's local scope is gone (set -u would otherwise fail on unbound
-  # $KEY_FILE / $NOTES_FILE when the EXIT trap fires post-return).
-  trap "rm -f '$KEY_FILE' '$NOTES_FILE'" EXIT
+  local KEY_FILE NOTES_FILE phase1_dir
+  phase1_dir=$(mktemp -d "${CODEXBAR_RELEASE_STAGE_BASE:-${TMPDIR:-/tmp}}/codexbar-release-metadata.XXXXXX")
+  # Protect the workspace before creating a private-key copy. Snapshot a
+  # shell-escaped path because phase1 locals are gone when EXIT runs.
+  trap "$(printf 'rm -rf -- %q' "$phase1_dir")" EXIT
+  KEY_FILE=$(TMPDIR="$phase1_dir" clean_key "$SPARKLE_PRIVATE_KEY_FILE")
+  NOTES_FILE="$phase1_dir/release-notes.md"
 
   probe_sparkle_key "$KEY_FILE"
   extract_notes_from_changelog "$MARKETING_VERSION" "$NOTES_FILE"
@@ -337,9 +338,10 @@ phase2() {
   require_remote_asset_matches_local "${ROOT}/${RELEASE_ASSET_BASENAME}.zip"
   require_remote_asset_matches_local "${ROOT}/${RELEASE_ASSET_BASENAME}.dSYM.zip"
 
-  local KEY_FILE
-  KEY_FILE=$(clean_key "$SPARKLE_PRIVATE_KEY_FILE")
-  trap "rm -f '$KEY_FILE'" EXIT
+  local KEY_FILE phase2_dir
+  phase2_dir=$(mktemp -d "${CODEXBAR_RELEASE_STAGE_BASE:-${TMPDIR:-/tmp}}/codexbar-release-publish.XXXXXX")
+  trap "$(printf 'rm -rf -- %q' "$phase2_dir")" EXIT
+  KEY_FILE=$(TMPDIR="$phase2_dir" clean_key "$SPARKLE_PRIVATE_KEY_FILE")
 
   clear_sparkle_caches "$BUNDLE_ID"
 

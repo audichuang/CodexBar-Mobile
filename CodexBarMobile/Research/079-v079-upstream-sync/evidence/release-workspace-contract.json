@@ -1,0 +1,58 @@
+[
+  {
+    "case": "phase1-success-after-return",
+    "exit": 0,
+    "cleanup": "pass",
+    "pathWithSpaceAndQuote": "pass",
+    "externalMutations": "stubbed",
+    "credentials": "synthetic"
+  },
+  {
+    "case": "phase1-missing-stage",
+    "exit": 1,
+    "cleanup": "pass",
+    "pathWithSpaceAndQuote": "pass",
+    "externalMutations": "stubbed",
+    "credentials": "synthetic"
+  },
+  {
+    "case": "phase1-probe-failure",
+    "exit": 17,
+    "cleanup": "pass",
+    "pathWithSpaceAndQuote": "pass",
+    "externalMutations": "stubbed",
+    "credentials": "synthetic"
+  },
+  {
+    "case": "phase2-missing-stage",
+    "exit": 1,
+    "cleanup": "pass",
+    "pathWithSpaceAndQuote": "pass",
+    "externalMutations": "stubbed",
+    "credentials": "synthetic"
+  },
+  {
+    "case": "phase2-appcast-failure",
+    "exit": 18,
+    "cleanup": "pass",
+    "pathWithSpaceAndQuote": "pass",
+    "externalMutations": "stubbed",
+    "credentials": "synthetic"
+  },
+  {
+    "case": "phase2-post-verify-publish-failure",
+    "exit": 19,
+    "cleanup": "pass",
+    "pathWithSpaceAndQuote": "pass",
+    "externalMutations": "stubbed",
+    "credentials": "synthetic"
+  },
+  {
+    "case": "metadata-parse-failure",
+    "exit": 1,
+    "cleanup": "pass",
+    "pathWithSpaceAndQuote": "pass",
+    "externalMutations": "stubbed",
+    "credentials": "synthetic"
+  }
+]

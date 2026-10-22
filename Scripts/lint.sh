@@ -175,6 +175,7 @@ check_release_dsym_paths() {
 
 check_release_checksum() {
   "${ROOT_DIR}/Scripts/test_release_checksum.sh"
+  python3 "${ROOT_DIR}/Scripts/test_release_temp_cleanup.py"
 }
 
 check_sparkle_signing_paths() {
