@@ -1,0 +1,191 @@
+<div id="cb-compact-preview" class="viz-dotted-background" aria-label="Summary 紧凑指标卡片预览">
+  <div class="cb-app" aria-label="CodexBar Summary"></div>
+</div>
+<style>
+#cb-compact-preview{padding:20px 8px;background-color:transparent;}
+#cb-compact-preview .cb-app{--bg:light-dark(#f2f2f7,#17171a);--surface:light-dark(#fff,#252529);--ink:light-dark(#16171b,#f5f5f7);--muted:light-dark(#666970,#b0b2bb);--line:light-dark(#dedee5,#3b3c43);--blue:light-dark(#0065d7,#79b3ff);--track:light-dark(#dadce3,#45464e);--warn:light-dark(#9c5900,#ffbf69);--blue-fill:light-dark(#eef5ff,#202e42);--green-fill:light-dark(#edf7f2,#1f332d);--purple-fill:light-dark(#f3effc,#30273e);--orange-fill:light-dark(#fff3e8,#3d2e21);--pink-fill:light-dark(#fcf0f5,#3a2832);--neutral-fill:light-dark(#fff,#252529);--blue-dot:light-dark(#3984df,#79b3ff);--green-dot:light-dark(#23835f,#70c9a4);--purple-dot:light-dark(#9067c7,#bb9deb);--orange-dot:light-dark(#bd7b3c,#e6ad74);--pink-dot:light-dark(#ba598a,#e99abc);--neutral-dot:light-dark(#8b8c95,#a3a5b0);font:14px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg);color-scheme:light dark;max-width:414px;width:100%;margin:0 auto;border:1px solid var(--line);border-radius:30px;position:relative;overflow:hidden;display:flex;flex-direction:column;min-height:794px;box-shadow:0 10px 36px light-dark(#0000000b,#00000035);}
+#cb-compact-preview *{box-sizing:border-box;}
+#cb-compact-preview button,#cb-compact-preview input,#cb-compact-preview select{font:inherit;}
+#cb-compact-preview button{color:inherit;}
+#cb-compact-preview .cb-status{display:flex;align-items:center;justify-content:space-between;padding:13px 24px 6px;font-size:12px;font-weight:600;}
+#cb-compact-preview .cb-status span:last-child{display:flex;align-items:center;gap:6px;}
+#cb-compact-preview .cb-header{padding:9px 18px 0;}
+#cb-compact-preview .cb-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+#cb-compact-preview h2{margin:0;font-size:28px;font-weight:700;letter-spacing:-.8px;line-height:1.2;}
+#cb-compact-preview h3{margin:0;font-size:19px;line-height:1.3;font-weight:650;}
+#cb-compact-preview .cb-tools{display:flex;align-items:center;gap:8px;}
+#cb-compact-preview .cb-text-button{border:0;background:none;color:var(--blue);padding:9px 3px;min-height:40px;}
+#cb-compact-preview .cb-plus{border:0;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--surface);color:var(--blue);}
+#cb-compact-preview .cb-sub{font-size:11px;color:var(--muted);margin:3px 0 0;}
+#cb-compact-preview .cb-filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:13px 0 0;}
+#cb-compact-preview .cb-filters select,#cb-compact-preview .cb-metric-select{width:100%;min-width:0;border:0;border-radius:9px;padding:7px 24px 7px 10px;background:var(--surface);color:var(--ink);font-size:12px;height:33px;}
+#cb-compact-preview .cb-grid-header{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:35px;margin-top:3px;}
+#cb-compact-preview .cb-count{font-size:11px;color:var(--muted);}
+#cb-compact-preview .cb-metric-select{background:transparent;width:auto;max-width:125px;font-size:11px;padding-left:0;height:31px;}
+#cb-compact-preview .cb-main{padding:0 16px 12px;flex:1;}
+#cb-compact-preview .cb-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;}
+#cb-compact-preview .cb-card{--tint:var(--neutral-fill);--dot:var(--neutral-dot);display:flex;flex-direction:column;justify-content:space-between;gap:4px;min-width:0;height:86px;border:0;border-radius:12px;background:var(--tint);padding:9px 11px 8px;text-align:left;position:relative;}
+#cb-compact-preview [data-color="blue"]{--tint:var(--blue-fill);--dot:var(--blue-dot);}
+#cb-compact-preview [data-color="green"]{--tint:var(--green-fill);--dot:var(--green-dot);}
+#cb-compact-preview [data-color="purple"]{--tint:var(--purple-fill);--dot:var(--purple-dot);}
+#cb-compact-preview [data-color="orange"]{--tint:var(--orange-fill);--dot:var(--orange-dot);}
+#cb-compact-preview [data-color="pink"]{--tint:var(--pink-fill);--dot:var(--pink-dot);}
+#cb-compact-preview .cb-identity{display:flex;gap:5px;align-items:center;min-width:0;max-width:100%;font-size:11px;font-weight:500;line-height:15px;}
+#cb-compact-preview .cb-dot{height:5px;width:5px;min-width:5px;border-radius:50%;background:var(--dot);}
+#cb-compact-preview .cb-name{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;}
+#cb-compact-preview .cb-reading{display:flex;justify-content:space-between;gap:4px;align-items:baseline;min-width:0;}
+#cb-compact-preview .cb-metric{font-size:12px;color:var(--muted);white-space:nowrap;}
+#cb-compact-preview .cb-value{font-size:23px;font-weight:650;line-height:26px;letter-spacing:-.7px;font-variant-numeric:tabular-nums;white-space:nowrap;}
+#cb-compact-preview .cb-value small{font-size:11px;letter-spacing:0;font-weight:400;margin-left:2px;}
+#cb-compact-preview .cb-footer{display:flex;justify-content:space-between;align-items:center;gap:3px;font-size:11px;color:var(--muted);line-height:14px;min-width:0;white-space:nowrap;}
+#cb-compact-preview .cb-mini-track{height:3px;width:38px;border-radius:3px;overflow:hidden;background:var(--track);flex-shrink:0;}
+#cb-compact-preview .cb-mini-fill{height:100%;border-radius:3px;background:var(--dot);}
+#cb-compact-preview .cb-high{color:var(--warn);}
+#cb-compact-preview .cb-edit-mark{color:var(--blue);font-size:11px;margin-left:auto;}
+#cb-compact-preview .cb-hint{font-size:11px;color:var(--muted);text-align:center;margin:11px 0 0;}
+#cb-compact-preview .cb-bottom{background:var(--surface);border-top:1px solid var(--line);}
+#cb-compact-preview .cb-nav{display:flex;gap:4px;padding:8px 12px 5px;}
+#cb-compact-preview .cb-tab{border:0;background:none;flex:1;min-width:0;min-height:43px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:var(--muted);font-size:10px;border-radius:11px;}
+#cb-compact-preview .cb-tab[aria-current="page"]{color:var(--blue);background:var(--blue-fill);}
+#cb-compact-preview .cb-home{width:105px;height:4px;background:var(--ink);border-radius:4px;margin:5px auto 8px;}
+#cb-compact-preview .cb-shade{position:absolute;inset:0;z-index:10;background:light-dark(#00000030,#00000090);display:flex;align-items:flex-end;}
+#cb-compact-preview .cb-sheet{width:100%;border-radius:23px 23px 0 0;background:var(--bg);padding:9px 18px 22px;}
+#cb-compact-preview .cb-handle{height:4px;width:32px;margin:0 auto 12px;background:var(--line);border-radius:4px;}
+#cb-compact-preview .cb-sheet-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;}
+#cb-compact-preview .cb-field{display:block;margin:13px 0;font-size:12px;color:var(--muted);}
+#cb-compact-preview .cb-field input,#cb-compact-preview .cb-field select{display:block;width:100%;margin-top:6px;padding:10px 12px;min-height:42px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink);font-size:16px;}
+#cb-compact-preview .cb-field small{display:block;font-size:11px;margin-top:5px;}
+#cb-compact-preview .cb-swatches{display:flex;justify-content:space-between;gap:8px;margin-top:9px;}
+#cb-compact-preview .cb-swatch{width:38px;height:38px;border:2px solid transparent;border-radius:50%;background:var(--dot);color:var(--ink);display:flex;align-items:center;justify-content:center;}
+#cb-compact-preview .cb-swatch[aria-pressed="true"]{outline:2px solid var(--ink);outline-offset:3px;}
+#cb-compact-preview .cb-button-row{display:flex;gap:8px;margin-top:16px;}
+#cb-compact-preview .cb-button{border:0;border-radius:10px;background:var(--surface);padding:10px 12px;min-height:40px;flex:1;font-size:12px;}
+#cb-compact-preview .cb-primary{background:var(--blue);color:light-dark(#fff,#111c2c);}
+#cb-compact-preview .cb-danger{color:light-dark(#b52727,#ff9999);}
+#cb-compact-preview button:disabled{opacity:.35;}
+#cb-compact-preview .cb-panel{background:var(--surface);border-radius:14px;padding:16px;margin-top:14px;}
+#cb-compact-preview .cb-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:13px;}
+#cb-compact-preview .cb-row:last-child{border:0;}
+#cb-compact-preview .cb-row span{color:var(--muted);}
+#cb-compact-preview .cb-full-name{font-size:12px;color:var(--muted);margin:6px 0 12px;overflow-wrap:anywhere;}
+#cb-compact-preview .cb-preview-card{margin-top:14px;width:calc(50% - 4px);min-width:145px;}
+#cb-compact-preview .cb-preview-card:disabled{opacity:1;}
+#cb-compact-preview .cb-swatch[data-color="neutral"]{--dot:var(--neutral-dot);}
+#cb-compact-preview .cb-sheet-note{font-size:11px;color:var(--muted);margin-top:10px;}
+#cb-compact-preview .cb-empty{padding:30px 8px;text-align:center;color:var(--muted);font-size:13px;}
+#cb-compact-preview .cb-notice{position:absolute;left:18px;right:18px;bottom:83px;border-radius:12px;padding:12px;background:var(--surface);box-shadow:0 3px 20px light-dark(#00000018,#00000055);font-size:12px;z-index:2;}
+@media(max-width:370px){#cb-compact-preview{padding:12px 0;}#cb-compact-preview .cb-main{padding-left:10px;padding-right:10px;}#cb-compact-preview .cb-header{padding-left:12px;padding-right:12px;}#cb-compact-preview .cb-card{padding-left:9px;padding-right:9px;}#cb-compact-preview .cb-footer{font-size:11px;}#cb-compact-preview .cb-mini-track{width:22px;}#cb-compact-preview .cb-metric{font-size:11px;}#cb-compact-preview .cb-value{font-size:21px;}#cb-compact-preview .cb-identity{font-size:11px;}}
+</style>
+<style>
+#cb-compact-preview .cb-provider-scroll{display:flex;align-items:center;gap:6px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;height:33px;max-width:100%;margin-top:13px;overscroll-behavior-x:contain;}
+#cb-compact-preview .cb-provider-scroll::-webkit-scrollbar{display:none;}
+#cb-compact-preview .cb-provider-chip{height:33px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;gap:5px;padding:0 10px;border:0;border-radius:9px;background:var(--surface);color:var(--muted);font-size:12px;white-space:nowrap;}
+#cb-compact-preview .cb-provider-chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);}
+#cb-compact-preview .cb-grid-header{justify-content:flex-start;}
+#cb-compact-preview .cb-count{font-size:11px;}
+#cb-compact-preview .cb-identity svg{height:12px;width:12px;flex-shrink:0;color:var(--dot);}
+#cb-compact-preview .cb-value.timer{font-size:22px;letter-spacing:-.5px;}
+#cb-compact-preview .cb-estimate{gap:2px;}
+#cb-compact-preview .cb-date{font-size:21px;line-height:25px;letter-spacing:-.6px;font-variant-numeric:tabular-nums;white-space:nowrap;display:flex;gap:7px;align-items:baseline;}
+#cb-compact-preview .cb-date span{font-size:15px;color:var(--muted);font-weight:400;letter-spacing:-.2px;}
+#cb-compact-preview .cb-date strong{font-weight:650;}
+#cb-compact-preview .cb-mode-group{display:flex;gap:3px;background:var(--surface);border:1px solid var(--line);padding:3px;border-radius:10px;margin-top:7px;}
+#cb-compact-preview .cb-mode{flex:1;min-width:0;border:0;border-radius:7px;background:transparent;font-size:12px;min-height:33px;color:var(--muted);padding:6px;}
+#cb-compact-preview .cb-mode[aria-pressed="true"]{background:var(--ink);color:var(--bg);}
+#cb-compact-preview .cb-field{margin:10px 0;}
+#cb-compact-preview .cb-field input,#cb-compact-preview .cb-field select{padding:8px 11px;min-height:40px;margin-top:5px;}
+#cb-compact-preview .cb-swatches{margin-top:8px;}
+#cb-compact-preview .cb-swatch{width:33px;height:33px;}
+#cb-compact-preview .cb-preview-card{margin-top:10px;}
+#cb-compact-preview .cb-full-name{margin-bottom:8px;}
+#cb-compact-preview .cb-button-row{margin-top:11px;}
+#cb-compact-preview .cb-estimate-note{font-size:11px;color:var(--muted);margin:9px 0;}
+#cb-compact-preview .cb-swatch[data-color="neutral"]{background:var(--surface);border:1px solid var(--line);}
+@media(max-width:370px){#cb-compact-preview .cb-value.timer{font-size:19px;}#cb-compact-preview .cb-date{font-size:20px;gap:5px;}#cb-compact-preview .cb-date span{font-size:13px;}#cb-compact-preview .cb-estimate .cb-metric{font-size:11px;}}
+</style>
+<script>
+(() => {
+ const root=document.getElementById('cb-compact-preview'),app=root.querySelector('.cb-app');
+ const colors=['neutral','blue','green','purple','orange','pink'];
+ const providerIcons={Claude:'asterisk',Codex:'terminal',ChatGPT:'message-circle',Grok:'orbit',Muse:'sparkles',OpenRouter:'route'};
+ const providerNames=Object.keys(providerIcons);
+ const accounts=[
+ {id:'claude-personal',provider:'Claude',alias:'Personal',plan:'Max 5×',session:34,weekly:86,sonnet:18,sr:'1h 42m',wr:'2d 6h',nr:'2d 6h',sessionEmpty:['Oct 22','18:06'],weeklyEmpty:['Oct 23','21:06']},
+ {id:'codex-personal',provider:'Codex',alias:'Personal',plan:'Plus',session:12,weekly:41,sr:'3h 18m',wr:'4d 9h',sessionEmpty:['Oct 22','19:33'],weeklyEmpty:['Oct 23','21:33']},
+ {id:'claude-work',provider:'Claude',alias:'Work',plan:'Team',session:8,weekly:23,sonnet:23,sr:'4h 12m',wr:'5d 2h',nr:'5d 2h',sessionEmpty:null,weeklyEmpty:null},
+ {id:'codex-work',provider:'Codex',alias:'Work',plan:'Pro',session:54,weekly:67,sr:'2h 16m',wr:'3d 1h',sessionEmpty:['Oct 22','20:10'],weeklyEmpty:['Oct 24','09:15']},
+ {id:'muse-personal',provider:'Muse',alias:'Personal',plan:'',balance:'$18.20'},
+ {id:'muse-work',provider:'Muse',alias:'Work',plan:'',balance:'$46.80'},
+ {id:'chatgpt-personal',provider:'ChatGPT',alias:'Personal',plan:'Plus',weekly:28,wr:'1d 8h',weeklyEmpty:null},
+ {id:'grok-personal',provider:'Grok',alias:'Personal',plan:'',session:54,sr:'2h 16m',sessionEmpty:['Oct 22','20:30']},
+ {id:'openrouter',provider:'OpenRouter',alias:'Personal',plan:'API',balance:'$24.80'}];
+ const labels={session:'Session',weekly:'Weekly',sonnet:'Sonnet only',balance:'Balance',extra:'Extra usage','empty-session':'Session · Est. empty','empty-weekly':'Weekly · Est. empty'};
+ const catalog=accounts.flatMap(a=>Object.keys(labels).filter(type=>type==='extra'?a.id==='claude-personal':type.startsWith('empty-')?a[type.slice(6)]!==undefined:a[type]!==undefined).map(type=>({id:a.id+'-'+type,account:a.id,type})));
+ const defaultOrder=['claude-personal-session','claude-personal-weekly','codex-personal-session','codex-personal-weekly','claude-personal-empty-weekly','codex-personal-empty-weekly','claude-work-sonnet','claude-work-session','muse-personal-balance','muse-work-balance','chatgpt-personal-weekly','grok-personal-session'];
+ const defaultModes={'claude-personal-weekly':'time','codex-personal-session':'time','claude-work-session':'time','chatgpt-personal-weekly':'time'};
+ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const icon=n=>'<i data-lucide="'+n+'" aria-hidden="true"></i>';
+ const aFor=m=>accounts.find(a=>a.id===m.account);
+ const metricById=id=>catalog.find(m=>m.id===id);
+ const isQuota=m=>['session','weekly','sonnet'].includes(m.type);
+ const reset=m=>{const a=aFor(m);return a[m.type==='session'?'sr':m.type==='sonnet'?'nr':'wr'];};
+ const isEstimate=m=>m.type.startsWith('empty-');
+ const state={v:3,order:[...defaultOrder],custom:{},aliases:{},provider:'all',tab:'Summary',edit:false,sheet:null,draft:null};
+ function restore(s){if(s?.v!==3)return;state.order=Array.isArray(s.order)?[...new Set(s.order.filter(id=>metricById(id)))]:[...defaultOrder];state.custom={};for(const [id,c] of Object.entries(s.custom||{})){if(metricById(id))state.custom[id]={label:String(c.label||'').slice(0,40),color:colors.includes(c.color)?c.color:'neutral',mode:c.mode==='time'?'time':'percent'};}state.aliases={};for(const a of accounts)if(typeof s.aliases?.[a.id]==='string')state.aliases[a.id]=s.aliases[a.id].slice(0,24);state.provider=['all',...providerNames].includes(s.provider)?s.provider:'all';}
+ restore(window.openai?.widgetState?.privateContent);
+ let lastSaved='';
+ function visible(){return state.order.map(metricById).filter(m=>state.provider==='all'||aFor(m).provider===state.provider);}
+ function title(m,draft=false){const a=aFor(m),alias=draft?state.draft.alias:state.aliases[a.id]??a.alias;return (draft?state.draft.label:state.custom[m.id]?.label)||[a.provider,alias,a.plan].filter(Boolean).join(' ');}
+ function color(m,draft=false){return (draft?state.draft.color:state.custom[m.id]?.color)||'neutral';}
+ function mode(m,draft=false){return (draft?state.draft.mode:state.custom[m.id]?.mode)||defaultModes[m.id]||'percent';}
+ function save(){if(!window.openai?.setWidgetState)return;const content={v:3,order:state.order,custom:state.custom,aliases:state.aliases,provider:state.provider};lastSaved=JSON.stringify(content);window.openai.setWidgetState({privateContent:content,modelContent:{layout:'compact cards with provider chips',provider:state.provider,cards:visible().map(m=>({metric:m.id,label:title(m),color:color(m),emphasis:isQuota(m)?mode(m):isEstimate(m)?'estimated empty date':'value'}))}}).catch(()=>{});}
+ function estimate(m){const a=aFor(m);return a[m.type==='empty-session'?'sessionEmpty':'weeklyEmpty'];}
+ function reading(m){const a=aFor(m);if(isEstimate(m)){const e=estimate(m);return {value:e?e.join(' '):'No estimate yet',foot:e?'At recent usage rate':'Not enough recent usage',date:e};}if(m.type==='balance')return {value:a.balance,foot:'Available credit'};if(m.type==='extra')return {value:'$4.20',foot:'of $20 monthly limit'};return {value:a[m.type]+'%',pct:a[m.type],foot:reset(m),high:a[m.type]>=80};}
+ function card(m,preview=false){const r=reading(m),name=title(m,preview),time=isQuota(m)&&mode(m,preview)==='time';let middle,foot;
+ if(isEstimate(m)){middle='<span class="cb-metric">'+labels[m.type]+'</span>';foot=r.date?'<span class="cb-date"><span>'+r.date[0]+'</span><strong>'+r.date[1]+'</strong></span>':'<span class="cb-footer">Not enough recent data</span>';}
+ else {middle='<span class="cb-reading"><span class="cb-metric">'+labels[m.type]+'</span><span class="cb-value'+(time?' timer':'')+(r.high&&!time?' cb-high':'')+'">'+(time?r.foot:r.value)+'</span></span>';foot='<span class="cb-footer"><span>'+(isQuota(m)?time?r.value+' used':'↻ '+r.foot:esc(r.foot))+'</span>'+(time?'<span>to reset</span>':r.pct!==undefined?'<span class="cb-mini-track" aria-hidden="true"><span class="cb-mini-fill" style="display:block;width:'+r.pct+'%"></span></span>':'')+'</span>';}
+ return '<button type="button" class="cb-card cursor-interaction'+(preview?' cb-preview-card':'')+(isEstimate(m)?' cb-estimate':'')+'" data-color="'+color(m,preview)+'" '+(preview?'disabled':'data-card="'+m.id+'"')+' aria-label="'+esc(name+' · '+labels[m.type]+' · '+(time?'Resets in '+r.foot+', '+r.value+' used':r.value))+'"><span class="cb-identity">'+icon(providerIcons[aFor(m).provider])+'<span class="cb-name" data-tooltip="'+esc(name)+'">'+esc(name)+'</span>'+(!preview&&state.edit?'<span class="cb-edit-mark">'+icon('pencil')+'</span>':'')+'</span>'+middle+foot+'</button>';}
+ function options(values,current){return values.map(([v,label])=>'<option value="'+esc(v)+'" '+(current===v?'selected':'')+'>'+esc(label)+'</option>').join('');}
+ function providerChoices(){return providerNames.filter(p=>state.order.some(id=>aFor(metricById(id)).provider===p));}
+ function summaryHeader(){return '<div class="cb-provider-scroll" role="group" aria-label="Provider filters"><button class="cb-provider-chip cursor-interaction" data-provider="all" aria-pressed="'+(state.provider==='all')+'">All providers</button>'+providerChoices().map(p=>'<button class="cb-provider-chip cursor-interaction" data-provider="'+p+'" aria-label="Filter '+p+'" aria-pressed="'+(state.provider===p)+'">'+icon(providerIcons[p])+p+'</button>').join('')+'</div><div class="cb-grid-header"><span class="cb-count" aria-live="polite">'+visible().length+' of '+state.order.length+' pinned'+(state.provider!=='all'?' · '+state.provider:'')+'</span></div>';}
+ function summary(){const ms=visible();return '<div class="cb-grid">'+ms.map(m=>card(m)).join('')+'</div>'+(!ms.length?'<div class="cb-empty">No pinned cards for this provider.<br><button class="cb-text-button cursor-interaction" data-add>Add metric</button></div>':'')+'<p class="cb-hint">'+(state.edit?'Tap a card to change its emphasis, name or color':'Tap for details · Edit to change emphasis')+'</p>';}
+ function closeButton(label='Cancel'){return '<button class="cb-text-button cursor-interaction" data-close>'+label+'</button>';}
+ function emphasisControls(m){return isQuota(m)&&reset(m)?'<div class="cb-field">Emphasize<div class="cb-mode-group" role="group" aria-label="Card emphasis"><button class="cb-mode cursor-interaction" data-mode="percent" aria-pressed="'+(state.draft.mode==='percent')+'">Usage %</button><button class="cb-mode cursor-interaction" data-mode="time" aria-pressed="'+(state.draft.mode==='time')+'">Time to reset</button></div></div>':'';}
+ function editor(){const m=metricById(state.sheet.id),a=aFor(m),position=state.order.indexOf(m.id),creating=state.sheet.creating;return '<div class="cb-sheet-head"><h3>'+(creating?'Create card':'Customize card')+'</h3>'+closeButton()+'</div><div class="cb-full-name">'+esc([a.provider,state.aliases[a.id]??a.alias,a.plan,labels[m.type]].filter(Boolean).join(' · '))+'</div><div data-live-preview>'+card(m,true)+'</div>'+emphasisControls(m)+'<label class="cb-field">Account alias<input data-alias maxlength="24" value="'+esc(state.draft.alias)+'"></label><label class="cb-field">Card display name<input data-label maxlength="40" value="'+esc(state.draft.label)+'" placeholder="'+esc([a.provider,state.draft.alias,a.plan].filter(Boolean).join(' '))+'"><small>Optional · e.g. C 5x. Original account stays linked.</small></label><div class="cb-field">Card color<div class="cb-swatches">'+colors.map(c=>'<button class="cb-swatch cursor-interaction" data-color="'+c+'" data-swatch="'+c+'" aria-label="'+(c==='neutral'?'Default white':c)+' card color" aria-pressed="'+(state.draft.color===c)+'">'+(state.draft.color===c?icon('check'):'')+'</button>').join('')+'</div></div>'+(!creating?'<div class="cb-button-row"><button class="cb-button cursor-interaction" data-move="-1" '+(position===0?'disabled':'')+'>← Move earlier</button><button class="cb-button cursor-interaction" data-move="1" '+(position===state.order.length-1?'disabled':'')+'>Move later →</button></div>':'')+'<div class="cb-button-row">'+(!creating?'<button class="cb-button cb-danger cursor-interaction" data-unpin>Unpin</button>':'')+'<button class="cb-button cb-primary cursor-interaction" data-save>'+(creating?'Add card':'Save card')+'</button></div>';}
+ function detail(){const m=metricById(state.sheet.id),a=aFor(m),r=reading(m);return '<div class="cb-sheet-head"><h3>'+labels[m.type]+'</h3>'+closeButton('Done')+'</div><div class="cb-full-name">'+esc([a.provider,state.aliases[a.id]??a.alias,a.plan].filter(Boolean).join(' · '))+'</div><div class="cb-panel"><div class="cb-row"><span>'+(isEstimate(m)?'Estimated empty at':labels[m.type])+'</span><strong>'+esc(r.value)+(isQuota(m)?' used':'')+'</strong></div>'+ (isQuota(m)?'<div class="cb-row"><span>Resets in</span><strong>'+esc(r.foot)+'</strong></div>':'')+'<div class="cb-row"><span>Source account</span><strong>'+esc(state.aliases[a.id]??a.alias)+'</strong></div></div>'+(isEstimate(m)?'<p class="cb-estimate-note">Estimated from recent usage; may change. This is the expected depletion time, separate from the quota reset.</p>':'')+'<div class="cb-button-row"><button class="cb-button cursor-interaction" data-customize>Customize card</button><button class="cb-button cb-primary cursor-interaction" data-open-usage>Open Usage</button></div>';}
+ function metricOptions(provider){return [...new Set(catalog.filter(m=>aFor(m).provider===provider).map(m=>m.type))].map(t=>[t,labels[t]]);}
+ function eligibleAccounts(provider,type){return accounts.filter(a=>a.provider===provider&&catalog.some(m=>m.account===a.id&&m.type===type));}
+ function addSheet(){const sh=state.sheet,m=catalog.find(m=>m.type===sh.type&&m.account===sh.account),pinned=!!m&&state.order.includes(m.id);return '<div class="cb-sheet-head"><h3>Add a metric</h3>'+closeButton()+'</div><label class="cb-field">1 · Provider<select data-add-provider>'+options(providerNames.map(p=>[p,p]),sh.provider)+'</select></label><label class="cb-field">2 · Metric<select data-add-type>'+options(metricOptions(sh.provider),sh.type)+'</select></label><label class="cb-field">3 · Account<select data-add-account>'+options(eligibleAccounts(sh.provider,sh.type).map(a=>[a.id,[state.aliases[a.id]??a.alias,a.plan].filter(Boolean).join(' · ')]),sh.account)+'</select></label>'+ (isEstimate(m)?'<p class="cb-sheet-note">A separate card for the selected quota’s estimated depletion date.</p>':'')+'<div class="cb-button-row"><button class="cb-button cb-primary cursor-interaction" data-confirm-add '+(pinned?'disabled':'')+'>'+(pinned?'Already pinned':'Next · Customize')+'</button></div>';}
+ function modal(){return '<div class="cb-shade"><section class="cb-sheet" role="dialog" aria-modal="true" aria-label="'+(state.sheet.kind==='edit'?'Customize card':state.sheet.kind==='add'?'Add a metric':'Metric details')+'"><div class="cb-handle"></div>'+(state.sheet.kind==='edit'?editor():state.sheet.kind==='add'?addSheet():detail())+'</section></div>';}
+ function usage(){const list=state.detail?accounts.filter(a=>a.id===state.detail):accounts;return '<button class="cb-text-button cursor-interaction" data-summary>‹ Back to Summary</button>'+list.map(a=>'<div class="cb-panel"><h3>'+a.provider+'</h3><div class="cb-full-name">'+esc([state.aliases[a.id]??a.alias,a.plan].filter(Boolean).join(' · '))+'</div>'+catalog.filter(m=>m.account===a.id).map(m=>'<div class="cb-row"><span>'+labels[m.type]+'</span><strong>'+esc(reading(m).value)+'</strong></div>').join('')+'</div>').join('');}
+ function other(){if(state.tab==='Usage')return usage();if(state.tab==='Cost')return '<div class="cb-panel"><h3>Cost & history</h3><div class="cb-row"><span>Estimated token cost</span><strong>$126.40</strong></div><div class="cb-row"><span>Daily token usage</span><strong>2.2M today</strong></div><div class="cb-row"><span>Provider share</span><strong>Claude 72%</strong></div></div>';return '<div class="cb-panel"><h3>Summary preferences</h3><div class="cb-row"><span>Pinned metrics</span><strong>'+state.order.length+'</strong></div><div class="cb-row"><span>Names, colors & emphasis</span><button class="cb-text-button cursor-interaction" data-personalize>Personalize</button></div></div>';}
+ function icons(){if(globalThis.lucide)globalThis.lucide.createIcons({attrs:{width:16,height:16}});}
+ function render(){const scroll=app.querySelector('.cb-provider-scroll')?.scrollLeft||0;app.innerHTML='<div class="cb-status"><span>9:41</span><span>'+icon('signal')+icon('wifi')+icon('battery-full')+'</span></div><header class="cb-header"><div class="cb-heading"><h2>'+state.tab+'</h2>'+(state.tab==='Summary'?'<div class="cb-tools"><button class="cb-text-button cursor-interaction" data-edit>'+(state.edit?'Done':'Edit')+'</button><button class="cb-plus cursor-interaction" data-add aria-label="Add metric">'+icon('plus')+'</button></div>':'')+'</div><p class="cb-sub">'+(state.tab==='Summary'?'Updated just now · Demo data':'CodexBar · Demo')+'</p>'+(state.tab==='Summary'?summaryHeader():'')+'</header><main class="cb-main">'+(state.tab==='Summary'?summary():other())+'</main><div class="cb-bottom"><nav class="cb-nav" aria-label="App navigation">'+[['Usage','gauge'],['Summary','layout-grid'],['Cost','chart-no-axes-combined'],['Settings','settings']].map(([t,i])=>'<button class="cb-tab cursor-interaction" data-tab="'+t+'" '+(state.tab===t?'aria-current="page"':'')+'>'+icon(i)+t+'</button>').join('')+'</nav><div class="cb-home"></div></div>'+(state.sheet?modal():'');const track=app.querySelector('.cb-provider-scroll');if(track)track.scrollLeft=scroll;icons();}
+ function openEdit(id,creating=false){const m=metricById(id),a=aFor(m);state.sheet={kind:'edit',id,creating};state.draft={alias:state.aliases[a.id]??a.alias,label:state.custom[id]?.label||'',color:color(m),mode:mode(m)};}
+ function captureDraft(){if(!state.draft)return;const alias=app.querySelector('[data-alias]'),label=app.querySelector('[data-label]');if(alias)state.draft.alias=alias.value;if(label)state.draft.label=label.value;}
+ function commitDraft(){const m=metricById(state.sheet.id);state.aliases[m.account]=state.draft.alias.trim()||aFor(m).alias;state.custom[m.id]={label:state.draft.label.trim(),color:state.draft.color,mode:state.draft.mode};if(!state.order.includes(m.id))state.order.push(m.id);if(state.sheet.creating)state.provider=aFor(m).provider;}
+ function openAdd(){const preferred=state.provider==='all'?'Claude':state.provider,candidate=catalog.find(m=>aFor(m).provider===preferred&&!state.order.includes(m.id))||catalog.find(m=>aFor(m).provider===preferred);state.sheet={kind:'add',provider:aFor(candidate).provider,type:candidate.type,account:candidate.account};}
+ app.addEventListener('click',e=>{const b=e.target.closest('button');if(!b||b.disabled)return;
+ if(b.hasAttribute('data-tab')){state.tab=b.dataset.tab;state.sheet=null;state.edit=false;state.detail=null;}
+ if(b.hasAttribute('data-provider'))state.provider=b.dataset.provider;
+ if(b.hasAttribute('data-edit'))state.edit=!state.edit;
+ if(b.hasAttribute('data-card')){if(state.edit)openEdit(b.dataset.card);else state.sheet={kind:'detail',id:b.dataset.card};}
+ if(b.hasAttribute('data-close')){state.sheet=null;state.draft=null;}
+ if(b.hasAttribute('data-customize'))openEdit(state.sheet.id);
+ if(b.hasAttribute('data-swatch')){captureDraft();state.draft.color=b.dataset.swatch;}
+ if(b.hasAttribute('data-mode')){captureDraft();state.draft.mode=b.dataset.mode;}
+ if(b.hasAttribute('data-save')){captureDraft();commitDraft();state.sheet=null;state.draft=null;}
+ if(b.hasAttribute('data-move')){captureDraft();const from=state.order.indexOf(state.sheet.id),to=from+Number(b.dataset.move);if(to>=0&&to<state.order.length)[state.order[from],state.order[to]]=[state.order[to],state.order[from]];}
+ if(b.hasAttribute('data-unpin')){state.order=state.order.filter(id=>id!==state.sheet.id);if(!visible().length)state.provider='all';state.sheet=null;state.draft=null;}
+ if(b.hasAttribute('data-open-usage')){state.detail=metricById(state.sheet.id).account;state.sheet=null;state.tab='Usage';state.edit=false;}
+ if(b.hasAttribute('data-summary')){state.tab='Summary';state.detail=null;}
+ if(b.hasAttribute('data-personalize')){state.tab='Summary';state.edit=true;}
+ if(b.hasAttribute('data-add'))openAdd();
+ if(b.hasAttribute('data-confirm-add')){const m=catalog.find(m=>m.type===state.sheet.type&&m.account===state.sheet.account);openEdit(m.id,true);}
+ render();save();});
+ app.addEventListener('change',e=>{const t=e.target,sh=state.sheet;if(t.hasAttribute('data-add-provider')){sh.provider=t.value;const m=catalog.find(m=>aFor(m).provider===t.value&&!state.order.includes(m.id))||catalog.find(m=>aFor(m).provider===t.value);sh.type=m.type;sh.account=m.account;render();}else if(t.hasAttribute('data-add-type')){sh.type=t.value;const list=eligibleAccounts(sh.provider,sh.type);if(!list.some(a=>a.id===sh.account))sh.account=list[0].id;render();}else if(t.hasAttribute('data-add-account')){sh.account=t.value;render();}});
+ app.addEventListener('input',e=>{if(e.target.hasAttribute('data-alias')||e.target.hasAttribute('data-label')){captureDraft();const m=metricById(state.sheet.id);app.querySelector('[data-live-preview]').innerHTML=card(m,true);icons();if(e.target.hasAttribute('data-alias'))app.querySelector('[data-label]').placeholder=[aFor(m).provider,state.draft.alias,aFor(m).plan].filter(Boolean).join(' ');}});
+ window.addEventListener('openai:set_globals',e=>{const next=e.detail?.globals?.widgetState?.privateContent;if(next?.v===3&&JSON.stringify(next)!==lastSaved){restore(next);state.sheet=null;state.draft=null;render();}});
+ render();
+})();
+</script>
