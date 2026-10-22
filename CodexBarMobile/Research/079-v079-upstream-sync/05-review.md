@@ -81,3 +81,7 @@ GitHub在ca2d92f8dd上返回“Didn't find any major issues”，但独立iOS审
 18ccdefb2eb29ea148e7823da221a8739d683015已推送，2026-10-21T23:21:05Z获“Didn't find any major issues”，两个历史thread均isResolved=true，PR Fast Checks通过。独立Mac reviewer再次确认原initializer签名完整保留、测试注入不读标准defaults、CLI→Web→CLI真实记录清理无阻塞。完整Mac160/160 first-pass、iOS1156+67、lint0、16组替代矩阵、新签名公证实包和远端digest均已通过。
 
 最终提交只更新Research/evidence，Mac/iOS产品和测试源码相对18cc零diff；该证据提交单独请求第五轮current-head Codex review并运行check_pr_review_gate.sh，最终精确head与输出保存在PR评论，不为写回receipt反复改变review head。未将本地独立审查替代GitHub gate。push/PR已获用户授权；merge/tag/live/TF未执行。
+
+## 发布授权后的最终审查
+
+PR199第五轮15be证据head clean；实际发布准备head15fb在第六轮前先提交四字段architecture audit（协调单版本Mac/iOS发行与实时ASC状态），R6 clean，0 unresolved，merge前gate/Checks通过，merge1b8。PR200 headb98f8ab76一轮clean/0 unresolved，merge e26，保持CI聚合门禁并修复Swift6.2容量；PR201 headb77f20c0b一轮clean/0 unresolved，merge e641，独立审查发现的phase1临时key清理P2已根因修复并补7项永久回归。两PR merge前即时gate与Checks通过、merge后lint/aggregate成功。独立Mac与iOS发布来源复核阻塞0；纠正archive时点/根Info.plist哈希与draft快照措辞，不把历史head/binary或cancelled CI冒称当前通过。Mac公开后证据收尾的exact-head review/gate保存在该PR。

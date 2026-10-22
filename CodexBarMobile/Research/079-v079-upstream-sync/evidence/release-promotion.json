@@ -1,0 +1,118 @@
+{
+  "macVersion": "0.79.0.1",
+  "mobileVersion": "3.1.0",
+  "sparkleVersion": "172.1.3.1.0",
+  "artifactSourceCommit": "15fb91b1f34d15b79899f258de035687b16287bb",
+  "mergeCommit": "1b8a8be12a251b322e8467fe3966250bcb0a3d00",
+  "releaseID": 420093277,
+  "releaseTag": "v0.79.0.1-mobile.3.1.0",
+  "releaseURL": "https://github.com/o1xhack/CodexBar-Mobile/releases/tag/v0.79.0.1-mobile.3.1.0",
+  "notaryID": "6b57e15b-da4b-482d-9049-ec0623b4972b",
+  "notaryStatus": "Accepted",
+  "reviewPR": 199,
+  "reviewRounds": 6,
+  "unresolvedThreadsAtMerge": 0,
+  "finalCI": 39723108855,
+  "finalCIState": "required coverage passed via original successful matrices and targeted compatibility repair; original run cancelled/aggregate failure preserved",
+  "macPublicationState": "live",
+  "ios": {
+    "archive": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/TestFlight-20261021-213219/CodexBarMobile.xcarchive",
+    "archiveCheckoutHead": "15fb91b1f34d15b79899f258de035687b16287bb",
+    "reviewedIOSInputsCommit": "15be65cbda7e2036f9961376bae3edfcc1b81133",
+    "iOSProductInputsDiff": [],
+    "bundles": [
+      {
+        "bundle": "CodexBarMobile.app",
+        "identifier": "com.o1xhack.codexbar.mobile",
+        "version": "3.1.0",
+        "build": "246"
+      },
+      {
+        "bundle": "CodexBarMobilePushExtension.appex",
+        "identifier": "com.o1xhack.codexbar.mobile.pushextension",
+        "version": "3.1.0",
+        "build": "246"
+      },
+      {
+        "bundle": "CodexBarMobileWidgetOptions.appex",
+        "identifier": "com.o1xhack.codexbar.mobile.widgetoptions",
+        "version": "3.1.0",
+        "build": "246"
+      },
+      {
+        "bundle": "CodexBarMobileWidgets.appex",
+        "identifier": "com.o1xhack.codexbar.mobile.widgets",
+        "version": "3.1.0",
+        "build": "246"
+      }
+    ],
+    "environment": "Production",
+    "executableSHA256": "96c6c551bd207ed9e1d32c415aac9cd075e0e930ef3cf683c80310d19bea49b4",
+    "sourceIconVisuallyVerified": true,
+    "compiledIconVisuallyVerified": true,
+    "duoRegression": {
+      "passed": 2,
+      "skipped": 1,
+      "failures": 0,
+      "reason": "current outer-screen width cannot exercise independent wide panes",
+      "xcresult": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/ios-duo-release-regression.xcresult"
+    },
+    "serverIconVisuallyVerified": true,
+    "reviewedReleaseMerge": "1b8a8be12a251b322e8467fe3966250bcb0a3d00",
+    "reviewedMergeIOSInputsDiff": [],
+    "ascBuildID": "17160de4-173b-434b-93f7-5d3c102aac4f",
+    "ascVersionID": "206d00f9-4b38-46d7-b952-f03fc81750b9",
+    "reviewSubmissionID": "c72ab909-dec3-4fdf-b714-06ce94e70004",
+    "reviewState": "WAITING_FOR_REVIEW",
+    "releaseType": "MANUAL",
+    "wideContainerRegression": {
+      "device": "CodexBar Duo 078 iPad QA / iOS 27.0",
+      "udid": "E446FFE7-8834-495D-926B-C4D4803F4F1C",
+      "passed": 1,
+      "skipped": 0,
+      "failed": 0,
+      "test": "testWidePanesScrollIndependently",
+      "xcresult": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/ios-wide-release-regression.xcresult"
+    },
+    "preExportArchiveInfoSHA256": "23e2857da9abb6c1cac058518e8c3b17e610bb0ad0fb8d65668de44ed392b292",
+    "preExportArchiveTreeSHA256": "98e732f6e7265cc0775efaa8976df37f38e1bb1c0c96bc85c9b2908f9d3456f9",
+    "postExportArchiveInfoSHA256": "dc7ae7fae1789956ebb296a24daf5539cee4a581e5a95a10745a9ce2a921b5aa",
+    "postExportArchiveTreeSHA256": "401abff1be19fe38aa1074565e47587ccd62517ab77be4480346fadf3718e7fd",
+    "archiveManifestHashAlgorithm": "SHA256 of UTF-8 json.dumps(relativePathToSHA256, sort_keys=True, separators=(comma,colon)), no newline",
+    "postExportChanges": {
+      "changed": [
+        "Info.plist"
+      ],
+      "added": [],
+      "removed": [],
+      "reason": "Xcode export/upload adds Distributions bookkeeping to the archive root Info.plist at upload completion. Every Products and dSYMs file matches the pre-export manifest.",
+      "rootInfoModifiedUTC": "2026-10-22T04:35:30.559994+00:00",
+      "productAndSymbolFilesUnchanged": true
+    }
+  },
+  "cloudKitSchema": "NO_DEPLOY",
+  "compatibilityMatrix": {
+    "cases": 16,
+    "reads": 64,
+    "merges": 32,
+    "result": "substituted",
+    "physicalCloudKitAPNsVerified": false
+  },
+  "artifactSourceTree": "c72ef4f163ac411a443d84be6c9f309fc0044a45",
+  "mergeTree": "c72ef4f163ac411a443d84be6c9f309fc0044a45",
+  "publishedAt": "2026-10-22T05:42:03Z",
+  "releaseCommit": "e64152322fa63732b38dd6c1b832879bdc4943fe",
+  "releaseMacInputsDiff": [],
+  "appcastCommit": "238b29709c2c75ed187b925d8784ffac1cf91b75",
+  "ciEvidence": "final-ci-coverage.json",
+  "upstreamIssue": {
+    "number": 196,
+    "state": "CLOSED",
+    "reason": "COMPLETED",
+    "comment": "https://github.com/o1xhack/CodexBar-Mobile/issues/196#issuecomment-6333691752"
+  },
+  "cliReleaseWorkflow": {
+    "run": 39729517647,
+    "state": "in_progress"
+  }
+}

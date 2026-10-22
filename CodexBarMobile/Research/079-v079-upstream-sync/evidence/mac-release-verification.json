@@ -1,0 +1,69 @@
+{
+  "sourceCommit": "15fb91b1f34d15b79899f258de035687b16287bb",
+  "version": "0.79.0.1",
+  "sparkleVersion": "172.1.3.1.0",
+  "releaseID": 420093277,
+  "isDraft": false,
+  "publishedAt": "2026-10-22T05:42:03Z",
+  "widgetVersion": "172.1",
+  "architectures": {
+    "Contents/MacOS/CodexBar": [
+      "x86_64",
+      "arm64"
+    ],
+    "Contents/Helpers/CodexBarCLI": [
+      "x86_64",
+      "arm64"
+    ],
+    "Contents/PlugIns/CodexBarWidget.appex/Contents/MacOS/CodexBarWidget": [
+      "x86_64",
+      "arm64"
+    ]
+  },
+  "binaryUUIDs": {
+    "x86_64": "8B766287-BF51-3EEA-90CF-AD043EB45FAA",
+    "arm64": "935ACCF0-7836-3208-8363-D6E0C23BD514"
+  },
+  "dSYMUUIDs": {
+    "x86_64": "8B766287-BF51-3EEA-90CF-AD043EB45FAA",
+    "arm64": "935ACCF0-7836-3208-8363-D6E0C23BD514"
+  },
+  "packagedGeminiPluginSHA256": {
+    "Contents/Helpers/CodexBar_CodexBarCore.bundle/Contents/Resources/gemini-web.js": "90ba836f1710c5a9ae528166e4815498bbd0ac2209106248fbe864af498c3a93",
+    "Contents/Resources/CodexBar_CodexBarCore.bundle/Contents/Resources/gemini-web.js": "90ba836f1710c5a9ae528166e4815498bbd0ac2209106248fbe864af498c3a93",
+    "Contents/PlugIns/CodexBarWidget.appex/Contents/Resources/CodexBar_CodexBarCore.bundle/Contents/Resources/gemini-web.js": "90ba836f1710c5a9ae528166e4815498bbd0ac2209106248fbe864af498c3a93"
+  },
+  "cloudKitEnvironment": "Production",
+  "codesign": "pass",
+  "spctl": "accepted",
+  "staple": "validated",
+  "assets": [
+    {
+      "name": "CodexBar-0.79.0.1-mobile.3.1.0.zip",
+      "size": 90774554,
+      "digest": "sha256:5db63fe39fd82da043d28243a477f4cc452e1b467e68c6db235a5582790ea0c0"
+    },
+    {
+      "name": "CodexBar-0.79.0.1-mobile.3.1.0.dSYM.zip",
+      "size": 72678034,
+      "digest": "sha256:d42707e076a2256bb1fbc48400ea89f672a7805e04617a5fea637d860d7476b6"
+    }
+  ],
+  "releaseURL": "https://github.com/o1xhack/CodexBar-Mobile/releases/tag/v0.79.0.1-mobile.3.1.0",
+  "releaseTagCommit": "e64152322fa63732b38dd6c1b832879bdc4943fe",
+  "releaseTargetCommitish": "e64152322fa63732b38dd6c1b832879bdc4943fe",
+  "appcastCommit": "238b29709c2c75ed187b925d8784ffac1cf91b75",
+  "servedFeedMatchesLocal": true,
+  "servedFeedSHA256": "64eaed972cfda8729d7d691ac647cd02f00ccceb1f735f1e26f5adf5e22d9980",
+  "publicDownloadEdSignatureVerified": true,
+  "publicDownloadLengthVerified": true,
+  "finalizeExit": 0,
+  "cleanupRegressionCases": 7,
+  "cloudKitSchema": "NO_DEPLOY",
+  "preflight": {
+    "draftURL": "https://github.com/o1xhack/CodexBar-Mobile/releases/tag/untagged-4e6171354bdf7c6c8942",
+    "draftTargetCommitish": "1b8a8be12a251b322e8467fe3966250bcb0a3d00",
+    "localTagAbsent": true,
+    "remoteTagAbsent": true
+  }
+}

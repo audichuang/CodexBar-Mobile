@@ -1,8 +1,8 @@
-# Mac draft release 证据
+# Mac 打包与发布证据
 
-Status: `done`（signed/notarized draft已刷新；后续用户授权的任务分支push/PR已完成，未merge/tag/live/TF）。
+Status: `done`（Mac 0.79.0.1-mobile.3.1.0已live，iOS已提交审核；最终来源、版本、资产和feed见07。以下draft段落为历史阶段记录）。
 
-## 发布方案
+## 起始Draft方案（历史，正式方案见07）
 
 - 目标 Mac 0.79.0.1 / BUILD_NUMBER 172.1 / companion 2.10.0；Sparkle 172.1.2.10.0，拟用 tag v0.79.0.1-mobile.2.10.0。
 - iOS 3.1.0 (246) 是本轮准备版本，未上传/发布，不能提前写成已发布的 Mac companion。已有 version.env 文档中的旧三段规则示例与四段规则冲突时，遵循顶部明确的四段规则。
@@ -11,7 +11,7 @@ Status: `done`（signed/notarized draft已刷新；后续用户授权的任务�
 - Mac product inputs 修改后必须重打包，不能把先前 draft 的二进制当成后续修复已生效。
 - 不调用 finalize，不创建或推送 tag、不 merge、不上传 TestFlight；只按后续用户授权推送任务分支。#196 维持 open，按仓库规则仅 live release 后才能关闭。
 
-## 当前完成证据
+## Draft阶段完成证据
 
 - evidence/version-plan.json：数字比较确认新 Sparkle 大于当前 appcast 所有条目。
 - 签名 appcast 候选已生成并验证；根 appcast 已恢复已发布 feed 原字节，未发布新 feed。
@@ -43,7 +43,7 @@ Status: `done`（signed/notarized draft已刷新；后续用户授权的任务�
 
 前述4f实包是历史成功证据；PR修复修改了Gemini插件和sync产品输入，必须刷新同一个draft。ca源第一次刷新中双archRelease通过，错误使用未带CODEXBAR_前缀的widget root导致新缓存缺锁定SweetCookieKit commit；改为已验证的CODEXBAR_WIDGET_DERIVED_DATA_ROOT。之后独立审查发现Gemini Web身份P1，主动中断该旧源重试并终止其本任务编译子进程，不将未完成产物上传。随后完整签名/公证与asset替换已绑定修复后的18ccdefb2，保留同一release ID；GitHub编辑后draft URL以最新API为准，无tag/live/feed publication。
 
-## PR修复后最终实包（当前）
+## PR修复后R4实包（历史draft）
 
 - 同release ID **420093277**，当前draft：https://github.com/o1xhack/CodexBar-Mobile/releases/tag/untagged-0715b4300e9fa77195ee 。编辑target后GitHub重新生成untagged URL，未创建第二个release；draft=true/published_at=null。
 - 源码与target均`18ccdefb2eb29ea148e7823da221a8739d683015`，已获GitHub第四轮clean review。版本0.79.0.1 / Sparkle172.1.2.10.0，Widget CFBundleVersion按既有脚本为172.1。Mac companion metadata保留version.env基线2.10.0，不声称最新手机beta版本。
@@ -51,3 +51,7 @@ Status: `done`（signed/notarized draft已刷新；后续用户授权的任务�
 - ZIP 90,774,579 bytes / sha256:b459031f7a6d1b57e39bede3766c780c6bfdf728f0d6ba8f4fc47984cf100db2；dSYM ZIP 72,677,888 bytes / sha256:5f5a1ed342b4df2654e044e43ae16ac739627df88bae04c06a1e966a00200380，GitHub asset digest/size逐一一致。
 - `v079-pr199-r4-mac-verification.log`：严格codesign、spctl、stapler、app/CLI/widget arm64+x86_64、dSYM逐arch UUID、Production entitlement、包内三份gemini-web.js逐字节匹配源码均通过。local/origin拟tag均不存在。
 - `v079-pr199-r4-appcast.log`：候选完整tag URL、长度90,774,579、172.1.2.10.0单调递增、EdDSA验证通过；root appcast恢复原字节，未发布feed。evidence四份当前artifact/appcast文件已替换旧4f证据。
+
+## 用户授权后的正式发布
+
+同release ID420093277已晋级为 [0.79.0.1-mobile.3.1.0](https://github.com/o1xhack/CodexBar-Mobile/releases/tag/v0.79.0.1-mobile.3.1.0)，原2.10 draft从未公开。源码15fb91b1f重新编译/签名/公证，tag指向e64152322（全部Mac产品输入相同，包含经审查CI/验证工具修复）；Sparkle172.1.3.1.0。finalize exit0，公开enclosure Ed25519/长度与served feed正确，appcast已推送238b29709。iOS3.1.0(246)已先上传VALID，再更新Mac companion metadata，保持单版本约束。完整公证ID、SHA/UUID/架构、CI原始失败与定向修复、临时key清理与发布状态见07和evidence/mac-release-verification.json。
