@@ -6,17 +6,18 @@ Status: `done`（本地验收完成；16组合均为有边界的替代验证，�
 
 | Gate | 结果与证据 |
 |---|---|
-| Mac build / packaged regression | PASS：R4显式SDK arm64/x86_64 Release（460.20/379.07秒）及Widget双架构，源码18ccdefb2；签名、公证、staple、launch/resource probes及dSYM UUID通过，详见04。 |
+| Mac build / packaged regression | PASS：正式15fb实包双架构Release/Widget、签名公证/staple/隔离launch/resource及公开下载验证通过，见07；R4显式SDK arm64/x86_64 Release（460.20/379.07秒）及Widget双架构，源码18ccdefb2；签名、公证、staple、launch/resource probes及dSYM UUID通过，详见04。 |
 | Mac完整单测 | PASS：R4 1791 selections /160 groups，160组first-pass，0失败/重试/超时；`v079-pr199-r4-all-tests.log`，729.0秒（discovery128.2/execution596.9），15800 runtime methods；13条默认关闭的性能/TSAN/native proof skip，新增用例无跳过。 |
 | 最终完整lint | PASS：`v079-pr199-r4-lint-final.log` exit0，3143文件0 violations；portable/CI/README/release guards、SwiftFormat、JS/TS、parser hash/revision、四语catalog和436个iOS源key通过。 |
 | iOS完整单测及Widget回归 | PASS：`v079-pr199-r4-ios.log` / `pr199-r4-ios.xcresult`，1156 Swift Testing /73 suites +67 XCTest，0失败；含新增Gemini真实merger正反序回归和已有ledger/details/Widget测试。 |
-| iOS设备Release build | PASS：复用R2 generic/platform=iOS Release（CODE_SIGNING_ALLOWED=NO，3.1.0/246）；R4仅改Mac及测试，iOS产品/Shared/project输入相对ca2d92f8dd零diff。未archive/upload。 |
+| iOS设备Release build | PASS：复用R2 generic/platform=iOS Release（CODE_SIGNING_ALLOWED=NO，3.1.0/246）；R4仅改Mac及测试，iOS产品/Shared/project输入相对ca2d92f8dd零diff。后续已在15fb实际Archive/upload，3.1.0(246)VALID并提交App Review/MANUAL，详07。 |
 | iOS引导交互 | PASS：Duo模拟器两条XCUITest，Duo27.1和iOS26.5均通过，首次notes→Setup→Continue、同版本重启不重复展示、Demo跳过notes；`v079-ios-intro-ui.log` / `ios-intro-ui.xcresult`。 |
 | 四语/深浅色/辅助字号视觉 | PASS：生产details/full+teaser四语×Light/Dark共8图，日文accessibility3另1图，最终逐张目视验收。第一版大字号拆行已改竖排并复跑。证据`evidence/ios-validation.json`绑定截图SHA256。 |
-| Mac draft与appcast候选 | PASS：同release ID420093277已刷新为源码18ccdefb2；远端digest/size、签名、三份Gemini资源及appcast签名/单调性全部对应；已发布feed未改，04含最新draft链接。 |
+| Mac live与线上appcast | PASS：同release ID420093277正式发布0.79.0.1-mobile.3.1.0；15fb实包digest/签名/资源/版本匹配，公开下载签名/长度与线上feed验证通过；07与mac-release-verification.json为终态。 |
+| 自动分发产物 | PASS：CLI六平台、Linux desktop两架构、Mac Release Verify均success；实际公开下载8份tarball及sha256/size/digest核对通过，18附件完整，check-release-assets exit0，详07。 |
 | CloudKit Production schema | NO_DEPLOY：见下；未执行live schema export/写入。 |
 | 2Mac×2iPhone gate | COMPLETE WITH SUBSTITUTIONS：16/16列出，64读取和32真实old/new consumer合并进程全部通过；不是16实体PASS。 |
-| 循环review | 实现head18ccdefb2已获GitHub第四轮clean，两个线程resolved；最终证据提交的exact-head clean与仓库gate记录在PR #199，详见05。 |
+| 循环review | 实现head18ccdefb2已获GitHub第四轮clean，两个线程resolved；最终15fb R6、后续200/201工具修复均exact-head clean/0 unresolved，merge前gate通过，详见05/07。 |
 
 日志根目录：`/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/`；xcresult、渲染附件与临时fixture位于其`v079/`子目录。轻量机器可读证据保存在本目录evidence。
 
@@ -25,8 +26,8 @@ Status: `done`（本地验收完成；16组合均为有边界的替代验证，�
 - Mac：`TMPDIR=.../v079/tmp bash Scripts/test.sh --direct-workers 4`，源码18ccdefb2；`Scripts/lint.sh lint`。完整runner在隔离snapshot runtime执行，实包从同一源码签名公证。首次4f实包的历史结果由R4产品修复与新实包取代。
 - iOS：`DEVELOPER_DIR=/Volumes/StudioSSD/Developer/Xcode/Xcode-27.1-RC.app/Contents/Developer`，27.1 RC /27A9275；无安装或全局xcode-select变更。`xcodebuild -project CodexBarMobile/CodexBarMobile.xcodeproj -scheme CodexBarMobile -destination 'platform=iOS Simulator,id=FA6BFB39-3400-472B-8ED0-CD10A87F629E' -derivedDataPath .../v079/ios-derived -resultBundlePath .../v079/ios-full-final.xcresult -parallel-testing-enabled NO -only-testing:CodexBarMobileTests CODE_SIGNING_ALLOWED=NO test`。
 - UI使用相同项目/destination/derivedData，仅选择`testVersionUpdateShowsReleaseNotesAndSetupGuideOnDemand`和`testChoosingDemoFromSetupGuideDismissesFirstLaunchReleaseNotes`，结果写入独立`ios-intro-ui.xcresult`。
-- Release改destination为`generic/platform=iOS`、configuration Release、独立`ios-release`派生目录及result；全程SSD、无签名上传。
-- iOS最终测试源码与独立review tree `beb4dc146badfd207830acdd9eccf6647e542877`一致；之后仅补Research证据。`ios-validation.json`记录关键源SHA256、结果路径、截图hash；frozen manifest逐文件绑定实际编译输入，newCommit是运行时Git HEAD而非声称未提交改动已在其中。
+- 早期 generic Release 阶段改destination为`generic/platform=iOS`、configuration Release、独立`ios-release`派生目录及result；该阶段全程SSD、无签名上传。后续实际 Archive、签名与上传已完成，见07。
+- 早期 pre-PR 1151 Swift Testing +66 XCTest 的测试源码与独立review tree `beb4dc146badfd207830acdd9eccf6647e542877`一致，该阶段测试后仅补Research证据；后续产品与测试修复及最终1156+67结果见下方R4，实际Archive来源15fb与审核来源绑定见07。`ios-validation.json`记录当时关键源SHA256、结果路径、截图hash；frozen manifest逐文件绑定实际编译输入，newCommit是运行时Git HEAD而非声称未提交改动已在其中。
 
 ## CloudKit Production schema 审计
 
@@ -67,7 +68,7 @@ Status: `done`（本地验收完成；16组合均为有边界的替代验证，�
 - old iOS不识别独立Claude cost owner隐藏规则，可能多一张无额度成本卡；旧CWL可能在clear后回填以前combined历史。Mac从未发送目录scoped金额，防止把不同目录daily混入machine历史。新iOS对明确机器撤回抑制展示、不删除原始ledger，普通nil与账号disown保留fallback。
 - JSON时间以秒编码。同一秒内快速切换所有权可能并列；独立owner有确定性tie优先、旧record两次成功publication后清理，但不保证亚秒排序/瞬时UI消失。下一次完整publication可收敛，未声称实时实体验证。
 - 当前Duo XCUITest的两张屏幕附件全黑；simctl复核同样全黑，open_sim工具返回成功也未改善。逻辑交互断言与9张生产视图ImageRenderer证据独立成立，黑图不作视觉PASS。随后在独立iOS26.5模拟器（F7DF92DB-2C2F-4475-8F19-615225381DB7）重复两条UI测试，2/2通过、41.47秒，`v079-ios-intro-ui-265.log` / `ios-intro-ui-265.xcresult`。正常导出两张notes/setup系统截图并逐张目视核对，补足完整引导界面证据；不扩大为Duo framebuffer修复。
-- 上游tag checks快照27success/3skipped/0failure，不满足严格“全部heavy CI成功”复用条件。本轮无push/远端CI；未来获准merge时Final CI须重新判断，必要时运行fork矩阵。GitHubPR审查也尚未运行。
+- 上游tag checks快照27success/3skipped/0failure，不满足严格复用条件；实际已跑fork矩阵，六Mac分片和三Linux任务均成功。原Swift6.2 job超时cancelled/aggregate失败保留，PR200修容量后固定相同源码单项补跑成功；两个工具修复PR的lint/aggregate成功。不能称原run全绿，详final-ci-coverage.json。
 - 没有live provider probe、cookie import、真实Keychain读取或真实账号历史金额QA；使用标准Scripts/test.sh安全环境、stubs和合成数据。
 
 ## 关键回归与失败修复记录
@@ -107,3 +108,7 @@ Mac focused retry：60 tests /3 suites PASS，含双JS engine、真实双设备p
 ## PR最终测试与实包终态
 
 `pr199-round4.json`、`mac-full-tests.json`和`mac-draft-verification.json`绑定18ccdefb2：60项Mac focused、完整Mac160/160 first-pass、1156+67 iOS、完整lint、16组合替代矩阵与新Mac signed/notarized draft全部通过。代码head GitHub R4 clean /两个thread resolved，最终证据提交继续接受exact-head review与gate；结果在PR评论记录，避免写入receipt再改变已审查head。Mac产品及测试此后不改，最终只有Research/evidence更新。CloudKit仍NO_DEPLOY；没有live release/tag/merge/TF，也没有把13条opt-in skip或16组substituted写成实体PASS。
+
+## 正式发布与追加回归终态
+
+用户后续明确授权后，Mac15fb实包已重打MOBILE_VERSION=3.1.0并live，公开下载和served feed均核验；iOS实际archive checkout15fb，所有产品输入与clean review及release tag完全一致，3.1.0(246)已上传/VALID/IN_BETA_TESTING并提交WAITING_FOR_REVIEW/MANUAL。pre/post-export101文件manifest唯一差异是根Info.plist分发记录，所有Products/dSYMs相同，详07。Duo外屏2pass/1宽度skip，iPad宽容器1pass/0skip，0fail；布局源与3.0.0基线byte一致，不冒称实体折叠认证。发布暂存/密钥生命周期12项隔离场景（5下载错误路径+7实际release函数）通过，7项永久回归接入lint；完整lint3143文件0违规。原16组合substituted风险仍适用，版本/发布metadata与非产品工具修复没有改变wire或consumer逻辑，无需重跑相同冻结矩阵。
