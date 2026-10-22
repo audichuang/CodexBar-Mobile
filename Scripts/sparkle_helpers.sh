@@ -130,7 +130,7 @@ probe_sparkle_key() {
   local key=$1 tmp
   [[ -f "$key" ]] || err "probe_sparkle_key: key file not found: $key"
   command -v sign_update >/dev/null || err "sign_update not on PATH (did SPM install Sparkle tools?)"
-  tmp=$(mktemp /tmp/sparkle-probe.XXXXXX)
+  tmp=$(mktemp "${CODEXBAR_RELEASE_STAGE_BASE:-${TMPDIR:-/tmp}}/sparkle-probe.XXXXXX")
   printf "codexbar-release-probe" > "$tmp"
   if ! sign_update "$tmp" --ed-key-file "$key" >/dev/null 2>&1; then
     rm -f "$tmp"

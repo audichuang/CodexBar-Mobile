@@ -38,10 +38,15 @@ function cleaned_key_path() {
   echo "$tmp"
 }
 
+KEY_FILE=""
+TMP_ZIP=""
+cleanup() {
+  [[ -z "$KEY_FILE" ]] || rm -f "$KEY_FILE"
+  [[ -z "$TMP_ZIP" ]] || rm -f "$TMP_ZIP" "$TMP_ZIP.meta"
+}
+trap cleanup EXIT
 KEY_FILE=$(cleaned_key_path)
-trap 'rm -f "$KEY_FILE" "$TMP_ZIP"' EXIT
-
-TMP_ZIP=$(mktemp /tmp/codexbar-enclosure.XXXX.zip)
+TMP_ZIP=$(mktemp "${CODEXBAR_RELEASE_STAGE_BASE:-${TMPDIR:-/tmp}}/codexbar-enclosure.XXXXXX.zip")
 
 python3 - "$APPCAST" "$VERSION" >"$TMP_ZIP.meta" <<'PY'
 import sys, xml.etree.ElementTree as ET
@@ -80,7 +85,7 @@ SIG=$(sed -n '2p' "$TMP_ZIP.meta")
 LEN_EXPECTED=$(sed -n '3p' "$TMP_ZIP.meta")
 
 echo "Downloading enclosure: $URL"
-curl -L -o "$TMP_ZIP" "$URL"
+curl --fail -L -o "$TMP_ZIP" "$URL"
 
 LEN_ACTUAL=$(stat -f%z "$TMP_ZIP")
 if [[ "$LEN_ACTUAL" != "$LEN_EXPECTED" ]]; then

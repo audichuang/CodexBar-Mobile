@@ -1,0 +1,42 @@
+[
+  {
+    "case": "success",
+    "exit": 0,
+    "cleanup": "pass",
+    "stage": "explicit SSD scratch",
+    "network": "stub",
+    "key": "synthetic"
+  },
+  {
+    "case": "wrong-length",
+    "exit": 1,
+    "cleanup": "pass",
+    "stage": "explicit SSD scratch",
+    "network": "stub",
+    "key": "synthetic"
+  },
+  {
+    "case": "missing-stage",
+    "exit": 1,
+    "cleanup": "pass",
+    "stage": "explicit SSD scratch",
+    "network": "stub",
+    "key": "synthetic"
+  },
+  {
+    "case": "http-error",
+    "exit": 22,
+    "cleanup": "pass",
+    "stage": "explicit SSD scratch",
+    "network": "stub",
+    "key": "synthetic"
+  },
+  {
+    "case": "bad-signature",
+    "exit": 1,
+    "cleanup": "pass",
+    "stage": "explicit SSD scratch",
+    "network": "stub",
+    "key": "synthetic"
+  }
+]
