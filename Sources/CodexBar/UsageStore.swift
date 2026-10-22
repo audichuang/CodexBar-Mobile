@@ -361,6 +361,8 @@ final class UsageStore {
     @ObservationIgnored var invalidatedQueuedWidgetProviders: Set<ProviderInstanceID> = []
     @ObservationIgnored var lastWidgetSourceSnapshots: [ProviderInstanceID: UsageSnapshot] = [:]
     @ObservationIgnored let widgetSnapshotURL: URL?
+    @ObservationIgnored let cliUsageCacheURL: URL?
+    @ObservationIgnored var cliUsageCachePersistTask: Task<Void, Never>?
     @ObservationIgnored let widgetTimelineReloader: @MainActor () -> Void
     @ObservationIgnored var widgetUsagePreservationBlockedProviders: Set<ProviderInstanceID> = []
 
@@ -538,6 +540,7 @@ final class UsageStore {
         environmentBase: [String: String] = ProcessInfo.processInfo.environment,
         pluginApprovalStore: ProviderPluginApprovalStore = ProviderPluginApprovalStore(),
         widgetSnapshotURL: URL? = nil,
+        cliUsageCacheURL: URL? = nil,
         widgetAccountSnapshotStore: (any WidgetAccountSnapshotStoring)? = nil,
         widgetTimelineReloader: @escaping @MainActor () -> Void = UsageStore.reloadWidgetTimelines,
         planUtilizationHistoryLoadGateForTesting: PlanUtilizationHistoryLoadGate? = nil)
@@ -550,6 +553,7 @@ final class UsageStore {
         self.environmentBase = environmentBase
         self.pluginApprovalStore = pluginApprovalStore
         self.widgetSnapshotURL = widgetSnapshotURL
+        self.cliUsageCacheURL = cliUsageCacheURL
         self.widgetTimelineReloader = widgetTimelineReloader
         self.historicalUsageHistoryStore = historicalUsageHistoryStore
         self.quotaTransitionWriter = quotaTransitionWriter
@@ -1610,6 +1614,10 @@ extension UsageStore {
             let durationText = String(format: "%.2f", duration)
             let message = "cost usage failed provider=\(provider.rawValue) duration=\(durationText)s error=\(msg)"
             self.tokenCostLogger.error(message)
+            // Provider-specific by design: an unavailable mapped Claude directory must not retain old costs.
+            if provider == .claude, self.claudeTokenCostConfigDirectory != nil {
+                self.clearTokenSnapshot(for: provider)
+            }
             let hadPriorData = self.tokenSnapshotPublications[provider.instanceID]?.snapshot != nil
             let shouldSurface = self.tokenFailureGates[provider.instanceID]?
                 .shouldSurfaceError(onFailureWithPriorData: hadPriorData) ?? true

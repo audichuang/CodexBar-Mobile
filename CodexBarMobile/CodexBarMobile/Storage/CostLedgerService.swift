@@ -501,7 +501,7 @@ enum CostLedgerService {
     /// keeps the positive amount the ledger already knows, with its tokens, until a publication that
     /// knows the cost arrives. Shared by the writer and the seed check so a kept day is not reseeded.
     static func keepsKnownDay(_ existing: DailyCostPoint, incomingCostIsKnown: Bool?) -> Bool {
-        incomingCostIsKnown == false && Self.hasKnownAmount(existing)
+        incomingCostIsKnown == false && self.hasKnownAmount(existing)
     }
 
     /// One total order for choosing among rows of the same day: a row whose cost is known (a known
@@ -537,12 +537,12 @@ enum CostLedgerService {
 
     /// Whether a merged day takes `candidate`'s values (see `dayPrecedes`).
     static func replacesDay(_ current: DailyCostPoint, with candidate: DailyCostPoint) -> Bool {
-        Self.dayPrecedes(current, candidate)
+        self.dayPrecedes(current, candidate)
     }
 
     /// The row a day keeps across Macs or former owners (see `dayPrecedes`).
     static func preferredDay(in rows: [DailyCostPoint]) -> DailyCostPoint? {
-        rows.max(by: Self.dayPrecedes)
+        rows.max(by: self.dayPrecedes)
     }
 
     /// Distinct accounts that own ledger rows for one device and provider.
@@ -632,15 +632,30 @@ enum CostLedgerService {
         let descriptor = FetchDescriptor<DailyCostPoint>(
             predicate: #Predicate { $0.dayKey >= fetchCutoffKey })
         let fetchedRows = try context.fetch(descriptor)
+        let costSources = sourceSnapshots.map(ProviderSnapshotMerger.effectiveCostSnapshot)
+        var withdrawnSources: [String: Set<String>] = [:]
+        for snapshot in costSources {
+            let deviceID = snapshot.deviceID ?? "legacy:\(snapshot.deviceName)"
+            for (providerID, providers) in Dictionary(grouping: snapshot.providers, by: \.providerID) {
+                guard ProviderSnapshotMerger.usesLocalCostMerge(providerID: providerID),
+                      providers.contains(where: {
+                          $0.costSummaryCleared == true && ProviderSnapshotMerger.hasMachineCostClaim($0)
+                      }),
+                      !providers.contains(where: { $0.costSummary != nil && $0.costSummaryCleared != true })
+                else { continue }
+                withdrawnSources[deviceID, default: []].insert(providerID)
+            }
+        }
+        let visibleRows = fetchedRows.filter { !(withdrawnSources[$0.deviceID]?.contains($0.providerID) ?? false) }
         let rows: [DailyCostPoint] = if let activeDeviceIDs {
-            fetchedRows.filter { activeDeviceIDs.contains($0.deviceID) }
+            visibleRows.filter { activeDeviceIDs.contains($0.deviceID) }
         } else {
-            fetchedRows
+            visibleRows
         }
 
         let decoder = CloudSyncConstants.makeJSONDecoder()
         let sourceDayWindows = Self.makeSourceDayWindows(
-            snapshots: sourceSnapshots,
+            snapshots: costSources,
             windowDays: windowDays,
             asOf: asOf,
             readerTodayDayKey: readerTodayKey)

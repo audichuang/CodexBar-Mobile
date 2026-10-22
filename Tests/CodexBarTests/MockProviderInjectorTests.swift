@@ -60,8 +60,8 @@ struct MockProviderInjectorTests {
         // iOS 1.20.0 adds 4 v0.46-v0.47 provider mocks. 77 → 81.
         // iOS 1.21.0 adds Fireworks and IBM Bob. 81 → 83.
         #expect(
-            MockProviderInjector.allMocks().count == 119,
-            "102 → 105 (+3 upstream v0.71-v0.72) → 106 (+Langdock, v0.73) → 115 (+9 v0.74) → 119 (+4 v0.75-v0.76).")
+            MockProviderInjector.allMocks().count == 121,
+            "121 snapshots include Future AGI and Munito alongside the previous provider fixtures.")
     }
 
     @Test
@@ -313,7 +313,7 @@ struct MockProviderInjectorTests {
                 "xkiro", "raycast", "museai", "lithosai", "workbuddy", "langdock",
                 "aerostack", "cosmic", "tavily", "exa", "linkup", "tinyapi",
                 "sailresearch", "sofya", "xapi",
-                "fal", "flora", "parallel", "claudeplatform",
+                "fal", "flora", "parallel", "claudeplatform", "futureagi", "munito",
             ]),
             "only the known credit/subscription mocks may be cost-less; got \(costLessIDs)")
         #expect(withCost.count >= 25, "≥25 real-borrowed mocks must carry cost data; got \(withCost.count)")

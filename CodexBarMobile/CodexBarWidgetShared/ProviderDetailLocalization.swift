@@ -22,7 +22,7 @@ enum ProviderDetailLocalization {
         "aerostack", "cosmic", "exa", "jetbrains", "linkup", "ollama", "qwencloud", "sailresearch",
         "sofya", "tavily", "tinyapi", "xapi",
         // Upstream v0.75.0–v0.76.0 bundled plugins.
-        "claudeplatform", "fal", "flora", "parallel",
+        "claudeplatform", "fal", "flora", "parallel", "futureagi", "munito",
     ]
 
     /// Stable semantic labels currently emitted by bundled provider detail
@@ -53,7 +53,9 @@ enum ProviderDetailLocalization {
         "Premium weekly",
         "Professional voices", "Project", "Promotional", "Providers", "Prompts", "Purchased", "Quota",
         "Quota details", "Quota services", "Rate limit", "Rate-limit remaining", "Recurring",
-        "Included limits", "Remaining", "Renews", "Request quota", "Requests", "Reset", "Reset window", "Reserved", "Session", "Shared",
+        "Included limits", "Remaining", "Renews", "Request quota", "Requests", "Reset", "Reset window", "Reserved",
+        "Session",
+        "Shared",
         "Rest of organization", "Reviews", "Rollover credits", "Routed", "Saved", "Scope", "Shared pool",
         "Spend history", "Spending limit", "Spent", "Spent this month", "Stored", "Subscription",
         "Subscription credits", "Team credits", "Top-up credits",
@@ -79,6 +81,11 @@ enum ProviderDetailLocalization {
         "Member limit", "Other credit grants", "Pending debit", "Runs this month", "Workspace balance",
         // Claude Extra usage budget periods (the v0.75 CLI parser now publishes "Monthly cap").
         "Monthly cap", "Spend limit",
+        "Billing period", "Used / free allowance", "Estimated usage cost", "Spend limits", "Usage tier",
+        "Data region", "Status", "Today organization limit", "Today account limit", "Today stopped until",
+        "This month organization limit", "This month account limit", "This month stopped until",
+        "Local cost history", "Account-specific history",
+        "Personal budget", "No personal budget configured",
     ]
 
     /// These sections deliberately use provider-returned account, team, model,
@@ -89,6 +96,7 @@ enum ProviderDetailLocalization {
         "claude": ["Cost items"],
         // Grant names come from the Console; a grant called "Balance" must stay verbatim.
         "claudeplatform": ["Other credit grants"],
+        "futureagi": ["Used / free allowance"],
         "groq": ["Models"],
         "ibmbob": ["Bobcoin usage"],
         "llmproxy": ["Providers"],
@@ -172,6 +180,37 @@ enum ProviderDetailLocalization {
         sectionTitle: String? = nil,
         locale: Locale = .current) -> String
     {
+        if providerID == "claude", sectionTitle == "Local cost history",
+           rowLabel == "Account-specific history", value == "View account-specific local costs on your Mac."
+        {
+            return MobileLocalizedString.value(value, defaultValue: value, locale: locale)
+        }
+        if providerID == "munito" {
+            if rowLabel == "Status", value == "Active" {
+                return MobileLocalizedString.value(value, defaultValue: value, locale: locale)
+            }
+            if sectionTitle == "Spend limits", ["Today", "This month"].contains(rowLabel ?? "") {
+                let parts = value.components(separatedBy: " of ")
+                if parts.count == 2 {
+                    let format = MobileLocalizedString.value("%@ of %@", defaultValue: "%@ of %@", locale: locale)
+                    return String(format: format, locale: locale, arguments: parts)
+                }
+            }
+            if rowLabel?.hasSuffix(" stopped until") == true {
+                let parser = ISO8601DateFormatter()
+                parser.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+                let fractional = parser.date(from: value)
+                parser.formatOptions = [.withInternetDateTime]
+                if let date = fractional ?? parser.date(from: value) {
+                    let formatter = DateFormatter()
+                    formatter.locale = locale
+                    formatter.dateStyle = .medium
+                    formatter.timeStyle = .short
+                    return formatter.string(from: date)
+                }
+            }
+            return value
+        }
         switch providerID {
         case "aixy":
             if rowLabel == nil,

@@ -159,9 +159,10 @@ enum SwiftDataBridge {
     // MARK: - Core upsert
 
     private static func upsertSnapshot(
-        _ snapshot: SyncedUsageSnapshot,
+        _ sourceSnapshot: SyncedUsageSnapshot,
         into context: ModelContext) throws
     {
+        let snapshot = ProviderSnapshotMerger.effectiveCostSnapshot(sourceSnapshot)
         let deviceID = snapshot.deviceID ?? Self.deviceIDFallback(for: snapshot)
         let device = try Self.fetchOrCreateDevice(
             deviceID: deviceID,
@@ -200,12 +201,16 @@ enum SwiftDataBridge {
         // atomically rekeying old-owner rows to the single incoming owner
         // before processing clear tombstones and bounded replacement blobs.
         for (providerID, providers) in Dictionary(grouping: snapshot.providers, by: \.providerID) {
-            let costOwners = providers.filter { $0.costSummary != nil }
+            let costOwners = providers.filter { $0.costSummary != nil && $0.costSummaryCleared != true }
             guard costOwners.count == 1, let costOwner = costOwners.first else { continue }
             // Account-native summaries must never move between accounts, even
             // if an older producer accidentally emitted a clear tombstone.
             guard !Self.usesAccountNativeCostOwnership(providerID: providerID) else { continue }
-            for oldOwner in providers where oldOwner.costSummaryCleared == true {
+            let movesMachineCost = ProviderSnapshotMerger.usesLocalCostMerge(providerID: providerID)
+            for oldOwner in providers where oldOwner.costSummaryCleared == true
+                || (movesMachineCost && (oldOwner.accountRecordKey != costOwner.accountRecordKey
+                        || oldOwner.accountEmail != costOwner.accountEmail))
+            {
                 try CostLedgerService.migrateCostOwnership(
                     deviceID: deviceID,
                     providerID: providerID,
@@ -228,7 +233,6 @@ enum SwiftDataBridge {
                 accountRecordKey: costOwner.accountRecordKey)
             // Only a machine's local cost follows its owner; account-level spend stays with the
             // account that incurred it (Research 069).
-            let movesMachineCost = ProviderSnapshotMerger.usesLocalCostMerge(providerID: providerID)
             for oldOwner in existingForDevice where
                 movesMachineCost
                 && oldOwner.providerID == providerID
@@ -290,8 +294,6 @@ enum SwiftDataBridge {
         for existing in existingForDevice where !incomingKeys.contains(existing.compositeKey) {
             context.delete(existing)
         }
-
-
     }
 
     /// Providers whose cost summaries describe one account rather than a

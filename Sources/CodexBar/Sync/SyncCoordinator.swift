@@ -10,6 +10,7 @@
 // used in MockProviderInjector.
 import CodexBarCore
 import CodexBarSync
+import CryptoKit
 import Foundation
 import Observation
 
@@ -169,17 +170,32 @@ final class SyncCoordinator {
     /// the real app. Tests that exercise mock activation pass
     /// `{ MockProviderInjector.allMocks() }` to bypass the global
     /// activation check entirely.
-    init(
+    convenience init(
         store: UsageStore,
         settings: SettingsStore,
         syncManager: any SyncPushing = CloudSyncManager.shared,
+        mockInjector: @escaping @MainActor () -> [ProviderUsageSnapshot] = { [] })
+    {
+        self.init(
+            store: store,
+            settings: settings,
+            syncManager: syncManager,
+            deviceID: Self.stableDeviceID(),
+            mockInjector: mockInjector)
+    }
+
+    init(
+        store: UsageStore,
+        settings: SettingsStore,
+        syncManager: any SyncPushing,
+        deviceID: String,
         mockInjector: @escaping @MainActor () -> [ProviderUsageSnapshot] = { [] })
     {
         self.store = store
         self.settings = settings
         self.syncManager = syncManager
         self.mockInjector = mockInjector
-        self.deviceID = Self.stableDeviceID()
+        self.deviceID = deviceID
     }
 
     /// Starts observing `UsageStore` snapshot changes.
@@ -241,6 +257,9 @@ final class SyncCoordinator {
             _ = self.store.errors
             _ = self.store.tokenSnapshotPublications
             _ = self.store.codexAccountSnapshots
+            _ = self.store.claudeSwapAccountSnapshots
+            _ = self.settings.claudeSwapEnabled
+            _ = self.settings.claudeSwapShowSingleAccount
             _ = self.store.credits
             _ = self.settings.iCloudSyncEnabled
             // Multi-account: re-push when the active Codex managed account
@@ -882,6 +901,7 @@ final class SyncCoordinator {
                         progress: $0.progress.flatMap {
                             SyncProviderDetailSection.Row.Progress(used: $0.used, total: $0.total)
                         },
+                        severity: $0.severity.flatMap { .init(rawValue: $0.rawValue) },
                         usageValue: $0.usageValue)
                 },
                 chart: chart)
@@ -1150,7 +1170,8 @@ final class SyncCoordinator {
         sharedUtilizationHistory: [SyncUtilizationSeries]?,
         clearSharedCostOwnership: Bool = false,
         accountRecordKey requestedAccountRecordKey: String? = nil,
-        statusNote: String? = nil) -> ProviderUsageSnapshot
+        statusNote: String? = nil,
+        accountIdentityOverrides: [String]? = nil) -> ProviderUsageSnapshot
     {
         // Build dynamic rate windows array with labels from metadata.
         var rateWindows: [SyncRateWindow] = []
@@ -1262,10 +1283,13 @@ final class SyncCoordinator {
 
         // Per-account stable identifier set for cross-Mac union-find merging.
         // See `Research/019-account-identity-multi-version-merge.md`.
-        let accountRecordKey = provider == .wayfinder
-            ? "device-\(self.deviceID.lowercased())"
-            : requestedAccountRecordKey
-        let accountIdentities = Self.syncAccountIdentities(
+        let accountRecordKey = Self.syncAccountRecordKey(
+            provider: provider,
+            requested: requestedAccountRecordKey,
+            deviceID: self.deviceID,
+            identity: snapshot?.identity,
+            sourceMode: self.settings.providerConfig(for: provider)?.source)
+        let accountIdentities = accountIdentityOverrides ?? Self.syncAccountIdentities(
             provider: provider,
             identity: snapshot?.identity,
             accountRecordKey: accountRecordKey)
@@ -1342,6 +1366,16 @@ final class SyncCoordinator {
         let resolvedCostSummary = sharedCostSummary
             ?? Self.mapMistralCostSummary(provider: provider, snapshot: snapshot)
             ?? Self.mapXAICostSummary(provider: provider, snapshot: snapshot)
+        var details = Self.mapSyncedDetails(snapshot?.details ?? [], provider: provider)
+        // Provider-specific by design: Mobile cannot store Claude directory-scoped history in its machine-wide ledger.
+        if provider == .claude, self.hasScopedClaudeCostPublication {
+            details = Array(details.prefix(SyncProviderDetailSection.maximumSectionsPerSnapshot - 1))
+            details.append(SyncProviderDetailSection(
+                title: "Local cost history",
+                rows: [.init(
+                    label: "Account-specific history",
+                    value: "View account-specific local costs on your Mac.")]))
+        }
         return ProviderUsageSnapshot(
             providerID: provider.rawValue,
             providerName: metadata?.displayName ?? provider.rawValue.capitalized,
@@ -1353,7 +1387,9 @@ final class SyncCoordinator {
             isError: error != nil,
             lastUpdated: snapshot?.updatedAt ?? Date(),
             costSummary: resolvedCostSummary,
-            costSummaryCleared: clearSharedCostOwnership && resolvedCostSummary == nil ? true : nil,
+            // Provider-specific by design: Claude directory scope withdraws the previous combined cost publication.
+            costSummaryCleared: (clearSharedCostOwnership || (provider == .claude && self.shouldClearClaudeCostSummary))
+                && resolvedCostSummary == nil ? true : nil,
             budget: budgetSnap,
             subscriptionExpiresAt: snapshot?.subscriptionExpiresAtIsDateOnly == true
                 ? nil : snapshot?.subscriptionExpiresAt,
@@ -1405,7 +1441,45 @@ final class SyncCoordinator {
             accountOrganization: snapshot?.identity?.accountOrganization,
             zoomMateCredits: zoomMateCredits,
             resetCreditInventory: resetCreditInventory,
-            details: Self.mapSyncedDetails(snapshot?.details ?? [], provider: provider))
+            details: details)
+    }
+
+    static func adapterAccountRecordKey(_ account: ProviderAccountUsageSnapshot, deviceID: String) -> String {
+        let owner = ClaudeSwapRetainedUsageStore.ownershipFingerprint(for: account) ?? "unidentified"
+        return "adapter:\(deviceID):\(account.id.source):\(account.id.opaqueID):\(owner)"
+    }
+
+    static func syncAccountRecordKey(
+        provider: UsageProvider,
+        requested: String?,
+        deviceID: String,
+        identity: ProviderIdentitySnapshot? = nil,
+        sourceMode: ProviderSourceMode? = nil) -> String?
+    {
+        // Provider-specific by design: source-owned organization IDs merge Munito; unverified sources stay
+        // device-scoped.
+        switch provider {
+        case .wayfinder:
+            return "device-\(deviceID.lowercased())"
+        case .munito:
+            if let requested { return requested }
+            if let raw = identity?.accountID?.trimmingCharacters(in: .whitespacesAndNewlines), !raw.isEmpty {
+                // Names are editable; hash only the API-issued ID, preserving its case and full length.
+                let bytes = Data(raw.precomposedStringWithCanonicalMapping.utf8)
+                let digest = SHA256.hash(data: bytes).map { String(format: "%02x", $0) }.joined()
+                return "organization-\(digest)"
+            }
+            return "device-\(deviceID.lowercased())"
+        case .futureagi:
+            return requested ?? "device-\(deviceID.lowercased())"
+        case .gemini:
+            // The explicit Web source exposes no verified Google account identity. Keep its quotas
+            // separate across Macs and from OAuth CLI accounts; never borrow a CLI email for Web.
+            guard sourceMode == .web else { return requested }
+            return requested ?? "web-device-\(deviceID.lowercased())"
+        default:
+            return requested
+        }
     }
 
     static func syncAccountIdentities(
@@ -2042,7 +2116,56 @@ final class SyncCoordinator {
         // "Show all" off later mid-session — though current cache lookup
         // path doesn't yet read from cache for token providers; that's an
         // R3 hardening item).
+        // Provider-specific by design: both claude-swap and tcr own their projected account inventory.
+        let adapterOwnsClaude = enabledSet.contains(.claude) && self.settings.claudeSwapEnabled
+            && ClaudeSwapMenuPrecedence.prefersClaudeSwap(
+                provider: .claude,
+                accountCount: self.store.claudeSwapAccountSnapshots.count,
+                showSingleAccount: self.settings.claudeSwapShowSingleAccount)
+        if adapterOwnsClaude {
+            let sharedCost = self.makeCostSummary(for: .claude)
+            providerSnapshots.removeAll { $0.providerID == "claude" }
+            for account in self.store.claudeSwapAccountSnapshots {
+                let recordKey = Self.adapterAccountRecordKey(account, deviceID: self.deviceID)
+                let identities = account.historyAccountKey.map { ["claude:workspace:\($0)"] }
+                    ?? ["claude:record:\(recordKey)"]
+                let snapshot = account.snapshot ?? UsageSnapshot(
+                    primary: nil,
+                    secondary: nil,
+                    updatedAt: .distantPast,
+                    identity: ProviderIdentitySnapshot(
+                        providerID: .claude,
+                        accountEmail: account.accountEmail,
+                        accountOrganization: nil,
+                        loginMethod: account.sourceLabel))
+                providerSnapshots.append(self.buildProviderUsageSnapshot(
+                    for: .claude,
+                    snapshot: snapshot,
+                    error: account.error,
+                    metadata: self.store.providerMetadata[.claude],
+                    sharedCostSummary: nil,
+                    sharedUtilizationHistory: nil,
+                    clearSharedCostOwnership: true,
+                    accountRecordKey: recordKey,
+                    accountIdentityOverrides: identities))
+            }
+            // Scanner scope and adapter selection are independent; tcr has no active slot.
+            // Keep device-local costs once, without assigning them to an unrelated account.
+            if sharedCost != nil || self.shouldClearClaudeCostSummary {
+                providerSnapshots.append(self.buildProviderUsageSnapshot(
+                    for: .claude,
+                    snapshot: nil,
+                    error: nil,
+                    metadata: self.store.providerMetadata[.claude],
+                    sharedCostSummary: sharedCost,
+                    sharedUtilizationHistory: nil,
+                    accountRecordKey: "claude-local-cost:\(self.deviceID)"))
+            }
+        }
+
         for tokenProvider in Self.tokenBasedMultiAccountProviders {
+            // Provider-specific by design: cached Claude adapter records already own these quotas.
+            if tokenProvider == .claude, adapterOwnsClaude { continue }
             guard enabledSet.contains(tokenProvider) else {
                 // Provider disabled — purge any cached entries so a
                 // re-enable starts clean (R3 P1: disabled-provider
@@ -2422,8 +2545,27 @@ final class SyncCoordinator {
         }
     }
 
+    /// Mobile's persisted Claude ledger is machine-wide. A directory-scoped publication
+    /// must never enter that contract: old readers would add its days to unrelated history.
+    /// Provider-specific by design: only Claude maps config directories; Mobile accepts its combined machine history.
+    private var hasScopedClaudeCostPublication: Bool {
+        self.store.claudeTokenCostConfigDirectory != nil
+            || self.store.tokenSnapshotPublications[UsageProvider.claude.instanceID]?
+            .scopeSignature.hasPrefix("claude:directory:") == true
+    }
+
+    private var shouldClearClaudeCostSummary: Bool {
+        self.hasScopedClaudeCostPublication
+            || (self.store.tokenSnapshotPublications[UsageProvider.claude.instanceID] != nil
+                && self.store.tokenSnapshot(for: .claude) == nil)
+    }
+
     private func makeCostSummary(for provider: UsageProvider) -> SyncCostSummary? {
-        let tokenSnapshot = self.store.tokenSnapshotPublications[provider.instanceID]?.snapshot
+        if provider == .claude, self.hasScopedClaudeCostPublication { return nil }
+        // Provider-specific by design: mapped Claude history must match the active account and config revision.
+        let tokenSnapshot = provider == .claude
+            ? self.store.tokenSnapshot(for: provider)
+            : self.store.tokenSnapshotPublications[provider.instanceID]?.snapshot
         let fallbackBucketTimeZone = self.settings.costUsageBucketCalendar.timeZone
         let tokenBucketTimeZoneIdentifier = tokenSnapshot?.bucketTimeZoneIdentifier
             ?? Self.costSummaryBucketTimeZoneIdentifier(

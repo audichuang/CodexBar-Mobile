@@ -1,0 +1,133 @@
+{
+  "finding": "Independent iOS contract audit after GitHub ca2d92f8dd clean review: Gemini Web identity-less cross-Mac quota collapse",
+  "focused": {
+    "tests": 60,
+    "suites": 3,
+    "failures": 0,
+    "log": "v079-pr199-r4-focused-retry.log"
+  },
+  "ios": {
+    "swiftTesting": 1156,
+    "suites": 73,
+    "xctest": 67,
+    "failures": 0,
+    "xcresult": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/pr199-r4-ios.xcresult"
+  },
+  "frozenMatrix": {
+    "cases": 16,
+    "reads": 64,
+    "merges": 32,
+    "result": "substituted",
+    "scratch": "v079/compat-pr199-r4"
+  },
+  "releaseBuild": "Reuse R2 generic-device Release: iOS product/Shared/project source inputs unchanged",
+  "schema": "NO_DEPLOY: existing accountRecordKey/accountIdentities only",
+  "fileSHA256": {
+    "Sources/CodexBar/Sync/SyncCoordinator.swift": "d610c29bbdaeeb78acd92e30d02a55d306b2f0ce5b3cddaea8de1e94d3aeb8cb",
+    "Tests/CodexBarTests/SyncV079BridgeTests.swift": "40ea7ff628ce491cf3af2afe070853914222d42361f397098114819c81ead1d2",
+    "Tests/CodexBarTests/ProviderArchitectureGatekeeperTests.swift": "9563945c03604871a60075a7e227514236dadba28de457154a6c16e5a5bb0842",
+    "CodexBarMobile/CodexBarMobileTests/V079CostAuthorityTests.swift": "9cfe1a62eae42a2c6c20dbd1df7ae4893e7e41cafad91ce7089d5623f52bfacf",
+    "CodexBarMobile/Research/079-v079-upstream-sync/tools/FrozenWireHarness.swift": "f61708e2a0e144af7f7a841b022133d455288248f7c42a342adaf5ce7f205bdc"
+  },
+  "failuresAndRecovery": [
+    "first focused link failed after initializer API change; original initializer preserved via convenience forwarding, full recompile/focused retry passed",
+    "initial lint had four multiline-argument violations; fixed, targeted SwiftLint passed; complete final lint running"
+  ],
+  "macFullRegression": {
+    "sourceCommit": "18ccdefb2eb29ea148e7823da221a8739d683015",
+    "sourceTree": "a6aeeeb011118fee42f370c810d030b542935a79",
+    "log": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079-pr199-r4-all-tests.log",
+    "exitCode": 0,
+    "selections": 1791,
+    "groups": 160,
+    "firstPassPassed": 160,
+    "firstPassFailed": 0,
+    "retries": 0,
+    "timeouts": 0,
+    "workers": 4,
+    "discoverySeconds": 128.2,
+    "executionSeconds": 596.9,
+    "seconds": 729.0,
+    "runtimeMethods": 15800,
+    "defaultGatedSkipRecords": 13,
+    "defaultGatedSkips": [
+      "➜ Test \"large synthetic history scan timing\" skipped.",
+      "➜ Test \"render synthetic period controls without launching the app\" skipped.",
+      "➜ Test \"synthetic two hundred thousand row saves\" skipped.",
+      "➜ Test \"warm large cache with one appended line\" skipped.",
+      "➜ Test \"large history refresh CPU writes and retained memory\" skipped.",
+      "➜ Test \"synthetic WebKit leases release their owners\" skipped.",
+      "➜ Test \"fixed corpus refreshes over thirty minutes\" skipped.",
+      "➜ Test \"synthetic artifact decode benchmark\" skipped.",
+      "➜ Test \"measure identical pricing refetch and warm report\" skipped.",
+      "➜ Test \"concurrent override writes, resets, and reads are race-free\" skipped.",
+      "➜ Test \"signed native card shows the asynchronously attached subscription date\" skipped.",
+      "➜ Test \"native close notifications settle and a retained window can be dismissed again\" skipped.",
+      "➜ Test \"concurrent stub handler writes and reads are race-free\" skipped."
+    ]
+  },
+  "macDraft": {
+    "sourceCommit": "18ccdefb2eb29ea148e7823da221a8739d683015",
+    "version": "0.79.0.1",
+    "sparkleVersion": "172.1.2.10.0",
+    "draftURL": "https://github.com/o1xhack/CodexBar-Mobile/releases/tag/untagged-0715b4300e9fa77195ee",
+    "releaseID": 420093277,
+    "isDraft": true,
+    "publishedAt": null,
+    "draftTargetCommitish": "18ccdefb2eb29ea148e7823da221a8739d683015",
+    "widgetVersion": "172.1",
+    "localTagAbsent": true,
+    "remoteTagAbsent": true,
+    "architectures": {
+      "Contents/MacOS/CodexBar": [
+        "x86_64",
+        "arm64"
+      ],
+      "Contents/Helpers/CodexBarCLI": [
+        "x86_64",
+        "arm64"
+      ],
+      "Contents/PlugIns/CodexBarWidget.appex/Contents/MacOS/CodexBarWidget": [
+        "x86_64",
+        "arm64"
+      ]
+    },
+    "binaryUUIDs": {
+      "x86_64": "8B766287-BF51-3EEA-90CF-AD043EB45FAA",
+      "arm64": "935ACCF0-7836-3208-8363-D6E0C23BD514"
+    },
+    "dSYMUUIDs": {
+      "x86_64": "8B766287-BF51-3EEA-90CF-AD043EB45FAA",
+      "arm64": "935ACCF0-7836-3208-8363-D6E0C23BD514"
+    },
+    "packagedGeminiPluginSHA256": {
+      "Contents/Helpers/CodexBar_CodexBarCore.bundle/Contents/Resources/gemini-web.js": "90ba836f1710c5a9ae528166e4815498bbd0ac2209106248fbe864af498c3a93",
+      "Contents/Resources/CodexBar_CodexBarCore.bundle/Contents/Resources/gemini-web.js": "90ba836f1710c5a9ae528166e4815498bbd0ac2209106248fbe864af498c3a93",
+      "Contents/PlugIns/CodexBarWidget.appex/Contents/Resources/CodexBar_CodexBarCore.bundle/Contents/Resources/gemini-web.js": "90ba836f1710c5a9ae528166e4815498bbd0ac2209106248fbe864af498c3a93"
+    },
+    "cloudKitEnvironment": "Production",
+    "codesign": "pass",
+    "spctl": "accepted",
+    "staple": "validated",
+    "assets": [
+      {
+        "name": "CodexBar-0.79.0.1-mobile.2.10.0.zip",
+        "size": 90774579,
+        "digest": "sha256:b459031f7a6d1b57e39bede3766c780c6bfdf728f0d6ba8f4fc47984cf100db2"
+      },
+      {
+        "name": "CodexBar-0.79.0.1-mobile.2.10.0.dSYM.zip",
+        "size": 72677888,
+        "digest": "sha256:5f5a1ed342b4df2654e044e43ae16ac739627df88bae04c06a1e966a00200380"
+      }
+    ]
+  },
+  "sourceCommit": "18ccdefb2eb29ea148e7823da221a8739d683015",
+  "lint": "PASS: v079-pr199-r4-lint-final.log exit0; 3143 files/0 violations; all portable/i18n/parser guards passed",
+  "codeReview": {
+    "sourceCommit": "18ccdefb2eb29ea148e7823da221a8739d683015",
+    "result": "clean",
+    "atUTC": "2026-10-21T23:21:05Z",
+    "unresolvedThreads": 0
+  }
+}

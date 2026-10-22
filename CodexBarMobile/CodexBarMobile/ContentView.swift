@@ -2180,7 +2180,8 @@ struct CostDashboardInsights: Sendable {
                 budgetRows.append(CostBudgetRow(provider: provider, budget: budget))
             }
 
-            guard let costSummary = provider.costSummary,
+            guard provider.costSummaryCleared != true,
+                  let costSummary = provider.costSummary,
                   ProviderSnapshotMerger.supportsUSDAggregation(costSummary) else { continue }
 
             let availableDailyCosts = costSummary.reportingPeriodDaily.filter { $0.costIsKnown != false }
@@ -2326,7 +2327,7 @@ struct CostDashboardInsights: Sendable {
 
         for rollup in aggregation.providerRollups.values {
             guard let provider = liveProviders.first(where: {
-                guard $0.providerID == rollup.providerID else { return false }
+                guard $0.providerID == rollup.providerID, $0.costSummaryCleared != true else { return false }
                 if rollup.accountIdentityKey != nil {
                     let liveKeys = Set(CostLedgerService.accountIdentityKeys(for: $0))
                     return !liveKeys.isDisjoint(with: rollup.accountIdentityKeys)
@@ -2382,7 +2383,8 @@ struct CostDashboardInsights: Sendable {
         }
 
         for provider in liveProviders where !representedProviderKeys.contains(provider.cardIdentityKey) {
-            guard let costSummary = provider.costSummary,
+            guard provider.costSummaryCleared != true,
+                  let costSummary = provider.costSummary,
                   ProviderSnapshotMerger.supportsUSDAggregation(costSummary) else { continue }
             let costUpdatedAt = costSummary.sourceUpdatedAt ?? provider.lastUpdated
             if let snapshotFallbackCutoff, costUpdatedAt <= snapshotFallbackCutoff {
@@ -4909,11 +4911,29 @@ private struct NSEInvocationLogSection: View {
 enum MobileReleaseNotesCatalog {
     static let versions: [ReleaseNotesVersion] = [
         ReleaseNotesVersion(
-            version: "3.0.0",
+            version: "3.1.0",
             status: String(localized: "Latest"),
             summary: String(
-                localized: "Your credits, right on time. Your workspace, ready to unfold."),
+                localized: "More providers and clearer account details."),
             highlights: [
+                .init(
+                    id: "providers",
+                    symbol: "square.grid.2x2",
+                    title: String(localized: "See Future AGI and Munito"),
+                    detail: String(
+                        localized: "See Future AGI allowances and Munito spend limits from your Mac, with translated details.")),
+                .init(
+                    id: "accounts",
+                    symbol: "person.2",
+                    title: String(localized: "More Claude accounts"),
+                    detail: String(
+                        localized: "View cached claude-swap and tcr accounts from your Mac, with separate workspaces and local costs counted once.")),
+                .init(
+                    id: "warnings",
+                    symbol: "exclamationmark.triangle",
+                    title: String(localized: "Plugin warnings are easier to spot"),
+                    detail: String(
+                        localized: "Provider details show warning symbols and colors when a plugin reports a problem.")),
                 .init(
                     id: "calendar", symbol: "calendar.badge.clock",
                     title: String(localized: "Never miss a reset credit"),
@@ -4926,15 +4946,23 @@ enum MobileReleaseNotesCatalog {
                         localized: "Accounts beside usage. Costs beside trends. Share controls beside a live preview. Fold or unfold and keep your place.")),
             ],
             sections: [
-                .init(title: String(localized: "More in 3.0"), items: [
+                .init(title: String(localized: "What's New"), items: [
                     String(
                         localized: "Claude, Codex, and Grok details list every available reset credit with its exact expiry date and time."),
                     String(
                         localized: "Turn on Settings → Calendar Reminders to add each reset credit's expiry to a CodexBar calendar, with reminders one day and one hour before."),
                     String(
                         localized: "If you use a reset credit early, its calendar event is removed once your Mac reports the change and you open CodexBar on your iPhone. Past expiries stay in the calendar."),
+
+                    String(
+                        localized: "See Gemini app quotas and updated Cursor, Vercel, and Antigravity usage from your Mac."),
+                    String(localized: "Claude Cowork and OpenCode Go history are included when your Mac reports them."),
+                    String(
+                        localized: "Account-specific Claude local costs stay on your Mac. Shared local history is counted once."),
                 ]),
                 .init(title: String(localized: "Required Mac version"), items: [
+                    String(
+                        localized: "Update CodexBar on Mac to 0.79.0.1 or later for these providers and account details."),
                     String(
                         localized: "Claude and Grok reset credits need CodexBar on Mac 0.76.0.2 or later. Codex reset credits also work with older Mac versions; with an older Mac, the rest of the app works as before."),
                 ]),

@@ -96,6 +96,7 @@ enum TokenActivity {
         referenceDate: Date = Date()) -> [TokenActivitySeries]
     {
         providers.compactMap { provider in
+            guard provider.costSummaryCleared != true else { return nil }
             let matching = rollups?.filter { rollup in
                 guard provider.providerID == rollup.providerID else { return false }
                 if rollup.accountIdentityKey != nil {

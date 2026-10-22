@@ -955,6 +955,8 @@ extension CostUsageStoreTests {
 
 extension CostUsageStoreTests {
     private static let testedPredecessorParserHashes = [
+        "a5aa8ea108856b6d",
+        "3f88178bf03ad704",
         "0d41437dcd95c17e", // Published 0.73.0.1 with the ledger pricing fix.
         "68cbd75ed0e591d9", // Published 0.74.1.1 with the ledger pricing fix on upstream 0.74.1.
         "fc698834d6329beb", // Before opt-in request observation; saved rows and cursors are unchanged.
@@ -1002,6 +1004,7 @@ extension CostUsageStoreTests {
         "7e293e8fc9e25700",
         "494eee446bb2e5f9",
         "6366caa15c925349",
+        "3f88178bf03ad704",
         "4a593b5d59c7bcf3",
         "b77d4ec72e14ea63",
         "cfd84d13ad7d4cfa",

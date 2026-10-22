@@ -1,0 +1,33 @@
+{
+  "finding": "https://github.com/o1xhack/CodexBar-Mobile/pull/199#discussion_r4342697183",
+  "focused": {
+    "tests": 59,
+    "suites": 3,
+    "failures": 0
+  },
+  "ios": {
+    "swiftTesting": 1153,
+    "suites": 72,
+    "xctest": 67,
+    "failures": 0,
+    "xcresult": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/pr199-r2-ios.xcresult"
+  },
+  "releaseBuild": "BUILD SUCCEEDED",
+  "lint": "exit0;0 violations;4-language/source436/parser guards passed",
+  "frozenMatrix": {
+    "cases": 16,
+    "reads": 64,
+    "merges": 32,
+    "result": "substituted"
+  },
+  "fileSHA256": {
+    "Sources/CodexBarCore/Resources/Plugins/gemini-web.ts": "ab59441730c15d07e35c6cd9c0c954a9e797cacf59065c0bf46602183b5ee6e2",
+    "Sources/CodexBarCore/Resources/Plugins/gemini-web.js": "90ba836f1710c5a9ae528166e4815498bbd0ac2209106248fbe864af498c3a93",
+    "Tests/CodexBarTests/SyncV079BridgeTests.swift": "8ebce1b4170d3c4eed29c8f798ee6f0c2841a0ff140268f8d620ab9023471475",
+    "CodexBarMobile/CodexBarWidgetShared/ProviderWindowLabel.swift": "e4ca954f7334a1fd69a2040c93075e1efde7ab5d889c7d9e68505a7e66352def",
+    "CodexBarMobile/CodexBarMobileTests/V079DetailsTests.swift": "61a45af7fbefa2ff48cd2e9da4fa88326f258e95a4ef251fd664a9bf35959112"
+  },
+  "generatedJSMatchesFocusedInput": true,
+  "macFullRegression": "PASS at ca2d92f8dd: v079-pr199-r2-all-tests.log exit0, 1791 selections/160 first-pass groups, 0 failures/retries/timeouts, 570.3s; superseded by R4 full regression",
+  "macDraft": "R2 source attempt superseded by identity fix 18ccdefb2; final artifact/provenance in mac-draft-verification.json"
+}

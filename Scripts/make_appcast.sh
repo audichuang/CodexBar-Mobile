@@ -64,7 +64,12 @@ if ! command -v generate_appcast >/dev/null; then
   exit 1
 fi
 
-WORK_DIR=$(mktemp -d /tmp/codexbar-appcast.XXXXXX)
+APPCAST_STAGE_BASE="${CODEXBAR_RELEASE_STAGE_BASE:-/Volumes/StudioSSD/Developer/BuildScratch/CodexBar}"
+[[ -d "$APPCAST_STAGE_BASE" && -w "$APPCAST_STAGE_BASE" ]] || {
+  echo "Appcast scratch directory is missing or not writable: $APPCAST_STAGE_BASE" >&2
+  exit 1
+}
+WORK_DIR=$(mktemp -d "$APPCAST_STAGE_BASE/codexbar-appcast.XXXXXX")
 
 cp "$ROOT/appcast.xml" "$WORK_DIR/appcast.xml"
 cp "$ZIP" "$WORK_DIR/$ZIP_NAME"

@@ -4,7 +4,7 @@ set -euo pipefail
 
 ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 README_PATH=${CODEXBAR_FORK_README_PATH:-"$ROOT_DIR/README.md"}
-EXPECTED_SHA256="236bd03f6ccc5226f7db3e00acafbc382be9ddd29f5b19c0d6a884b6f97d0aa5"
+EXPECTED_SHA256="db47b54adb4ee09477ee8e6d87053b0796e490052e0b43ce0df9def8741b8801"
 
 sha256_file() {
   if command -v shasum >/dev/null 2>&1; then

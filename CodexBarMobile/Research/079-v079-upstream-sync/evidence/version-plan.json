@@ -1,0 +1,17 @@
+{
+  "marketing": "0.79.0.1",
+  "build": "172.1",
+  "publishedCompanion": "2.10.0",
+  "candidateIOS": "3.1.0 (246)",
+  "sparkle": "172.1.2.10.0",
+  "existingAppcastVersions": [
+    "169.2.2.10.0",
+    "169.1.2.9.0",
+    "167.1.2.8.0",
+    "41",
+    "40",
+    "39"
+  ],
+  "monotonic": true,
+  "tagPlannedOnly": "v0.79.0.1-mobile.2.10.0"
+}

@@ -293,6 +293,7 @@ run_portable_checks() {
   check_ci_path_gate
   check_ci_upstream_check_gate
   check_ci_policy
+  python3 "${ROOT_DIR}/Scripts/test_linux_cli_linkage.py"
   check_ci_build_cache
   check_homebrew_tap_wait
   check_repository_size

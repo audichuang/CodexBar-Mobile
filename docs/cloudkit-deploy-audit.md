@@ -137,3 +137,7 @@ git diff $LAST_TAG..HEAD -- Shared/Models/UsageSnapshot.swift | grep -E "^\+.*pu
 - **新增用户私有数据库 custom zone 不等于新增 schema**。Apple 文档规定客户端可通过 CloudKit API 为该用户私有数据库保存自定义 zone；Dashboard 的 schema deploy 不创建每个用户的 zone。检查代码是否新增了 record type、字段/index 或依赖新 schema 的 subscription，再判断是否 deploy。
 - **零 schema change**只代表"不需要 deploy"，不代表"不会出问题"。Phase G 这种"推更多 record" 的改动可能让用户 iCloud 配额吃紧（如果 record 数量大涨）— 那是 quota 问题不是 schema 问题，但同样要测。
 - 这份 doc 的对照表必须跟 `docs/versioning.md` 一起读。版本 bump + schema deploy 是两个独立维度的决策。
+
+## 2026-10-21：v0.79.0.1 draft 准备审计
+
+**NO_DEPLOY**。相对最近 published `v0.76.0.2-mobile.2.10.0`，CloudConstants.swift 无变化、payload version仍为1；severity 只是已有 opaque payload 内的可选字段，Claude adapter fan-out/cost owner 使用现有 DeviceProviderSnapshot，Future AGI/Munito 只增加既有状态 type 的运行时 zone 实例。无新 CKRecord type、直接 field、index、predicate 或 subscription schema。Mac/iOS entitlements 均为 Production。未执行 schema deploy，也未声称 live export；证据与16组合替代验证在 `CodexBarMobile/Research/079-v079-upstream-sync/03-testing.md`。

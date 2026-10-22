@@ -53,6 +53,59 @@ enum ProviderSnapshotMerger {
         return monthStarts.count == summaries.count && Set(monthStarts).count == 1
     }
 
+    /// Adapter quota clears only disown that account's cost. At startup the scanner may
+    /// still be unknown while those quotas refresh; only a machine-level claim can withdraw
+    /// the independent owner's retained history.
+    static func hasMachineCostClaim(_ provider: ProviderUsageSnapshot) -> Bool {
+        if provider.providerID == "claude", provider.accountRecordKey?.hasPrefix("adapter:") == true,
+           provider.costSummary == nil
+        {
+            return false
+        }
+        return provider.costSummary != nil || provider.costSummaryCleared == true
+    }
+
+    /// Resolve a machine's cost publication before flattening devices. New independent owners
+    /// coexist with legacy quota owners during the producer's two-success cleanup window.
+    /// A later legacy publication also permits switching the adapter off without stale costs.
+    static func effectiveCostSnapshot(_ snapshot: SyncedUsageSnapshot) -> SyncedUsageSnapshot {
+        let providers = snapshot.providers
+        let claims = providers.filter {
+            $0.providerID == "claude" && Self.hasMachineCostClaim($0)
+        }
+        // Legacy-only sources keep their existing semantics. Once an independent owner appears,
+        // every explicit cost publication participates, including a legacy clear when disabling it.
+        guard claims.contains(where: \.isProviderLevelCostEnvelope),
+              let winner = claims.max(by: { lhs, rhs in
+                  let left = snapshot.publicationTimestamp(for: lhs)
+                  let right = snapshot.publicationTimestamp(for: rhs)
+                  if left != right { return left < right }
+                  if lhs.isProviderLevelCostEnvelope != rhs.isProviderLevelCostEnvelope {
+                      return !lhs.isProviderLevelCostEnvelope
+                  }
+                  return SyncedUsageSnapshot.providerPublicationKey(for: lhs)
+                      < SyncedUsageSnapshot.providerPublicationKey(for: rhs)
+              })
+        else { return snapshot }
+        let winnerKey = SyncedUsageSnapshot.providerPublicationKey(for: winner)
+        let effective = providers.map { provider in
+            guard provider.providerID == "claude",
+                  Self.hasMachineCostClaim(provider)
+            else { return provider }
+            // Never turn ordinary unknown rows into claims: their newer observation timestamp
+            // could otherwise supersede the actual owner during the next normalization.
+            let keepsCost = SyncedUsageSnapshot.providerPublicationKey(for: provider) == winnerKey
+                && winner.costSummaryCleared != true
+            return keepsCost ? provider : provider.withCostWithdrawn()
+        }
+        return SyncedUsageSnapshot(
+            providers: effective, syncTimestamp: snapshot.syncTimestamp, deviceName: snapshot.deviceName,
+            deviceID: snapshot.deviceID, appVersion: snapshot.appVersion, mobileVersion: snapshot.mobileVersion,
+            notificationPushEnabled: snapshot.notificationPushEnabled,
+            providerPublicationTimestamps: snapshot.providerPublicationTimestamps,
+            providerQuotaSources: snapshot.providerQuotaSources)
+    }
+
     static func mergeSnapshots(
         _ snapshots: [SyncedUsageSnapshot],
         linkages: [ProviderAccountLinkage] = [],
@@ -71,7 +124,8 @@ enum ProviderSnapshotMerger {
         var sourceHistoryTimestamps: [Date] = []
         var sourceDeviceNames: [String] = []
         var sourceDeviceSyncTimestamps: [Date] = []
-        for snapshot in snapshots {
+        for sourceSnapshot in snapshots {
+            let snapshot = Self.effectiveCostSnapshot(sourceSnapshot)
             let providers = providersForSnapshot(snapshot)
             allProviders.append(contentsOf: providers)
             sourceAppVersions.append(contentsOf: repeatElement(snapshot.appVersion, count: providers.count))
@@ -180,7 +234,8 @@ enum ProviderSnapshotMerger {
                     groupedIndices[target, default: []].append(contentsOf: members)
                     groupedIndices[root] = nil
                     absorbedIndices.formUnion(members)
-                    absorbedIdentitiesByRoot[target, default: []].formUnion(members.flatMap { effectiveIdentifiers[$0] })
+                    absorbedIdentitiesByRoot[target, default: []]
+                        .formUnion(members.flatMap { effectiveIdentifiers[$0] })
                 }
             }
         }
@@ -191,7 +246,8 @@ enum ProviderSnapshotMerger {
         for (root, unsortedIndices) in groupedIndices {
             let indices = unsortedIndices.sorted()
             let group = indices.map { allProviders[$0] }
-            let sortIdentity = Set(indices.filter { !absorbedIndices.contains($0) }.flatMap { effectiveIdentifiers[$0] })
+            let sortIdentity = Set(indices.filter { !absorbedIndices.contains($0) }
+                .flatMap { effectiveIdentifiers[$0] })
                 .sorted()
                 .joined(separator: "|")
             var provider: ProviderUsageSnapshot
@@ -314,7 +370,7 @@ enum ProviderSnapshotMerger {
     /// A real account observation that may absorb another Mac's identity-less failure. Provider-level
     /// cost envelopes and debug mocks are not accounts and must not hide a real provider's error.
     static func isPresentableObservation(_ provider: ProviderUsageSnapshot) -> Bool {
-        guard !Self.isFailureOnly(provider), !provider.isProviderLevelCostEnvelope else { return false }
+        guard !self.isFailureOnly(provider), !provider.isProviderLevelCostEnvelope else { return false }
         if provider.providerID.hasPrefix("_mock_") { return false }
         if let email = provider.accountEmail, email.hasSuffix(".test") { return false }
         return true
@@ -945,7 +1001,7 @@ enum ProviderSnapshotMerger {
         precondition(providers.count == sourceSyncTimestamps.count)
         let sources = providers.indices.compactMap { index -> CostSummarySource? in
             let provider = providers[index]
-            guard let summary = provider.costSummary else { return nil }
+            guard provider.costSummaryCleared != true, let summary = provider.costSummary else { return nil }
             return CostSummarySource(
                 summary: summary,
                 snapshotPublishedAt: sourceSyncTimestamps[index])
@@ -1526,5 +1582,67 @@ private struct MergeUnionFind {
         if ra != rb {
             self.parent[ra] = rb
         }
+    }
+}
+
+extension ProviderUsageSnapshot {
+    fileprivate func withCostWithdrawn() -> ProviderUsageSnapshot {
+        var copy = ProviderUsageSnapshot(
+            providerID: self.providerID,
+            providerName: self.providerName,
+            primary: self.primary,
+            secondary: self.secondary,
+            accountEmail: self.accountEmail,
+            loginMethod: self.loginMethod,
+            statusMessage: self.statusMessage,
+            isError: self.isError,
+            lastUpdated: self.lastUpdated,
+            costSummary: nil,
+            costSummaryCleared: true,
+            budget: self.budget,
+            subscriptionExpiresAt: self.subscriptionExpiresAt,
+            subscriptionRenewsAt: self.subscriptionRenewsAt,
+            subscriptionExpiresOn: self.subscriptionExpiresOn,
+            subscriptionRenewsOn: self.subscriptionRenewsOn,
+            rateWindows: self.rateWindows,
+            utilizationHistory: self.utilizationHistory,
+            perplexityCredits: self.perplexityCredits,
+            accountIdentities: self.accountIdentities,
+            quotaWarnings: self.quotaWarnings,
+            openAIAPIDashboard: self.openAIAPIDashboard,
+            zaiHourlyUsage: self.zaiHourlyUsage,
+            kiroCredits: self.kiroCredits,
+            bedrockCost: self.bedrockCost,
+            moonshotBalance: self.moonshotBalance,
+            antigravityAccounts: self.antigravityAccounts,
+            grokBilling: self.grokBilling,
+            elevenLabsCredits: self.elevenLabsCredits,
+            deepgramUsage: self.deepgramUsage,
+            groqMetrics: self.groqMetrics,
+            llmProxyStats: self.llmProxyStats,
+            claudeAdminUsage: self.claudeAdminUsage,
+            claudeExtraUsage: self.claudeExtraUsage,
+            openCodeGoZenBalance: self.openCodeGoZenBalance,
+            minimaxBilling: self.minimaxBilling,
+            codexWorkspace: self.codexWorkspace,
+            openRouterStats: self.openRouterStats,
+            azureOpenAIInfo: self.azureOpenAIInfo,
+            alibabaTokenPlan: self.alibabaTokenPlan,
+            deepSeekUsage: self.deepSeekUsage,
+            codexResetCredits: self.codexResetCredits,
+            usageDataConfidence: self.usageDataConfidence,
+            crossModelUsage: self.crossModelUsage,
+            wayfinderUsage: self.wayfinderUsage,
+            sub2APIUsage: self.sub2APIUsage,
+            providerAmount: self.providerAmount,
+            accountRecordKey: self.accountRecordKey,
+            accountOrganization: self.accountOrganization,
+            zoomMateCredits: self.zoomMateCredits,
+            resetCreditInventory: self.resetCreditInventory,
+            details: self.details,
+            providerIconMonogram: self.providerIconMonogram,
+            providerIconTintHex: self.providerIconTintHex)
+        copy.sourceReport = self.sourceReport
+        return copy
     }
 }

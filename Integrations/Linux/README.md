@@ -125,6 +125,11 @@ UTF-8, including existing glyphs. Installed binaries and icons replace links at
 their destination; existing Omarchy adapter links, including dangling links, are
 archived before the new adapter is installed.
 
+The installer honors absolute `XDG_CONFIG_HOME` and `XDG_DATA_HOME` paths.
+Unset, empty, or relative values use `~/.config` and `~/.local/share`, respectively.
+The executable always installs to `~/.local/bin/codexbar-linux`; `XDG_BIN_HOME`
+does not change that destination.
+
 ## Build and install
 
 Requires Linux, C++17, make, qmake6, and Qt 6.4 or newer: Base, Declarative/Quick,
@@ -176,7 +181,9 @@ identity visibility, refresh interval, status, local spending, notifications, an
 tray visibility. Account selectors choose displayed usage; they do not change the
 provider CLI's login. Choose `custom` to pick providers from the installed CLI's catalog and move them
 up or down. Only that ordered list is queried, sequentially; a failed provider
-retains its previous result while healthy providers update. Account selectors
+retains its previous result while healthy providers update. Responses must match
+the requested catalog ID; a mismatched response retains that provider's previous
+result or reports it unavailable instead of showing another provider's usage. Account selectors
 apply to a single-provider query; custom lists use each provider's default account.
 
 Sign in and Sign out open the Codex or Claude CLI in the default terminal using

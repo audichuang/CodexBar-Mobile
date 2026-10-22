@@ -179,6 +179,8 @@ public enum QuotaProviderList {
         // iOS 2.9.0 / Mac v0.75.0–v0.76.0 percentage provider (fal, FLORA and
         // Parallel report balances only). Append only.
         Provider(id: "claudeplatform", displayName: "Claude Platform"),
+        Provider(id: "futureagi", displayName: "Future AGI"),
+        Provider(id: "munito", displayName: "Munito"),
     ]
 
     /// Returns the CloudKit zone name for a given `(providerID, state)`. The

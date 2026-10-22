@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>CodexBar</title>
+        <item>
+            <title>0.79.0.1</title>
+            <pubDate>Wed, 21 Oct 2026 16:38:40 -0700</pubDate>
+            <link>https://raw.githubusercontent.com/o1xhack/CodexBar-Mobile/mobile-dev/appcast.xml</link>
+            <sparkle:version>172.1.2.10.0</sparkle:version>
+            <sparkle:shortVersionString>0.79.0.1</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[<h2>CodexBar 0.79.0.1-Mobile 2.10.0</h2>
+<h3>Highlights — Mobile 2.10.0</h3>
+<ul>
+<li>Sync upstream v0.77.0–v0.79.0 in one release: Future AGI and Munito, Gemini app quotas, Claude desktop/tcr accounts, safer local-only Agent Sessions, and lower CPU, memory and cost-cache disk I/O.</li>
+<li>Keep existing Codex history and checkpoints when upgrading the fork cost cache; keep account-specific Claude local history on the Mac so it cannot contaminate the iPhone’s combined history.</li>
+<li>Sync cached claude-swap/tcr account quotas and plugin warning details to iPhone through the existing Production payload. Keep Gemini app five-hour and weekly window names distinct from CLI model quotas, with device-scoped Web identities to preserve different accounts across Macs. iOS 3.1.0 is prepared separately; the Mac companion metadata retains the version.env baseline of 2.10.0.</li>
+</ul>
+<p><a href="https://github.com/o1xhack/CodexBar-Mobile/blob/mobile-dev/CHANGELOG.md">View full changelog</a></p>
+]]></description>
+            <enclosure url="https://github.com/o1xhack/CodexBar-Mobile/releases/download/v0.79.0.1-mobile.2.10.0/CodexBar-0.79.0.1-mobile.2.10.0.zip" length="90774579" type="application/octet-stream" sparkle:edSignature="cF6T3+Bg5EpbZmDYownt+ysnreW71HodsBiYAanIPQ7yqKUvO2GJSV2dLT22Lwhd8ZYo6ceVTvvCwYgeMW68Dg=="/>
+        </item>
+        <item>
+            <title>0.76.0.2</title>
+            <pubDate>Mon, 19 Oct 2026 08:45:18 -0700</pubDate>
+            <link>https://raw.githubusercontent.com/o1xhack/CodexBar-Mobile/mobile-dev/appcast.xml</link>
+            <sparkle:version>169.2.2.10.0</sparkle:version>
+            <sparkle:shortVersionString>0.76.0.2</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[<h2>CodexBar 0.76.0.2-Mobile 2.10.0</h2>
+<h3>Highlights</h3>
+<ul>
+<li>The iPhone companion (Mobile 2.10) can now show every Claude and Grok usage-limit reset credit with its exact expiry, and can add those expiries to a calendar. Update this Mac app so your iPhone receives them; Codex reset credits keep working as before.</li>
+</ul>
+<h3>Added</h3>
+<ul>
+<li>Mobile snapshots publish the Claude and Grok reset-credit inventory as expiry times only (grant and token identifiers never leave the Mac), including a confirmed empty inventory so the iPhone can remove a calendar reminder for a reset that was used early.</li>
+</ul>
+<h3>Changed</h3>
+<ul>
+<li>Claude: an eligible reset-credit response with no available reset is kept as an empty inventory instead of no inventory, and an inventory from which a malformed grant was dropped is marked incomplete so the iPhone never treats the missing grant as used; Grok: a completed remaining-resets lookup with no token is kept as an empty inventory, a cancelled lookup keeps the previous one, and cached or retained tokens keep the time they were read instead of looking newly read (a cached empty read stays a confirmed empty inventory). Menus, Settings previews, and CLI output still hide empty inventories, so nothing changes on the Mac.</li>
+</ul>
+<p><a href="https://github.com/o1xhack/CodexBar-Mobile/blob/mobile-dev/CHANGELOG.md">View full changelog</a></p>
+]]></description>
+            <enclosure url="https://github.com/o1xhack/CodexBar-Mobile/releases/download/v0.76.0.2-mobile.2.10.0/CodexBar-0.76.0.2-mobile.2.10.0.zip" length="89020805" type="application/octet-stream" sparkle:edSignature="fKebmD1WKCvcZgdZWFWXCzOSivgu47xtOWrv1l5LhSIfnyjsi9gkomzFYwX49ywDHY26j0E0NBS4akhue+zGDA=="/>
+        </item>
+        <item>
+            <title>0.76.0.1</title>
+            <pubDate>Fri, 16 Oct 2026 20:24:22 -0700</pubDate>
+            <link>https://raw.githubusercontent.com/o1xhack/CodexBar-Mobile/mobile-dev/appcast.xml</link>
+            <sparkle:version>169.1.2.9.0</sparkle:version>
+            <sparkle:shortVersionString>0.76.0.1</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[<h2>CodexBar 0.76.0.1-Mobile 2.9.0</h2>
+<h3>Highlights</h3>
+<ul>
+<li>New providers: Claude Platform (Console API credits with expiring grants and month-to-date spend), fal, FLORA, and Parallel; Command Code API keys, Kimi China Desktop sessions, Charm Hyper and Helmcode browser sessions, and current JetBrains AI quota from newer IDE logs.</li>
+<li>Claude: spend-only accounts get a real meter, pace, and a reset at midnight UTC on the 1st; reset credits, Extra usage, Credits, and plan dates are independently selectable; OAuth accounts show their email; stale usage notices are separated from errors.</li>
+<li>Codex and Usage & Spend: every saved account shows up again beyond the third, native details stay stable when OpenCodex replaces totals, ChatGPT-created Auto-review requests are priced at $0 from October 6, and project cost reports flag incomplete history.</li>
+<li>OpenAI Live Usage with per-minute token throughput, cookie imports that find signed-in sessions in every supported browser with bounded Keychain prompts, plugin memory that no longer grows on every refresh, menu bar progress-bar tokens with a stacked-bars preset, Large text and monospaced digits, a Settings provider list you can filter and search, and open-source acknowledgements in About.</li>
+<li>The iPhone companion (Mobile 2.9) receives the new providers, the Claude Platform credit balance and grant expiry days, Claude sign-in emails, and exact $0 Auto-review days.</li>
+</ul>
+<h3>Changed</h3>
+<ul>
+<li>Sync upstream v0.75.0 and v0.76.0 in one fork release, retaining the complete upstream provider, Claude, Codex, OpenAI, menu bar, Settings, CLI, localization, packaging, and Linux changes listed below.</li>
+<li>Codex cost caches written by 0.74.1.1 are kept and upgraded in place instead of being rebuilt: the fork re-reads only each rollout's leaf session_meta for the Auto-review creator account, so saved rows, history and pricing stay visible and complete immediately (upstream reparses every older file from the start under the scan budget, which lowers day totals for many refreshes).</li>
+<li>Preserve fork CloudKit Production publishing, mobile payloads, download entrypoints, About links, and the fast PR / post-merge CI policy.</li>
+</ul>
+<h3>Added</h3>
+<ul>
+<li>Mobile snapshots publish the Claude Platform Console credit balance (including negative balances) as a prepaid balance, and Claude Platform joins the quota-alert provider list so iPhones can subscribe to its grant warnings.</li>
+</ul>
+<h3>Fixed</h3>
+<ul>
+<li>Claude monthly spend caps that report no rollover publish the same inferred UTC month-end reset the Mac meter shows, so iPhones of every version show when the cap resets.</li>
+<li>Days containing $0 ChatGPT-created Auto-review requests are published to the iPhone as exact costs rather than as lower bounds.</li>
+</ul>
+<p><a href="https://github.com/o1xhack/CodexBar-Mobile/blob/mobile-dev/CHANGELOG.md">View full changelog</a></p>
+]]></description>
+            <enclosure url="https://github.com/o1xhack/CodexBar-Mobile/releases/download/v0.76.0.1-mobile.2.9.0/CodexBar-0.76.0.1-mobile.2.9.0.zip" length="88965680" type="application/octet-stream" sparkle:edSignature="cT+X1PPaNQHKodVqNZaTf3nWnxINP7XrQG/US1I0UcSmXyPGR7gllJjZOaBkNvKnzx50U+p/R9oafwJbQHvAAA=="/>
+        </item>
+        <item>
+            <title>0.14.0</title>
+            <pubDate>Thu, 25 Dec 2025 03:56:15 +0100</pubDate>
+            <link>https://raw.githubusercontent.com/steipete/CodexBar/main/appcast.xml</link>
+            <sparkle:version>41</sparkle:version>
+            <sparkle:shortVersionString>0.14.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[<h2>CodexBar 0.14.0</h2>
+<ul>
+<li>Antigravity: new local provider for the Antigravity language server (Claude + Gemini quotas) with an experimental toggle; improved plan display + debug output; clearer not-running/port errors; hide account switch.</li>
+<li>Status: poll Google Workspace incidents for Gemini + Antigravity; Status Page opens the Workspace status page.</li>
+            <li>Settings: add Providers tab; move cost usage + status toggles to General; keep display controls in Advanced.</li>
+<li>Menu/UI: widen the menu for four providers; cards/charts adapt to menu width; tighten provider switcher/toggle spacing; keep menus refreshed while open.</li>
+<li>Gemini: hide the dashboard action when unsupported.</li>
+<li>Claude: fix Extra usage spend/limit units (cents); improve CLI probe stability; surface web session info in Debug.</li>
+<li>OpenAI web: fix dashboard ghost overlay on desktop (WebKit keepalive window).</li>
+<li>Debug: add a debug-lldb build mode for troubleshooting.</li>
+</ul>
+<p><a href="https://github.com/steipete/CodexBar/blob/main/CHANGELOG.md">View full changelog</a></p>
+]]></description>
+            <enclosure url="https://github.com/steipete/CodexBar/releases/download/v0.14.0/CodexBar-0.14.0.zip" length="5382347" type="application/octet-stream" sparkle:edSignature="qhj8jnqH/eOXEP2plbZyTb8w1x0Afcpix0kC+pzMh5jX9Lkf3Yg2Bvd6/vsKdhOObEwJjQZRb/RKiSBx55J3DA=="/>
+        </item>
+        <item>
+            <title>0.13.0</title>
+            <pubDate>Wed, 24 Dec 2025 01:53:35 +0100</pubDate>
+            <link>https://raw.githubusercontent.com/steipete/CodexBar/main/appcast.xml</link>
+            <sparkle:version>40</sparkle:version>
+            <sparkle:shortVersionString>0.13.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/steipete/CodexBar/releases/download/v0.13.0/CodexBar-0.13.0.zip" length="5099083" type="application/octet-stream" sparkle:edSignature="EmhEmcTFQEpuQG6vZ288l9j278VjnpQdQcmZnU1JDvzERVTtnIg+8RDlsHV9niwejaOBPX6mvXST3vNJHpwADA=="/>
+        </item>
+        <item>
+            <title>0.12.0</title>
+            <pubDate>Tue, 23 Dec 2025 04:39:05 +0100</pubDate>
+            <link>https://raw.githubusercontent.com/steipete/CodexBar/main/appcast.xml</link>
+            <sparkle:version>39</sparkle:version>
+            <sparkle:shortVersionString>0.12.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/steipete/CodexBar/releases/download/v0.12.0/CodexBar-0.12.0.zip" length="4888386" type="application/octet-stream" sparkle:edSignature="tQMHO/RNAbvwRHXYnLAkNV2ksiV722qR8fEYzcbipgetacfPnwnLJ0Pe/lAiZ03PBmj3BkisHb74GosUlSV+DQ=="/>
+        </item>
+    </channel>
+</rss>

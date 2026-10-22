@@ -1,0 +1,115 @@
+{
+  "reviewedStagedTree": "beb4dc146badfd207830acdd9eccf6647e542877",
+  "swiftTesting": {
+    "tests": 1151,
+    "suites": 72,
+    "failures": 0
+  },
+  "xctest": {
+    "tests": 66,
+    "failures": 0
+  },
+  "fullTestResult": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/ios-full-final.xcresult",
+  "releaseBuild": {
+    "configuration": "Release",
+    "destination": "generic/platform=iOS",
+    "codeSigningAllowed": false,
+    "result": "BUILD SUCCEEDED",
+    "xcresult": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/ios-release.xcresult"
+  },
+  "lint": {
+    "violations": 0,
+    "files": 3143,
+    "sourceKeys": 436,
+    "allFourLanguagesTranslated": true
+  },
+  "render": {
+    "test": "V079DetailsRenderTests/testDetailsAndTeaserInFourLanguagesAppearancesAndLargeText()",
+    "visuallyInspected": true,
+    "cases": [
+      {
+        "name": "v079-details-ja-accessibility3_0_B84D89F3-AEB7-415E-ACFC-D940FAA2652D.png",
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/ios-final-render-attachments/73088F81-98CF-4005-8011-181040A74CA7.png",
+        "sha256": "989018071a9ede09d47c5c0dd7d006f9489696a7c5fb9d660923d4bfb68bb7a4"
+      },
+      {
+        "name": "v079-details-ja-dark_0_3CDF5D64-36B7-4E74-B1BA-3E8B9AE5C6FF.png",
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/ios-final-render-attachments/F87514F7-493E-46CB-B8B9-5702F4F16560.png",
+        "sha256": "342856135f7893df1f9cb91e81512e14525771ccdef1e98a3c56187c60cc56c0"
+      },
+      {
+        "name": "v079-details-ja-light_0_C5436BEC-B4A4-4346-B54C-067484554DB4.png",
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/ios-final-render-attachments/AB304A3B-19D4-4F0A-B494-52CE57C239D9.png",
+        "sha256": "302a561c33904402ecc5dab904b7f0795eaf4e88370a3ba04db343dd6827d16d"
+      },
+      {
+        "name": "v079-details-zh-Hant-dark_0_1498E88F-1610-4617-BCC3-01B86C8FD4D9.png",
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/ios-final-render-attachments/A4540E37-7FD4-48CB-9277-491ABA3C3CB1.png",
+        "sha256": "3fbeb8dd34db357720e7141306a1dcbb6807c9e9cff4dccbbbf7ed3621e399e9"
+      },
+      {
+        "name": "v079-details-zh-Hant-light_0_B5473E96-14BE-41D1-9242-8210EA76F1AA.png",
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/ios-final-render-attachments/EFE75E24-8F7D-4192-A739-922CE5A8EB56.png",
+        "sha256": "ab5ed0eaa31ab321b53f614a5fbd62aac219b1900d805cb3750f6646e758599d"
+      },
+      {
+        "name": "v079-details-zh-Hans-dark_0_3B2CAE6E-B83E-4A36-831A-46927BBCDDE6.png",
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/ios-final-render-attachments/A6E03DF3-3C52-4679-BF64-B9A4497E9857.png",
+        "sha256": "081899f132d7717357355d54431927572028124129325c2312f086ad9ef5245d"
+      },
+      {
+        "name": "v079-details-zh-Hans-light_0_D6A15960-1501-4044-BD2A-AB63E091F32F.png",
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/ios-final-render-attachments/7AF69908-C452-46B2-A5EC-D07A57A2AAD4.png",
+        "sha256": "d89b41a51cc6a247538edfd6fb770cf0a8442edfa040c9a5be01002ff8a76e32"
+      },
+      {
+        "name": "v079-details-en-dark_0_9C9110B8-DF32-45D6-BFA6-46E2BF0D57A0.png",
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/ios-final-render-attachments/717415B4-D3E9-4311-9393-76CDD5B69296.png",
+        "sha256": "7dc1ba25c9c59513aea237969a5122f57c454396f3e172ae72a7cfc3c74e7110"
+      },
+      {
+        "name": "v079-details-en-light_0_CBCA92BB-2F53-426B-A550-7645F9BF71A2.png",
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/ios-final-render-attachments/C28D46B1-0C88-4BCD-8190-B04BCD9D7AE4.png",
+        "sha256": "79fb3a19a64aeefa8e35a78b3368522bdb71046bbbfad1e32acd8c8f00471109"
+      }
+    ]
+  },
+  "fileSHA256": {
+    "CodexBarMobile/CodexBarWidgetShared/ProviderSnapshotMerger.swift": "97d81a5087e6a0e25e1fd458bb169a7f801369237f465d354f435dc939675af0",
+    "CodexBarMobile/CodexBarMobile/Storage/SwiftDataBridge.swift": "96580ae3825659f792aec5aedc44b1ce12dc5847a329d68ecd3ba0438be254a0",
+    "CodexBarMobile/CodexBarMobile/Storage/CostLedgerService.swift": "1cbc302a42b2fb6150b8ad747fccec12d53e30f1df3e56ed3147e188a1fa8bf0",
+    "CodexBarMobile/CodexBarMobile/Views/ProviderDetailsView.swift": "1462792536185ba0175588dfd926c13349cb90970e5e9ccb3b17f09ea8b0276d",
+    "CodexBarMobile/CodexBarMobileTests/V079CostAuthorityTests.swift": "a1a1827a42d3fc55ed7e02add33b284b8ed9437b356da81bc2dbce394efac2b1",
+    "CodexBarMobile/CodexBarMobileTests/V079DetailsTests.swift": "0551b241f64a4da9471900fd3679c5f3eaa1845bf3ae74e13ca58b90e456dc62",
+    "CodexBarMobile/project.yml": "b2837393e1bd1af774d6cfb47a847076a54c7d6bf2c8e8724ad1b4181507e1bd"
+  },
+  "productionCloudKitLiveTests": false,
+  "testFlightUploaded": false,
+  "uiInteraction": {
+    "tests": 2,
+    "failures": 0,
+    "device": "Duo 27.1",
+    "xcresult": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/ios-intro-ui.xcresult",
+    "screenAttachments": "black; excluded from visual acceptance",
+    "additionalRuntime": {
+      "name": "iOS 26.5 Compatibility QA",
+      "deviceID": "F7DF92DB-2C2F-4475-8F19-615225381DB7",
+      "tests": 2,
+      "failures": 0,
+      "xcresult": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/ios-intro-ui-265.xcresult",
+      "screenAttachments": "2 screenshots visually inspected; passed",
+      "images": [
+        {
+          "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/ios-intro-ui-265-attachments/027D7FA7-5283-465D-B2DE-72CEE3038292.png",
+          "name": "Setup Guide opened from update notes_0_C5C6BDDE-D718-43A9-AB17-D8AB46165CBD.png",
+          "sha256": "81c3b6f10fbd6927bdd754a3ef53d4445f75ba77e58e8bc268e2241d9b77cadc"
+        },
+        {
+          "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/ios-intro-ui-265-attachments/7D0CE769-3D07-4968-B0E3-446DCF0526FA.png",
+          "name": "3.1 release highlights_0_2C17CF8B-52D8-4B89-8BD9-52DB3788CE02.png",
+          "sha256": "839abfdb779193229ee1d82f6ec6c3c5cbda26af9f1749e5e6bb0bd19e959a50"
+        }
+      ]
+    }
+  }
+}

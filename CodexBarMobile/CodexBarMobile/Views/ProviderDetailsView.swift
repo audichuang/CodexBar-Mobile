@@ -4,6 +4,7 @@ import Foundation
 import SwiftUI
 
 struct ProviderDetailsView: View {
+    @Environment(\.locale) private var locale
     let providerID: String
     let sections: [SyncProviderDetailSection]
     let tintColor: Color
@@ -36,7 +37,7 @@ struct ProviderDetailsView: View {
         ForEach(Array(self.visibleSections.enumerated()), id: \.offset) { index, section in
             VStack(alignment: .leading, spacing: 12) {
                 if let title = section.title {
-                    Text(ProviderDetailLocalization.localized(title, providerID: self.providerID))
+                    Text(ProviderDetailLocalization.localized(title, providerID: self.providerID, locale: self.locale))
                         .font(.headline)
                 }
 
@@ -48,19 +49,19 @@ struct ProviderDetailsView: View {
                             providerID: self.providerID,
                             row: row,
                             sectionTitle: section.title,
-                            now: context.date)
+                            now: context.date, locale: self.locale)
                         VStack(alignment: .leading, spacing: 6) {
-                            HStack(alignment: .firstTextBaseline, spacing: 12) {
-                                Text(ProviderDetailLocalization.localized(
+                            ProviderDetailRowLayout(
+                                label: ProviderDetailLocalization.localized(
                                     row.label,
                                     providerID: self.providerID,
                                     context: ProviderDetailLocalization.rowContext(
                                         providerID: self.providerID,
                                         section: section,
                                         row: row,
-                                        index: index)))
-                                    .foregroundStyle(.secondary)
-                                Spacer(minLength: 12)
+                                        index: index), locale: self.locale),
+                                severity: row.severity)
+                            {
                                 VStack(alignment: .trailing, spacing: 2) {
                                     Text(presentation.value)
                                         .fontWeight(.semibold)
@@ -85,7 +86,10 @@ struct ProviderDetailsView: View {
 
                 if let chart = section.chart, !chart.points.isEmpty {
                     if let title = chart.title {
-                        Text(ProviderDetailLocalization.localized(title, providerID: self.providerID))
+                        Text(ProviderDetailLocalization.localized(
+                            title,
+                            providerID: self.providerID,
+                            locale: self.locale))
                             .font(.subheadline)
                             .fontWeight(.semibold)
                     }
@@ -105,6 +109,7 @@ struct ProviderDetailsView: View {
 }
 
 private struct ProviderDetailsChart: View {
+    @Environment(\.locale) private var locale
     let providerID: String
     let chart: SyncProviderDetailSection.Chart
     let tintColor: Color
@@ -112,7 +117,7 @@ private struct ProviderDetailsChart: View {
     private var localizedUnit: String {
         ProviderDetailLocalization.localized(
             self.chart.unit ?? "Usage",
-            providerID: self.providerID)
+            providerID: self.providerID, locale: self.locale)
     }
 
     var body: some View {
@@ -145,6 +150,7 @@ private struct ProviderDetailsChart: View {
 }
 
 struct ProviderDetailsTeaserView: View {
+    @Environment(\.locale) private var locale
     let providerID: String
     let section: SyncProviderDetailSection
 
@@ -161,39 +167,89 @@ struct ProviderDetailsTeaserView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if let title = self.section.title {
-                Text(ProviderDetailLocalization.localized(title, providerID: self.providerID))
+                Text(ProviderDetailLocalization.localized(title, providerID: self.providerID, locale: self.locale))
                     .font(.subheadline)
                     .fontWeight(.semibold)
             }
             ForEach(Array(self.section.rows.prefix(2).enumerated()), id: \.offset) { index, row in
-                HStack(alignment: .firstTextBaseline, spacing: 8) {
-                    Text(ProviderDetailLocalization.localized(
+                ProviderDetailRowLayout(
+                    label: ProviderDetailLocalization.localized(
                         row.label,
                         providerID: self.providerID,
                         context: ProviderDetailLocalization.rowContext(
                             providerID: self.providerID,
                             section: self.section,
                             row: row,
-                            index: index)))
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    Spacer(minLength: 8)
+                            index: index), locale: self.locale),
+                    severity: row.severity)
+                {
                     // Same minute clock as the full details so a cached expiry flips while visible.
                     TimelineView(.periodic(from: .now, by: 60)) { context in
                         Text(ProviderDetailRowPresentation(
                             providerID: self.providerID,
                             row: row,
                             sectionTitle: self.section.title,
-                            now: context.date).value)
+                            now: context.date, locale: self.locale).value)
                             .font(.caption)
                             .fontWeight(.semibold)
                             .monospacedDigit()
                     }
                 }
+                .font(.caption)
             }
         }
         .padding(12)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(.quaternary, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
+}
+
+/// A symbol and a spoken label carry severity together; the value retains system text contrast.
+struct ProviderDetailSeverityIndicator: View {
+    @Environment(\.locale) private var locale
+    let severity: SyncProviderDetailSection.Row.Severity?
+
+    nonisolated static func label(for severity: SyncProviderDetailSection.Row.Severity?, locale: Locale) -> String? {
+        let key: String
+        switch severity {
+        case .warning: key = "Warning"
+        case .critical: key = "Critical"
+        case .normal, nil: return nil
+        }
+        return MobileLocalizedString.value(key, defaultValue: key, locale: locale)
+    }
+
+    var body: some View {
+        if let label = Self.label(for: self.severity, locale: self.locale) {
+            Image(systemName: self
+                .severity == .critical ? "exclamationmark.octagon.fill" : "exclamationmark.triangle.fill")
+                .foregroundStyle(ProviderColorPalette.readable(
+                    self.severity == .critical ? Color.red : Color.orange, adjustsLightMode: true))
+                .accessibilityLabel(label)
+        }
+    }
+}
+
+/// Keep long dates and amounts readable at accessibility sizes, then speak each row as one item.
+private struct ProviderDetailRowLayout<Value: View>: View {
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    let label: String
+    let severity: SyncProviderDetailSection.Row.Severity?
+    @ViewBuilder let value: Value
+
+    var body: some View {
+        let stacked = self.dynamicTypeSize.isAccessibilitySize
+        let layout = stacked
+            ? AnyLayout(VStackLayout(alignment: .leading, spacing: 8))
+            : AnyLayout(HStackLayout(alignment: .firstTextBaseline, spacing: 12))
+        layout {
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                ProviderDetailSeverityIndicator(severity: self.severity)
+                Text(self.label).foregroundStyle(.secondary)
+            }
+            if !stacked { Spacer(minLength: 8) }
+            self.value.frame(maxWidth: stacked ? .infinity : nil, alignment: .leading)
+        }
+        .accessibilityElement(children: .combine)
     }
 }

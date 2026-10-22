@@ -1,0 +1,51 @@
+{
+  "reviewedHead": "8de535ee3c3c2376dd227d208637fb1d1c8fa20d",
+  "finding": "https://github.com/o1xhack/CodexBar-Mobile/pull/199#discussion_r4342646390",
+  "threadID": "PRRT_kwDORPTto86u-mIj",
+  "swiftTesting": {
+    "tests": 1152,
+    "suites": 72,
+    "failures": 0
+  },
+  "xctest": {
+    "tests": 67,
+    "failures": 0
+  },
+  "testResult": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/pr199-r1-ios.xcresult",
+  "releaseResult": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/pr199-r1-ios-release.xcresult",
+  "releaseBuild": "BUILD SUCCEEDED",
+  "lint": "exit0;3143 files;0 violations;four-language audit passed",
+  "fileSHA256": {
+    "CodexBarMobile/CodexBarWidgetShared/ProviderDetailLocalization.swift": "795d10c5cce4267511e77ef5289c81e4d72120d3513b10da39962135a2b09a08",
+    "CodexBarMobile/CodexBarMobile/Localizable.xcstrings": "2866482a761ccebb96eb63a62659b73430654c9954d9ec73523a695f06b43f16",
+    "CodexBarMobile/CodexBarMobileTests/V079DetailsTests.swift": "bf761c5534c34a47ec84bc20b334de8ad80f5d7d6e62039f1bf68d9aa8c5a3a6"
+  },
+  "renders": [
+    {
+      "name": "v079-vercel-personal-budget-ja_0_42D742D5-9864-45D3-B50C-790080D949A1.png",
+      "path": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/pr199-r1-vercel-renders/88431C6F-38C1-4C5F-9BFF-08EF9782D127.png",
+      "sha256": "ef9f98436f8e0f3ff95eec3f744734b7d9870be8be3ffbc1f9478c94cd358feb",
+      "visuallyInspected": true
+    },
+    {
+      "name": "v079-vercel-personal-budget-zh-Hant_0_C25DD2BB-46A5-4ADD-8576-874AE89A98B3.png",
+      "path": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/pr199-r1-vercel-renders/4270DFA3-B697-46E4-A4A2-DD9D543FB549.png",
+      "sha256": "00470736a22e8ce976f63dc6ee4c2430cf2a06d35167a133ea959146292f0e22",
+      "visuallyInspected": true
+    },
+    {
+      "name": "v079-vercel-personal-budget-zh-Hans_0_5676C45E-0D13-4155-90FE-0E2AD62F90AF.png",
+      "path": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/pr199-r1-vercel-renders/4C78B187-A8E3-497E-A93B-04DBF0ED7BD9.png",
+      "sha256": "f57bdf3aedffc0a851f0b047ec1d9c368df425cbd3119669ff392cb55b1d156a",
+      "visuallyInspected": true
+    },
+    {
+      "name": "v079-vercel-personal-budget-en_0_2C531C66-8CB8-4A14-9490-38BD967B5CF2.png",
+      "path": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/v079/pr199-r1-vercel-renders/E015A915-E2B4-4174-AD58-4EFA45F63CCF.png",
+      "sha256": "3c0ade5fe819ccb198009c3881b131b3837162d0ebfa8b3b9abfcc448fe149ba",
+      "visuallyInspected": true
+    }
+  ],
+  "macArtifactInputsChanged": false,
+  "schemaChanged": false
+}
