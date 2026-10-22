@@ -1,6 +1,6 @@
 # Summary Tab 设计与官方图标研究
 
-- 状态：`ready`（设计方案可实施；实际原生界面检查另记于验证文档）
+- 状态：`done`（设计、官方资源研究与原生视觉验收已完成）
 - 查阅日期：2026-10-22（America/Los_Angeles）
 - 设计依据：本对话用户确认的单版 `codexbar-summary-compact.html`、[00-goal.md](00-goal.md)。
 - 当前环境：iOS 最低版本 17.0，Swift 6.0；不引入要求更高系统的新导航 API。
@@ -43,12 +43,12 @@ Summary 和 Usage 可以读同一份额度数据；不复制抓取、预测算�
 - 默认卡片为白色；暗色模式采用系统对应表面。颜色只能由用户主动选择；警告通过数值颜色、符号与文字表达，不把整卡自动染成橙红。用户颜色不驱动官方 logo 改色。
 - 顶部只保留一行横滑 `All providers` + 已添加卡片的 provider 标签，标签图标和文字并存。无 All Accounts、无额外多行筛选。选中状态用形状/描边与可访问状态一起表示。
 - 筛选只改变当前可见卡片，不重排、不清除隐藏卡片，不改用户默认顺序。新增卡片后可选中其 provider，便于立即找到；删除最后一张导致筛选失效时回到 All providers。
-- 添加按 Provider → 指标 → 具体账号 → 自定义。每层只显示实际支持的数据；重复卡片说明已添加。取消丢弃草稿。无账号、无支持指标、没有筛选结果和没有固定卡片是不同空态。
+- 添加按 Provider → 指标 → 具体账号 → 自定义。每层只显示实际支持的数据；允许同一指标添加多张卡，以设置不同重点、文字或颜色，每张卡有独立 ID。取消丢弃草稿。无账号、无支持指标、没有筛选结果和没有固定卡片是不同空态。
 - 编辑支持单卡标题、账号别名、重点模式、颜色、删除与顺序；提供可访问的前移/后移或原生排序，不能只有长按拖拽。不要在筛选视图里把未显示的卡片意外覆盖掉。
 
 ## 原生与自适应检查
 
-1. 用原生 TabView 保留 Usage → Summary → Cost → Settings，Summary 使用独立 NavigationStack。沿用已有导航语义，不改变账号详情或状态归属。
+1. 用原生 TabView 保留 Usage → Summary → Cost → Settings，Summary 使用独立 NavigationSplitView 与详情 NavigationStack。沿用已有导航语义，不改变账号详情或状态归属。
 2. 约 86pt 是常规字号的密度目标，不是强制裁剪高度。两列卡片需正确适配窄屏；辅助功能大字采用一列与自动高度，让身份、窗口、读数和重置语义全部可读。
 3. 宽屏按可用容器宽度增加卡片列数，避免两张卡横向拉成巨幅面板；展开设备可使用现有 detail/inspector 结构。以容器尺寸计算，不用具体手机型号判断。旋转/调整窗口不丢筛选、排序或编辑草稿。
 4. 时长使用本地化短格式与等宽数字；不要整卡每秒刷新。预测日期按用户地区、时区和 12/24 小时偏好格式化。日期和时间的权重应接近，不能只看见 `21:06` 而漏掉日期。
@@ -57,24 +57,18 @@ Summary 和 Usage 可以读同一份额度数据；不复制抓取、预测算�
 
 实际截图与交互检查不能用 HTML 原型替代；原型只提供已确认的布局依据。实现后设计复查重点为：常规字号两列密度、长账号识别、三种重点样式可辨、Provider-only 筛选、编辑草稿保留和大字可读性。
 
-### 2026-10-22 原生实现首次静态设计 review
+### 最终原生设计复查
 
-已读 `Views/SummaryTab.swift`、`Views/SummaryCardEditor.swift`。两列卡片、仅 Provider 横滑、白色默认、逐卡重点模式、预测独立指标、原始品牌图形与中性字母 fallback 均与已批准方向一致。卡片以 `minHeight` 而非固定高度实现，辅助功能大字切一列。
+设计师已检查源码、真实 UI 测试截图与原生 SwiftUI 渲染，推动并验收：
 
-已向主工程反馈以下具体问题，实际关闭与截图结果见 `03-validation.md`：
+- 自适应色板、额度读数水平/垂直排版、AX 单列与自然高度；没有以裁切主值换密度。
+- 默认身份中间省略保留套餐、装饰 monogram 固定图标字号；完整身份与 reset 语义经过隐私清洗后读给 VoiceOver。
+- 别名草稿进入纯 resolver 实时预览；编辑器常驻字段标签区分账号别名与单卡名称，输入框保持独立焦点。
+- 窄屏两列、真正的指标网格/账号详情双栏、浅深色、大字，以及百分比/倒计时/预估日期/余额四类型混排。
+- 预测卡采用窗口先行短标题，长范围名称允许自然换行；日期和时间可读。默认演示账号不会在重置前用完时，忠实显示 Lasts until reset。
+- `SummaryInfoView` 提供官方资源归属及品牌指南入口；用户卡片配色不改变原始图标。
 
-1. 色板固定六项横排最少需要 286pt，窄屏 Form 内容可能不足；需改自适应网格/换行，并给每项足够触控范围。
-2. 额度主值 `fixedSize(horizontal: true)` 加同行窗口名称，大字一列仍可能溢出；需水平/垂直可适配布局，长时长允许自然换行。
-3. VoiceOver 隐藏子元素后只读取自定义标题，可能失去 provider/账号身份，倒计时也缺“后重置”语义；需补完整、经过隐私清洗的身份与 reset 语义。
-4. 次要交互建议：账号别名草稿应进入卡片预览的纯 resolver，保存前也能看见改名结果；取消仍不得写入持久化。
-
-第二次静态复查：以上四项已在源代码中修复。额度读数具备水平/垂直布局，大字采用垂直；色板可换行；辅助功能明确读出 provider、账号与重置语义，额外用量金额/百分比均不再漏读；别名草稿已经参与纯预览投影。`SummaryInfoView` 已加入官方图标归属说明及官网品牌指南链接。此处只确认代码中的设计修复，实际屏幕和辅助功能行为仍以各自验证为准。
-
-### 原生渲染设计复查
-
-已实际查看 BuildScratch `CodexBar/LayoutPreviews/` 下的 `outer-portrait-summary.png`、`inner-portrait-summary.png`、`outer-landscape-summary.png`、`inner-dark-summary.png` 与 `inner-large-text-summary.png`：窄屏两列紧凑白卡、宽容器四列、单行 Provider 标签及系统暗色表面符合已批准方向；辅助功能大字单列纵向主值，已显示区域无关键值裁切。注意这些是生产 SwiftUI 的 hosting 渲染，不是设备交互或 VoiceOver 操作验收。
-
-首次截图发现 13pt 两字母 monogram 变成省略号、默认长身份的尾部套餐被截断，已反馈主工程；后续源代码改为固定装饰图标字号/单行缩放和默认身份中间截断保留套餐。最终源重渲染及倒计时/预估日期混排仍在等待，此段不把旧截图写成最终版本证明。
+设计最终无阻断。精选原生截图位于 `evidence/`，测试、失败修复和合成数据的证据边界统一记录于 [03-validation.md](03-validation.md)。HTML 只保留为已确认设计依据，不充当原生验收。
 
 ## 官方图标：已核实来源与本次使用结论
 
@@ -83,10 +77,10 @@ Summary 和 Usage 可以读同一份额度数据；不复制抓取、预测算�
 | Provider | 官方 primary 来源与资源 | 核实的条件 | 本次建议 |
 | --- | --- | --- | --- |
 | OpenAI / ChatGPT | [OpenAI Design Guidelines](https://openai.com/brand/)，官方完整资源入口 [brand.openai.com](https://brand.openai.com/)；后者当前重定向登录页 | 页面提供受品牌指南约束的非独占使用许可；标识须直接关联服务、保持原样并注明归属，不暗示背书，不成为自己主品牌。Blossom 不可改色。 | 有条件可用官方提供的 OpenAI/ChatGPT 资源。本次已从官方 CDN 取得原始黑/白 monoblossom PNG 并打包为 `SummaryProviderOpenAI`，用于 OpenAI/ChatGPT 的服务身份标识；名称文本仍明确具体服务。这不授权将 OpenAI logo 称作独立 Codex 产品图标。 |
-| Codex | 上述 [OpenAI Design Guidelines](https://openai.com/brand/) 与 [Codex 产品页](https://openai.com/codex/)；上游另从签名桌面 app 提取过产品 PNG | 上游 provenance 能证明出处，不能证明该提取资源的独立再分发许可或它在公开品牌包内。 | 未核对官方 Codex 资源许可前用中性 `CX`；不直接扩大使用从本机 app 解包的渐变资源。 |
-| Anthropic / Claude / Claude Platform | [Anthropic Trademark Guidelines](https://www.anthropic.com/legal/trademark-guidelines)，2024-08-01 生效 | 要求具体许可并事前批准使用材料；不允许更改颜色、字体、比例等。官网公开品牌色或 GitHub skill 不是该许可的替代品。 | 当前没有本 App 已获许可证据，Summary 用 `CL` 等中性文字；不新增官方 Claude 图形资源，也不把上游改色图称为获授权官方图。 |
-| Grok / xAI | [官方 Brand Guidelines](https://x.ai/legal/brand-guidelines)，直接下载 [官方 logo ZIP](https://data.x.ai/logos/SpaceXAI_Grok_Assets.zip) | 明确允许准确指代服务；不得暗示背书、用于自有产品名或组合新商标。logo 必须用下载包提供原样资源。查阅时页面公司字样已有变化，故以 URL 和条款内容留证，不扩展品牌重命名工作。 | 可采用 ZIP 中实际匹配 Grok 的未修改资源；本次 urllib 与 curl 两次下载均为 Cloudflare HTTP 403，未取得可核对字节，故本次 `GR` fallback，不继续重试或取网站 favicon 替代。 |
-| Muse Code / Meta | [Meta 官方品牌资源与规则](https://www.meta.com/brand/resources/meta/company-brand/)；上游图源为 [Meta developer SVG](https://dev.meta.ai/logo/meta-logo-with-text.svg) | Meta 页面明确所有 Meta logo 使用需要批准；12px 最小高度并要求足够留白。上游还去除了文字，不能等同原样官方批准资源。 | 目前无批准证据，用 `MU`；不把 Meta 公司标识自动当作 Muse 的产品 logo。若未来取得专用产品资源与许可，再替换。 |
+| Codex | 上述 [OpenAI Design Guidelines](https://openai.com/brand/) 与 [Codex 产品页](https://openai.com/codex/)；上游另从签名桌面 app 提取过产品 PNG | 上游 provenance 能证明出处，不能证明该提取资源的独立再分发许可或它在公开品牌包内。 | 未核对官方 Codex 资源许可前用中性 `Cx`；不直接扩大使用从本机 app 解包的渐变资源。 |
+| Anthropic / Claude / Claude Platform | [Anthropic Trademark Guidelines](https://www.anthropic.com/legal/trademark-guidelines)，2024-08-01 生效 | 要求具体许可并事前批准使用材料；不允许更改颜色、字体、比例等。官网公开品牌色或 GitHub skill 不是该许可的替代品。 | 当前没有本 App 已获许可证据，Summary 用 `Cl` 等中性文字；不新增官方 Claude 图形资源，也不把上游改色图称为获授权官方图。 |
+| Grok / xAI | [官方 Brand Guidelines](https://x.ai/legal/brand-guidelines)，直接下载 [官方 logo ZIP](https://data.x.ai/logos/SpaceXAI_Grok_Assets.zip) | 明确允许准确指代服务；不得暗示背书、用于自有产品名或组合新商标。logo 必须用下载包提供原样资源。查阅时页面公司字样已有变化，故以 URL 和条款内容留证，不扩展品牌重命名工作。 | 可采用 ZIP 中实际匹配 Grok 的未修改资源；本次 urllib 与 curl 两次下载均为 Cloudflare HTTP 403，未取得可核对字节，故本次 `G` fallback，不继续重试或取网站 favicon 替代。 |
+| Muse Code / Meta | [Meta 官方品牌资源与规则](https://www.meta.com/brand/resources/meta/company-brand/)；上游图源为 [Meta developer SVG](https://dev.meta.ai/logo/meta-logo-with-text.svg) | Meta 页面明确所有 Meta logo 使用需要批准；12px 最小高度并要求足够留白。上游还去除了文字，不能等同原样官方批准资源。 | 目前无批准证据，用 `M`；不把 Meta 公司标识自动当作 Muse 的产品 logo。若未来取得专用产品资源与许可，再替换。 |
 | OpenRouter | [官方 Brand Assets](https://openrouter.ai/brand)，小尺寸 glyph 原始 [Ink PNG](https://openrouter.ai/brand/logos/transparent/glyph/png/glyph-ink%402x.png) | 页面明确提供可使用的标志配置及小尺寸 glyph，要求不要拉伸、改色或混合改造。 | 已下载官方原始 Ink/Cloud PNG 并打包 `SummaryProviderOpenRouter` 浅/深色；保持宽高比及原色，用户配色不改 glyph。 |
 | Cursor | [官方 Brand Guidelines](https://cursor.com/brand)，[官方 ZIP](https://ptht05hbb1ssoooe.public.blob.vercel-storage.com/assets/brand/cursor-brand-assets.zip) | 页面给出可表达品牌的资源、2D 默认、独立 cube/wordmark 与正确名称；未在已读取内容中看到清晰覆盖本 App 再分发的许可条款。 | 不仅凭可下载判定许可；本次先 `CU`。后续如包内使用条件明确覆盖再启用。 |
 | Mistral | [官方品牌页](https://mistral.ai/brand/) | 欢迎 partners/collaborators 使用，要求原样、留白、不得改色/拉伸；页面禁止有色背景。未核实本 App 属于所述范围。 | 本次 `MI`。后续核实许可及背景条件后再启用；用户自定义有色卡片尤其要检查适用性。 |
@@ -122,4 +116,8 @@ OpenAI 官方 ZIP SHA-256：`b2c4cd1e86bbe76bdc4946a72d014efa455240c177f4878fd68
 
 ## 设计结论
 
-可按已确认单版方案实施。官方图标有可行路径：OpenAI 与 OpenRouter 已取得可复核原始资源；Grok 条件明确但下载受阻，暂用 fallback。Claude、Meta/Muse 与未明确许可的资源采用中性文字，确保图标研究不拖住核心卡片/筛选/定制功能。原生界面完成后继续做实际截图和交互设计 review。
+可按已确认单版方案实施。官方图标有可行路径：OpenAI 与 OpenRouter 已取得可复核原始资源；Grok 条件明确但下载受阻，暂用 fallback。Claude、Meta/Muse 与未明确许可的资源采用中性文字，确保图标研究不拖住核心卡片/筛选/定制功能。原生截图、交互与设计 review 已按本目标完成。
+
+## 最终原生验收
+
+设计师已逐张检查四种卡片混排、手机/窄侧栏、浅深色、AX 单列与真正网格/账号详情双栏。预测短标签先给出窗口；较长日期自然增高；原生 editor 常驻标签区分账号别名与单卡名称。截图与测试边界见 [03-validation.md](03-validation.md)，所有有效发现均已修复，最终没有设计阻断项。

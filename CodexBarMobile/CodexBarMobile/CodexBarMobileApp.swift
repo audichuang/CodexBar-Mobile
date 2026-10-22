@@ -31,6 +31,7 @@ struct CodexBarMobileApp: App {
             defaults.removeObject(forKey: "onboardingSeenVersion")
             defaults.removeObject(forKey: "releaseNotesSeenVersion")
             defaults.removeObject(forKey: UsageCardPreferencesStore.defaultsKey)
+            defaults.removeObject(forKey: SummaryDefaultsPersistence.key)
             defaults.removeObject(forKey: ResetCreditCalendarSync.enabledKey)
             defaults.removeObject(forKey: ResetCreditCalendarSync.stateKey)
         }

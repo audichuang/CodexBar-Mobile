@@ -17,7 +17,7 @@ This directory contains research documents for features being considered for Cod
 
 | # | Feature | Status | Blocker | File | Date |
 |---|---------|--------|---------|------|------|
-| 080 | 独立 Summary Tab：紧凑自选指标、Provider 筛选、倒计时与耗尽预测、自定义与稳定账号绑定（#203） | `in-progress` | 设计已确认；本地实现、四语、正式测试与原生 UI 验证推进中；未授权远程发布 | [080-summary-tab/00-goal.md](080-summary-tab/00-goal.md) | 2026-10-22 |
+| 080 | 独立 Summary Tab：紧凑自选指标、Provider 筛选、倒计时与耗尽预测、自定义与稳定账号绑定（#203） | `done` | 本地实现、四语、1,244 项回归与原生关键交互/视觉/review 已完成；详见验证记录 | [080-summary-tab/00-goal.md](080-summary-tab/00-goal.md) | 2026-10-22 |
 | 079 | v0.77.0–v0.79.0 单版本上游同步（#196）+ iOS 3.1.0 (246)：Future AGI/Munito、Gemini App、Claude Desktop/tcr、成本缓存与详情告警 | `done` | Mac live 0.79.0.1-mobile.3.1.0、公开下载/feed验收；iOS1156+67/四语/3.1(246)上传并提交审核MANUAL；PR199/200/201 clean、#196 completed；NO_DEPLOY，16组合substituted及风险保留 | [079-v079-upstream-sync/00-overview.md](079-v079-upstream-sync/00-overview.md) | 2026-10-21 |
 | 078 | iPhone Duo：Usage 账号与额度详情、Cost 总览与趋势、分享预览与编辑分区；折叠、拖动和输入连续性 | `done` | Xcode 27.1 / 27A9275；原生展开/半折叠交互完成，修复半屏预览裁切，最终 UI 回归 5 项通过 | [078-iphone-duo-experience.md](078-iphone-duo-experience.md) | 2026-10-20 |
 | 077 | Reset credit 到期时间详情与日历提醒（Claude / Codex / Grok 每次 credit 的精确到期时间；可选写入 CodexBar 日历，提前用掉自动删除；Mac 0.76.0.2 同步 Claude / Grok 库存，只含到期时间） | `done` | PR #195（分支 `feature/reset-credit-calendar`）；iOS 2.10.0 (243) + Mac 0.76.0.2 / 169.2；CloudKit `NO_DEPLOY`；16 组合为替代验证 | [077-reset-credit-calendar/00-overview.md](077-reset-credit-calendar/00-overview.md) | 2026-10-18 |

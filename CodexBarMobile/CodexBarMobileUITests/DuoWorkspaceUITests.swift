@@ -119,7 +119,7 @@ extension XCUIApplication {
     func nativeTab(_ name: String) -> XCUIElement {
         let bottomButton = self.tabBars.buttons[name]
         if bottomButton.exists { return bottomButton }
-        let symbol = ["Usage": "chart.bar.fill", "Cost": "dollarsign.circle.fill", "Setting": "gearshape"][name] ?? name
+        let symbol = ["Usage": "chart.bar.fill", "Summary": "square.grid.2x2.fill", "Cost": "dollarsign.circle.fill", "Setting": "gearshape"][name] ?? name
         let predicate = NSPredicate(format: "identifier == %@ OR label == %@", symbol, name)
         let local = self.descendants(matching: .any).matching(predicate).firstMatch
         if local.exists { return local }
