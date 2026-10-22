@@ -15,3 +15,7 @@ PR #199 六轮 exact-head clean，所有线程已 resolved，第六轮前有四�
 ## Final CI 容量修复（发布仍等待）
 
 原 run `39723108855` 的 Swift 6.2 compatibility job `119640941201` 在30分钟被取消；最后进度3313/3365，编译error为0。Linux x64/arm64/musl全部通过，Mac分片继续运行，不重复其健康结果。兼容job移为 `macos-compatibility.yml` reusable/manual workflow，仍用相同Xcode26.3、Swift6.2、cache key和 `swift build --build-tests` 覆盖，给60分钟完成。Final CI 保持相同条件与聚合success要求，手动修复只针对已审查 source SHA，不将旧cancelled记PASS。CI策略/路径gate、28项cache tests、actionlint（排除既有SC2016字面Markdown误报）通过；最终需PR exact-head clean并独立补跑兼容job成功才公开Mac。顺手修正既有branch-ref直接插shell的风险，改env+quoted传参。
+
+## 发布验证临时路径修复
+
+正式finalize前发现 `verify_appcast.sh` 下载enclosure ZIP硬编码 `/tmp`，已改为 `CODEXBAR_RELEASE_STAGE_BASE` 优先、TMPDIR后备；release metadata/notes与Sparkle probe也遵循相同暂存根，不修改历史evidence/fixture字符串。此次调用同时设置两者为SSD BuildScratch。Appcast验证增加HTTP失败即退出，并在ZIP临时创建失败、长度/HTTP/签名失败时清理已创建的key、ZIP及meta。五个隔离合成stub场景（success、wrong length、missing stage、HTTP error、bad signature）全部符合预期退出且无临时文件残留，真实加密签名仍沿用此前Mac实包preflight与最终公开下载验证，不把stub当真实网络/签名PASS。bash语法、既有Sparkle signing/checksum测试及diff检查通过。修改仅release验证/临时路径，不改变已签名Mac或已上传iOS产品输入。

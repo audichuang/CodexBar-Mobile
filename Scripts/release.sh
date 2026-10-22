@@ -105,7 +105,7 @@ require_remote_asset_matches_local() {
 
 verify_local_appcast_artifact() {
   local zip=$1 key=$2 metadata expected_url signature expected_length actual_length
-  metadata=$(mktemp /tmp/codexbar-appcast-metadata.XXXXXX)
+  metadata=$(mktemp "${CODEXBAR_RELEASE_STAGE_BASE:-${TMPDIR:-/tmp}}/codexbar-appcast-metadata.XXXXXX")
   python3 - "$APPCAST" "$MARKETING_VERSION" >"$metadata" <<'PY'
 import sys
 import xml.etree.ElementTree as ET
@@ -211,7 +211,7 @@ phase1() {
 
   local KEY_FILE NOTES_FILE
   KEY_FILE=$(clean_key "$SPARKLE_PRIVATE_KEY_FILE")
-  NOTES_FILE=$(mktemp /tmp/codexbar-notes.XXXXXX)
+  NOTES_FILE=$(mktemp "${CODEXBAR_RELEASE_STAGE_BASE:-${TMPDIR:-/tmp}}/codexbar-notes.XXXXXX")
   # Eager-expand paths into the trap so the cleanup still works after
   # phase1's local scope is gone (set -u would otherwise fail on unbound
   # $KEY_FILE / $NOTES_FILE when the EXIT trap fires post-return).
