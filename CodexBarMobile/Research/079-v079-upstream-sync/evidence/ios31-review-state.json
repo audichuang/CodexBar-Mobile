@@ -1,0 +1,18 @@
+{
+  "data" : {
+    "type" : "appStoreVersions",
+    "id" : "206d00f9-4b38-46d7-b952-f03fc81750b9",
+    "attributes" : {
+      "versionString" : "3.1.0",
+      "appStoreState" : "WAITING_FOR_REVIEW",
+      "appVersionState" : "WAITING_FOR_REVIEW",
+      "releaseType" : "MANUAL"
+    },
+    "links" : {
+      "self" : "https://api.appstoreconnect.apple.com/v1/appStoreVersions/206d00f9-4b38-46d7-b952-f03fc81750b9"
+    }
+  },
+  "links" : {
+    "self" : "https://api.appstoreconnect.apple.com/v1/appStoreVersions/206d00f9-4b38-46d7-b952-f03fc81750b9?fields%5BappStoreVersions%5D=versionString%2CreleaseType%2CappStoreState%2CappVersionState"
+  }
+}

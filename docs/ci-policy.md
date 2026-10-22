@@ -48,6 +48,21 @@ although no test failed.
 - A shard that times out without a failing test is a CI capacity problem to
   fix in this step, not something to rerun indefinitely.
 
+## Swift 6.2 compatibility capacity and targeted reruns
+
+`ci.yml` still requires the Swift 6.2 compatibility build whenever macOS tests
+are selected, and the aggregate gate still requires its success. The build lives
+in the reusable `macos-compatibility.yml` workflow, which also supports an explicit
+manual dispatch with a pinned `source_ref`. This lets a capacity repair validate
+only the failed compatibility check while retaining completed matrix evidence.
+It never runs on PR updates and is not a replacement for the normal matrices.
+
+The job allows 60 minutes: the v0.79 fork build had no compiler errors but reached
+only 3313/3365 build steps before the previous 30-minute limit cancelled it.
+The Swift/Xcode version, build command, cache key and target coverage are unchanged.
+A release records both the original matrix and the successful targeted repair;
+a cancelled check is never recorded as a pass.
+
 ## Upstream-sync reuse
 
 An `upstream-sync/*` merge may skip the duplicate heavy remote matrices only
