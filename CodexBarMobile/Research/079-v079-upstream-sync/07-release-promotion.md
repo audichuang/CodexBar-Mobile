@@ -11,3 +11,7 @@ Duo：MobileAdaptiveLayout、ReportPanePlan、AdaptiveReportPanes、ReleaseNotes
 Archive 的101文件 pre/post-export manifests 均保存。Xcode 上传完成后只在根 Info.plist 加入 Distributions，因此分别保存上传前后 tree hash；App、三个扩展、资源与 dSYM 文件逐一相同。来源、hash 算法和差异详情见 `evidence/ios246-archive-provenance.json`。源图、archive 编译图、Apple CDN 图标分别目视核对正确。
 
 PR #199 六轮 exact-head clean，所有线程已 resolved，第六轮前有四字段 architecture audit；合并前 review gate/Fast Checks 通过。合并后 gate 按设计因 MERGED 状态拒绝，但 currentClean=true、unresolvedCount=0，不冒称这次调用 PASS。独立 Mac / iOS agents 复核产品阻塞0，证据措辞问题在本收尾修正。Final CI39723108855仍在运行，未先 tag 或 public release。CloudKit仍 NO_DEPLOY，Mac/iOS Production，16组合保留替代验证/实体收敛风险边界。
+
+## Final CI 容量修复（发布仍等待）
+
+原 run `39723108855` 的 Swift 6.2 compatibility job `119640941201` 在30分钟被取消；最后进度3313/3365，编译error为0。Linux x64/arm64/musl全部通过，Mac分片继续运行，不重复其健康结果。兼容job移为 `macos-compatibility.yml` reusable/manual workflow，仍用相同Xcode26.3、Swift6.2、cache key和 `swift build --build-tests` 覆盖，给60分钟完成。Final CI 保持相同条件与聚合success要求，手动修复只针对已审查 source SHA，不将旧cancelled记PASS。CI策略/路径gate、28项cache tests、actionlint（排除既有SC2016字面Markdown误报）通过；最终需PR exact-head clean并独立补跑兼容job成功才公开Mac。顺手修正既有branch-ref直接插shell的风险，改env+quoted传参。

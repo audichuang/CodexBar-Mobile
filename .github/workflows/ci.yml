@@ -53,11 +53,12 @@ jobs:
         if: ${{ github.event_name == 'pull_request' && startsWith(github.event.pull_request.head.ref, 'upstream-sync/') }}
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          UPSTREAM_SYNC_BRANCH: ${{ github.event.pull_request.head.ref }}
         run: |
           ./Scripts/ci_verify_upstream_release.sh \
             "${{ github.repository }}" \
             "${{ github.event.pull_request.merge_commit_sha }}" \
-            "${{ github.event.pull_request.head.ref }}"
+            "$UPSTREAM_SYNC_BRANCH"
 
       - name: Detect final CI test impact
         id: macos-tests
@@ -252,37 +253,9 @@ jobs:
   swift-build-macos-compatibility:
     needs: changes
     if: ${{ needs.changes.outputs.macos-tests == 'true' }}
-    runs-on: macos-15
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-        with:
-          ref: ${{ github.event.pull_request.merge_commit_sha || github.sha }}
-
-      - name: Select Xcode 26.3
-        run: |
-          set -euo pipefail
-          sudo xcode-select -s /Applications/Xcode_26.3.app/Contents/Developer
-          echo "DEVELOPER_DIR=/Applications/Xcode_26.3.app/Contents/Developer" >> "$GITHUB_ENV"
-          [[ "$(/usr/bin/xcodebuild -version)" == Xcode\ 26.3* ]]
-          /usr/bin/xcodebuild -version
-
-      - name: Restore SwiftPM build cache
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: |
-            .build
-            ~/Library/Caches/org.swift.swiftpm
-          key: swiftpm-macos15-xcode26.3-arm64-${{ hashFiles('Package.resolved', 'Package.swift') }}
-          restore-keys: |
-            swiftpm-macos15-xcode26.3-arm64-
-
-      - name: Build app, CLI, and tests with Swift 6.2
-        run: |
-          set -euo pipefail
-          swift --version
-          swift build --build-tests
+    uses: ./.github/workflows/macos-compatibility.yml
+    with:
+      source_ref: ${{ github.event.pull_request.merge_commit_sha || github.sha }}
 
   lint-build-test:
     runs-on: ubuntu-24.04

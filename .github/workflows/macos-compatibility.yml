@@ -1,0 +1,65 @@
+# FORK CI: reusable and individually dispatchable; no PR update trigger.
+name: Swift 6.2 Compatibility
+
+on:
+  workflow_call:
+    inputs:
+      source_ref:
+        description: Commit to validate
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        description: Commit to validate (defaults to the selected workflow ref)
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-15
+    # A v0.79 cold test build reached 3313/3365 steps at the old 30-minute cap.
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+        with:
+          ref: ${{ inputs.source_ref || github.sha }}
+
+      - name: Record validated source
+        run: |
+          set -euo pipefail
+          source_sha=$(git rev-parse HEAD)
+          printf 'Validated source commit: %s\nWorkflow commit: %s\n' "$source_sha" "$GITHUB_SHA"
+          {
+            printf '### Swift 6.2 compatibility provenance\n\n'
+            printf 'Validated source commit: %s\n\n' "$source_sha"
+            printf 'Workflow commit: %s\n' "$GITHUB_SHA"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Select Xcode 26.3
+        run: |
+          set -euo pipefail
+          sudo xcode-select -s /Applications/Xcode_26.3.app/Contents/Developer
+          echo "DEVELOPER_DIR=/Applications/Xcode_26.3.app/Contents/Developer" >> "$GITHUB_ENV"
+          [[ "$(/usr/bin/xcodebuild -version)" == Xcode\ 26.3* ]]
+          /usr/bin/xcodebuild -version
+
+      - name: Restore SwiftPM build cache
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            .build
+            ~/Library/Caches/org.swift.swiftpm
+          key: swiftpm-macos15-xcode26.3-arm64-${{ hashFiles('Package.resolved', 'Package.swift') }}
+          restore-keys: |
+            swiftpm-macos15-xcode26.3-arm64-
+
+      - name: Build app, CLI, and tests with Swift 6.2
+        run: |
+          set -euo pipefail
+          swift --version
+          swift build --build-tests
