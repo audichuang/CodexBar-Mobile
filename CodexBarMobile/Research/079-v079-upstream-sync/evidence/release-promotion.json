@@ -88,7 +88,8 @@
       "reason": "Xcode export/upload adds Distributions bookkeeping to the archive root Info.plist at upload completion. Every Products and dSYMs file matches the pre-export manifest.",
       "rootInfoModifiedUTC": "2026-10-22T04:35:30.559994+00:00",
       "productAndSymbolFilesUnchanged": true
-    }
+    },
+    "selectedBuildRelationshipEvidence": "ios31-selected-build-final.json"
   },
   "cloudKitSchema": "NO_DEPLOY",
   "compatibilityMatrix": {
@@ -113,6 +114,22 @@
   },
   "cliReleaseWorkflow": {
     "run": 39729517647,
-    "state": "in_progress"
+    "state": "success",
+    "platforms": 6,
+    "homebrewTap": "skipped by fork guard",
+    "evidence": "ci-cli-release.json"
+  },
+  "distributionVerification": {
+    "assetCount": 18,
+    "cliPlatforms": 6,
+    "linuxDesktopPlatforms": 2,
+    "publicTarballDownloadsVerified": 8,
+    "checkReleaseAssetsExitCode": 0,
+    "evidence": "release-distribution-verification.json"
+  },
+  "releaseVerifyWorkflows": {
+    "mac": 39729517578,
+    "linuxDesktop": 39729517642,
+    "conclusion": "success"
   }
 }

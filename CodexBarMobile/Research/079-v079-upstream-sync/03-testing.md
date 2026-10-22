@@ -14,6 +14,7 @@ Status: `done`（本地验收完成；16组合均为有边界的替代验证，�
 | iOS引导交互 | PASS：Duo模拟器两条XCUITest，Duo27.1和iOS26.5均通过，首次notes→Setup→Continue、同版本重启不重复展示、Demo跳过notes；`v079-ios-intro-ui.log` / `ios-intro-ui.xcresult`。 |
 | 四语/深浅色/辅助字号视觉 | PASS：生产details/full+teaser四语×Light/Dark共8图，日文accessibility3另1图，最终逐张目视验收。第一版大字号拆行已改竖排并复跑。证据`evidence/ios-validation.json`绑定截图SHA256。 |
 | Mac live与线上appcast | PASS：同release ID420093277正式发布0.79.0.1-mobile.3.1.0；15fb实包digest/签名/资源/版本匹配，公开下载签名/长度与线上feed验证通过；07与mac-release-verification.json为终态。 |
+| 自动分发产物 | PASS：CLI六平台、Linux desktop两架构、Mac Release Verify均success；实际公开下载8份tarball及sha256/size/digest核对通过，18附件完整，check-release-assets exit0，详07。 |
 | CloudKit Production schema | NO_DEPLOY：见下；未执行live schema export/写入。 |
 | 2Mac×2iPhone gate | COMPLETE WITH SUBSTITUTIONS：16/16列出，64读取和32真实old/new consumer合并进程全部通过；不是16实体PASS。 |
 | 循环review | 实现head18ccdefb2已获GitHub第四轮clean，两个线程resolved；最终15fb R6、后续200/201工具修复均exact-head clean/0 unresolved，merge前gate通过，详见05/07。 |

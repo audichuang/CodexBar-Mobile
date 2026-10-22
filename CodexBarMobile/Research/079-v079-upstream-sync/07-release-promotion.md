@@ -1,6 +1,6 @@
 # 正式发布与 iOS 审核提交
 
-Status: in-progress（Mac已live、iOS已提交；自动CLI分发产物和最后文档审查仍在完成）
+Status: done（Mac已live、iOS已提交审核并保持手动发布；全部分发产物验收完成，收尾PR的最终review回执保存在PR）
 
 ## 发布结果
 
@@ -47,4 +47,6 @@ Mac live 后以正式 URL 回复并关闭 upstream-sync #196，Todoist Dev 移�
 
 ## 自动 CLI 分发产物
 
-Mac签名GUI包和dSYM已公开并通过发布脚本验收；release事件另触发 [Release CLI](https://github.com/o1xhack/CodexBar-Mobile/actions/runs/39729517647)，六个平台的独立tarballs/sha256目前构建中，不记为成功。Homebrew upstream tap job受fork guard保护，不写上游。
+Mac签名GUI包和dSYM已公开并通过发布脚本验收；release事件触发的 [Release CLI](https://github.com/o1xhack/CodexBar-Mobile/actions/runs/39729517647) 最终success，六个平台CLI tarballs及sha256均已上传；Homebrew upstream tap job按fork guard跳过，未写上游。[Mac Release Verify](https://github.com/o1xhack/CodexBar-Mobile/actions/runs/39729517578) 与 [Linux desktop release](https://github.com/o1xhack/CodexBar-Mobile/actions/runs/39729517642) 同源成功。
+
+`Scripts/check-release-assets.sh v0.79.0.1-mobile.3.1.0` exit0。额外实际公开下载六份CLI与两份Linux desktop tarballs（均落SSD），逐个验证bytes、SHA256、sidecar内容和GitHub digest一致，8/8通过；18个附件为2份Mac包+8份tarball及各自8份校验文件。最终完整资产快照为`evidence/mac-public-release.json`，分发校验为`evidence/release-distribution-verification.json`，三份自动workflow结果保存在`evidence/ci-cli-release.json`、`evidence/ci-mac-release-verify.json`和`evidence/ci-linux-desktop-release.json`。App Review的最终selected-build relationship独立GET也确认build17160de4，保存在`evidence/ios31-selected-build-final.json`。

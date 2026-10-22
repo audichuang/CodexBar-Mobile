@@ -1,0 +1,66 @@
+{
+  "observedAt": "2026-10-22T06:00:07.084552+00:00",
+  "releaseTag": "v0.79.0.1-mobile.3.1.0",
+  "releaseCommit": "e64152322fa63732b38dd6c1b832879bdc4943fe",
+  "cliPlatforms": 6,
+  "desktopPlatforms": 2,
+  "assetCount": 18,
+  "assets": [
+    {
+      "name": "CodexBarCLI-v0.79.0.1-mobile.3.1.0-macos-arm64.tar.gz",
+      "bytes": 15029285,
+      "sha256": "7b8ce940bf43aeae1a2a7e6b2e39197fbfaed0e587c34786bd4dc5dbc4b8a986",
+      "publicDownloadVerified": true,
+      "sidecarVerified": true
+    },
+    {
+      "name": "CodexBarCLI-v0.79.0.1-mobile.3.1.0-macos-x86_64.tar.gz",
+      "bytes": 15671771,
+      "sha256": "b934b382e63acf15ca40460bd9a361d7380e5c563ef4931391513bb14aa06a34",
+      "publicDownloadVerified": true,
+      "sidecarVerified": true
+    },
+    {
+      "name": "CodexBarCLI-v0.79.0.1-mobile.3.1.0-linux-aarch64.tar.gz",
+      "bytes": 55683616,
+      "sha256": "4a1d569350ac9895e27f2e1196ad592552904de802f15d576586a925f111edf7",
+      "publicDownloadVerified": true,
+      "sidecarVerified": true
+    },
+    {
+      "name": "CodexBarCLI-v0.79.0.1-mobile.3.1.0-linux-x86_64.tar.gz",
+      "bytes": 56600359,
+      "sha256": "ae42f0cf14212f8d955e1ab7be01d68cceffb7b33800b7438dddd1dd3d0d5b93",
+      "publicDownloadVerified": true,
+      "sidecarVerified": true
+    },
+    {
+      "name": "CodexBarCLI-v0.79.0.1-mobile.3.1.0-linux-musl-aarch64.tar.gz",
+      "bytes": 93685263,
+      "sha256": "f64f6b8a3edef176f9b9185078e8583384f27d34dd3885073fd3460fe85c6004",
+      "publicDownloadVerified": true,
+      "sidecarVerified": true
+    },
+    {
+      "name": "CodexBarCLI-v0.79.0.1-mobile.3.1.0-linux-musl-x86_64.tar.gz",
+      "bytes": 95708223,
+      "sha256": "78734d2385257627078264c126ebb94a8de60d6a3df4c1ad1712ebf3674006a8",
+      "publicDownloadVerified": true,
+      "sidecarVerified": true
+    },
+    {
+      "name": "CodexBarDesktop-v0.79.0.1-mobile.3.1.0-linux-aarch64.tar.gz",
+      "bytes": 249050,
+      "sha256": "93db5cbcb84f007a4134283ad5e384a9f88a06797497d009e300955e1b71f51d",
+      "publicDownloadVerified": true,
+      "sidecarVerified": true
+    },
+    {
+      "name": "CodexBarDesktop-v0.79.0.1-mobile.3.1.0-linux-x86_64.tar.gz",
+      "bytes": 255712,
+      "sha256": "a92d7d1830dc4c268383525fc5dd94f3b98bdbf97e784343595a5341a1bd316e",
+      "publicDownloadVerified": true,
+      "sidecarVerified": true
+    }
+  ]
+}
