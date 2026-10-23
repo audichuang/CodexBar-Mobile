@@ -131,7 +131,6 @@
 		65F5D6C09B5AAE52CE4CE849 /* MobileQuotaBurndown.swift in Sources */ = {isa = PBXBuildFile; fileRef = D317FDA7B59C971619973C86 /* MobileQuotaBurndown.swift */; };
 		66A54A05F64B57FC828A2C40 /* AlibabaTokenPlanCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C6897E84FB3CBD02DC3D8C /* AlibabaTokenPlanCard.swift */; };
 		6723B0E31B950F7C988C433F /* SyncQuotaWarningConfigTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AF7B6A222FD3554CA455D8E /* SyncQuotaWarningConfigTests.swift */; };
-		67A0113B106D1F186C1C3357 /* SummaryProviderMark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7CB87EDC30EACBBD9E9617 /* SummaryProviderMark.swift */; };
 		67B06FA7C5A2AD0605CC1C4B /* DuoWorkspaceUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218B73280580E4A94C140E2D /* DuoWorkspaceUITests.swift */; };
 		67C5AF7FC62936A0A28189B3 /* SnapshotIdentityKeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A393218B2702DC47F1003A5 /* SnapshotIdentityKeyTests.swift */; };
 		68BFB9E94BCAA6528578F9DE /* ReleaseNotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8070CA59B4F85933DD090003 /* ReleaseNotesView.swift */; };
@@ -430,7 +429,6 @@
 		1C3F51A2F6DE018A276166F7 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		1C9038A6A037C9329348C876 /* MockProviderDetectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockProviderDetectorTests.swift; sourceTree = "<group>"; };
 		1CECA0608F74E3BA76EE5910 /* QuotaProviderList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuotaProviderList.swift; sourceTree = "<group>"; };
-		1E7CB87EDC30EACBBD9E9617 /* SummaryProviderMark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryProviderMark.swift; sourceTree = "<group>"; };
 		1F6D955B355B9CDF255AF8DB /* SyncedDailyActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncedDailyActivityView.swift; sourceTree = "<group>"; };
 		1F8C8BB69CA51A514FF41E14 /* MultiAccountForEachIdentityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiAccountForEachIdentityTests.swift; sourceTree = "<group>"; };
 		20CA4E5C7B1091C018B038D4 /* CostLedgerModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostLedgerModels.swift; sourceTree = "<group>"; };
@@ -1132,7 +1130,6 @@
 				ADBAD8F25D20EF318A00EA0A /* ResetCreditsCard.swift */,
 				A8D1A686D11DB3E3BB3D5B96 /* SummaryCardEditor.swift */,
 				5877F20D6F33EA77BE500C0B /* SummaryInfoView.swift */,
-				1E7CB87EDC30EACBBD9E9617 /* SummaryProviderMark.swift */,
 				C3CD1A8B5A71D029B3BB7E08 /* SummaryTab.swift */,
 				1F6D955B355B9CDF255AF8DB /* SyncedDailyActivityView.swift */,
 				85BCB81FDAB42986B27BFA60 /* TokenActivityView.swift */,
@@ -1581,7 +1578,6 @@
 				C156FD565ABD66B8CA30A24B /* SummaryCardResolver.swift in Sources */,
 				D429412536A4AD596A0F0B6E /* SummaryInfoView.swift in Sources */,
 				64758429A6363D1A094F1AAE /* SummaryPreferencesStore.swift in Sources */,
-				67A0113B106D1F186C1C3357 /* SummaryProviderMark.swift in Sources */,
 				A131E5837010179F5B262118 /* SummaryTab.swift in Sources */,
 				86AF1C1CE9402E616E87F26C /* SwiftDataBridge.swift in Sources */,
 				77AF491945589ACEFFCD2342 /* SwiftDataSchema.swift in Sources */,
@@ -1804,7 +1800,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = CodexBarMobileWidgets/WidgetExtension.entitlements;
-				CURRENT_PROJECT_VERSION = 249;
+				CURRENT_PROJECT_VERSION = 250;
 				DEVELOPMENT_TEAM = 3TUERHN53E;
 				INFOPLIST_FILE = CodexBarMobileWidgets/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1824,7 +1820,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
-				CURRENT_PROJECT_VERSION = 249;
+				CURRENT_PROJECT_VERSION = 250;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -1849,7 +1845,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = CodexBarMobileWidgets/WidgetExtension.entitlements;
-				CURRENT_PROJECT_VERSION = 249;
+				CURRENT_PROJECT_VERSION = 250;
 				DEVELOPMENT_TEAM = 3TUERHN53E;
 				INFOPLIST_FILE = CodexBarMobileWidgets/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2024,7 +2020,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = CodexBarMobilePushExtension/PushExtension.entitlements;
-				CURRENT_PROJECT_VERSION = 249;
+				CURRENT_PROJECT_VERSION = 250;
 				DEVELOPMENT_TEAM = 3TUERHN53E;
 				INFOPLIST_FILE = CodexBarMobilePushExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2045,7 +2041,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = CodexBarMobileWidgetOptions/WidgetOptions.entitlements;
-				CURRENT_PROJECT_VERSION = 249;
+				CURRENT_PROJECT_VERSION = 250;
 				DEVELOPMENT_TEAM = 3TUERHN53E;
 				INFOPLIST_FILE = CodexBarMobileWidgetOptions/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2067,7 +2063,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = CodexBarMobile/CodexBarMobile.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 249;
+				CURRENT_PROJECT_VERSION = 250;
 				DEVELOPMENT_TEAM = 3TUERHN53E;
 				INFOPLIST_FILE = CodexBarMobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2104,7 +2100,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = CodexBarMobileWidgetOptions/WidgetOptions.entitlements;
-				CURRENT_PROJECT_VERSION = 249;
+				CURRENT_PROJECT_VERSION = 250;
 				DEVELOPMENT_TEAM = 3TUERHN53E;
 				INFOPLIST_FILE = CodexBarMobileWidgetOptions/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2126,7 +2122,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = CodexBarMobile/CodexBarMobile.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 249;
+				CURRENT_PROJECT_VERSION = 250;
 				DEVELOPMENT_TEAM = 3TUERHN53E;
 				INFOPLIST_FILE = CodexBarMobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2162,7 +2158,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
-				CURRENT_PROJECT_VERSION = 249;
+				CURRENT_PROJECT_VERSION = 250;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -2186,7 +2182,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = CodexBarMobilePushExtension/PushExtension.entitlements;
-				CURRENT_PROJECT_VERSION = 249;
+				CURRENT_PROJECT_VERSION = 250;
 				DEVELOPMENT_TEAM = 3TUERHN53E;
 				INFOPLIST_FILE = CodexBarMobilePushExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

@@ -50,12 +50,12 @@ struct SummaryCardTests {
     }
 
     @Test
-    func `compact identity drops repeated provider and plan but preserves full identity`() throws {
+    func `text card headings use provider names unless the user names them`() throws {
         let store = SummaryPreferencesStore.inMemory()
         let account = Self.account(organization: "Personal")
         store.reconcile(accounts: [account], now: Self.now)
         let cards = store.resolvedCards(accounts: [account], now: Self.now)
-        #expect(cards.allSatisfy { $0.compactTitle == "Personal" })
+        #expect(cards.allSatisfy { $0.compactTitle == "Claude" })
         #expect(cards.allSatisfy { $0.accountTitle == "Claude Personal Max 5x" })
         var first = try #require(cards.first?.configuration)
         store.setAccountAlias("Work", accountAnchorID: first.accountAnchorID)
@@ -67,7 +67,7 @@ struct SummaryCardTests {
     }
 
     @Test
-    func `matching workspace names keep distinct emails and privacy can still redact them`() {
+    func `provider headings omit automatic account details while bindings remain distinct`() {
         let store = SummaryPreferencesStore.inMemory()
         let first = Self.account(organization: "Work")
         let second = Self.account(
@@ -75,14 +75,17 @@ struct SummaryCardTests {
             record: "install-b")
         store.reconcile(accounts: [first, second], now: Self.now)
         let cards = store.resolvedCards(accounts: [first, second], now: Self.now)
-        #expect(Set(cards.map(\.compactTitle)) == ["fictional-a@example.invalid", "fictional-b@example.invalid"])
+        #expect(Set(cards.map(\.compactTitle)) == ["Claude"])
+        #expect(Set(cards.map(\.accountTitle)).count == 2)
+        #expect(Set(cards.map { SummaryPresentation.redact($0.accountTitle, enabled: true) }).count == 2)
+        #expect(Set(cards.map(\.configuration.accountAnchorID)).count == 2)
         #expect(cards
             .allSatisfy { !SummaryPresentation.redact($0.compactTitle, enabled: true).contains("@example.invalid") })
         let privateNames = Set(cards.map { SummaryPresentation.redact($0.privateTitle, enabled: true) })
-        #expect(privateNames == ["Work · 1", "Work · 2"])
+        #expect(privateNames == ["Claude"])
         let reversed = store.resolvedCards(accounts: [second, first], now: Self.now)
-        #expect(Dictionary(uniqueKeysWithValues: cards.map { ($0.id, $0.privateTitle) })
-            == Dictionary(uniqueKeysWithValues: reversed.map { ($0.id, $0.privateTitle) }))
+        #expect(Dictionary(uniqueKeysWithValues: cards.map { ($0.id, $0.accountTitle) })
+            == Dictionary(uniqueKeysWithValues: reversed.map { ($0.id, $0.accountTitle) }))
     }
 
     @Test

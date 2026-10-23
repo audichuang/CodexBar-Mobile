@@ -4986,12 +4986,12 @@ enum MobileReleaseNotesCatalog {
                     symbol: "square.grid.2x2.fill",
                     title: String(localized: "Your personal Summary"),
                     detail: String(
-                        localized: "Pin the metrics that matter, with clearer cards, short names, monochrome icons, reset countdowns and estimated depletion dates. Names stay visible while editing. Summary and Settings match the rest of the app.")),
+                        localized: "Pin the metrics that matter, with simple text labels, reset countdowns and estimated depletion dates. Cards show the provider name or your own label. Names stay visible while editing. Summary and Settings match the rest of the app.")),
             ],
             sections: [
                 .init(title: String(localized: "What's New"), items: [
                     String(
-                        localized: "Pin the metrics that matter, with clearer cards, short names, monochrome icons, reset countdowns and estimated depletion dates. Names stay visible while editing. Summary and Settings match the rest of the app."),
+                        localized: "Pin the metrics that matter, with simple text labels, reset countdowns and estimated depletion dates. Cards show the provider name or your own label. Names stay visible while editing. Summary and Settings match the rest of the app."),
                     String(
                         localized: "Summary uses usage data already synced from your Mac. No Mac update is required for this release."),
                 ]),

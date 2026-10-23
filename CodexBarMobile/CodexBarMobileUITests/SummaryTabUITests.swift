@@ -166,6 +166,7 @@ final class SummaryTabUITests: XCTestCase {
         app.buttons["summary-save"].tap()
         XCTAssertTrue(self.cards(app).matching(NSPredicate(format: "label CONTAINS %@", "My key limit")).firstMatch
             .waitForExistence(timeout: 5))
+        app.buttons["summary-edit"].tap()
         self.capture("Summary custom card")
     }
 
