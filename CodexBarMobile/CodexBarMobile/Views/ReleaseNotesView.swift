@@ -44,7 +44,7 @@ struct ReleaseNotesView: View {
                     ReleaseNotesHighlights(highlights: latest.highlights)
                     ReleaseNotesContent(version: latest)
                         .padding(20)
-                        .background(.background, in: RoundedRectangle(cornerRadius: 24))
+                        .background(MobileSurfaceStyle.cardMaterial, in: RoundedRectangle(cornerRadius: 24))
                 }
                 if self.showsHistory {
                     VStack(alignment: .leading, spacing: 16) {
@@ -68,7 +68,7 @@ struct ReleaseNotesView: View {
                                 }
                             }
                             .padding(20)
-                            .background(.background, in: RoundedRectangle(cornerRadius: 20))
+                            .background(MobileSurfaceStyle.cardMaterial, in: RoundedRectangle(cornerRadius: 20))
                         }
                     }
                 }
@@ -77,7 +77,7 @@ struct ReleaseNotesView: View {
             .padding(20)
             .frame(maxWidth: .infinity)
         }
-        .background(Color(uiColor: .systemGroupedBackground))
+        .background(MobileSurfaceStyle.pageBackground)
         .navigationTitle(String(localized: "Release Notes"))
         .navigationBarTitleDisplayMode(.inline)
         .safeAreaInset(edge: .bottom) {
@@ -172,7 +172,7 @@ private struct ReleaseNotesHighlights: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                 .padding(24)
-                .background(.background, in: RoundedRectangle(cornerRadius: 24))
+                .background(MobileSurfaceStyle.cardMaterial, in: RoundedRectangle(cornerRadius: 24))
                 .overlay {
                     RoundedRectangle(cornerRadius: 24)
                         .strokeBorder(.tint.opacity(0.14), lineWidth: 1)

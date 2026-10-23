@@ -94,7 +94,7 @@ struct SummaryTab: View {
                 }
             }
             .navigationTitle(String(localized: "Summary"))
-            .background(Color(.systemGroupedBackground))
+            .background(MobileSurfaceStyle.pageBackground)
             .toolbar {
                 if self.isDemoMode {
                     ToolbarItem(placement: .topBarLeading) {
@@ -241,11 +241,14 @@ struct SummaryMetricTile: View {
     let card: SummaryResolvedCard
     let now: Date
     var editing = false
+    var editingTitle: String?
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @AppStorage(MobileSettingsKeys.hidePersonalInfo) private var hidesPersonalInfo = false
 
     private var displayTitle: String {
-        SummaryPresentation.redact(self.card.title, enabled: self.hidesPersonalInfo)
+        self.editingTitle ?? SummaryPresentation.redact(
+            self.hidesPersonalInfo ? self.card.privateTitle : self.card.compactTitle,
+            enabled: self.hidesPersonalInfo)
     }
 
     private var mayShowValue: Bool {
@@ -253,10 +256,11 @@ struct SummaryMetricTile: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 5) {
-            HStack(spacing: 5) {
-                SummaryProviderMark(providerID: self.card.configuration.providerID, size: 13)
-                Text(self.displayTitle).font(.caption2).lineLimit(self.dynamicTypeSize.isAccessibilitySize ? 2 : 1)
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 7) {
+                SummaryProviderMark(providerID: self.card.configuration.providerID, size: 17)
+                Text(self.displayTitle).font(.caption.weight(.medium))
+                    .lineLimit(self.dynamicTypeSize.isAccessibilitySize ? 2 : 1)
                     .truncationMode(self.card.configuration.title == nil ? .middle : .tail)
                 if self.editing { Image(systemName: "pencil").font(.caption2).foregroundStyle(.secondary) }
             }
@@ -268,12 +272,14 @@ struct SummaryMetricTile: View {
                 self.valueContent
             }
         }
-        .frame(maxWidth: .infinity, minHeight: 68, alignment: .topLeading)
-        .padding(.horizontal, 10).padding(.vertical, 9)
+        .frame(maxWidth: .infinity, minHeight: 88, alignment: .topLeading)
+        .padding(12)
         .background(
-            SummaryPresentation.background(self.card.configuration.color),
-            in: RoundedRectangle(cornerRadius: 12))
-        .contentShape(RoundedRectangle(cornerRadius: 12))
+            self.card.configuration.color == .white
+                ? AnyShapeStyle(MobileSurfaceStyle.cardMaterial)
+                : AnyShapeStyle(SummaryPresentation.background(self.card.configuration.color)),
+            in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         .accessibilityElement(children: .ignore)
         .accessibilityLabel(self.accessibilityDescription)
         .accessibilityHint(self
@@ -283,14 +289,12 @@ struct SummaryMetricTile: View {
     @ViewBuilder private var valueContent: some View {
         switch self.card.configuration.metric {
         case .depletion:
-            Text(self.depletionTitle).font(.caption2).foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
             switch self.card.forecast {
             case let .emptyAt(date):
                 ViewThatFits(in: .horizontal) {
                     HStack(alignment: .firstTextBaseline, spacing: 6) {
                         Text(date, format: .dateTime.month(.abbreviated).day()).font(.subheadline)
-                        Text(date, format: .dateTime.hour().minute()).font(.title3.weight(.semibold))
+                        Text(date, format: .dateTime.hour().minute()).font(.title2.weight(.semibold))
                     }
                     Text(date, format: .dateTime.month(.abbreviated).day().hour().minute())
                         .font(.headline).fixedSize(horizontal: false, vertical: true)
@@ -302,18 +306,19 @@ struct SummaryMetricTile: View {
             case nil:
                 Text(String(localized: "Not enough recent data")).font(.caption).foregroundStyle(.secondary)
             }
+            Text(self.depletionTitle).font(.caption2).foregroundStyle(.secondary)
             if self.card.isStale { self.staleLabel }
         case .quota:
             self.valueRow(title: self.card.metricTitle, value: self.primaryValue)
             HStack(spacing: 3) {
                 if self.card.isStale { self.staleLabel }
                 else if self.card.effectiveEmphasis == .countdown {
-                    Text(SummaryPresentation.percent(self.card.usedPercent) + " " + String(localized: "used"))
-                    Spacer(minLength: 0)
-                    Text(String(localized: "to reset"))
+                    Text(String(localized: "to reset") + " · "
+                        + SummaryPresentation.percent(self.card.usedPercent) + " " + String(localized: "used"))
                 } else if let reset = self.card.resetDate {
-                    Image(systemName: "arrow.clockwise").accessibilityHidden(true)
-                    Text(SummaryPresentation.countdown(to: reset, now: self.now))
+                    Text(String(
+                        format: String(localized: "Resets in %@"),
+                        SummaryPresentation.countdown(to: reset, now: self.now)))
                     Spacer(minLength: 0)
                 } else {
                     Text(String(localized: "used"))
@@ -341,7 +346,7 @@ struct SummaryMetricTile: View {
         if self.dynamicTypeSize.isAccessibilitySize {
             VStack(alignment: .leading, spacing: 3) {
                 Text(title).font(.caption).foregroundStyle(.secondary)
-                Text(value).font(.title3.weight(.semibold)).monospacedDigit()
+                Text(value).font(.title2.weight(.semibold)).monospacedDigit()
                     .fixedSize(horizontal: false, vertical: true)
             }
         } else {
@@ -349,11 +354,11 @@ struct SummaryMetricTile: View {
                 HStack(alignment: .firstTextBaseline, spacing: 5) {
                     Text(title).font(.caption).foregroundStyle(.secondary).fixedSize()
                     Spacer(minLength: 0)
-                    Text(value).font(.title3.weight(.semibold)).monospacedDigit().fixedSize()
+                    Text(value).font(.title2.weight(.semibold)).monospacedDigit().fixedSize()
                 }
                 VStack(alignment: .leading, spacing: 2) {
                     Text(title).font(.caption).foregroundStyle(.secondary)
-                    Text(value).font(.title3.weight(.semibold)).monospacedDigit()
+                    Text(value).font(.title2.weight(.semibold)).monospacedDigit()
                         .fixedSize(horizontal: false, vertical: true)
                 }
             }
@@ -407,7 +412,7 @@ struct SummaryMetricTile: View {
                     accounts: self.card.provider.map { [$0] } ?? []),
                 enabled: self.hidesPersonalInfo),
             self.displayTitle,
-            self.card.accountTitle == self.card.title ? ""
+            self.card.accountTitle == self.displayTitle ? ""
                 : SummaryPresentation.redact(self.card.accountTitle, enabled: self.hidesPersonalInfo),
             self.card.metricTitle,
             value,
@@ -490,7 +495,7 @@ enum SummaryPresentation {
 
     static func background(_ color: SummaryCardColor) -> Color {
         switch color {
-        case .white: Color(.secondarySystemGroupedBackground)
+        case .white: Color(.secondarySystemFill)
         case .blue: Color.blue.opacity(0.12)
         case .green: Color.green.opacity(0.12)
         case .orange: Color.orange.opacity(0.12)
@@ -501,40 +506,12 @@ enum SummaryPresentation {
 
     static func colorName(_ color: SummaryCardColor) -> String {
         switch color {
-        case .white: String(localized: "Default white")
+        case .white: String(localized: "Default")
         case .blue: String(localized: "Blue")
         case .green: String(localized: "Green")
         case .orange: String(localized: "Orange")
         case .purple: String(localized: "Purple")
         case .pink: String(localized: "Pink")
         }
-    }
-}
-
-struct SummaryProviderMark: View {
-    let providerID: String
-    var size: CGFloat = 18
-    private var assetName: String? {
-        switch self.providerID {
-        case "openai", "chatgpt": "SummaryProviderOpenAI"
-        case "openrouter": "SummaryProviderOpenRouter"
-        default: nil
-        }
-    }
-
-    var body: some View {
-        Group {
-            if let assetName {
-                Image(assetName).resizable().renderingMode(.original).scaledToFit()
-            } else {
-                let monograms = ["claude": "Cl", "codex": "Cx", "grok": "G", "muse": "M"]
-                Text(monograms[self.providerID] ?? String(self.providerID.prefix(2)).uppercased())
-                    // Decorative mark shares the fixed logo box; the adjacent provider text scales.
-                        .font(.system(size: self.size * 0.65, weight: .semibold))
-                        .lineLimit(1).minimumScaleFactor(0.8)
-            }
-        }
-        .frame(width: self.size, height: self.size)
-        .accessibilityHidden(true)
     }
 }

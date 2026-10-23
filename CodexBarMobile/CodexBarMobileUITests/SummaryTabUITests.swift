@@ -4,13 +4,16 @@ import XCTest
 final class SummaryTabUITests: XCTestCase {
     override func setUpWithError() throws { self.continueAfterFailure = false }
 
-    @MainActor private func launch(language: String = "en") -> XCUIApplication {
+    @MainActor private func launch(
+        language: String = "en", hidePersonalInfo: Bool = false) -> XCUIApplication
+    {
         let app = XCUIApplication()
         app.launchArguments = [
             "UI_TEST_PREVIEW_DATA", "UI_TEST_MULTI_ACCOUNT_DATA", "UI_TEST_SKIP_ONBOARDING", "UI_TEST_RESET_DEFAULTS",
             "-cwlEnabled", "NO", "-AppleLanguages", "(\(language))", "-AppleLocale",
             language == "ja" ? "ja_JP" : "en_US",
         ]
+        if hidePersonalInfo { app.launchArguments += ["-hidePersonalInfo", "YES"] }
         app.launch()
         let names = ["en": "Summary", "zh-Hans": "摘要", "zh-Hant": "摘要", "ja": "概要"]
         let tab = app.nativeTab(names[language] ?? "Summary")
@@ -164,6 +167,56 @@ final class SummaryTabUITests: XCTestCase {
         XCTAssertTrue(self.cards(app).matching(NSPredicate(format: "label CONTAINS %@", "My key limit")).firstMatch
             .waitForExistence(timeout: 5))
         self.capture("Summary custom card")
+    }
+
+    @MainActor func testPrivacyModeKeepsNamesEditableAsPlainText() {
+        let app = self.launch(hidePersonalInfo: true)
+        app.buttons["summary-edit"].tap()
+        self.cards(app).firstMatch.tap()
+        let name = app.textFields["summary-card-name"]
+        XCTAssertTrue(name.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.secureTextFields["summary-card-name"].exists)
+        name.tap()
+        let displayName = "C 5x fictional@example.invalid"
+        name.typeText(displayName)
+        XCTAssertEqual(name.value as? String, displayName)
+        let aliasDisclosure = app.buttons["summary-account-alias-disclosure"]
+        XCTAssertTrue(aliasDisclosure.waitForExistence(timeout: 5))
+        aliasDisclosure.tap()
+        let alias = app.textFields["summary-account-alias"]
+        XCTAssertTrue(alias.waitForExistence(timeout: 5))
+        XCTAssertFalse(app.secureTextFields["summary-account-alias"].exists)
+        alias.tap()
+        alias.typeText("Work")
+        XCTAssertEqual(alias.value as? String, "Work")
+        self.capture("Summary plain-text names with privacy enabled")
+        app.buttons["summary-save"].tap()
+        let saved = self.cards(app).matching(NSPredicate(format: "label CONTAINS %@", "C 5x")).firstMatch
+        XCTAssertTrue(saved.waitForExistence(timeout: 5))
+        XCTAssertFalse(saved.label.contains("fictional@example.invalid"))
+        saved.tap()
+        XCTAssertTrue(name.waitForExistence(timeout: 5))
+        XCTAssertEqual(name.value as? String, displayName)
+        app.buttons["Cancel"].tap()
+    }
+
+    /// Select the simulator's actual system appearance before running this case.
+    /// AppleInterfaceStyle launch defaults do not reliably change Duo's trait environment.
+    @MainActor func testTabSurfacesInCurrentSystemAppearance() {
+        let app = self.launch()
+        self.capture("Summary unified surface")
+        for tabName in ["Usage", "Cost", "Setting"] {
+            let tab = app.nativeTab(tabName)
+            XCTAssertTrue(tab.waitForExistence(timeout: 5))
+            tab.tap()
+            if tabName == "Cost" {
+                XCTAssertTrue(app.staticTexts["Overview"].firstMatch.waitForExistence(timeout: 8))
+            } else if tabName == "Setting" {
+                XCTAssertTrue(app.staticTexts["Setup Guide"].firstMatch.waitForExistence(timeout: 5))
+            }
+            self.capture("\(tabName) surface reference")
+        }
+        app.terminate()
     }
 
     @MainActor func testCancelledCreationDoesNotAddAndCreatingAddsOneCard() {

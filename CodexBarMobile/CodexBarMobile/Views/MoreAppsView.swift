@@ -21,6 +21,7 @@ struct MoreAppsView: View {
             } header: {
                 Text("Apps & Projects")
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
 
             Section {
                 ForEach(MoreAppItem.obsidianPlugins) { item in
@@ -46,7 +47,10 @@ struct MoreAppsView: View {
                 }
                 .padding(.top, 4)
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
         }
+        .listStyle(.insetGrouped)
+        .mobilePageSurface()
         .navigationTitle("More Apps")
         .navigationBarTitleDisplayMode(.inline)
     }

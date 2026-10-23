@@ -65,13 +65,18 @@ final class SummaryCardRenderTests: XCTestCase {
             let size = CGSize(width: width, height: largeText ? 1000 : 620)
             let board = VStack(alignment: .leading, spacing: 10) {
                 Text("Native card variants · synthetic data").font(.caption)
+                HStack(spacing: 16) {
+                    ForEach(["claude", "codex", "chatgpt", "openrouter"], id: \.self) { id in
+                        SummaryProviderMark(providerID: id, size: 20)
+                    }
+                }
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: largeText ? 1 : 2)) {
                     ForEach(cards) { card in SummaryMetricTile(card: card, now: now) }
                 }
                 Spacer(minLength: 0)
             }
             .padding(16)
-            .background(Color(.systemGroupedBackground))
+            .background(MobileSurfaceStyle.pageBackground)
             .environment(\.colorScheme, scheme)
             .environment(\.dynamicTypeSize, largeText ? .accessibility2 : .large)
             let controller = UIHostingController(rootView: board)

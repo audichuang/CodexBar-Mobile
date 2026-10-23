@@ -1,6 +1,118 @@
 {
   "sourceLanguage": "en",
   "strings": {
+  "Pin the metrics that matter, with clearer cards, short names, monochrome icons, reset countdowns and estimated depletion dates. Names stay visible while editing. Summary and Settings match the rest of the app.": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Pin the metrics that matter, with clearer cards, short names, monochrome icons, reset countdowns and estimated depletion dates. Names stay visible while editing. Summary and Settings match the rest of the app."
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "置顶你关心的指标，以更清晰的卡片、短名称和单色图标查看重置倒计时与预计耗尽日期。编辑名称时文字保持可见，摘要和设置的基础色调也与其他页面统一。"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "釘選你關心的指標，以更清晰的卡片、短名稱和單色圖示查看重設倒數計時與預估耗盡日期。編輯名稱時文字保持可見，摘要和設定的基礎色調也與其他頁面統一。"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "必要な指標を、短い名前と単色アイコンを使った見やすいカードに固定できます。リセットまでの残り時間や使い切る予測日時を確認でき、名前は編集中も表示されます。概要と設定の配色も他の画面に統一しました。"
+        }
+      }
+    }
+  },
+  "Provider icons identify their respective services. All marks belong to their owners; no endorsement is implied.": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Provider icons identify their respective services. All marks belong to their owners; no endorsement is implied."
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "服务商图标用于识别对应服务。所有标识均属于各自所有者，不表示官方背书。"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "服務商圖示用於識別對應服務。所有標誌均屬於各自所有者，不表示官方背書。"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "プロバイダーのアイコンは各サービスを識別するためのものです。すべての商標は各所有者に帰属し、推奨や提携を示すものではありません。"
+        }
+      }
+    }
+  },
+  "Account alias · Shared by this account’s cards": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Account alias · Shared by this account’s cards"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "账号别名 · 同账号卡片共用"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "帳號別名 · 同帳號卡片共用"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "アカウントの別名・同じアカウントのカードで共通"
+        }
+      }
+    }
+  },
+  "Default": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Default"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "默认"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "預設"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "デフォルト"
+        }
+      }
+    }
+  },
     "%@ · Est. empty": {
       "localizations": {
         "en": {

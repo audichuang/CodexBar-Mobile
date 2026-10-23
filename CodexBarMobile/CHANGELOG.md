@@ -2,11 +2,15 @@
 
 All notable changes to the CodexBar iOS companion app will be documented in this file.
 
-## [3.2.0 (248)] — Unreleased
+## [3.2.0 (249)] — Unreleased
 
 ### Added
-- Independent Summary tab with compact, individually selected account/window metrics, horizontal provider filters, white-by-default cards, per-card usage/reset emphasis, available balance/extra-usage metrics and observation-based depletion forecasts. The grid fills expanded windows instead of automatically opening a detail pane; tapping a card pushes full account details. Local names, account aliases, colors and manual ordering persist independently of Usage and Cost; demo layouts remain isolated.
-- Summary account bindings retain stable identity across Macs and reversible account linkages. Unknown, stale, reset-passed, blocked and unavailable observations stay distinct; credit units and balance observation ages retain their source semantics. Official OpenAI/OpenRouter assets include documented provenance and attribution; other Summary marks use neutral abbreviations.
+- Independent Summary tab with compact, individually selected account/window metrics, horizontal provider filters, neutral material cards by default, per-card usage/reset emphasis, available balance/extra-usage metrics and observation-based depletion forecasts. The grid fills expanded windows instead of automatically opening a detail pane; tapping a card pushes full account details. Local names, account aliases, colors and manual ordering persist independently of Usage and Cost; demo layouts remain isolated.
+- Summary account bindings retain stable identity across Macs and reversible account linkages. Unknown, stale, reset-passed, blocked and unavailable observations stay distinct; credit units and balance observation ages retain their source semantics. Official OpenAI/OpenRouter assets include documented provenance and attribution; known providers now use bundled monochrome artwork with black/light and white/dark rendering; unknown providers retain text fallbacks.
+
+### Fixed
+- Summary uses short card titles, keeps full account identities in details, and offers ordinary visible text inputs even when privacy mode is enabled. Shared account aliases are tucked into an expandable editor.
+- Summary default cards and the Settings home list now match Usage and Cost’s system canvas and material surfaces; custom card colors remain opt-in.
 
 ### Notes
 - iOS-only Summary release. Existing Mac sync payloads and CloudKit schema are unchanged; no companion Mac release is required.
