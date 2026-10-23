@@ -1,6 +1,6 @@
 # Usage 图表普通 iPhone 横屏可见性修复
 
-状态：`in-progress` · 2026-10-23 · iOS 3.2.0 (252)
+状态：`done` · 2026-10-23 · iOS 3.2.0 (252)
 
 ## 目标与授权
 
@@ -39,11 +39,15 @@
 - [x] 252 构建与完整 iOS 单元测试通过，包含模型/组件渲染；iOS 26/27 原生 UI 最终重跑通过
 - [x] 四种屏幕姿态完整 App 截图及实际可见性验收
 - [x] 独立本地静态 CR 无 findings；原生交互回归结果按验证文档单独记录
-- [ ] PR exact-head 线上 CR、CI、合并
-- [ ] 最终已审源码 Archive、Production entitlement、上传及 TestFlight 可用性回读
+- [x] PR #210 exact-head 线上 CR：1 轮 / 0 unresolved；Fast Checks、Final CI `40005040876` 成功并合并
+- [x] 最终已审源码 Archive、Production entitlement、本地 Apple Distribution export 与实际编译图标验收
+- [x] 实际上传成功 receipt 与实际上传 IPA 签名、版本、资源/代码一致性审计
+- [x] ASC `VALID` / `IN_BETA_TESTING`、Internal 既有全 build 访问、四语说明精确回读与 Apple CDN 实际图标验收
 
 ## 数据与发布边界
 
-此补丁不改变 Mac `Sources/`、共享 wire payload、CloudKit record/schema、账号身份绑定、额度采样或估算逻辑。CloudKit 审计预期为 `NO_DEPLOY`；上传前仍核验最终签名构建的 Production entitlement。实体多设备同步不作为本次布局补丁的已验证结果。
+此补丁不改变 Mac `Sources/`、共享 wire payload、CloudKit record/schema、账号身份绑定、额度采样或估算逻辑。相关路径 diff 为空，CloudKit 审计为 `NO_DEPLOY`；已核验 Archive 与本地分发 export 中使用 CloudKit 的三个 bundle 均为 Production。实体多设备同步不作为本次布局补丁的已验证结果。
+
+PR #210 的 reviewed head 为 `0e78e8ff6d82d723dd58292b039dceda2a08a79b`，合并/Archive 来源为 `14a191367e4b67cdec868cfdcef7fc7f8135f943`；两者 204 项发布输入摘要一致。测试、审查、分发审计与实际上传均已完成；上传成功时间为 `2026-10-23T18:44:23.985Z`，delivery UUID / ASC build ID 为 `f895b559-3312-4b78-8cfb-11de6ac63d43`。最终于 `2026-10-23T18:56:17Z` 确认 ASC `VALID` / `IN_BETA_TESTING`，Internal 既有全 build 访问、四语说明精确回读、Apple CDN 真实 1024px 图标均通过；3.2.0 (252) 已可供内部测试，目标状态更新为 `done`。当前收尾分支为 `review/usage-landscape-release-closeout`，只更新文档，不改变已上传来源。
 
 验证过程与发布证据记录在 [01-validation.md](01-validation.md)。遇到原生栏位行为与设计假设不符时重新调查，不用放宽截图/可见性断言掩盖问题。
