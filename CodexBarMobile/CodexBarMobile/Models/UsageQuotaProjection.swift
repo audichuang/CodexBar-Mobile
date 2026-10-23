@@ -62,25 +62,58 @@ enum UsageQuotaProjection {
                 observedAt: card.observedAt, resetDate: card.resetDate,
                 observedSamples: samples, localObservationCount: history.count)
         }
-        let firstObservation = lines.flatMap(\.observedSamples).map(\.date).min() ?? now
-        // End at now, never a future reset/depletion. One reading remains a point, not a line.
-        return UsageQuotaOverview(start: min(firstObservation, now.addingTimeInterval(-60)), end: now, lines: lines)
-    }
-
-    static func isAccountLinked(_ account: ProviderUsageSnapshot, linkages: [ProviderAccountLinkage]) -> Bool {
-        let identifiers = Set(ProviderSnapshotMerger.effectiveIdentifiers(for: account))
-        return UsageCardLinkages.effective(linkages).contains {
-            $0.providerID == account.providerID && !identifiers.isDisjoint(with: $0.linkedIdentifiers)
+        // The calendar is shared by all providers, not resized to selected lines or
+        // this iPhone's available samples. Only a current, valid Weekly reset anchors it.
+        let week: TimeInterval = 7 * 86400
+        let resets = accounts.flatMap { account -> [Date] in
+            guard !account.isError, account.sourceReport?.allFailed != true else { return [] }
+            return QuotaPaceWindowSelection.candidates(for: account).compactMap { candidate in
+                guard let evidence = UsageQuotaSourceResolver.evidence(
+                    account: account, windowID: candidate.id,
+                    sourceSnapshots: sourceSnapshots, quotaSources: quotaSources),
+                    !evidence.account.isError, evidence.account.sourceReport?.allFailed != true,
+                    evidence.capturedAt <= now,
+                    now.timeIntervalSince(evidence.capturedAt) <= ProviderSourceStatus.staleInterval,
+                    QuotaPaceWindowSelection.isWeekly(evidence.window, observedAt: evidence.capturedAt)
+                else { return nil }
+                let window = evidence.window
+                guard window.usageKnown, window.usedPercent.isFinite, window.usedPercent >= 0,
+                      window.blockingQuota == nil, let reset = window.resetsAt,
+                      reset.timeIntervalSince1970.isFinite, reset > now,
+                      reset.timeIntervalSince(now) <= week else { return nil }
+                return reset
+            }
         }
+        let end = resets.max() ?? now
+        return UsageQuotaOverview(start: end.addingTimeInterval(-week), end: end, lines: lines)
     }
 
     static func hasUnambiguousHistorySource(
         _ account: ProviderUsageSnapshot, anchorID: String, preferences: UsageQuotaPreferences,
         linkages: [ProviderAccountLinkage]) -> Bool
     {
-        guard !self.isAccountLinked(account, linkages: linkages) else { return false }
         let stable = UsageAccountIdentity.tokens(for: account).filter(UsageAccountIdentity.isStable)
         guard !stable.isEmpty else { return false }
+        let identifiers = Set(ProviderSnapshotMerger.effectiveIdentifiers(for: account))
+        var reachable = identifiers
+        var remainingLinks = UsageCardLinkages.effective(linkages).filter { $0.providerID == account.providerID }
+        var affectedLinks: [ProviderAccountLinkage] = []
+        // Weak aliases also connect links. A second known owner reached through an
+        // anonymous/record/card alias is just as ambiguous as a direct account linkage.
+        while let index = remainingLinks.firstIndex(where: { !reachable.isDisjoint(with: $0.linkedIdentifiers) }) {
+            let link = remainingLinks.remove(at: index)
+            affectedLinks.append(link)
+            reachable.formUnion(link.linkedIdentifiers)
+        }
+        if !affectedLinks.isEmpty {
+            // Old anonymous publications may be linked to one known owner. They must not
+            // disable that owner's real sampling; the source resolver still rejects anonymous
+            // writers as proof of a named account. Two distinct stable owners remain ambiguous.
+            let owners = Set(affectedLinks.flatMap(\.linkedIdentifiers).filter {
+                UsageAccountIdentity.isStable($0) && $0 != "\(account.providerID):legacy-no-identity"
+            })
+            guard owners.count == 1, owners.isSubset(of: stable) else { return false }
+        }
         let matches = preferences.accountAnchors.filter {
             $0.providerID == account.providerID
                 && !stable.isDisjoint(with: $0.tokens.filter(UsageAccountIdentity.isStable))

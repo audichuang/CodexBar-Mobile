@@ -2,10 +2,10 @@
 
 All notable changes to the CodexBar iOS companion app will be documented in this file.
 
-## [3.2.0 (252)] — Unreleased
+## [3.2.0 (253)] — Unreleased
 
 ### Added
-- Usage remaining-quota overview compares up to five independently selected account/window lines on one historical date axis, with custom colors and a collapsed legend. Device-local, account-scoped observations show actual consumption and stop at the latest source reading, without predictions or reused provider-shared history. Historical patterns require verified stable ownership; anonymous or changed identities restart observation history while preserving the current-quota fallback.
+- Usage remaining-quota overview compares up to five independently selected account/window lines on one shared seven-day calendar ending at the latest Weekly reset, with custom colors and a collapsed legend. Device-local, account-scoped observations show actual consumption and stop at the latest source reading, without predictions or reused provider-shared history. History requires verified stable ownership; linking a known account to old anonymous publications preserves sampling from its known source, while multiple stable owners remain isolated.
 - Cost dashboard groups can be reordered together, retaining saved positions when data is temporarily unavailable.
 - Independent Summary tab with compact, individually selected account/window metrics, horizontal provider filters, neutral material cards by default, per-card usage/reset emphasis, available balance/extra-usage metrics and observation-based depletion forecasts. The grid fills expanded windows instead of automatically opening a detail pane; tapping a card pushes full account details. Local names, account aliases, colors and manual ordering persist independently of Usage and Cost; demo layouts remain isolated.
 - Summary account bindings retain stable identity across Macs and reversible account linkages. Unknown, stale, reset-passed, blocked and unavailable observations stay distinct; credit units and balance observation ages retain their source semantics. Provider filters and card headings are text-only; headings default to the provider name or use a custom card name/account alias.

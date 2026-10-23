@@ -5080,7 +5080,7 @@ enum MobileReleaseNotesCatalog {
                 .init(
                     id: "quota-overview", symbol: "chart.xyaxis.line",
                     title: String(localized: "Compare your remaining quotas"),
-                    detail: String(localized: "Choose up to five account quotas, customize their colors, and compare actual remaining quota over time. Expand the compact legend for account details. Landscape on iPhone keeps the chart and legend clear of the search and tab bars.")),
+                    detail: String(localized: "Choose up to five account quotas, customize their colors, and compare actual remaining quota on a shared weekly timeline. Expand the compact legend for account details. Landscape on iPhone keeps the chart and legend clear of the search and tab bars.")),
                 .init(
                     id: "cost-order", symbol: "arrow.up.arrow.down",
                     title: String(localized: "Put Cost groups in your order"),
@@ -5091,7 +5091,7 @@ enum MobileReleaseNotesCatalog {
                     String(
                         localized: "Pin the metrics that matter, with simple text labels, reset countdowns and estimated depletion dates. Cards show the provider name or your own label. Names stay visible while editing. Summary and Settings match the rest of the app."),
                     String(
-                        localized: "Compare up to five actual quota histories in Usage with custom colors and a compact legend. Lines stop at the latest reading without predicting future usage. Landscape on iPhone keeps the chart and legend clear of the search and tab bars. Reorder Cost groups and find routine source notes at the bottom."),
+                        localized: "Compare up to five actual quota histories in Usage on one weekly timeline, with custom colors and a compact legend. Lines stop at the latest reading without predicting future usage. Landscape on iPhone keeps the chart and legend clear of the search and tab bars. Reorder Cost groups and find routine source notes at the bottom."),
                     String(localized: "This update uses data already synced from your Mac. No Mac update is required."),
                 ]),
             ]),

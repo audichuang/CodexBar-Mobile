@@ -110,6 +110,15 @@ struct UsageQuotaOverview: Equatable, Sendable {
     let start: Date
     let end: Date
     let lines: [UsageQuotaResolvedLine]
+
+    /// Seven calendar labels ending on the reset day. The plot itself retains the
+    /// complete 7 x 24 hours, including the preceding day's unlabeled left edge.
+    func dateTicks(calendar: Calendar = .autoupdatingCurrent) -> [Date] {
+        let lastDay = calendar.startOfDay(for: self.end)
+        return (0..<7).reversed().compactMap {
+            calendar.date(byAdding: .day, value: -$0, to: lastDay)
+        }.map { max(self.start, $0) }.filter { $0 <= self.end }
+    }
 }
 
 enum UsageQuotaColor {

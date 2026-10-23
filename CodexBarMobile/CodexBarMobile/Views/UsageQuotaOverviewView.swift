@@ -2,7 +2,7 @@ import Charts
 import CodexBarSync
 import SwiftUI
 
-/// A shared historical date axis for actual, independent account/window quota observations.
+/// A shared weekly calendar for actual observations; future dates contain no predicted marks.
 struct UsageQuotaOverviewView: View {
     @ObservedObject var store: UsageQuotaOverviewStore
     let accounts: [ProviderUsageSnapshot]
@@ -16,8 +16,6 @@ struct UsageQuotaOverviewView: View {
     @State private var expanded = false
     @State private var showingEditor = false
     @State private var showingExplanation = false
-    @State private var lastDayOnly = false
-    @State private var chartWidth: CGFloat = 0
 
     private var usesCompactLayout: Bool {
         self.layout.usesShortHeight && !self.dynamicTypeSize.isAccessibilitySize
@@ -40,7 +38,7 @@ struct UsageQuotaOverviewView: View {
                 Form {
                     Text(
                         String(
-                            localized: "Each line shows actual remaining quota at the time it was observed, and stops at the latest reading."))
+                            localized: "The chart spans seven days ending at the latest weekly reset across providers. Each line shows actual remaining quota and stops at its latest reading."))
                     Text(
                         String(
                             localized: "No future usage is predicted. One reading appears as a point; missing history is not filled in, and long gaps break the line."))
@@ -67,12 +65,12 @@ struct UsageQuotaOverviewView: View {
                         self.title.fixedSize()
                         Spacer(minLength: 8)
                         self.explanationButton.fixedSize()
-                        self.rangeMenu.fixedSize()
+                        self.rangeLabel(overview).fixedSize()
                         self.editButton
                     }
                     VStack(alignment: .leading, spacing: 8) {
                         self.header
-                        self.chartControls
+                        self.chartControls(overview)
                     }
                 }
             } else {
@@ -88,7 +86,7 @@ struct UsageQuotaOverviewView: View {
                     .buttonStyle(.bordered)
             } else {
                 if !self.usesCompactLayout {
-                    self.chartControls
+                    self.chartControls(overview)
                 }
                 self.chart(overview)
                 self.legend(overview)
@@ -121,11 +119,11 @@ struct UsageQuotaOverviewView: View {
         .accessibilityIdentifier("usage-quota-edit")
     }
 
-    private var chartControls: some View {
+    private func chartControls(_ overview: UsageQuotaOverview) -> some View {
         HStack {
             self.explanationButton
             Spacer(minLength: 6)
-            self.rangeMenu
+            self.rangeLabel(overview)
         }
     }
 
@@ -137,21 +135,15 @@ struct UsageQuotaOverviewView: View {
         .accessibilityIdentifier("usage-quota-info")
     }
 
-    private var rangeMenu: some View {
-        Menu {
-            Button(String(localized: "All history")) { self.lastDayOnly = false }
-            Button(String(localized: "Last 24 hours")) { self.lastDayOnly = true }
-        } label: {
-            HStack(spacing: 4) {
-                Text(self.lastDayOnly ? String(localized: "Last 24 hours") : String(localized: "All history"))
-                Image(systemName: "chevron.down").font(.caption2)
-            }.font(.caption)
-        }
-        .accessibilityIdentifier("usage-quota-range")
+    private func rangeLabel(_ overview: UsageQuotaOverview) -> some View {
+        Text((overview.start..<overview.end).formatted(.interval.month(.abbreviated).day()))
+            .font(.caption)
+            .foregroundStyle(.secondary)
+            .accessibilityIdentifier("usage-quota-period")
     }
 
     private func chart(_ overview: UsageQuotaOverview) -> some View {
-        let start = self.lastDayOnly ? max(overview.start, overview.end.addingTimeInterval(-86400)) : overview.start
+        let start = overview.start
         let end = overview.end
         return Chart {
             ForEach(overview.lines) { line in
@@ -188,32 +180,18 @@ struct UsageQuotaOverviewView: View {
             }
         }
         .chartXAxis {
-            AxisMarks(values: self.dynamicTypeSize.isAccessibilitySize || self
-                .chartWidth < 300 ? [start, end] : [
-                    start,
-                    start.addingTimeInterval(end.timeIntervalSince(start) / 2),
-                    end,
-                ]) { value in
-                    AxisValueLabel(
-                        anchor: value
-                            .as(Date.self) == start ? .topLeading : (value.as(Date.self) == end ? .topTrailing : .top),
-                        collisionResolution: .disabled)
-                    {
-                        if let date = value.as(Date.self) {
-                            if date == end {
-                                Text(String(localized: "Now")).font(.caption2)
-                            } else if end.timeIntervalSince(start) <= 86400 {
-                                Text(date, format: .dateTime.hour().minute()).font(.caption2)
-                            } else {
-                                Text(date, format: .dateTime.month(.abbreviated).day()).font(.caption2)
-                            }
-                        }
+            AxisMarks(values: overview.dateTicks()) { value in
+                AxisValueLabel(anchor: .top, collisionResolution: .disabled) {
+                    if let date = value.as(Date.self) {
+                        Text(Calendar.autoupdatingCurrent.component(.day, from: date).formatted())
+                            .font(.caption2).monospacedDigit()
+                            .accessibilityLabel(date.formatted(date: .complete, time: .omitted))
                     }
                 }
+            }
         }
         .chartPlotStyle { $0.clipped() }
         .frame(height: self.dynamicTypeSize.isAccessibilitySize ? 210 : (self.usesCompactLayout ? 140 : 170))
-        .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { self.chartWidth = $0 }
         .accessibilityLabel(String(localized: "Observed remaining quota by date"))
         .accessibilityIdentifier("usage-quota-chart")
     }

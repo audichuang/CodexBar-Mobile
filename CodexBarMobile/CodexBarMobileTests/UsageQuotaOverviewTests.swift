@@ -179,7 +179,7 @@ struct UsageQuotaOverviewTests {
         let line = try #require(overview.lines.first)
         #expect(line.observedSamples.map(\.remainingPercent) == [90, 90, 88, 82, 82, 80, 75, 75, 70])
         #expect(line.observedSamples.map(\.date) == (0...8).map { Self.now.addingTimeInterval(Double($0 - 8) * 300) })
-        #expect(overview.start == Self.now.addingTimeInterval(-2400))
+        #expect(overview.start == Self.now.addingTimeInterval(-7 * 86400))
         #expect(overview.end == Self.now)
         #expect(line.observedSamples.last?.remainingPercent == 70)
         #expect(line.observedSamples.allSatisfy { $0.date <= Self.now })
@@ -455,6 +455,76 @@ struct UsageQuotaOverviewTests {
         #expect(lines[1].currentRemainingPercent == 55)
     }
 
+    @Test(arguments: ["claude", "codex"])
+    func `a known account linked to legacy anonymous publications still collects only its real readings`(
+        providerID: String) throws
+    {
+        let store = UsageQuotaOverviewStore.inMemory()
+        let link = ProviderAccountLinkage(
+            providerID: providerID,
+            linkedIdentifiers: ["\(providerID):account:fictional-a", "\(providerID):legacy-no-identity"],
+            confirmedFromDeviceID: "fictional-phone")
+        var latest = Self.account(providerID: providerID)
+        var latestSources: [SyncedUsageSnapshot] = []
+        for step in 0...2 {
+            let capture = Self.now.addingTimeInterval(Double(step - 2) * 300)
+            latest = Self.account(
+                providerID: providerID,
+                capturedAt: capture,
+                windows: [Self.window(used: Double(10 + step))])
+            let anonymous = ProviderUsageSnapshot(
+                providerID: providerID, providerName: providerID.capitalized,
+                primary: nil, secondary: nil, accountEmail: nil, loginMethod: nil,
+                statusMessage: nil, isError: false, lastUpdated: capture.addingTimeInterval(30),
+                rateWindows: [Self.window(used: 90)], accountIdentities: ["\(providerID):legacy-no-identity"])
+            latestSources = [
+                SyncedUsageSnapshot(
+                    providers: [latest],
+                    syncTimestamp: capture,
+                    deviceName: "Known owner Mac",
+                    deviceID: "known-mac"),
+                SyncedUsageSnapshot(
+                    providers: [anonymous],
+                    syncTimestamp: capture.addingTimeInterval(30),
+                    deviceName: "Legacy Mac",
+                    deviceID: "legacy-mac"),
+            ]
+            store.reconcile(accounts: [latest], sourceSnapshots: latestSources, linkages: [link], now: Self.now)
+        }
+        let line = try #require(store.overview(accounts: [latest], now: Self.now).lines.first)
+        #expect(line.localObservationCount == 3)
+        #expect(line.observedSamples.map(\.remainingPercent) == [90, 89, 88])
+        #expect(line.observedSamples.map(\.date) == [-600.0, -300, 0].map(Self.now.addingTimeInterval))
+        #expect(line.observedAt == Self.now)
+        let anonymousOnly = UsageQuotaOverviewStore.inMemory()
+        anonymousOnly.reconcile(
+            accounts: [latest], sourceSnapshots: latestSources.filter { $0.deviceID == "legacy-mac" },
+            linkages: [link], now: Self.now)
+        let missing = try #require(anonymousOnly.overview(accounts: [latest], now: Self.now).lines.first)
+        #expect(missing.localObservationCount == 0)
+        #expect(missing.observedSamples.isEmpty)
+    }
+
+    @Test(arguments: ["legacy-no-identity", "record:shared-slot", "card:shared-card"])
+    func `indirect weak aliases cannot join two stable owners and unmerge recomputes the component`(
+        alias: String)
+    {
+        let account = Self.account()
+        let first = ProviderAccountLinkage(
+            providerID: "claude", linkedIdentifiers: ["claude:account:fictional-a", "claude:\(alias)"],
+            confirmedFromDeviceID: "fictional-phone")
+        let second = ProviderAccountLinkage(
+            providerID: "claude", linkedIdentifiers: ["claude:account:fictional-b", "claude:\(alias)"],
+            confirmedFromDeviceID: "fictional-phone")
+        let store = UsageQuotaOverviewStore.inMemory()
+        store.reconcile(accounts: [account], linkages: [first, second], now: Self.now)
+        #expect(store.overview(accounts: [account], now: Self.now).lines.first?.localObservationCount == 0)
+        store.reconcile(
+            accounts: [account],
+            linkages: [first, second, second.inverseUnmerge(confirmedFromDeviceID: "fictional-phone")], now: Self.now)
+        #expect(store.overview(accounts: [account], now: Self.now).lines.first?.localObservationCount == 1)
+    }
+
     @Test
     func `linked accounts do not mix samples and unmerge preserves original binding`() throws {
         let store = Self.sampledStore()
@@ -655,7 +725,7 @@ struct UsageQuotaOverviewTests {
     }
 
     @Test
-    func `calendar domain ends now and future resets cannot create future curves`() throws {
+    func `all current weekly resets anchor seven days even when their lines are unselected`() throws {
         let account = Self.account(windows: [
             Self.window(reset: Self.now.addingTimeInterval(3600)),
             Self.window(id: "secondary", minutes: 10080, reset: Self.now.addingTimeInterval(3 * 86400)),
@@ -663,13 +733,112 @@ struct UsageQuotaOverviewTests {
         let store = UsageQuotaOverviewStore.inMemory()
         store.reconcile(accounts: [account], now: Self.now)
         let overview = store.overview(accounts: [account], now: Self.now)
-        #expect(overview.start == Self.now.addingTimeInterval(-60))
-        #expect(overview.end == Self.now)
+        #expect(overview.start == Self.now.addingTimeInterval(-4 * 86400))
+        #expect(overview.end == Self.now.addingTimeInterval(3 * 86400))
         #expect(overview.lines
             .allSatisfy { $0.observedSamples == [UsageQuotaPoint(date: Self.now, remainingPercent: 80)] })
         let weekly = try #require(overview.lines.first { $0.selection.windowID == "secondary" })
         store.remove(id: weekly.id)
-        #expect(store.overview(accounts: [account], now: Self.now).end == Self.now)
+        #expect(store.overview(accounts: [account], now: Self.now).end == Self.now.addingTimeInterval(3 * 86400))
+    }
+
+    @Test
+    func `shared weekly window preserves different cycle balances at the same left boundary`() throws {
+        let store = UsageQuotaOverviewStore.inMemory()
+        let start = Self.now.addingTimeInterval(-86400)
+        var accounts: [ProviderUsageSnapshot] = []
+        for hour in 0...24 {
+            let captured = start.addingTimeInterval(Double(hour) * 3600)
+            accounts = [
+                Self.account(providerID: "claude", capturedAt: captured, windows: [Self.window(
+                    id: "secondary", used: 30 + Double(hour) * 10 / 24, minutes: 10080,
+                    reset: Self.now.addingTimeInterval(2 * 86400))]),
+                Self.account(id: "fictional-codex", providerID: "codex", capturedAt: captured, windows: [Self.window(
+                    id: "secondary", used: Double(hour) * 20 / 24, minutes: 10080,
+                    reset: Self.now.addingTimeInterval(6 * 86400))]),
+            ]
+            store.reconcile(accounts: accounts, now: captured)
+        }
+        let overview = store.overview(accounts: accounts, now: Self.now)
+        #expect(overview.start == start)
+        #expect(overview.end == Self.now.addingTimeInterval(6 * 86400))
+        let claude = try #require(overview.lines.first { $0.selection.providerID == "claude" })
+        let codex = try #require(overview.lines.first { $0.selection.providerID == "codex" })
+        #expect(claude.observedSamples.first == UsageQuotaPoint(date: start, remainingPercent: 70))
+        #expect(codex.observedSamples.first == UsageQuotaPoint(date: start, remainingPercent: 100))
+        #expect(claude.observedSamples.last == UsageQuotaPoint(date: Self.now, remainingPercent: 60))
+        #expect(codex.observedSamples.last == UsageQuotaPoint(date: Self.now, remainingPercent: 80))
+        #expect(overview.lines.allSatisfy { $0.observedSamples.allSatisfy { $0.date <= Self.now } })
+    }
+
+    @Test
+    func `weekly plot includes the 23rd while its seven date labels run from the 24th through the 30th`() throws {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = try #require(TimeZone(secondsFromGMT: 0))
+        let end = try #require(calendar.date(from: DateComponents(
+            year: 2026,
+            month: 10,
+            day: 30,
+            hour: 10,
+            minute: 41)))
+        let overview = UsageQuotaOverview(start: end.addingTimeInterval(-7 * 86400), end: end, lines: [])
+        #expect(calendar.component(.day, from: overview.start) == 23)
+        #expect(overview.end.timeIntervalSince(overview.start) == 7 * 86400)
+        #expect(overview.dateTicks(calendar: calendar).map { calendar.component(.day, from: $0) } == [
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+        ])
+        #expect(overview.dateTicks(calendar: calendar).allSatisfy { overview.start <= $0 && $0 <= overview.end })
+    }
+
+    @Test
+    func `seven local date labels survive daylight saving transitions without moving the weekly domain`() throws {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = try #require(TimeZone(identifier: "America/Los_Angeles"))
+        for (month, day) in [(11, 7), (3, 14)] {
+            let end = try #require(calendar.date(from: DateComponents(
+                year: 2026, month: month, day: day, hour: 23, minute: 30)))
+            let start = end.addingTimeInterval(-7 * 86400)
+            let overview = UsageQuotaOverview(start: start, end: end, lines: [])
+            let ticks = overview.dateTicks(calendar: calendar)
+            #expect(ticks.count == 7)
+            #expect(Set(ticks.map { calendar.startOfDay(for: $0) }).count == 7)
+            #expect(ticks.allSatisfy { start <= $0 && $0 <= end })
+            #expect(calendar.component(.day, from: ticks[0]) == day - 6)
+            #expect(calendar.component(.day, from: ticks[6]) == day)
+            #expect(overview.end.timeIntervalSince(overview.start) == 7 * 86400)
+        }
+    }
+
+    @Test
+    func `a weekly reset beyond seven days cannot hide all current observations`() {
+        let account = Self.account(windows: [
+            Self.window(id: "secondary", minutes: 10080, reset: Self.now.addingTimeInterval(7 * 86400 + 60)),
+        ])
+        let store = UsageQuotaOverviewStore.inMemory()
+        store.reconcile(accounts: [account], now: Self.now)
+        let overview = store.overview(accounts: [account], now: Self.now)
+        #expect(overview.end == Self.now)
+        #expect(overview.start == Self.now.addingTimeInterval(-7 * 86400))
+        #expect(overview.lines.allSatisfy { $0.observedSamples.allSatisfy { $0.date <= overview.end } })
+    }
+
+    @Test
+    func `monthly and invalid distant weekly resets cannot move the weekly plot into the future`() {
+        let goodReset = Self.now.addingTimeInterval(2 * 86400)
+        let account = Self.account(windows: [
+            Self.window(id: "secondary", minutes: 10080, reset: goodReset),
+            Self.window(id: "monthly", minutes: 43200, reset: Self.now.addingTimeInterval(20 * 86400)),
+            Self.window(id: "invalid-weekly", minutes: 10080, reset: Self.now.addingTimeInterval(20 * 86400)),
+        ])
+        let store = UsageQuotaOverviewStore.inMemory()
+        store.reconcile(accounts: [account], now: Self.now)
+        #expect(store.overview(accounts: [account], now: Self.now).end == goodReset)
     }
 
     @Test
@@ -691,9 +860,9 @@ struct UsageQuotaOverviewTests {
         let near = Self.now.addingTimeInterval(3600)
         let far = Self.now.addingTimeInterval(30 * 86400)
         let valid = Self.account(windows: [
-            Self.window(reset: near),
-            Self.window(id: "unknown", reset: far, known: false),
-            Self.window(id: "blocked", reset: far, blocked: true),
+            Self.window(id: "secondary", minutes: 10080, reset: near),
+            Self.window(id: "unknown", minutes: 10080, reset: far, known: false),
+            Self.window(id: "blocked", minutes: 10080, reset: far, blocked: true),
         ])
         let stale = Self.account(
             id: "stale",
@@ -702,7 +871,7 @@ struct UsageQuotaOverviewTests {
             windows: [Self.window(reset: far)])
         let store = UsageQuotaOverviewStore.inMemory()
         store.reconcile(accounts: [valid, stale], now: Self.now)
-        #expect(store.overview(accounts: [valid, stale], now: Self.now).end == Self.now)
+        #expect(store.overview(accounts: [valid, stale], now: Self.now).end == near)
     }
 
     @Test
