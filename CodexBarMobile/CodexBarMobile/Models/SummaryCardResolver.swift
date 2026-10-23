@@ -20,7 +20,11 @@ enum SummaryCardResolver {
         now _: Date = .now) -> [SummaryMetricCandidate]
     {
         self.accountBindings(accounts: accounts, preferences: preferences).flatMap { anchorID, account in
-            let accountTitle = self.accountTitle(account, anchorID: anchorID, preferences: preferences)
+            let accountTitle = self.accountTitle(
+                account,
+                anchorID: anchorID,
+                preferences: preferences,
+                accounts: accounts)
             func candidate(_ metric: SummaryCardMetric, title: String, countdown: Bool = false)
                 -> SummaryMetricCandidate
             {
@@ -200,19 +204,22 @@ enum SummaryCardResolver {
             return SummaryResolvedCard(
                 configuration: configuration, provider: account,
                 accountTitle: account.map {
-                    self.accountTitle($0, anchorID: configuration.accountAnchorID, preferences: preferences)
+                    self.accountTitle(
+                        $0, anchorID: configuration.accountAnchorID, preferences: preferences, accounts: accounts)
                 } ?? preferences.accountAliases[configuration.accountAnchorID] ?? configuration.accountTitle,
                 metricTitle: candidate?.metricTitle ?? configuration.metricTitle,
                 state: state, isStale: stale, observedAt: observedAt, window: window,
                 usedPercent: usedPercent, resetDate: reset, forecast: forecast, amount: amount,
                 compactAccountTitle: account.map {
                     self.compactAccountTitle(
-                        $0, anchorID: configuration.accountAnchorID, preferences: preferences, accounts: accounts)
-                } ?? preferences.accountAliases[configuration.accountAnchorID],
+                        $0, anchorID: configuration.accountAnchorID, preferences: preferences)
+                } ?? preferences.accountAliases[configuration.accountAnchorID]
+                    ?? SummaryPresentation.providerName(id: configuration.providerID, accounts: []),
                 privateAccountTitle: account.map {
-                    self.privateAccountTitle(
-                        $0, anchorID: configuration.accountAnchorID, preferences: preferences, accounts: accounts)
-                } ?? preferences.accountAliases[configuration.accountAnchorID])
+                    self.compactAccountTitle(
+                        $0, anchorID: configuration.accountAnchorID, preferences: preferences)
+                } ?? preferences.accountAliases[configuration.accountAnchorID]
+                    ?? SummaryPresentation.providerName(id: configuration.providerID, accounts: []))
         }
     }
 
@@ -270,54 +277,34 @@ enum SummaryCardResolver {
         account.sourceReport?.sourceCapturedAt ?? account.lastUpdated
     }
 
-    /// A display projection only: the complete identity remains in accountTitle and the binding never changes.
+    /// Cards use a provider name unless the user supplies an account alias or a card title.
+    /// Complete account identity remains in details, accessibility and the account picker.
     static func compactAccountTitle(
         _ account: ProviderUsageSnapshot, anchorID: String,
-        preferences: SummaryPreferences, accounts: [ProviderUsageSnapshot]) -> String
+        preferences: SummaryPreferences) -> String
     {
-        if let alias = preferences.accountAliases[anchorID], !alias.isEmpty { return alias }
-        let peers = accounts.filter { $0.providerID == account.providerID }
-        if let organization = account.accountOrganization, !organization.isEmpty,
-           peers.filter({ $0.accountOrganization == organization }).count == 1
-        {
-            return organization
-        }
-        // Preserve a full email so the privacy projection can still recognize and redact it.
-        if let email = account.accountEmail, !email.isEmpty { return email }
-        let label = account.accountOrganization.flatMap { $0.isEmpty ? nil : $0 }
-            ?? account.loginMethod.flatMap { $0.isEmpty ? nil : $0 }
-        let anchors = preferences.accountAnchors.filter { $0.providerID == account.providerID }
-        let ordinal = (anchors.firstIndex { $0.id == anchorID } ?? 0) + 1
-        if let label {
-            return peers.count > 1 ? "\(label) · \(ordinal)" : label
-        }
-        return String(format: String(localized: "Account %lld"), Int64(ordinal))
-    }
-
-    /// Keep automatic names distinguishable when emails are hidden, using persistent anchor order.
-    static func privateAccountTitle(
-        _ account: ProviderUsageSnapshot, anchorID: String,
-        preferences: SummaryPreferences, accounts: [ProviderUsageSnapshot]) -> String
-    {
-        if let alias = preferences.accountAliases[anchorID], !alias.isEmpty { return alias }
-        let anchors = preferences.accountAnchors.filter { $0.providerID == account.providerID }
-        let ordinal = (anchors.firstIndex { $0.id == anchorID } ?? 0) + 1
-        if let organization = account.accountOrganization, !organization.isEmpty, !organization.contains("@") {
-            let sameName = accounts.filter {
-                $0.providerID == account.providerID && $0.accountOrganization == organization
-            }
-            return sameName.count > 1 ? "\(organization) · \(ordinal)" : organization
-        }
-        return String(format: String(localized: "Account %lld"), Int64(ordinal))
+        preferences.accountAliases[anchorID].flatMap { $0.isEmpty ? nil : $0 } ?? self.providerName(account)
     }
 
     static func accountTitle(
-        _ account: ProviderUsageSnapshot, anchorID: String, preferences: SummaryPreferences) -> String
+        _ account: ProviderUsageSnapshot, anchorID: String,
+        preferences: SummaryPreferences, accounts: [ProviderUsageSnapshot]) -> String
     {
         var components = [self.providerName(account)]
         let alias = preferences.accountAliases[anchorID].flatMap { $0.isEmpty ? nil : $0 }
-        let identity = alias ?? account.accountOrganization.flatMap { $0.isEmpty ? nil : $0 }
+        var identity = alias ?? account.accountOrganization.flatMap { $0.isEmpty ? nil : $0 }
             ?? account.accountEmail
+        if alias == nil, let organization = account.accountOrganization, !organization.isEmpty,
+           accounts.filter({ $0.providerID == account.providerID && $0.accountOrganization == organization }).count > 1
+        {
+            let anchors = preferences.accountAnchors.filter { $0.providerID == account.providerID }
+            let ordinal = (anchors.firstIndex { $0.id == anchorID } ?? 0) + 1
+            var label = "\(organization) · \(ordinal)"
+            if let email = account.accountEmail, !email.isEmpty, email != organization {
+                label += " · " + email
+            }
+            identity = label
+        }
         for value in [identity, account.loginMethod].compactMap(\.self) where !value.isEmpty {
             if !components.contains(value) { components.append(value) }
         }

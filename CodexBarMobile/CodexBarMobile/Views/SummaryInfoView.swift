@@ -14,17 +14,6 @@ struct SummaryInfoView: View {
                         String(
                             localized: "Estimated depletion uses the Mac's observed usage rate. Time to reset is a separate countdown."))
                 }
-                Section(String(localized: "Brand resources")) {
-                    Text(
-                        String(
-                            localized: "Provider icons identify their respective services. All marks belong to their owners; no endorsement is implied."))
-                    Link(
-                        String(localized: "OpenAI brand guidelines"),
-                        destination: URL(string: "https://openai.com/brand/")!)
-                    Link(
-                        String(localized: "OpenRouter brand resources"),
-                        destination: URL(string: "https://openrouter.ai/brand")!)
-                }
             }
             .mobilePageSurface()
             .navigationTitle(String(localized: "About Summary"))

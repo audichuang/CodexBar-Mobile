@@ -205,16 +205,13 @@ struct SummaryTab: View {
 
     private func providerButton(_ id: String?, title: String) -> some View {
         Button { self.selectedProviderID = id } label: {
-            HStack(spacing: 5) {
-                if let id { SummaryProviderMark(providerID: id, size: 17) }
-                Text(SummaryPresentation.redact(title, enabled: self.hidesPersonalInfo)).font(.caption).lineLimit(1)
-            }
-            .padding(.horizontal, 10).frame(minHeight: 34)
-            .foregroundStyle(Color.primary)
-            .background(
-                self.selectedProviderID == id ? Color.accentColor
-                    .opacity(0.15) : Color(.secondarySystemGroupedBackground),
-                in: RoundedRectangle(cornerRadius: 9))
+            Text(SummaryPresentation.redact(title, enabled: self.hidesPersonalInfo)).font(.caption).lineLimit(1)
+                .padding(.horizontal, 10).frame(minHeight: 34)
+                .foregroundStyle(Color.primary)
+                .background(
+                    self.selectedProviderID == id ? Color.accentColor
+                        .opacity(0.15) : Color(.secondarySystemGroupedBackground),
+                    in: RoundedRectangle(cornerRadius: 9))
         }
         .buttonStyle(.plain)
         .accessibilityAddTraits(self.selectedProviderID == id ? .isSelected : [])
@@ -258,7 +255,6 @@ struct SummaryMetricTile: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 7) {
-                SummaryProviderMark(providerID: self.card.configuration.providerID, size: 17)
                 Text(self.displayTitle).font(.caption.weight(.medium))
                     .lineLimit(self.dynamicTypeSize.isAccessibilitySize ? 2 : 1)
                     .truncationMode(self.card.configuration.title == nil ? .middle : .tail)
