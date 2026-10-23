@@ -63,7 +63,7 @@ canonical account 继续决定窗口是否存在、是否全局 blocked、是否
 
 修复后的 `all-unit-ui-phone.log` 已保留原 `[40,60]` 严格断言并通过 16 参数，不是修改 expected 或去掉 legacy fixture。
 
-### 较早全量轮次的 3 个 issues（已复跑关闭）
+### 较早全量轮次的 2 个模型 issues（已复跑关闭）
 
 `all-unit-ui-phone.log` 的 1219 tests 轮次仍失败，具体为：
 
@@ -142,3 +142,16 @@ canonical account 继续决定窗口是否存在、是否全局 blocked、是否
 本次 CR 未修改生产代码、未启动额外 build/test。Duo 正向 portrait、iPad、large phone、phone/landscape 编辑 final、外屏 landscape 与外屏 portrait 结果均来自中央测试日志，全部适用 native QA 已通过。保留 folded landscape 旧 phone-navigation 的 1 skip，因为该测试的 compact-width 前提不适用，不能记为第二项通过或额外旋转覆盖。
 
 本地验证记录在此冻结；pre-PR lint/四语已通过，在线 CR/合并与发布门禁仍待主工程执行。Hosting 大字截图不是真实 device pose 证明。最终用户可安装产物的来源记录写入 `04-release.md`。
+
+
+## 线上 CR 第一轮：高频采样的时间跨度
+
+PR #208 首轮审查 head `9d5c209e50908b1e26c66abd6dfcb2c82c98b275` 提出一个 P2：Weekly 每五分钟采样时，截取最近 12 点只覆盖 55 分钟，永远达不到六小时的 pattern 门槛。进一步检查发现，只去掉 12 点截取仍不够；每分钟采样时，96 点存储容量也只能保留 95 分钟。
+
+本轮修正以共享的时间跨度要求约束历史保留与预测选取，保留真实端点和最新读数；不生成虚构观测。重置、时长变化、额度下降仍先断段，真正缺测仍不能伪装为连续忙闲模式。新增测试覆盖高频采样、滚动保留、最新端点与缺测边界。此段记录问题与方案；最终测试结果及审查结论待本轮实际运行后补充，不复用此前全量 pass 作为新代码的通过证据。
+
+初次 archive（source `9d5c209…`）已保留在 `superseded-9d5c209/`，从未上传；因本轮生产逻辑变化，必须从最终审查输入重新归档。
+
+修复后的 `online-r1-quota-regression.log` / `.xcresult` 为 **TEST SUCCEEDED**：36 个 Swift Testing tests / 4 suites 通过（参数用例另按日志保留，包含每分钟/每五分钟高频采样、滚动、重复读数、短尾、近缺测与旧 gap 后恢复）；两个生产组件 render tests 通过（34 配置 / 44 PNG）；`testNativeUsageChartInCurrentDisplayPose` 在 compact phone 1/1 通过，覆盖完整四 Tab、折叠/展开图例和返回状态。此轮没有重跑全量 1223 tests，不将早轮结果误记为新来源的全量结果。
+
+最终方案先按共享 `minimumHistorySpan` 对有界存储保留真实端点及最新尾点，再选择最新且至少有三段观测的充分时间跨度；原有最长缺测、单调消耗和当前 capture/value 检查保留。独立 reviewer 对本轮三个 Swift 文件复审 clean，无 P1/P2；设计师逐张查看最新八个窄屏/宽屏/AX/浅深色代表 render，未发现新增布局或曲线溢出问题。界面布局与先前跨屏矩阵相同。

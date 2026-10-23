@@ -123,6 +123,12 @@ enum UsageQuotaProjection {
         return Double(minutes) * 60
     }
 
+    /// Retention and forecasting share this elapsed-time requirement. An observation-count
+    /// limit alone would make a frequent updater permanently lose the required history.
+    static func minimumHistorySpan(windowDuration: TimeInterval?) -> TimeInterval {
+        max(900, min(6 * 3600, (windowDuration ?? 18000) * 0.05))
+    }
+
     private static func forecast(
         card: SummaryResolvedCard,
         observations: [UsageQuotaObservation],
@@ -141,8 +147,26 @@ enum UsageQuotaProjection {
                 && $0.usedPercent.isFinite && (0...100).contains($0.usedPercent)
                 && $0.windowDuration == duration
         }
-        let recent = Array(compatible.suffix(12))
-        let minimumSpan = max(900, min(6 * 3600, (duration ?? 18000) * 0.05))
+        // The store already bounds this cycle's retained endpoints while preserving elapsed
+        // span. Evaluate that span before applying any further observation-count reduction.
+        var recent = compatible
+        // Keep the actual newest capture/value, merging an unfinished subminute tail into
+        // the preceding measured interval. This only removes endpoints: no samples or
+        // synthetic pauses are introduced, and any resulting long gap is still rejected.
+        while recent.count >= 3,
+              let last = recent.last,
+              last.capturedAt.timeIntervalSince(recent[recent.count - 2].capturedAt) < 60
+        {
+            recent.remove(at: recent.count - 2)
+        }
+        let minimumSpan = self.minimumHistorySpan(windowDuration: duration)
+        // Select the latest sufficient elapsed span (with at least three measured intervals),
+        // so an older gap cannot suppress a complete, fresh contiguous observation period.
+        var firstIndex = max(0, recent.count - 4)
+        while firstIndex > 0, captured.timeIntervalSince(recent[firstIndex].capturedAt) < minimumSpan {
+            firstIndex -= 1
+        }
+        recent = Array(recent.dropFirst(firstIndex))
         if recent.count >= 4, let first = recent.first, let last = recent.last,
            last.capturedAt == captured, abs(last.usedPercent - used) < 0.000001,
            last.capturedAt.timeIntervalSince(first.capturedAt) >= minimumSpan

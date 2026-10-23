@@ -169,11 +169,151 @@ struct UsageQuotaOverviewTests {
         #expect(first.projectionKind == .observedPattern)
         #expect(first.estimatedSamples == second.estimatedSamples)
         #expect(first.estimatedSamples.first?.date == Self.now)
-        let pause = first.estimatedSamples.filter { $0.date <= Self.now.addingTimeInterval(300) }
+        // The latest sufficient 900-second segment consumed 5, then 0, then 5 points.
+        let pause = first.estimatedSamples.filter {
+            $0.date >= Self.now.addingTimeInterval(300) && $0.date <= Self.now.addingTimeInterval(600)
+        }
         #expect(pause.count > 1)
-        #expect(pause.allSatisfy { abs($0.remainingPercent - 70) < 0.000001 })
-        #expect(first.estimatedSamples.contains { $0.remainingPercent < 70 })
+        #expect(pause.allSatisfy { abs($0.remainingPercent - 65) < 0.000001 })
+        #expect(first.estimatedSamples.contains { $0.remainingPercent < 65 })
         #expect(first.estimatedSamples.allSatisfy { (0...100).contains($0.remainingPercent) })
+    }
+
+    @Test(arguments: [60, 300])
+    func `frequent weekly observations retain elapsed span and real busy idle estimates`(intervalSeconds: Int) throws {
+        let memory = UsageQuotaMemoryPersistence()
+        let store = UsageQuotaOverviewStore(persistence: memory)
+        let start = Self.now.addingTimeInterval(-8 * 3600)
+        let reset = Self.now.addingTimeInterval(3 * 86400)
+        func reading(at elapsed: Int) -> ProviderUsageSnapshot {
+            let periods = elapsed / 1200
+            let activeSeconds = max(0, elapsed % 1200 - 600)
+            let used = 10 + Double(periods) * 2 + Double(activeSeconds) / 300
+            return Self.account(
+                capturedAt: start.addingTimeInterval(Double(elapsed)),
+                windows: [Self.window(used: used, minutes: 10080, reset: reset)])
+        }
+        for elapsed in stride(from: 0, through: 8 * 3600, by: intervalSeconds) {
+            let account = reading(at: elapsed)
+            store.reconcile(accounts: [account], now: account.lastUpdated)
+        }
+        func assertEstimate(elapsed: Int) throws {
+            let account = reading(at: elapsed)
+            let line = try #require(store.overview(accounts: [account], now: account.lastUpdated).lines.first)
+            let archive = try JSONDecoder().decode(UsageQuotaArchive.self, from: #require(memory.data))
+            let observations = try #require(archive.histories.first).observations
+            let first = try #require(observations.first)
+            let latest = try #require(observations.last)
+            #expect(observations.count <= UsageQuotaOverviewStore.maximumObservationsPerStream)
+            #expect(latest.capturedAt.timeIntervalSince(first.capturedAt) >= 6 * 3600)
+            #expect(latest.capturedAt == account.lastUpdated)
+            #expect(latest.usedPercent == account.rateWindows[0].usedPercent)
+            #expect(line.projectionKind == .observedPattern)
+            #expect(line.estimatedSamples.first?.date == account.lastUpdated)
+            #expect(line.estimatedSamples.first?.remainingPercent == line.currentRemainingPercent)
+            let pairs = Array(zip(line.estimatedSamples, line.estimatedSamples.dropFirst()))
+            #expect(pairs.contains { $0.remainingPercent == $1.remainingPercent })
+            #expect(pairs.contains { $0.remainingPercent > $1.remainingPercent })
+            #expect(pairs.allSatisfy { $0.remainingPercent >= $1.remainingPercent })
+            #expect(line.estimatedSamples.allSatisfy { $0.date <= reset })
+        }
+        try assertEstimate(elapsed: 8 * 3600)
+        let beforeDuplicate = memory.data
+        store.reconcile(accounts: [reading(at: 8 * 3600)], now: Self.now.addingTimeInterval(30))
+        #expect(memory.data == beforeDuplicate, "A reader refresh cannot advance a source observation")
+        // Once full, trimming old endpoints must continue to retain the minimum elapsed span.
+        for elapsed in stride(from: 8 * 3600 + intervalSeconds, through: 9 * 3600, by: intervalSeconds) {
+            let account = reading(at: elapsed)
+            store.reconcile(accounts: [account], now: account.lastUpdated)
+        }
+        try assertEstimate(elapsed: 9 * 3600)
+    }
+
+    @Test
+    func `subminute sampling retains the latest actual endpoint without disabling an eligible pattern`() throws {
+        let store = UsageQuotaOverviewStore.inMemory()
+        let start = Self.now.addingTimeInterval(-1830)
+        for elapsed in stride(from: 0, through: 1830, by: 30) {
+            let used = 10 + Double(elapsed / 300)
+            let account = Self.account(
+                capturedAt: start.addingTimeInterval(Double(elapsed)), windows: [Self.window(used: used)])
+            store.reconcile(accounts: [account], now: account.lastUpdated)
+        }
+        let latest = Self.account(windows: [Self.window(used: 16)])
+        let line = try #require(store.overview(accounts: [latest], now: Self.now).lines.first)
+        #expect(line.observedAt == Self.now)
+        #expect(line.currentRemainingPercent == 84)
+        #expect(line.projectionKind == .observedPattern)
+        #expect(line.estimatedSamples.first == UsageQuotaPoint(date: Self.now, remainingPercent: 84))
+        #expect(line.localObservationCount <= UsageQuotaOverviewStore.maximumObservationsPerStream)
+    }
+
+    @Test
+    func `time aware retention never relabels a long missing interval as measured idle time`() throws {
+        let memory = UsageQuotaMemoryPersistence()
+        let store = UsageQuotaOverviewStore(persistence: memory)
+        let reset = Self.now.addingTimeInterval(3 * 86400)
+        for step in 0...72 {
+            let capture = Self.now.addingTimeInterval(-10 * 3600 + Double(step) * 300)
+            let account = Self.account(
+                capturedAt: capture, windows: [Self.window(used: 10, minutes: 10080, reset: reset)])
+            store.reconcile(accounts: [account], now: capture)
+        }
+        let current = Self.account(windows: [Self.window(used: 10, minutes: 10080, reset: reset)])
+        store.reconcile(accounts: [current], now: Self.now)
+        let archive = try JSONDecoder().decode(UsageQuotaArchive.self, from: #require(memory.data))
+        let observations = try #require(archive.histories.first).observations
+        #expect(observations.count >= 4)
+        let first = try #require(observations.first)
+        let latest = try #require(observations.last)
+        #expect(latest.capturedAt.timeIntervalSince(first.capturedAt) >= 6 * 3600)
+        #expect(zip(observations, observations.dropFirst()).contains {
+            $1.capturedAt.timeIntervalSince($0.capturedAt) > 2 * 3600
+        })
+        let line = try #require(store.overview(accounts: [current], now: Self.now).lines.first)
+        #expect(line.projectionKind == .uniformMean)
+    }
+
+    @Test
+    func `an old gap does not suppress a newer complete contiguous observation span`() throws {
+        let memory = UsageQuotaMemoryPersistence()
+        let store = UsageQuotaOverviewStore(persistence: memory)
+        let reset = Self.now.addingTimeInterval(3 * 86400)
+        func record(_ capture: Date) {
+            let account = Self.account(
+                capturedAt: capture, windows: [Self.window(used: 10, minutes: 10080, reset: reset)])
+            store.reconcile(accounts: [account], now: capture)
+        }
+        // Keep an older three-hour gap in the archive, followed by six complete hours
+        // of direct five-minute observations. The newer period is sufficient on its own.
+        for step in 0...12 {
+            record(Self.now.addingTimeInterval(-10 * 3600 + Double(step) * 300))
+        }
+        for step in 0...72 {
+            record(Self.now.addingTimeInterval(-6 * 3600 + Double(step) * 300))
+        }
+        let archive = try JSONDecoder().decode(UsageQuotaArchive.self, from: #require(memory.data))
+        let observations = try #require(archive.histories.first).observations
+        #expect(zip(observations, observations.dropFirst()).contains {
+            $1.capturedAt.timeIntervalSince($0.capturedAt) > 2 * 3600
+        })
+        let current = Self.account(windows: [Self.window(used: 10, minutes: 10080, reset: reset)])
+        let line = try #require(store.overview(accounts: [current], now: Self.now).lines.first)
+        #expect(line.projectionKind == .observedPattern)
+        #expect(line.estimatedSamples.first?.date == Self.now)
+        #expect(line.estimatedSamples.allSatisfy { $0.remainingPercent == 90 })
+    }
+
+    @Test
+    func `observation stream capacity stays bounded and protects selected bindings`() throws {
+        let memory = UsageQuotaMemoryPersistence()
+        let store = UsageQuotaOverviewStore(persistence: memory)
+        let accounts = (0..<70).map { Self.account(id: "fictional-\($0)", record: "fictional-record-\($0)") }
+        store.reconcile(accounts: accounts, now: Self.now)
+        let archive = try JSONDecoder().decode(UsageQuotaArchive.self, from: #require(memory.data))
+        #expect(archive.histories.count == UsageQuotaOverviewStore.maximumHistoryStreams)
+        let savedBindings = Set(archive.histories.map(\.binding))
+        #expect(store.preferences.selections.allSatisfy { savedBindings.contains($0.binding) })
     }
 
     @Test

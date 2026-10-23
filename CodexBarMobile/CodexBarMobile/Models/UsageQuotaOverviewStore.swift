@@ -277,6 +277,18 @@ final class UsageQuotaOverviewStore: ObservableObject {
                     observations.removeAll()
                 }
             }
+            // Freeze endpoints far enough apart for the bounded archive to retain the
+            // forecasting span. The final, unfinished interval always keeps the newest
+            // actual capture/value, even when updates arrive faster than this cadence.
+            let cadence = max(
+                60, UsageQuotaProjection.minimumHistorySpan(windowDuration: observation.windowDuration)
+                    / Double(Self.maximumObservationsPerStream - 2))
+            if observations.count >= 2,
+               let last = observations.last,
+               last.capturedAt.timeIntervalSince(observations[observations.count - 2].capturedAt) < cadence
+            {
+                observations.removeLast()
+            }
             observations.append(observation)
             archive.histories[index].observations = Array(observations.suffix(Self.maximumObservationsPerStream))
         } else {
