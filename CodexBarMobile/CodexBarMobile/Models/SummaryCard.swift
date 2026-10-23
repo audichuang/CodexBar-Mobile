@@ -105,6 +105,8 @@ struct SummaryResolvedCard: Identifiable, Equatable, Sendable {
     let resetDate: Date?
     let forecast: QuotaPace.Forecast?
     let amount: SummaryCardAmount?
+    var compactAccountTitle: String?
+    var privateAccountTitle: String?
 
     var id: UUID {
         self.configuration.id
@@ -112,6 +114,14 @@ struct SummaryResolvedCard: Identifiable, Equatable, Sendable {
 
     var title: String {
         self.configuration.title ?? self.accountTitle
+    }
+
+    var compactTitle: String {
+        self.configuration.title ?? self.compactAccountTitle ?? self.accountTitle
+    }
+
+    var privateTitle: String {
+        self.configuration.title ?? self.privateAccountTitle ?? self.compactTitle
     }
 
     var supportsCountdown: Bool {

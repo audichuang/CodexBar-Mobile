@@ -68,6 +68,7 @@ struct SummaryAddFlow: View {
                         } footer: {
                             Text(String(localized: "Choose a provider, a metric, then the account to follow."))
                         }
+                        .listRowBackground(MobileSurfaceStyle.rowBackground)
                         Section {
                             Button(String(localized: "Next · Customize")) {
                                 self.configuration = self.selected?.configuration()
@@ -75,8 +76,10 @@ struct SummaryAddFlow: View {
                             .disabled(self.selected == nil || self.preferences.isReadOnly)
                             .accessibilityIdentifier("summary-add-next")
                         }
+                        .listRowBackground(MobileSurfaceStyle.rowBackground)
                     }
                 }
+                .mobilePageSurface()
                 .navigationTitle(String(localized: "Add metric"))
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
@@ -143,7 +146,8 @@ struct SummaryCardEditor: View {
                     SummaryMetricTile(
                         card: self.preferences.resolve(
                             self.draft, accounts: self.accounts, accountAlias: self.accountAlias, now: context.date),
-                        now: context.date)
+                        now: context.date,
+                        editingTitle: self.draft.title ?? (self.accountAlias.isEmpty ? nil : self.accountAlias))
                         .frame(maxWidth: 240)
                         .frame(maxWidth: .infinity)
                 }
@@ -160,29 +164,26 @@ struct SummaryCardEditor: View {
                     .accessibilityIdentifier("summary-emphasis")
                 }
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(String(localized: "Account alias")).font(.caption).foregroundStyle(.secondary)
-                    if self.hidesPersonalInfo {
-                        SecureField("", text: self.$accountAlias)
-                            .accessibilityLabel(String(localized: "Account alias"))
-                            .accessibilityIdentifier("summary-account-alias")
-                    } else {
-                        TextField("", text: self.$accountAlias).autocorrectionDisabled()
-                            .accessibilityLabel(String(localized: "Account alias"))
-                            .accessibilityIdentifier("summary-account-alias")
-                    }
-                }
-                VStack(alignment: .leading, spacing: 4) {
                     Text(String(localized: "Card display name")).font(.caption).foregroundStyle(.secondary)
-                    if self.hidesPersonalInfo {
-                        SecureField("", text: self.$displayName)
-                            .accessibilityLabel(String(localized: "Card display name"))
-                            .accessibilityIdentifier("summary-card-name")
-                    } else {
-                        TextField("", text: self.$displayName, prompt: Text(self.resolved.accountTitle))
-                            .autocorrectionDisabled()
-                            .accessibilityLabel(String(localized: "Card display name"))
-                            .accessibilityIdentifier("summary-card-name")
-                    }
+                    TextField("", text: self.$displayName, prompt: Text(SummaryPresentation.redact(
+                        self.resolved.compactAccountTitle ?? self.resolved.accountTitle,
+                        enabled: self.hidesPersonalInfo)))
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.never)
+                        .accessibilityLabel(String(localized: "Card display name"))
+                        .accessibilityIdentifier("summary-card-name")
+                }
+                DisclosureGroup {
+                    Text(SummaryPresentation.redact(self.resolved.accountTitle, enabled: self.hidesPersonalInfo))
+                        .font(.caption).foregroundStyle(.secondary)
+                    TextField("", text: self.$accountAlias)
+                        .autocorrectionDisabled()
+                        .textInputAutocapitalization(.never)
+                        .accessibilityLabel(String(localized: "Account alias"))
+                        .accessibilityIdentifier("summary-account-alias")
+                } label: {
+                    Text(String(localized: "Account alias · Shared by this account’s cards"))
+                        .accessibilityIdentifier("summary-account-alias-disclosure")
                 }
             } header: {
                 Text(String(localized: "Display"))
@@ -191,6 +192,7 @@ struct SummaryCardEditor: View {
                     String(
                         localized: "The account alias is shared by its cards. A card display name overrides only this card's title."))
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
             Section(String(localized: "Card color")) {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 40))], spacing: 8) {
                     ForEach(SummaryCardColor.allCases) { color in
@@ -213,12 +215,14 @@ struct SummaryCardEditor: View {
                     }
                 }
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
             if case .depletion = self.configuration.metric {
                 Section {
                     Text(
                         String(
                             localized: "This predicts when the selected quota may run out at its observed usage rate. It is separate from the reset time."))
                 }
+                .listRowBackground(MobileSurfaceStyle.rowBackground)
             }
             if !self.isNew {
                 Section {
@@ -228,8 +232,10 @@ struct SummaryCardEditor: View {
                     }
                     .accessibilityIdentifier("summary-unpin")
                 }
+                .listRowBackground(MobileSurfaceStyle.rowBackground)
             }
         }
+        .mobilePageSurface()
         .navigationTitle(self.isNew ? String(localized: "Create card") : String(localized: "Customize card"))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -262,7 +268,9 @@ struct SummaryOrderEditor: View {
             List {
                 ForEach(self.preferences.resolvedCards(accounts: self.accounts)) { card in
                     VStack(alignment: .leading) {
-                        Text(SummaryPresentation.redact(card.title, enabled: self.hidesPersonalInfo))
+                        Text(SummaryPresentation.redact(
+                            self.hidesPersonalInfo ? card.privateTitle : card.compactTitle,
+                            enabled: self.hidesPersonalInfo))
                         Text(card.metricTitle).font(.caption).foregroundStyle(.secondary)
                     }
                 }

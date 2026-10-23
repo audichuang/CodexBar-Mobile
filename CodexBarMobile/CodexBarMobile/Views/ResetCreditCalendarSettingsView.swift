@@ -25,6 +25,7 @@ struct ResetCreditCalendarSettingsView: View {
                     String(
                         localized: "CodexBar adds each reset credit's expiration to a calendar named CodexBar, with reminders one day and one hour before. If you use a reset early, its event is removed once your Mac reports the change and you open CodexBar on your iPhone. Turning this off removes upcoming events from the shared calendar; another device with this on adds them back."))
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
 
             if let accessMessage = self.accessMessage {
                 Section {
@@ -36,6 +37,7 @@ struct ResetCreditCalendarSettingsView: View {
                         }
                     }
                 }
+                .listRowBackground(MobileSurfaceStyle.rowBackground)
             }
 
             if !self.sync.isEnabled, self.sync.hasPendingRemovals() {
@@ -46,6 +48,7 @@ struct ResetCreditCalendarSettingsView: View {
                         .font(.caption)
                         .foregroundStyle(.orange)
                 }
+                .listRowBackground(MobileSurfaceStyle.rowBackground)
             }
 
             if self.sync.isEnabled, let lastSyncAt = self.sync.lastSyncAt {
@@ -66,6 +69,7 @@ struct ResetCreditCalendarSettingsView: View {
                             .foregroundStyle(.orange)
                     }
                 }
+                .listRowBackground(MobileSurfaceStyle.rowBackground)
             }
 
             Section {
@@ -89,7 +93,10 @@ struct ResetCreditCalendarSettingsView: View {
                     String(
                         localized: "Claude and Grok reset credits need CodexBar for Mac 0.76.0.2 or later, with Claude using the OAuth or Web source. Codex also works with earlier Mac versions."))
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
         }
+        .listStyle(.insetGrouped)
+        .mobilePageSurface()
         .navigationTitle(String(localized: "Calendar Reminders"))
         .onAppear {
             // Reconciles when on, or finishes queued removals when off.

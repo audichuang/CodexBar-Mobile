@@ -56,3 +56,7 @@
 - 2026-10-22：首版卡片、浅深色、大字与独立 reviewer 检查完成。用户随后明确否决双栏默认详情，目标重新打开；首版通用宽屏截图不能证明实际 Duo 姿态。当前进度见 `04-duo-grid-correction.md`。
 
 - 2026-10-22：实际 Duo 模拟器展开内屏竖屏三列/底部 Tab、横屏四列/右侧 Tab 验收通过；Computer Use 实际旋转、两项独立 UI case、完整 framebuffer 原图与设计/review 完成，见 `04-duo-grid-correction.md`。
+
+- 2026-10-22 后续：用户批准卡片信息减负交互，要求明文名称编辑、黑白真实图标与 Summary/Settings 跟随 Usage/Cost 的统一基础色调；本地修订按 [07-card-clarity-draft.md](07-card-clarity-draft.md) 推进，目标版本 3.2.0 (249)，尚未上传。
+
+- 2026-10-22 后续本地验收完成：明文编辑/脱敏回归、23 项专项模型显示测试与原生渲染通过；四 Tab 实际系统浅深色截图与设计验收、独立源码 review 完成。Summary 和 Settings 主/详情/诊断列表现统一 Usage/Cost 基础表面，保留自定义卡色。版本 3.2.0 (249) 仅本地，TF 仍是 248。

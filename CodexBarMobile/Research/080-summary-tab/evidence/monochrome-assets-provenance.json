@@ -1,0 +1,226 @@
+[
+  {
+    "provider": "abacus",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-abacus.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-abacus.imageset/ProviderIcon-abacus.svg",
+    "sha256": "dd11b1c6007507310d9c20577c0a97e1fb5a236d7d3fb88bd2c7e873312e89af",
+    "rendering": "template"
+  },
+  {
+    "provider": "amp",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-amp.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-amp.imageset/ProviderIcon-amp.svg",
+    "sha256": "50b187ec706d84c6cfadba067d696f3a831bba3728d873a1de102578fab705d3",
+    "rendering": "template"
+  },
+  {
+    "provider": "antigravity",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-antigravity.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-antigravity.imageset/ProviderIcon-antigravity.svg",
+    "sha256": "eafc2d1d432b369c34c98e1bb0cd36f0bc58872a64ef4ef814860f3dccef5f71",
+    "rendering": "template"
+  },
+  {
+    "provider": "bedrock",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-bedrock.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-bedrock.imageset/ProviderIcon-bedrock.svg",
+    "sha256": "92ab48942b617ce78c7540cbd9244d17526ea5c8edaa99b28b21022d90c6c7a4",
+    "rendering": "template"
+  },
+  {
+    "provider": "claude",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-claude.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-claude.imageset/ProviderIcon-claude.svg",
+    "sha256": "497a88a780831512317b6dd061285e2ec2608abf09a94a5f24ee9019a4d3ef8b",
+    "rendering": "template"
+  },
+  {
+    "provider": "codex",
+    "source": "Sources/CodexBar/Resources/Brand-ProviderIcon-codex.png",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-codex.imageset/Brand-ProviderIcon-codex.png",
+    "sha256": "8e82b26c98a10e45798ce48124515720657f7735fb8d0853b3f087eaa8a6b74e",
+    "rendering": "original"
+  },
+  {
+    "provider": "copilot",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-copilot.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-copilot.imageset/ProviderIcon-copilot.svg",
+    "sha256": "945934ed46f6fb1f8b3fdef5465264051068664c477004195a56a89d03c1d994",
+    "rendering": "template"
+  },
+  {
+    "provider": "cursor",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-cursor.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-cursor.imageset/ProviderIcon-cursor.svg",
+    "sha256": "01bac27782652bb9f607f35fac6359e639d6ade0f1a1a0b34d530a367e23ecd3",
+    "rendering": "template"
+  },
+  {
+    "provider": "deepseek",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-deepseek.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-deepseek.imageset/ProviderIcon-deepseek.svg",
+    "sha256": "0c9beab8db2c807c65f5ad59c0870e600320f697f1596629ebe1398af144c87e",
+    "rendering": "template"
+  },
+  {
+    "provider": "factory",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-factory.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-factory.imageset/ProviderIcon-factory.svg",
+    "sha256": "f2a16395f166104832b7fbf43b021c93cf5d0f14740ae9453c41df807d12e8cb",
+    "rendering": "template"
+  },
+  {
+    "provider": "gemini",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-gemini.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-gemini.imageset/ProviderIcon-gemini.svg",
+    "sha256": "c67e54c663041fdebf0ce2f3ff9a8e76e1928cabaee74f7936450a01c1a40aa5",
+    "rendering": "template"
+  },
+  {
+    "provider": "grok",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-grok.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-grok.imageset/ProviderIcon-grok.svg",
+    "sha256": "41edb24e0b3a31268c6374bad1984e830ead62856e7859b83aa47059a221562f",
+    "rendering": "template"
+  },
+  {
+    "provider": "groq",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-groq.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-groq.imageset/ProviderIcon-groq.svg",
+    "sha256": "fb343ece916bfc5ccbfebcabd4d1505928241dd7cefe575ee92f749d49fdaf13",
+    "rendering": "template"
+  },
+  {
+    "provider": "kimi",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-kimi.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-kimi.imageset/ProviderIcon-kimi.svg",
+    "sha256": "d2d89b6880d8613bde77e2d6362dde1209462a4c2d18c25c0b564ff1b48aa990",
+    "rendering": "template"
+  },
+  {
+    "provider": "kiro",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-kiro.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-kiro.imageset/ProviderIcon-kiro.svg",
+    "sha256": "573b22d098743f669364c82180432a82714588b6d25a6686869f2db99fd6e2e5",
+    "rendering": "template"
+  },
+  {
+    "provider": "minimax",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-minimax.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-minimax.imageset/ProviderIcon-minimax.svg",
+    "sha256": "07b86f4995e398083daf28d80fd1ddf68b291461e64fb818459e8fa8ee6456a5",
+    "rendering": "template"
+  },
+  {
+    "provider": "mistral",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-mistral.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-mistral.imageset/ProviderIcon-mistral.svg",
+    "sha256": "690fa49df402cca5aa90949abff9d07899781ae29e33b3fed2ae5dca450aceb5",
+    "rendering": "template"
+  },
+  {
+    "provider": "muse",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-muse.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-muse.imageset/ProviderIcon-muse.svg",
+    "sha256": "266df039b3bf8b565f02d001e9c9b2b3fc7416f40822e62b8f840848c6ac98b4",
+    "rendering": "template"
+  },
+  {
+    "provider": "museai",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-museai.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-museai.imageset/ProviderIcon-museai.svg",
+    "sha256": "9da087304f1b6b9331fd5f2301116a1f1037871ddd38ccdbd9858359e604d4ed",
+    "rendering": "template"
+  },
+  {
+    "provider": "notion",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-notion.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-notion.imageset/ProviderIcon-notion.svg",
+    "sha256": "1ffa05c609d3ace7b3f1de7595413b0f8a2bfb02c50473a5c2fadf192a101a4f",
+    "rendering": "template"
+  },
+  {
+    "provider": "ollama",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-ollama.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-ollama.imageset/ProviderIcon-ollama.svg",
+    "sha256": "aed9685d6dec79f85b83dbaaf0a62034bb3bc0e85b875bd35b167a010738dc5b",
+    "rendering": "template"
+  },
+  {
+    "provider": "opencode",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-opencode.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-opencode.imageset/ProviderIcon-opencode.svg",
+    "sha256": "6c1688e66e63a0415f43f150b6f329074095f76e875cd708878447220606532a",
+    "rendering": "template"
+  },
+  {
+    "provider": "opencodego",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-opencodego.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-opencodego.imageset/ProviderIcon-opencodego.svg",
+    "sha256": "6c1688e66e63a0415f43f150b6f329074095f76e875cd708878447220606532a",
+    "rendering": "template"
+  },
+  {
+    "provider": "perplexity",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-perplexity.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-perplexity.imageset/ProviderIcon-perplexity.svg",
+    "sha256": "89941d419f94d27021d2168f9dbf6436abad3f2186cd6e9901cb68370407fa63",
+    "rendering": "template"
+  },
+  {
+    "provider": "poe",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-poe.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-poe.imageset/ProviderIcon-poe.svg",
+    "sha256": "add87aa7ec2ade3d1c77edde5c2d5fc74e74f86997d987119ae22d9091e988e2",
+    "rendering": "template"
+  },
+  {
+    "provider": "qwencloud",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-qwencloud.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-qwencloud.imageset/ProviderIcon-qwencloud.svg",
+    "sha256": "e431112eb201ee28a645bc1d6967c1ea43791ae7155e50b12e2a9258b719014c",
+    "rendering": "template"
+  },
+  {
+    "provider": "replicate",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-replicate.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-replicate.imageset/ProviderIcon-replicate.svg",
+    "sha256": "02fa8f8a14f33a0bcd380610b2029f6ab2c63a26717c6c32506fea10f9825697",
+    "rendering": "template"
+  },
+  {
+    "provider": "warp",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-warp.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-warp.imageset/ProviderIcon-warp.svg",
+    "sha256": "fd62dfca5b87dc61cf5c3168096f7becea935730b31c26ed7c37864e077bd0a1",
+    "rendering": "template"
+  },
+  {
+    "provider": "windsurf",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-windsurf.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-windsurf.imageset/ProviderIcon-windsurf.svg",
+    "sha256": "e2e68e7ead2c5a926c56a1be92301c367899962c01c406559ee250d1ee32b0f3",
+    "rendering": "template"
+  },
+  {
+    "provider": "xai",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-xai.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-xai.imageset/ProviderIcon-xai.svg",
+    "sha256": "c17830582241ba7b7a44803ae124aff983833266db2318e6396a0237670b2b88",
+    "rendering": "template"
+  },
+  {
+    "provider": "xkiro",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-xkiro.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-xkiro.imageset/ProviderIcon-xkiro.svg",
+    "sha256": "1130dc3d5bed0f66def56e209f008f4cd685056593b512981d4e0ecd6e7e8671",
+    "rendering": "template"
+  },
+  {
+    "provider": "zai",
+    "source": "Sources/CodexBar/Resources/ProviderIcon-zai.svg",
+    "asset": "CodexBarMobile/CodexBarMobile/Assets.xcassets/SummaryProvider-zai.imageset/ProviderIcon-zai.svg",
+    "sha256": "586f658fe329a52e5f25e5f9b63e506721b96c2ed64cc5deb0b5087f27780598",
+    "rendering": "template"
+  }
+]

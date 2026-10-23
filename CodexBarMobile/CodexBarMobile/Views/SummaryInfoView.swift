@@ -17,18 +17,16 @@ struct SummaryInfoView: View {
                 Section(String(localized: "Brand resources")) {
                     Text(
                         String(
-                            localized: "OpenAI and ChatGPT marks are owned by OpenAI. OpenRouter marks are owned by OpenRouter. They identify the connected services; no endorsement is implied."))
+                            localized: "Provider icons identify their respective services. All marks belong to their owners; no endorsement is implied."))
                     Link(
                         String(localized: "OpenAI brand guidelines"),
                         destination: URL(string: "https://openai.com/brand/")!)
                     Link(
                         String(localized: "OpenRouter brand resources"),
                         destination: URL(string: "https://openrouter.ai/brand")!)
-                    Text(
-                        String(
-                            localized: "Other providers use neutral abbreviations where approved artwork is unavailable."))
                 }
             }
+            .mobilePageSurface()
             .navigationTitle(String(localized: "About Summary"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

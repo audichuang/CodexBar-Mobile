@@ -3249,6 +3249,7 @@ private struct SettingsTab: View {
                             summary: String(localized: "Latest updates and version history"))
                     }
                 }
+                .listRowBackground(MobileSurfaceStyle.rowBackground)
 
                 Section {
                     NavigationLink(value: Destination.usage) {
@@ -3280,6 +3281,7 @@ private struct SettingsTab: View {
                     }
                     .accessibilityIdentifier("settings-calendar-reminders")
                 }
+                .listRowBackground(MobileSurfaceStyle.rowBackground)
 
                 Section("Developer") {
                     Link(destination: URL(string: "https://x.com/o1xhack")!) {
@@ -3333,6 +3335,7 @@ private struct SettingsTab: View {
                     }
                     .accessibilityIdentifier("settings-more-apps")
                 }
+                .listRowBackground(MobileSurfaceStyle.rowBackground)
 
                 Section("Developer") {
                     NavigationLink(value: Destination.developer) {
@@ -3342,6 +3345,7 @@ private struct SettingsTab: View {
                             summary: String(localized: "Sync inspector, push diagnostic, and more"))
                     }
                 }
+                .listRowBackground(MobileSurfaceStyle.rowBackground)
 
                 if MockProviderDetector.hasAnyMock(in: self.usageData.snapshot) {
                     Section("Diagnostics") {
@@ -3361,6 +3365,7 @@ private struct SettingsTab: View {
                         }
                         .padding(.vertical, 4)
                     }
+                    .listRowBackground(MobileSurfaceStyle.rowBackground)
                 }
 
                 Section("Open Source") {
@@ -3392,7 +3397,10 @@ private struct SettingsTab: View {
                         }
                     }
                 }
+                .listRowBackground(MobileSurfaceStyle.rowBackground)
             }
+            .mobilePageSurface()
+            .listStyle(.insetGrouped)
             .contentMargins(.top, 12, for: .scrollContent)
             .navigationTitle("Setting")
             .sheet(isPresented: self.$showingSetupGuide) {
@@ -3498,6 +3506,7 @@ private struct AboutSyncDetailView: View {
                     LabeledContent("Mac App", value: String(localized: "Not synced"))
                 }
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
 
             // MARK: Mac Update Prompt
 
@@ -3520,6 +3529,7 @@ private struct AboutSyncDetailView: View {
                         Label("Download Latest Mac Version", systemImage: "arrow.down.circle")
                     }
                 }
+                .listRowBackground(MobileSurfaceStyle.rowBackground)
             }
 
             // MARK: Sync Status
@@ -3556,6 +3566,7 @@ private struct AboutSyncDetailView: View {
                         .foregroundStyle(.red)
                 }
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
 
             // MARK: Devices
 
@@ -3571,6 +3582,7 @@ private struct AboutSyncDetailView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
+                .listRowBackground(MobileSurfaceStyle.rowBackground)
             } else {
                 if !self.activeDeviceItems.isEmpty {
                     Section {
@@ -3585,6 +3597,7 @@ private struct AboutSyncDetailView: View {
                                 .foregroundStyle(.secondary)
                         }
                     }
+                    .listRowBackground(MobileSurfaceStyle.rowBackground)
                 }
 
                 if !self.archivedDeviceItems.isEmpty {
@@ -3600,6 +3613,7 @@ private struct AboutSyncDetailView: View {
                                 .foregroundStyle(.secondary)
                         }
                     }
+                    .listRowBackground(MobileSurfaceStyle.rowBackground)
                 }
             }
 
@@ -3625,8 +3639,11 @@ private struct AboutSyncDetailView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
+                .listRowBackground(MobileSurfaceStyle.rowBackground)
             }
         }
+        .listStyle(.insetGrouped)
+        .mobilePageSurface()
         .navigationTitle("About & Sync")
         .sheet(item: self.$deviceActionSheet) { sheet in
             switch sheet {
@@ -4075,12 +4092,16 @@ private struct RawSyncDataView: View {
                     Text("No device data available")
                         .foregroundStyle(.secondary)
                 }
+                .listRowBackground(MobileSurfaceStyle.rowBackground)
             } else {
                 ForEach(Array(self.usageData.rawDeviceSnapshots.enumerated()), id: \.offset) { _, device in
                     RawDeviceSection(device: device)
+                        .listRowBackground(MobileSurfaceStyle.rowBackground)
                 }
             }
         }
+        .listStyle(.insetGrouped)
+        .mobilePageSurface()
         .navigationTitle("Raw Sync Data")
     }
 }
@@ -4200,6 +4221,7 @@ private struct RawProviderDetailView: View {
                         .foregroundStyle(.red)
                 }
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
 
             if let cost = self.provider.costSummary {
                 Section("Cost Summary") {
@@ -4210,6 +4232,7 @@ private struct RawProviderDetailView: View {
                         value: self.formatCost(cost.reportingPeriodCostUSD))
                     LabeledContent("History Tokens", value: self.formatTokens(cost.reportingPeriodTokens))
                 }
+                .listRowBackground(MobileSurfaceStyle.rowBackground)
             }
 
             self.rateWindowsSection
@@ -4218,6 +4241,8 @@ private struct RawProviderDetailView: View {
                 self.dailyCostSection(cost.reportingPeriodDaily)
             }
         }
+        .listStyle(.insetGrouped)
+        .mobilePageSurface()
         .navigationTitle(self.provider.providerName)
     }
 
@@ -4230,6 +4255,7 @@ private struct RawProviderDetailView: View {
                     RawRateWindowRow(window: window)
                 }
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
         }
     }
 
@@ -4241,6 +4267,7 @@ private struct RawProviderDetailView: View {
                 RawDailyPointRow(day: day)
             }
         }
+        .listRowBackground(MobileSurfaceStyle.rowBackground)
     }
 
     private func formatCost(_ value: Double?) -> String {
@@ -4382,7 +4409,10 @@ private struct DeveloperToolsView: View {
                 Text("These tools may show internal sync state, device identifiers, and account emails for debugging.")
                     .font(.caption2)
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
         }
+        .listStyle(.insetGrouped)
+        .mobilePageSurface()
         .navigationTitle("Developer Tools")
     }
 }
@@ -4411,6 +4441,7 @@ private struct ICloudSyncDiagnosticView: View {
                         .textSelection(.enabled)
                 }
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
 
             Section("Read-Only Check") {
                 Text("This check never creates, changes, or deletes iCloud records, zones, subscriptions, or schema.")
@@ -4430,6 +4461,7 @@ private struct ICloudSyncDiagnosticView: View {
                     UIPasteboard.general.string = self.fullReport
                 }
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
 
             Section("Actions") {
                 Button("Refresh Synced Data") {
@@ -4437,7 +4469,10 @@ private struct ICloudSyncDiagnosticView: View {
                 }
                 .disabled(self.usageData.syncStatus == .syncing)
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
         }
+        .listStyle(.insetGrouped)
+        .mobilePageSurface()
         .navigationTitle("iCloud Sync Diagnostics")
         .task {
             if self.reportText == String(localized: "No check run yet.") {
@@ -4527,6 +4562,7 @@ private struct CostDiagnosticsView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
+                .listRowBackground(MobileSurfaceStyle.rowBackground)
 
                 Section("Provider Rules") {
                     ForEach(report.providerRules) { rule in
@@ -4547,6 +4583,7 @@ private struct CostDiagnosticsView: View {
                         }
                     }
                 }
+                .listRowBackground(MobileSurfaceStyle.rowBackground)
 
                 Section("Reconciliation") {
                     ForEach(report.checks) { item in
@@ -4564,6 +4601,7 @@ private struct CostDiagnosticsView: View {
                         }
                     }
                 }
+                .listRowBackground(MobileSurfaceStyle.rowBackground)
 
                 Section("Raw Inputs") {
                     NavigationLink {
@@ -4575,13 +4613,17 @@ private struct CostDiagnosticsView: View {
                             summary: String(localized: "Inspect per-device synced rows used as source input"))
                     }
                 }
+                .listRowBackground(MobileSurfaceStyle.rowBackground)
             } else {
                 Section {
                     Text("No cost data available")
                         .foregroundStyle(.secondary)
                 }
+                .listRowBackground(MobileSurfaceStyle.rowBackground)
             }
         }
+        .listStyle(.insetGrouped)
+        .mobilePageSurface()
         .navigationTitle("Cost Diagnostics")
         .task(id: self.ledgerRefreshSignature) {
             await self.refreshLedgerAggregation(for: self.ledgerRefreshSignature)
@@ -4778,6 +4820,7 @@ private struct PushSetupDiagnosticView: View {
                 self.row("Permission", self.diag.notificationPermission)
                 self.row("APNs Registration", self.diag.remoteRegistration)
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
 
             Section("Subscription List (from iOS)") {
                 Text(self.diag.subscriptionList)
@@ -4791,6 +4834,7 @@ private struct PushSetupDiagnosticView: View {
                 }
                 .controlSize(.small)
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
 
             if let error = self.diag.lastError {
                 Section("Last Error") {
@@ -4799,6 +4843,7 @@ private struct PushSetupDiagnosticView: View {
                         .foregroundStyle(.red)
                         .textSelection(.enabled)
                 }
+                .listRowBackground(MobileSurfaceStyle.rowBackground)
             }
 
             Section("Actions") {
@@ -4823,6 +4868,7 @@ private struct PushSetupDiagnosticView: View {
                         .textSelection(.enabled)
                 }
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
 
             #if DEBUG
             // NSE invocation log was added in build 122 to diagnose the
@@ -4845,6 +4891,7 @@ private struct PushSetupDiagnosticView: View {
                     .tint(.red)
                 }
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
             #endif
 
             if let ts = self.diag.lastUpdated {
@@ -4853,8 +4900,11 @@ private struct PushSetupDiagnosticView: View {
                         .font(.caption2)
                         .foregroundStyle(.tertiary)
                 }
+                .listRowBackground(MobileSurfaceStyle.rowBackground)
             }
         }
+        .listStyle(.insetGrouped)
+        .mobilePageSurface()
         .navigationTitle("Push Setup")
         .onAppear {
             self.nseEntries = NSEInvocationLog.shared.loadAll()
@@ -4936,12 +4986,12 @@ enum MobileReleaseNotesCatalog {
                     symbol: "square.grid.2x2.fill",
                     title: String(localized: "Your personal Summary"),
                     detail: String(
-                        localized: "Pin the metrics that matter, with compact cards, reset countdowns and estimated depletion dates.")),
+                        localized: "Pin the metrics that matter, with clearer cards, short names, monochrome icons, reset countdowns and estimated depletion dates. Names stay visible while editing. Summary and Settings match the rest of the app.")),
             ],
             sections: [
                 .init(title: String(localized: "What's New"), items: [
                     String(
-                        localized: "Pin the metrics that matter, with compact cards, reset countdowns and estimated depletion dates."),
+                        localized: "Pin the metrics that matter, with clearer cards, short names, monochrome icons, reset countdowns and estimated depletion dates. Names stay visible while editing. Summary and Settings match the rest of the app."),
                     String(
                         localized: "Summary uses usage data already synced from your Mac. No Mac update is required for this release."),
                 ]),
@@ -5990,6 +6040,7 @@ private struct UsageSettingsView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
 
             Section {
                 Picker("Chart Style", selection: self.usageChartStyle) {
@@ -6005,6 +6056,7 @@ private struct UsageSettingsView: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
 
             Section {
                 Toggle(isOn: self.$hideQuotaWarningMarkers) {
@@ -6028,6 +6080,7 @@ private struct UsageSettingsView: View {
             } header: {
                 Text("setting_section_warnings_links")
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
 
             Section {
                 Toggle(isOn: self.$hidePersonalInfo) {
@@ -6041,7 +6094,9 @@ private struct UsageSettingsView: View {
             } header: {
                 Text("Privacy")
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
         }
+        .mobilePageSurface()
         .navigationTitle("Usage Setting")
         .listStyle(.insetGrouped)
     }
@@ -6101,6 +6156,7 @@ private struct CostSettingsView: View {
             } header: {
                 Text("Cost History")
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
 
             if self.cwlEnabled {
                 if let diagnostics = self.ledgerDiagnostics, diagnostics.rowCount > 0 {
@@ -6114,6 +6170,7 @@ private struct CostSettingsView: View {
                             LabeledContent("Since", value: earliest)
                         }
                     }
+                    .listRowBackground(MobileSurfaceStyle.rowBackground)
                 }
 
                 Section {
@@ -6161,6 +6218,7 @@ private struct CostSettingsView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
+                .listRowBackground(MobileSurfaceStyle.rowBackground)
             }
 
             Section("Charts") {
@@ -6171,6 +6229,7 @@ private struct CostSettingsView: View {
                 }
                 .pickerStyle(.menu)
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
 
             Section {
                 Toggle(isOn: self.$openCostByDefault) {
@@ -6182,13 +6241,17 @@ private struct CostSettingsView: View {
                     }
                 }
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
 
             Section {
                 Text("Press and hold on the chart to inspect the exact value for a given day.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
         }
+        .listStyle(.insetGrouped)
+        .mobilePageSurface()
         .navigationTitle("Cost Setting")
         .task(id: "\(self.cwlEnabled)|\(self.usageData.publicationRevision)") {
             do {
@@ -6261,6 +6324,7 @@ private struct WidgetSettingsView: View {
             } header: {
                 Text("Preview")
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
             Section {
                 ForEach(self.previewProviderChoices) { provider in
                     Button {
@@ -6286,7 +6350,9 @@ private struct WidgetSettingsView: View {
                     String(
                         localized: "Choose up to four providers for this preview. To save your Home Screen selection, use Edit Widget."))
             }
+            .listRowBackground(MobileSurfaceStyle.rowBackground)
         }
+        .mobilePageSurface()
         .navigationTitle("Widget Setting")
         .listStyle(.insetGrouped)
     }
