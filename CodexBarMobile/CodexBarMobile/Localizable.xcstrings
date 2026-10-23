@@ -11614,6 +11614,34 @@
         }
       }
     },
+    "Summary uses usage data already synced from your Mac. No Mac update is required for this release.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Summary uses usage data already synced from your Mac. No Mac update is required for this release."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "摘要使用已从 Mac 同步的用量数据。本次更新无需升级 Mac 端。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "摘要使用已從 Mac 同步的用量資料。本次更新無需升級 Mac 端。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "概要はMacから同期済みの使用量データを使います。今回のアップデートではMac版の更新は不要です。"
+          }
+        }
+      }
+    },
     "Supports English, Simplified Chinese, Traditional Chinese, and Japanese.": {
       "localizations": {
         "en": {
