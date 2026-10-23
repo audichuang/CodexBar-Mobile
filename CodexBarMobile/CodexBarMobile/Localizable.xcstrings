@@ -1,6 +1,370 @@
 {
   "sourceLanguage": "en",
   "strings": {
+  "The chart spans seven days ending at the latest weekly reset across providers. Each line shows actual remaining quota and stops at its latest reading.": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "The chart spans seven days ending at the latest weekly reset across providers. Each line shows actual remaining quota and stops at its latest reading."
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "图表显示以所有服务商中最晚的每周重置时间为终点的完整七天。每条线显示实际剩余额度，并停在最新采样处。"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "圖表顯示以所有服務商中最晚的每週重置時間為終點的完整七天。每條線顯示實際剩餘額度，並停在最新取樣處。"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "全プロバイダーの最も遅い週次リセットを終点とする7日間を表示します。各線は実際の残り利用枠を示し、最新の測定値で止まります。"
+        }
+      }
+    }
+  },
+  "Choose up to five account quotas, customize their colors, and compare actual remaining quota on a shared weekly timeline. Expand the compact legend for account details. Landscape on iPhone keeps the chart and legend clear of the search and tab bars.": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Choose up to five account quotas, customize their colors, and compare actual remaining quota on a shared weekly timeline. Expand the compact legend for account details. Landscape on iPhone keeps the chart and legend clear of the search and tab bars."
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "最多选择五项账号额度，自定义颜色，在同一每周时间轴上对比实际剩余额度。展开紧凑图例可查看账号详情。iPhone 横屏时图表和图例避开搜索栏及标签栏。"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "最多選擇五項帳號額度，自訂顏色，在同一每週時間軸上比較實際剩餘額度。展開精簡圖例可查看帳號詳情。iPhone 橫向時圖表與圖例避開搜尋列及標籤列。"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "アカウントの利用枠を最大5件選び、色を変えて共通の週次時間軸で実際の残り利用枠を比較できます。凡例を展開するとアカウントの詳細を確認できます。iPhoneの横向き表示ではグラフと凡例が検索バーやタブバーに重なりません。"
+        }
+      }
+    }
+  },
+  "Compare up to five actual quota histories in Usage on one weekly timeline, with custom colors and a compact legend. Lines stop at the latest reading without predicting future usage. Landscape on iPhone keeps the chart and legend clear of the search and tab bars. Reorder Cost groups and find routine source notes at the bottom.": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Compare up to five actual quota histories in Usage on one weekly timeline, with custom colors and a compact legend. Lines stop at the latest reading without predicting future usage. Landscape on iPhone keeps the chart and legend clear of the search and tab bars. Reorder Cost groups and find routine source notes at the bottom."
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "在用量的同一每周时间轴上对比最多五条真实额度历史，自定义颜色并使用紧凑图例。曲线停在最新采样处，不预测未来用量。iPhone 横屏时图表和图例避开搜索栏及标签栏。费用分组可排序，普通来源说明移至底部。"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "在用量的同一每週時間軸上比較最多五條真實額度歷史，自訂顏色並使用精簡圖例。曲線停在最新取樣處，不預測未來用量。iPhone 橫向時圖表與圖例避開搜尋列及標籤列。費用群組可排序，一般來源說明移至底部。"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "使用状況で最大5件の実際の利用枠履歴を、共通の週次時間軸、独自の色、コンパクトな凡例で比較できます。線は最新の測定値で止まり、将来の使用量は予測しません。iPhoneの横向き表示では検索バーやタブバーに重なりません。費用グループの並べ替えと、通常の情報元メモの下部表示にも対応しています。"
+        }
+      }
+    }
+  },
+  "Observed history": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Observed history"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "真实历史"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "真實歷史"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "実測履歴"
+        }
+      }
+    }
+  },
+  "All history": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "All history"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "全部历史"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "全部歷史"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "すべての履歴"
+        }
+      }
+    }
+  },
+  "Choose up to five account quotas, customize their colors, and compare actual remaining quota over time. Expand the compact legend for account details. Landscape on iPhone keeps the chart and legend clear of the search and tab bars.": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Choose up to five account quotas, customize their colors, and compare actual remaining quota over time. Expand the compact legend for account details. Landscape on iPhone keeps the chart and legend clear of the search and tab bars."
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "最多选择五项账号额度，自定义颜色，对比实际剩余额度的历史变化。展开紧凑图例可查看账号详情。iPhone 横屏时图表和图例避开搜索栏及标签栏。"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "最多選擇五項帳號額度，自訂顏色，比較實際剩餘額度的歷史變化。展開精簡圖例可查看帳號詳情。iPhone 橫向時圖表與圖例避開搜尋列及標籤列。"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "アカウントの利用枠を最大5件選び、色を変えて実際の残り利用枠の推移を比較できます。コンパクトな凡例を展開するとアカウントの詳細を確認できます。iPhoneの横向き表示ではグラフと凡例が検索バーやタブバーに重なりません。"
+        }
+      }
+    }
+  },
+  "Each line shows actual remaining quota at the time it was observed, and stops at the latest reading.": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Each line shows actual remaining quota at the time it was observed, and stops at the latest reading."
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "每条线显示各次采样时的实际剩余额度，并停在最新读数处。"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "每條線顯示各次取樣時的實際剩餘額度，並停在最新讀數處。"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "各線は観測時点の実際の残り利用枠を示し、最新の測定値で止まります。"
+        }
+      }
+    }
+  },
+  "No future usage is predicted. One reading appears as a point; missing history is not filled in, and long gaps break the line.": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "No future usage is predicted. One reading appears as a point; missing history is not filled in, and long gaps break the line."
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "此图不预测未来用量。只有一个读数时显示为点；缺失历史不会补造，长时间缺测会断开曲线。"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "此圖不預測未來用量。只有一個讀數時顯示為點；缺失歷史不會補造，長時間缺測會斷開曲線。"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "将来の使用量は予測しません。測定値が1件の場合は点で表示し、欠けた履歴は補完せず、長い欠測区間では線を切ります。"
+        }
+      }
+    }
+  },
+  "About Quota History": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "About Quota History"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "关于额度历史"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "關於額度歷史"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "利用枠の履歴について"
+        }
+      }
+    }
+  },
+  "Last 24 hours": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Last 24 hours"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "过去 24 小时"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "過去 24 小時"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "過去24時間"
+        }
+      }
+    }
+  },
+  "Observed remaining quota by date": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Observed remaining quota by date"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "按日期查看实际剩余额度"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "依日期查看實際剩餘額度"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "日付別の実測残り利用枠"
+        }
+      }
+    }
+  },
+  "Choose up to 5 account quotas to compare their remaining quota history.": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Choose up to 5 account quotas to compare their remaining quota history."
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "最多选择 5 项账号额度，对比实际剩余额度历史。"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "最多選擇 5 項帳號額度，比較實際剩餘額度歷史。"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "アカウントの利用枠を最大5件選び、実際の残り利用枠の履歴を比較できます。"
+        }
+      }
+    }
+  },
+  "Compare up to five actual quota histories in Usage with custom colors and a compact legend. Lines stop at the latest reading without predicting future usage. Landscape on iPhone keeps the chart and legend clear of the search and tab bars. Reorder Cost groups and find routine source notes at the bottom.": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Compare up to five actual quota histories in Usage with custom colors and a compact legend. Lines stop at the latest reading without predicting future usage. Landscape on iPhone keeps the chart and legend clear of the search and tab bars. Reorder Cost groups and find routine source notes at the bottom."
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "在用量中对比最多五条真实额度历史，自定义颜色并使用紧凑图例。曲线停在最新采样处，不预测未来用量。iPhone 横屏时图表和图例避开搜索栏及标签栏。费用分组可排序，普通来源说明移至底部。"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "在用量中比較最多五條真實額度歷史，自訂顏色並使用精簡圖例。曲線停在最新取樣處，不預測未來用量。iPhone 橫向時圖表與圖例避開搜尋列及標籤列。費用群組可排序，一般來源說明移至底部。"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "使用状況で最大5件の実際の利用枠履歴を、独自の色とコンパクトな凡例で比較できます。線は最新の測定値で止まり、将来の使用量は予測しません。iPhoneの横向き表示ではグラフと凡例が検索バーやタブバーに重なりません。費用グループの並べ替えと、通常の情報元メモの下部表示にも対応しています。"
+        }
+      }
+    }
+  },
   "Quota Lines": {
     "localizations": {
       "en": {

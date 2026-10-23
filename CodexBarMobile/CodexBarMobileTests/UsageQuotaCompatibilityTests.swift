@@ -117,7 +117,8 @@ struct UsageQuotaCompatibilityTests {
             #expect(reader.quota?.preferences.selections == beforeRefresh?.selections)
             if let quota = reader.quota {
                 #expect(quota.overview(
-                    accounts: [], sourceSnapshots: reader.cache.buildDeviceSnapshots(), quotaSources: reader.quotaSources,
+                    accounts: [], sourceSnapshots: reader.cache.buildDeviceSnapshots(),
+                    quotaSources: reader.quotaSources,
                     now: Self.now)
                     .lines.allSatisfy { $0.provider == nil })
             }
@@ -173,7 +174,7 @@ struct UsageQuotaCompatibilityTests {
             #expect(inherited.currentRemainingPercent == 30)
             #expect(inherited.observedAt == oldCapture)
             #expect(inherited.state == .stale)
-            #expect(inherited.estimatedSamples.isEmpty)
+            #expect(inherited.observedSamples.isEmpty)
             #expect(overview.end == Self.now.addingTimeInterval(7200))
             let archive = try JSONDecoder().decode(UsageQuotaArchive.self, from: #require(reader.persistence.load()))
             let observations = try #require(archive.histories.first { $0.binding == extra.id }).observations
@@ -294,7 +295,8 @@ struct UsageQuotaCompatibilityTests {
 
         func reconcile(_ providers: [ProviderUsageSnapshot]) {
             self.quota?.reconcile(
-                accounts: providers, sourceSnapshots: self.cache.buildDeviceSnapshots(), quotaSources: self.quotaSources,
+                accounts: providers, sourceSnapshots: self.cache.buildDeviceSnapshots(),
+                quotaSources: self.quotaSources,
                 now: UsageQuotaCompatibilityTests.now)
         }
 
@@ -340,6 +342,50 @@ struct UsageQuotaCompatibilityTests {
         let disk: DictionaryDisk
         func load() -> Data? { self.disk.values[UsageQuotaDefaultsPersistence.key] }
         func save(_ data: Data) { self.disk.values[UsageQuotaDefaultsPersistence.key] = data }
+    }
+
+    @Test
+    func `build 252 local archive readers ignore new continuity metadata and current readers accept their roundtrip`() throws {
+        let reader = try Reader(modern: true)
+        let snapshot = try reader.decode(Self.writer(device: "fictional-mac", modern: true, newer: true))
+        reader.cache.replaceFromFullFetch(perProviderSnapshots: [snapshot], legacySnapshots: [])
+        try reader.reconcile(reader.mergedProviders())
+        let currentData = try #require(reader.persistence.load())
+        let current = try JSONDecoder().decode(UsageQuotaArchive.self, from: currentData)
+        #expect(!current.histories.isEmpty)
+        #expect(current.histories.flatMap(\.observations).contains { $0.startsSegment != nil })
+        let old = try JSONDecoder().decode(Build252QuotaArchive.self, from: currentData)
+        let oldData = try JSONEncoder().encode(old)
+        let roundtrip = try JSONDecoder().decode(UsageQuotaArchive.self, from: oldData)
+        #expect(roundtrip.preferences == current.preferences)
+        #expect(roundtrip.histories.flatMap(\.observations).allSatisfy { $0.startsSegment == nil })
+        #expect(try JSONDecoder().decode(
+            Build252QuotaArchive.self,
+            from: JSONEncoder().encode(roundtrip)) == old)
+        reader.persistence.save(oldData)
+        let reopened = UsageQuotaOverviewStore(persistence: reader.persistence)
+        #expect(!reopened.isReadOnly)
+        #expect(reopened.preferences == current.preferences)
+    }
+
+    /// Frozen local v1 observation fields from 252 (14a191367). Unchanged preferences
+    /// and binding types are shared; this is a decoding substitute, not an old binary run.
+    private struct Build252QuotaArchive: Codable, Equatable {
+        let preferences: UsageQuotaPreferences
+        let histories: [Build252QuotaHistory]
+    }
+
+    private struct Build252QuotaHistory: Codable, Equatable {
+        let binding: UsageQuotaBinding
+        let observations: [Build252QuotaObservation]
+        let stableAccountTokens: [String]?
+    }
+
+    private struct Build252QuotaObservation: Codable, Equatable {
+        let capturedAt: Date
+        let usedPercent: Double
+        let resetDate: Date
+        let windowDuration: TimeInterval?
     }
 
     private struct Build250Snapshot: Codable {
