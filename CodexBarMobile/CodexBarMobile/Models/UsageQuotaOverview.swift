@@ -69,6 +69,9 @@ struct UsageQuotaObservation: Codable, Equatable, Sendable {
 struct UsageQuotaHistory: Codable, Equatable, Sendable {
     let binding: UsageQuotaBinding
     var observations: [UsageQuotaObservation] = []
+    /// Frozen stable owner of these samples. Legacy archives without this proof retain
+    /// their settings, but their observations cannot establish an account-specific pattern.
+    var stableAccountTokens: [String]?
 }
 
 struct UsageQuotaPoint: Equatable, Sendable {

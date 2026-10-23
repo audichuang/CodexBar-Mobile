@@ -2,7 +2,7 @@
 
 状态：`in-progress` · 2026-10-22–23 · iOS 3.2.0 (251)。本文件按已读日志记录结果；未完成、失败与待重跑的门禁不会记为通过。
 
-**Local verification done：本地源码 CR、单元、替代兼容和全部适用原生 QA 已完成。Online exact-head CR、merge/final CI 与 Archive/TestFlight 仍 pending。** 真实 2 Mac × 2 iPhone Production 同步没有执行，保留 substituted 边界；外屏旧 compact-phone navigation 的 skip 不计为 pass。
+**发布候选复核中：既有单元、替代兼容和全部适用原生 QA 结果见下表。a05 的线上 CR 已完成，但额外独立复核发现账号身份退化时的历史来源问题；修复已通过增量验证与独立复核，新 head 的线上审查尚待执行。此前 archive/export 通过但未上传，修复后将重新归档。** 真实 2 Mac × 2 iPhone Production 同步没有执行，保留 substituted 边界；外屏旧 compact-phone navigation 的 skip 不计为 pass。
 
 ## 环境与证据
 
@@ -35,8 +35,8 @@
 | Large phone / dark | pass（2/2） | `large-phone-dark.log`：原生 navigation safe area/rotation、quota current-pose 四 Tab 均通过 |
 | Duo actual 外屏 landscape / light | 1 pass + 1 skip（非 2 pass） | `duo-folded-outer-light.log`：current-pose 四 Tab 1 项通过；旧 phone-navigation test 因实际 width >= 600 不满足 compact phone 前提而 skip，不能计作外屏旋转通过 |
 | Duo actual 外屏 portrait / light | pass（1/1） | CUA 切到实际外屏 portrait 后，`duo-folded-portrait-light.log` / summary 明确 current-pose 四 Tab 1 test、0 failures、0 skips，独立于 landscape run |
-| PR exact-head CR / merge gate / final CI | 待执行 | 本地源码 review 不代替远端门禁 |
-| Production entitlement audit / Archive / TestFlight | 待执行 | 当前 build/Simulator 不证明用户可安装 beta |
+| PR exact-head CR / merge gate / final CI | a05 线上 clean；后续修复需重新审查 | a05 receipt 见下；merge / Final CI 尚未执行 |
+| Production entitlement audit / Archive / TestFlight | a05 archive/export pass；未上传 | a05 候选保存在 `superseded-a05bc8e/`；修复后重新归档，TF 待实际验收 |
 
 ## 渲染覆盖的实际含义
 
@@ -148,10 +148,21 @@ canonical account 继续决定窗口是否存在、是否全局 blocked、是否
 
 PR #208 首轮审查 head `9d5c209e50908b1e26c66abd6dfcb2c82c98b275` 提出一个 P2：Weekly 每五分钟采样时，截取最近 12 点只覆盖 55 分钟，永远达不到六小时的 pattern 门槛。进一步检查发现，只去掉 12 点截取仍不够；每分钟采样时，96 点存储容量也只能保留 95 分钟。
 
-本轮修正以共享的时间跨度要求约束历史保留与预测选取，保留真实端点和最新读数；不生成虚构观测。重置、时长变化、额度下降仍先断段，真正缺测仍不能伪装为连续忙闲模式。新增测试覆盖高频采样、滚动保留、最新端点与缺测边界。此段记录问题与方案；最终测试结果及审查结论待本轮实际运行后补充，不复用此前全量 pass 作为新代码的通过证据。
+本轮修正以共享的时间跨度要求约束历史保留与预测选取，保留真实端点和最新读数；不生成虚构观测。重置、时长变化、额度下降仍先断段，真正缺测仍不能伪装为连续忙闲模式。新增测试覆盖高频采样、滚动保留、最新端点与缺测边界。该修复的实际测试结果在下文记录；不复用此前全量 pass 作为新代码的通过证据。
 
 初次 archive（source `9d5c209…`）已保留在 `superseded-9d5c209/`，从未上传；因本轮生产逻辑变化，必须从最终审查输入重新归档。
 
 修复后的 `online-r1-quota-regression.log` / `.xcresult` 为 **TEST SUCCEEDED**：36 个 Swift Testing tests / 4 suites 通过（参数用例另按日志保留，包含每分钟/每五分钟高频采样、滚动、重复读数、短尾、近缺测与旧 gap 后恢复）；两个生产组件 render tests 通过（34 配置 / 44 PNG）；`testNativeUsageChartInCurrentDisplayPose` 在 compact phone 1/1 通过，覆盖完整四 Tab、折叠/展开图例和返回状态。此轮没有重跑全量 1223 tests，不将早轮结果误记为新来源的全量结果。
 
 最终方案先按共享 `minimumHistorySpan` 对有界存储保留真实端点及最新尾点，再选择最新且至少有三段观测的充分时间跨度；原有最长缺测、单调消耗和当前 capture/value 检查保留。独立 reviewer 对本轮三个 Swift 文件复审 clean，无 P1/P2；设计师逐张查看最新八个窄屏/宽屏/AX/浅深色代表 render，未发现新增布局或曲线溢出问题。界面布局与先前跨屏矩阵相同。
+
+
+## 审查恢复与额外独立复核
+
+07:43 / 08:17 UTC 对同一 a05 head 的请求长时间未返回结果。15:50 UTC 在核对仓库审查设置及可访问的后台后重新发起，15:52 UTC 收到 [当前 head clean receipt](https://github.com/o1xhack/CodexBar-Mobile/pull/208#issuecomment-6368948944)。后台没有暴露旧请求的错误日志；普通额度充足不等于独立 Code Review 额度已确认，不能据此宣称已定位服务故障原因。
+
+与此同时，新独立 reviewer 对 a05 完整差异发现 P2：同一 weak record 槽上的稳定账号 A 变为无稳定身份的快照时，历史许可函数将 0 个 stable 匹配视作无歧义，可把新读数接到 A 的历史；反向匿名→稳定身份首次学习也可能保留未经证明的旧历史。实际 wire 允许 record-only 身份，例如 Future AGI 的普通 API 配置可只带登录方式与同设备槽位，换凭据后仍可能复用 weak key；即使没有稳定→匿名过渡，weak→weak 也不构成历史账号证明。
+
+修复要求将历史与可验证的稳定账号来源绑定；身份丢失、首次确认或来源无法证明时不沿用旧 pattern，保留当前额度与诚实的均值估算。旧本地观测无 owner 证明时重新积累，卡片选择和配色保留。生产 UI、共享 wire、Mac 代码不变。修复后冻结四个模型/测试文件的独立静态复核已 clean，报告 `recovery-fix-review.md`，SHA-256 `deb7bd9038109d7b18706a2ff89ab6171f0f79e857822873526bcefed181a413`。新增 4 个测试（其中 1 个参数化）覆盖 weak→weak、stable→weak→stable、legacy 首次稳定身份、缺失/错误/正确 owner 证明，且保留当前值、均值回退、选择与颜色的断言。`recovery-identity-regression.log` / `.xcresult` 实际 **TEST SUCCEEDED**：40 个 Swift Testing tests / 4 suites、两个生产 render tests（34 配置 / 44 PNG）及 compact phone 原生四 Tab / 图例测试全部通过，0 failures / 0 skips。主工程查看最新 phone 浅色与宽屏深色原图，未发现此模型修复引入的视觉变化；没有改变 UI。此增量不冒充全量重跑，不将 a05 的线上 clean 用于后续 head。
+
+`recovery-identity-lint.log` 的 portable lint 全部通过（3143 files，0 violations，四语与 523 source keys 审核通过）；`git diff --check` 通过。对基线的 Mac `Sources`、根 `Tests`、`version.env`、Shared 和 CI workflow 差异为空。

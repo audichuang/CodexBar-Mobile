@@ -19,3 +19,10 @@
 5. 图标三层验收：1024px 源图、archive 实际编译图和 Apple CDN 图均人工查看；source 图已确认 1024×1024、无 Alpha。
 
 发布证据根目录：`/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/UsageQuota-3.2.0-251/`。`provenance.json` 保存最终来源、hash、ASC build ID、处理状态、测试组及验证时间；archive/export/upload 日志、四语 notes 与截图在同目录。最终结果确认后更新此记录；当前文档不预先宣称上传或 merge 已完成。
+
+
+## 15:52 UTC 发布候选调整
+
+a05 的线上 Codex CR 已 clean；额外独立本地复核发现账号身份退化时可能混用历史，发布暂不放行。a05 的 Archive、Apple Distribution 本地 export、五目标版本和 Production entitlement 校验曾通过，相关完整证据移至 `superseded-a05bc8e/`，没有上传。修复改变生产输入，必须重新记录 source/tree 并 Archive；旧包及旧 clean receipt 不作为最终发布来源。
+
+ASC 当前仅有 build 251 的 `AWAITING_UPLOAD` 预约记录（创建于 07:53 UTC），没有可安装 build。此状态不是上传成功或 TF 已分发证据。

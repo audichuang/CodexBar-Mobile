@@ -47,6 +47,18 @@ struct UsageQuotaOverviewTests {
         return store
     }
 
+    private static func weakAccount(
+        capturedAt: Date, used: Double, providerID: String = "claude", minutes: Int = 300,
+        reset: Date = Self.now.addingTimeInterval(3600)) -> ProviderUsageSnapshot
+    {
+        ProviderUsageSnapshot(
+            providerID: providerID, providerName: providerID.capitalized,
+            primary: nil, secondary: nil, accountEmail: nil, loginMethod: "Fictional plan",
+            statusMessage: nil, isError: false, lastUpdated: capturedAt,
+            rateWindows: [self.window(used: used, minutes: minutes, reset: reset)],
+            accountIdentities: ["\(providerID):record:install-a"], accountRecordKey: "install-a")
+    }
+
     @Test
     func `defaults initialize only once and clearing survives persistence reload`() throws {
         let memory = UsageQuotaMemoryPersistence()
@@ -423,6 +435,152 @@ struct UsageQuotaOverviewTests {
         let unrelated = Self.account(id: "unrelated", record: "install-a")
         store.reconcile(accounts: [unrelated], now: Self.now)
         #expect(store.overview(accounts: [unrelated], now: Self.now).lines.first?.state == .missingAccount)
+    }
+
+    @Test(arguments: [false, true])
+    func `a stable account becoming anonymous breaks history before the same owner returns`(
+        originalSources: Bool) throws
+    {
+        let memory = UsageQuotaMemoryPersistence()
+        let store = UsageQuotaOverviewStore(persistence: memory)
+        func publish(_ raw: ProviderUsageSnapshot) throws -> ProviderUsageSnapshot {
+            if originalSources {
+                let snapshot = SyncedUsageSnapshot(
+                    providers: [raw], syncTimestamp: raw.lastUpdated,
+                    deviceName: "Fictional Mac", deviceID: "fictional-mac")
+                let merged = try #require(ProviderSnapshotMerger.mergeSnapshots([snapshot]))
+                store.reconcile(
+                    accounts: merged.providers, sourceSnapshots: [snapshot], quotaSources: merged.providerQuotaSources,
+                    now: raw.lastUpdated)
+                return try #require(merged.providers.first)
+            }
+            store.reconcile(accounts: [raw], now: raw.lastUpdated)
+            return raw
+        }
+        for (index, used) in [10.0, 20, 30].enumerated() {
+            _ = try publish(Self.account(
+                capturedAt: Self.now.addingTimeInterval(Double(index - 3) * 300),
+                windows: [Self.window(used: used)]))
+        }
+        var selection = try #require(store.preferences.selections.first)
+        selection.colorHex = "123ABC"
+        #expect(store.update(selection))
+        let saved = store.preferences.selections
+        let anonymous = try publish(Self.weakAccount(capturedAt: Self.now, used: 40))
+        let weakLine = try #require(store.overview(accounts: [anonymous], now: Self.now).lines.first)
+        #expect(weakLine.state == .available)
+        #expect(weakLine.currentRemainingPercent == 60)
+        #expect(weakLine.localObservationCount == 0)
+        #expect(weakLine.projectionKind == .uniformMean)
+        let weakArchive = try JSONDecoder().decode(UsageQuotaArchive.self, from: #require(memory.data))
+        #expect(weakArchive.histories.isEmpty)
+        #expect(store.preferences.selections == saved)
+
+        let time = Self.now.addingTimeInterval(300)
+        let returned = try publish(Self.account(capturedAt: time, windows: [Self.window(used: 50)]))
+        let returnedLine = try #require(store.overview(accounts: [returned], now: time).lines.first)
+        #expect(returnedLine.localObservationCount == 1)
+        #expect(returnedLine.projectionKind == .uniformMean)
+        #expect(returnedLine.currentRemainingPercent == 50)
+        #expect(store.preferences.selections == saved)
+    }
+
+    @Test
+    func `record only credential slots never collect account history even without an identity transition`() throws {
+        let store = UsageQuotaOverviewStore.inMemory()
+        var latest: ProviderUsageSnapshot?
+        for (index, used) in [10.0, 20, 30, 40].enumerated() {
+            let raw = Self.weakAccount(
+                capturedAt: Self.now.addingTimeInterval(Double(index - 3) * 7200), used: used,
+                providerID: "futureagi", minutes: 43200, reset: Self.now.addingTimeInterval(10 * 86400))
+            let snapshot = SyncedUsageSnapshot(
+                providers: [raw], syncTimestamp: raw.lastUpdated,
+                deviceName: "Fictional API Mac", deviceID: "fictional-api-mac")
+            let merged = try #require(ProviderSnapshotMerger.mergeSnapshots([snapshot]))
+            store.reconcile(
+                accounts: merged.providers, sourceSnapshots: [snapshot], quotaSources: merged.providerQuotaSources,
+                now: raw.lastUpdated)
+            latest = merged.providers.first
+        }
+        let current = try #require(latest)
+        let line = try #require(store.overview(accounts: [current], now: Self.now).lines.first)
+        #expect(line.state == .available)
+        #expect(line.currentRemainingPercent == 60)
+        #expect(line.localObservationCount == 0)
+        #expect(line.projectionKind == .uniformMean)
+    }
+
+    @Test
+    func `promoting a legacy anonymous anchor clears its old unproven history without resetting settings`() throws {
+        let weak = Self.weakAccount(capturedAt: Self.now, used: 30)
+        let anchor = UsageAccountAnchor(
+            id: "legacy-anonymous-anchor", providerID: "claude",
+            tokens: UsageAccountIdentity.tokens(for: weak).sorted())
+        let selection = UsageQuotaSelection(
+            providerID: "claude", accountAnchorID: anchor.id, windowID: "primary", colorHex: "12ABEF")
+        var archive = UsageQuotaArchive()
+        archive.preferences.hasInitialized = true
+        archive.preferences.accountAnchors = [anchor]
+        archive.preferences.selections = [selection]
+        archive.histories = [UsageQuotaHistory(binding: selection.binding, observations: (0..<3).map {
+            UsageQuotaObservation(
+                capturedAt: Self.now.addingTimeInterval(Double($0 - 3) * 300), usedPercent: Double($0 + 1) * 10,
+                resetDate: Self.now.addingTimeInterval(3600), windowDuration: 18000)
+        })]
+        let memory = try UsageQuotaMemoryPersistence(data: JSONEncoder().encode(archive))
+        let store = UsageQuotaOverviewStore(persistence: memory)
+        #expect(!store.isReadOnly)
+        let stable = Self.account(id: "named-owner", windows: [Self.window(used: 40)])
+        store.reconcile(accounts: [stable], now: Self.now)
+        let line = try #require(store.overview(accounts: [stable], now: Self.now).lines.first)
+        #expect(line.currentRemainingPercent == 60)
+        #expect(line.localObservationCount == 1)
+        #expect(line.projectionKind == .uniformMean)
+        #expect(store.preferences.selections == [selection])
+        let saved = try JSONDecoder().decode(UsageQuotaArchive.self, from: #require(memory.data))
+        let history = try #require(saved.histories.first)
+        #expect(history.observations.count == 1)
+        #expect(history.observations.first?.capturedAt == Self.now)
+        #expect(history.stableAccountTokens == ["claude:account:named-owner"])
+    }
+
+    @Test
+    func `persisted history needs the exact stable anchor owner while legacy settings remain readable`() throws {
+        let account = Self.account()
+        let stable = UsageAccountIdentity.tokens(for: account).filter(UsageAccountIdentity.isStable).sorted()
+        let anchor = UsageAccountAnchor(
+            id: UsageAccountIdentity.proposedAnchorID(for: account), providerID: "claude",
+            tokens: UsageAccountIdentity.tokens(for: account).sorted())
+        let selection = UsageQuotaSelection(
+            providerID: "claude", accountAnchorID: anchor.id, windowID: "primary", colorHex: "12ABEF")
+        for proof in [nil, stable, ["claude:account:someone-else"]] as [[String]?] {
+            var archive = UsageQuotaArchive()
+            archive.preferences.hasInitialized = true
+            archive.preferences.accountAnchors = [anchor]
+            archive.preferences.selections = [selection]
+            archive.histories = [UsageQuotaHistory(
+                binding: selection.binding, observations: [10.0, 15, 15, 20].enumerated().map {
+                    UsageQuotaObservation(
+                        capturedAt: Self.now.addingTimeInterval(Double($0.offset - 3) * 300), usedPercent: $0.element,
+                        resetDate: Self.now.addingTimeInterval(3600), windowDuration: 18000)
+                }, stableAccountTokens: proof)]
+            let memory = try UsageQuotaMemoryPersistence(data: JSONEncoder().encode(archive))
+            let store = UsageQuotaOverviewStore(persistence: memory)
+            #expect(!store.isReadOnly)
+            let before = try #require(store.overview(accounts: [account], now: Self.now).lines.first)
+            #expect(before.currentRemainingPercent == 80)
+            #expect(before.projectionKind == (proof == stable ? .observedPattern : .uniformMean))
+            #expect(before.localObservationCount == (proof == stable ? 4 : 0))
+            #expect(store.preferences.selections == [selection])
+            store.reconcile(accounts: [account], now: Self.now)
+            let after = try #require(store.overview(accounts: [account], now: Self.now).lines.first)
+            #expect(after.localObservationCount == (proof == stable ? 4 : 1))
+            #expect(after.projectionKind == (proof == stable ? .observedPattern : .uniformMean))
+        }
+        var preferences = UsageQuotaPreferences()
+        preferences.accountAnchors = [anchor]
+        #expect(!UsageQuotaProjection.hasUnambiguousHistorySource(
+            account, anchorID: "another-anchor", preferences: preferences, linkages: []))
     }
 
     @Test

@@ -17,7 +17,7 @@ This directory contains research documents for features being considered for Cod
 
 | # | Feature | Status | Blocker | File | Date |
 |---|---------|--------|---------|------|------|
-| 081 | Usage 剩余额度多曲线、Cost 整组排序与来源说明下移 | `in-progress` | 已确认设计；本地 CR、跨屏验证、PR 与 3.2 TF 推进中 | [081-usage-quota-overview/00-goal.md](081-usage-quota-overview/00-goal.md) | 2026-10-22 |
+| 081 | Usage 剩余额度多曲线、Cost 整组排序与来源说明下移 | `in-progress` | 既有跨屏/本地验证完成；a05 线上 clean 后追加身份历史修复；重新 CR/Archive/TF 待验收，16 组合 substituted | [081-usage-quota-overview/00-goal.md](081-usage-quota-overview/00-goal.md) | 2026-10-22 |
 | 080 | 独立 Summary Tab：紧凑自选指标、Provider 筛选、倒计时与耗尽预测、自定义与稳定账号绑定（#203） | `done` | 全宽独立指标网格；真实 Duo 内屏横竖屏 UI/完整截图、原生栏位与设计/review 已通过，见 04 修订记录 | [080-summary-tab/00-goal.md](080-summary-tab/00-goal.md) | 2026-10-22 |
 | 079 | v0.77.0–v0.79.0 单版本上游同步（#196）+ iOS 3.1.0 (246)：Future AGI/Munito、Gemini App、Claude Desktop/tcr、成本缓存与详情告警 | `done` | Mac live 0.79.0.1-mobile.3.1.0、公开下载/feed验收；iOS1156+67/四语/3.1(246)上传并提交审核MANUAL；PR199/200/201 clean、#196 completed；NO_DEPLOY，16组合substituted及风险保留 | [079-v079-upstream-sync/00-overview.md](079-v079-upstream-sync/00-overview.md) | 2026-10-21 |
 | 078 | iPhone Duo：Usage 账号与额度详情、Cost 总览与趋势、分享预览与编辑分区；折叠、拖动和输入连续性 | `done` | Xcode 27.1 / 27A9275；原生展开/半折叠交互完成，修复半屏预览裁切，最终 UI 回归 5 项通过 | [078-iphone-duo-experience.md](078-iphone-duo-experience.md) | 2026-10-20 |

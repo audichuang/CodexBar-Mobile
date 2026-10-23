@@ -48,10 +48,12 @@ enum UsageQuotaProjection {
             // A linkage may make an old selection resolve to a different canonical account. Its
             // previous local history must not be transplanted to that account's current quota.
             let unambiguous = card.provider.map {
-                self.hasUnambiguousHistorySource($0, preferences: preferences, linkages: linkages)
+                self.hasUnambiguousHistorySource(
+                    $0, anchorID: selection.accountAnchorID, preferences: preferences, linkages: linkages)
             } ?? false
-            let history = canonical == nil || !unambiguous ? [] : histories.first { $0.binding == selection.binding }?
-                .observations ?? []
+            let storedHistory = histories.first { $0.binding == selection.binding }
+            let verifiedOwner = storedHistory.map { self.historyMatchesAnchor($0, preferences: preferences) } == true
+            let history = canonical == nil || !unambiguous || !verifiedOwner ? [] : storedHistory?.observations ?? []
             let forecast = self.forecast(card: card, observations: history, now: now)
             return UsageQuotaResolvedLine(
                 selection: selection, provider: card.provider, accountTitle: card.accountTitle,
@@ -91,16 +93,25 @@ enum UsageQuotaProjection {
     }
 
     static func hasUnambiguousHistorySource(
-        _ account: ProviderUsageSnapshot, preferences: UsageQuotaPreferences,
+        _ account: ProviderUsageSnapshot, anchorID: String, preferences: UsageQuotaPreferences,
         linkages: [ProviderAccountLinkage]) -> Bool
     {
         guard !self.isAccountLinked(account, linkages: linkages) else { return false }
         let stable = UsageAccountIdentity.tokens(for: account).filter(UsageAccountIdentity.isStable)
+        guard !stable.isEmpty else { return false }
         let matches = preferences.accountAnchors.filter {
             $0.providerID == account.providerID
                 && !stable.isDisjoint(with: $0.tokens.filter(UsageAccountIdentity.isStable))
         }
-        return matches.count <= 1
+        return matches.count == 1 && matches.first?.id == anchorID
+    }
+
+    static func historyMatchesAnchor(_ history: UsageQuotaHistory, preferences: UsageQuotaPreferences) -> Bool {
+        guard let anchor = preferences.accountAnchors.first(where: {
+            $0.id == history.binding.accountAnchorID && $0.providerID == history.binding.providerID
+        }) else { return false }
+        let stable = Set(anchor.tokens.filter(UsageAccountIdentity.isStable))
+        return !stable.isEmpty && Set(history.stableAccountTokens ?? []) == stable
     }
 
     private struct Forecast {

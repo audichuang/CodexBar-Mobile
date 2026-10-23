@@ -92,8 +92,12 @@ final class UsageQuotaOverviewStore: ObservableObject {
                         usedPercent: used - delta + delta * fraction,
                         resetDate: reset, windowDuration: duration)
                 }
+                let stableOwner = archive.preferences.accountAnchors.first { $0.id == selection.accountAnchorID }?
+                    .tokens.filter(UsageAccountIdentity.isStable).sorted() ?? []
+                guard !stableOwner.isEmpty else { continue }
                 archive.histories.removeAll { $0.binding == selection.binding }
-                archive.histories.append(UsageQuotaHistory(binding: selection.binding, observations: observations))
+                archive.histories.append(UsageQuotaHistory(
+                    binding: selection.binding, observations: observations, stableAccountTokens: stableOwner))
             }
         }
         return store
@@ -111,6 +115,9 @@ final class UsageQuotaOverviewStore: ObservableObject {
             && Set(archive.histories.map(\.binding)).count == archive.histories.count
             && archive.histories.allSatisfy { history in
                 history.observations.count <= self.maximumObservationsPerStream
+                    && (history.stableAccountTokens == nil ||
+                        (history.stableAccountTokens?.isEmpty == false
+                            && history.stableAccountTokens?.allSatisfy(UsageAccountIdentity.isStable) == true))
                     && history.observations.allSatisfy {
                         $0.capturedAt.timeIntervalSince1970.isFinite && $0.resetDate.timeIntervalSince1970.isFinite
                             && $0.capturedAt < $0.resetDate && $0.usedPercent.isFinite && (0...100)
@@ -149,6 +156,11 @@ final class UsageQuotaOverviewStore: ObservableObject {
                 if let index = archive.preferences.accountAnchors.firstIndex(where: { $0.id == id }) {
                     let existing = Set(archive.preferences.accountAnchors[index].tokens)
                     let ownsStable = existing.contains(where: UsageAccountIdentity.isStable)
+                    // A reusable slot is not an account owner. An anonymous interval breaks
+                    // continuity; first learning its stable owner cannot legitimize old samples.
+                    if !ownsStable || !incoming.contains(where: UsageAccountIdentity.isStable) {
+                        archive.histories.removeAll { $0.binding.accountAnchorID == id }
+                    }
                     let learnable = ownsStable ? incoming.filter { !UsageAccountIdentity.isStable($0) } : incoming
                     archive.preferences.accountAnchors[index].tokens = existing.union(learnable).sorted()
                 } else {
@@ -168,7 +180,9 @@ final class UsageQuotaOverviewStore: ObservableObject {
             }
             for (anchor, account) in assigned where !account.isError && account.sourceReport?.allFailed != true {
                 guard UsageQuotaProjection.hasUnambiguousHistorySource(
-                    account, preferences: archive.preferences, linkages: linkages) else { continue }
+                    account, anchorID: anchor, preferences: archive.preferences, linkages: linkages),
+                    let stableOwner = archive.preferences.accountAnchors.first(where: { $0.id == anchor })?
+                        .tokens.filter(UsageAccountIdentity.isStable).sorted() else { continue }
                 for candidate in QuotaPaceWindowSelection.candidates(for: account) {
                     guard let evidence = UsageQuotaSourceResolver.evidence(
                         account: account, windowID: candidate.id,
@@ -189,7 +203,7 @@ final class UsageQuotaOverviewStore: ObservableObject {
                         capturedAt: captured, usedPercent: min(100, window.usedPercent), resetDate: reset,
                         windowDuration: UsageQuotaProjection.duration(
                             window: window, providerID: account.providerID, capturedAt: captured))
-                    Self.record(observation, binding: binding, archive: &archive)
+                    Self.record(observation, binding: binding, stableOwner: stableOwner, archive: &archive)
                 }
             }
             if archive.histories.count > Self.maximumHistoryStreams {
@@ -263,9 +277,14 @@ final class UsageQuotaOverviewStore: ObservableObject {
     }
 
     private static func record(
-        _ observation: UsageQuotaObservation, binding: UsageQuotaBinding, archive: inout UsageQuotaArchive)
+        _ observation: UsageQuotaObservation, binding: UsageQuotaBinding, stableOwner: [String],
+        archive: inout UsageQuotaArchive)
     {
         if let index = archive.histories.firstIndex(where: { $0.binding == binding }) {
+            if archive.histories[index].stableAccountTokens != stableOwner {
+                archive.histories[index].observations.removeAll()
+                archive.histories[index].stableAccountTokens = stableOwner
+            }
             var observations = archive.histories[index].observations
             if let last = observations.last {
                 guard observation.capturedAt >= last.capturedAt else { return }
@@ -292,7 +311,8 @@ final class UsageQuotaOverviewStore: ObservableObject {
             observations.append(observation)
             archive.histories[index].observations = Array(observations.suffix(Self.maximumObservationsPerStream))
         } else {
-            archive.histories.append(UsageQuotaHistory(binding: binding, observations: [observation]))
+            archive.histories.append(UsageQuotaHistory(
+                binding: binding, observations: [observation], stableAccountTokens: stableOwner))
         }
     }
 
