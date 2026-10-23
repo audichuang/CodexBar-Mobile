@@ -1,10 +1,10 @@
 # 验证与发布记录
 
-状态：`in-progress` · 2026-10-23 · iOS 3.2.0 (252)
+状态：`done` · 2026-10-23 · iOS 3.2.0 (252)
 
 ## 当前边界
 
-252 已成功构建，完整 iOS 单元测试、最终 lint 与独立本地静态 CR 已完成。最终生产方案保留原 `ProviderListView` 搜索归属及 `isPresented` 绑定，仅在短高且搜索未激活时使用 `.minimize`，激活后使用 `.automatic`。普通 iPhone 的 iOS 27 完整交互流程及 Duo 展开横竖屏最终测试均已通过；iOS 26 串行最终对照也已通过。PR、线上 CR、Archive 与上传尚未完成。使用真实 App 原生截图，组件渲染仅作为补充证据。
+252 已成功构建，完整 iOS 单元测试、最终 lint 与独立本地静态 CR 已完成。最终生产方案保留原 `ProviderListView` 搜索归属及 `isPresented` 绑定，仅在短高且搜索未激活时使用 `.minimize`，激活后使用 `.automatic`。普通 iPhone 的 iOS 26/27 完整交互流程及 Duo 展开横竖屏最终测试均已通过。PR #210 已完成 exact-head CR、合并和 Final CI；已审来源 Archive、分发审计和实际上传均成功。ASC 已为 `VALID` / `IN_BETA_TESTING`，3.2.0 (252) 可供内部测试；Internal 访问、四语说明与 Apple CDN 图标均完成回读验收。使用真实 App 原生截图，组件渲染仅作为补充证据。
 
 证据根目录：`/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/UsageLandscape-3.2.0-252`（下文文件名均相对该目录）。
 
@@ -45,9 +45,32 @@
 
 - 基线：`ac6ce659c83a372507b757a23e7e81ed5e737e85`；分支：`fix/usage-landscape-chart`。
 - Marketing version 保持 `3.2.0`，全部五个 target build number 为 `252`。
-- 最终 source commit、PR、exact-head CR、CI、merge：待完成。
-- Archive、export、签名/CloudKit Production 审计、上传 receipt、ASC build 状态：待完成。
-- 四语 What to Test 保留完整 3.2 更新并增加横屏修复；最终保存与回读：待完成。
+- [PR #210](https://github.com/o1xhack/CodexBar-Mobile/pull/210) reviewed head：`0e78e8ff6d82d723dd58292b039dceda2a08a79b`。`review-gate.log` 确认 `rounds=1 unresolved=0`；PR Fast Checks 成功。`2026-10-23T18:39:03Z` 合并为 `14a191367e4b67cdec868cfdcef7fc7f8135f943`；[Final CI 40005040876](https://github.com/o1xhack/CodexBar-Mobile/actions/runs/40005040876) 成功。
+- Archive 来自合并 commit `14a191367e4b67cdec868cfdcef7fc7f8135f943`，tree 为 `72864cd438d01f0c81fb581fcca2690c17b09d60`。已审 head 与合并来源的 204 项发布输入 SHA256 均为 `4b804e78e040ef16ed04368fe88037c161bd9df9a161fcab1f0d9f3602ffc80e`；`review-proof.json` 和 `provenance.json` 保存来源及匹配结果。
+- `archive.log` 为成功结果；`CodexBarMobile.xcarchive` 内五个 bundle 全部为 3.2.0 (252)。主 App、Push Extension、Widgets 的 CloudKit entitlement 均为 Production；Widget Options 与 Sync framework 无此 entitlement，未伪造为需要 CloudKit 的 bundle。Archive 的 `codesign --verify --deep --strict` 通过。
+- Archive 本身采用开发签名（主 App `get-task-allow=true`、APS `development`），分发签名由 export 完成。`distribution-signing.json` 确认本地 IPA 四个可执行 App/Extension 均为 Apple Distribution、`get-task-allow=false`；主 App APS 为 `production`，使用 CloudKit 的三个 bundle 保持 Production。不能把 Archive 的开发签名状态冒充已经完成分发签名。
+- 真实 Archive 编译图标已目视确认：蓝底、白色代码括号与两根白色柱形，无空白图标。Apple CDN 实际处理后的 1024px 图标 `asc-cdn-icon.png` 已下载、计算摘要并目视确认同样正确，未使用 placeholder 或源文件替代服务端图标。
+- `upload-receipt.json` 确认实际直接上传于 `2026-10-23T18:44:23.985Z` 成功，结果为 `UPLOAD SUCCEEDED with no errors`；delivery UUID 为 `f895b559-3312-4b78-8cfb-11de6ac63d43`，build-upload file ID 为 `80552cfe-703a-4303-a72f-dd78b6924690`。实际上传 IPA 为 12,034,793 bytes，校验值与 Apple 上传日志一致，保留副本已重新计算 SHA256 并匹配。
+- `uploaded-distribution-signing.json` 审计对象为实际直接上传 IPA：五个 bundle 全部为 3.2.0 (252) 且 Apple Distribution 签名，严格签名验证通过；四个 App/Extension 的 `get-task-allow=false`，主 App APS 为 `production`，三个 CloudKit bundle 均为 Production。与 Archive 对比，66 个资源文件摘要完全一致、五个 Info.plist 解析后的值一致、184 个 Mach-O section 一致。重签名可改变 headers/load commands、link-edit 表和签名元数据；不声称整个可执行文件字节完全一致。
+- 早期 `upload-status.json` 保留 ASC `PROCESSING` 的历史快照。最终 ASC build ID 为 `f895b559-3312-4b78-8cfb-11de6ac63d43`，`processingState=VALID`、`internalBuildState=IN_BETA_TESTING`、`externalBuildState=READY_FOR_BETA_SUBMISSION`。最终回读时间为 `2026-10-23T18:56:17.471005Z`；没有发起外部 Beta 审核或 App Review。
+- `groups.json` 的 `complete=true`，确认 Internal group `eb0df43e-af6b-42ad-a429-efe2f5478702` 保持既有 `hasAccessToAllBuilds=true`，membership 为 `explicit-and-all-builds`，当前 build 已可访问；不记为新建或重新授权分组。
+- 四语 What to Test 保留完整 3.2 更新并增加横屏修复。`test-notes-readback.json` 中 `en-US`、`zh-Hans`、`zh-Hant`、`ja` 均与 `test-notes.json` 精确一致。元数据辅助脚本曾在说明已写入后误读分组 JSON 结构产生 `KeyError`；按工具实际返回的规范化分组结构修正后回读通过，没有重复写入说明来掩盖该错误。
+- 在 `VALID` 与 Internal 访问确认后，Todoist Dev 任务已移至 QA，保持未完成，等待用户体验反馈；未因此发起 App Review 或公开发布。
 - Mac、共享 wire、CloudKit schema 均不改动；相关路径 diff 为空，本次 `NO_DEPLOY`。不进行 App Review、公开发布或 Mac release。
 
-所有新构建、测试结果、Archive、导出与截图均保留在上述 BuildScratch 证据根目录；最终补入发布 provenance。当前所有 UI 证据来自模拟器，不声称真机验收或实体多设备 Production 同步验证。
+### 已验收本地产物摘要
+
+| 证据 | SHA256 |
+|---|---|
+| `review-gate.log` | `25eecac49007842799a6ba6507407fe7a0fb82e27795d61a394d6961871c6b96` |
+| Archive 主 App binary | `732166b00eb5eb3e5e24b6b66ee7fe961c25e71ebaa3fa0b656d6d6c28091d9f` |
+| Archive `Assets.car` | `5a9dfa498f3673a3a4ebba5e61b66486eafe9eac5796776e8ca50e272ae2d085` |
+| `archive-sha256-manifest.txt`（101 files） | `d4659d2d1c377b4d63a92a5f9d976d067bf8999c74287222b861dba37ac49aa2` |
+| 本地分发校验 IPA | `207d9cefef79941b40b9da17c32ac6c5c138ff115e30ceb284eb81881981b1a2` |
+| 实际直接上传 IPA（12,034,793 bytes） | `e85336178b5d7a40e4be22b3b998ad5cc9538b28d09c574d46ed0056ecf82175` |
+| `test-notes-readback.json` | `a84fadbe2096b1a54a45edf4793e32bc99b29971a9fc6c940dbeadceaa7f2d78` |
+| Apple CDN 实际 1024px 图标 `asc-cdn-icon.png` | `15371085021c48767793b5074314fe25006a9017795b0e08cbf120f008caeefb` |
+
+本地校验 IPA 与实际直接上传 IPA 为两次独立 export 的产物，SHA256 不同；两者用途和来源分别保留。已通过最终已审源码、Archive 清单、实际上传 IPA 审计、delivery receipt、ASC `VALID`/内部可用性及服务端图标回读建立完整来源链。当前文档收尾分支 `review/usage-landscape-release-closeout` 不改变已审发布输入或已上传二进制。
+
+所有新构建、测试结果、Archive、导出与截图均保留在上述 BuildScratch 证据根目录；发布 provenance 已保存并包含最终 ASC 回读。当前所有 UI 证据来自模拟器，不声称真机验收或实体多设备 Production 同步验证。
