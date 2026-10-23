@@ -1,8 +1,8 @@
 # 实现验证记录
 
-状态：`in-progress` · 2026-10-22–23 · iOS 3.2.0 (251)。本文件按已读日志记录结果；未完成、失败与待重跑的门禁不会记为通过。
+状态：`done` · 2026-10-22–23 · iOS 3.2.0 (251)。本文件按已读日志记录结果；未完成、失败与待重跑的门禁不会记为通过。
 
-**发布候选复核中：既有单元、替代兼容和全部适用原生 QA 结果见下表。a05 的线上 CR 已完成，但额外独立复核发现账号身份退化时的历史来源问题；修复已通过增量验证与独立复核，新 head 的线上审查尚待执行。此前 archive/export 通过但未上传，修复后将重新归档。** 真实 2 Mac × 2 iPhone Production 同步没有执行，保留 substituted 边界；外屏旧 compact-phone navigation 的 skip 不计为 pass。
+**最终生产来源已审查并合并；Archive 和 Apple Distribution 本地 export 验证通过。** reviewed head `6cd449d8ba69628db9242bdef4cc9f71b5b8d875` 的 clean receipt 为 `6369240831`，PR #208 gate 为 3 轮 / 0 unresolved，已合并。最新身份历史修复的专项为 43 tests / 参数展开 60 passes；早期全量结果和 combined `TEST FAILED` 历史分别保留。Final CI 与直接上传已成功；ASC 最终 build 已为 `VALID` / `IN_BETA_TESTING`；Internal 既有自动访问、四语 What to Test exact readback 和 Apple CDN 图标人工验收均通过。真实 2 Mac × 2 iPhone Production 同步没有执行，16 组合仍为 substituted；外屏旧 compact-phone navigation 的 skip 不计为 pass。
 
 ## 环境与证据
 
@@ -10,7 +10,7 @@
 - Xcode：`/Volumes/StudioSSD/Developer/Xcode/Xcode-27.1-RC.app`；当前原生测试设备为 `CodexBar Compact QA`，Simulator UUID `77015D3F-613D-4B1E-B348-1624350AD7E1`。
 - 本轮主证据目录：`/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/UsageQuota-3.2.0-251`。下文相对 evidence 路径均位于此目录。
 - 组件渲染原始 PNG：`/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/UsageQuotaRenders`；导出的 XCTest 附件及映射为本轮目录的 `designer-attachments/manifest.json`。
-- 验收 gallery：`/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/UsageQuota-3.2.0-251/gallery/gallery.md`，图片与 gallery 均留在 BuildScratch；约 19 MB 图片不进入 Git，只提交本文的证据索引。
+- 验收 gallery：`/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/UsageQuota-3.2.0-251/gallery/gallery.md`，40 张原始图片、来源哈希与 gallery 均留在 BuildScratch，不进入 Git，只提交本文的证据索引。
 - 测试使用虚构 provider/account、内存 store 与字典持久化；没有调用真实 CloudKit、Keychain 或 live provider。
 
 ## 已确认与待验证
@@ -23,7 +23,7 @@
 | 16 old/current wire × 独立 reader 组合及 inherited-extra | substituted · pass | `final-unit-ui-phone.log` 明确记录 16 cases 和独立 extra 回归通过，整个 compatibility suite 通过 |
 | 每窗口原始来源证明 6 项 | pass | `final-unit-ui-phone.log` 的 source proof suite 通过，包含新增 Kimi 真实 alias authority map 与 same-clock legacy substitute 拒绝回归 |
 | 图例隐私与稳定账号序号 | pass（纯展示 helper） | `Quota overview private labels` suite 通过；不替代完整原生隐私交互 |
-| 全量 Swift Testing 与 XCTest 单元 | pass（本次构建源码） | `final-unit-ui-phone.log`：1223 Swift Testing tests / 81 suites 通过；XCTest 单元 70 tests / 0 failures，含 render；不覆盖下述构建开始后的 AX 日期修改 |
+| 全量 Swift Testing 与 XCTest 单元 | 历史 pass（两个后续 quota 修复前） | `final-unit-ui-phone.log`：1223 Swift Testing tests / 81 suites 通过；XCTest 单元 70 tests / 0 failures，含 render；不覆盖下述构建开始后的 AX 日期修改 |
 | Accessibility / 窄宽横轴日期与折叠图例 | pass（分轮 render/native），增量 CR clean | Accessibility 或 chartWidth < 300 只显示 `[Now,end]`，其它宽度保留 midpoint；日期 domain 不变。折叠图例保留 provider/metric，冲突账号才加稳定序号并可横滑；后续各 native 当前姿态验证，不倒算到此前全量单元证据 |
 | 原生 phone 新 QA 5 项与四语 Cost scope | pass | `final-unit-ui-phone.log` 五项 `UsageQuotaOverviewUITests` 全过；`testCostScopeExplanationInFourLanguages` 通过。该 combined run 仍因旧 release intro 断言失败，不能将 bundle 总结果写成成功 |
 | Phone 完整编辑链最终 helper | pass（1/1） | `phone-editor-final.log`：最终 Form geometry/row helper 在 phone 增删、排序与重开链路通过 |
@@ -35,8 +35,12 @@
 | Large phone / dark | pass（2/2） | `large-phone-dark.log`：原生 navigation safe area/rotation、quota current-pose 四 Tab 均通过 |
 | Duo actual 外屏 landscape / light | 1 pass + 1 skip（非 2 pass） | `duo-folded-outer-light.log`：current-pose 四 Tab 1 项通过；旧 phone-navigation test 因实际 width >= 600 不满足 compact phone 前提而 skip，不能计作外屏旋转通过 |
 | Duo actual 外屏 portrait / light | pass（1/1） | CUA 切到实际外屏 portrait 后，`duo-folded-portrait-light.log` / summary 明确 current-pose 四 Tab 1 test、0 failures、0 skips，独立于 landscape run |
-| PR exact-head CR / merge gate / final CI | a05 线上 clean；后续修复需重新审查 | a05 receipt 见下；merge / Final CI 尚未执行 |
-| Production entitlement audit / Archive / TestFlight | a05 archive/export pass；未上传 | a05 候选保存在 `superseded-a05bc8e/`；修复后重新归档，TF 待实际验收 |
+| 最终修复专项 | pass（43 tests / 参数展开 60 passes） | `recovery-identity-regression.log`：40 Swift Testing + 2 render + 1 native UI，0 failures / 0 skips；不是全量重跑 |
+| PR exact-head CR / merge gate | pass · 已合并 | head `6cd449d8…`，clean receipt `6369240831`；`merge-gate-208.log`：3 轮 / 0 unresolved；merge `41dbf7cd…`，reviewed/merge tree 相同 |
+| PR Fast Checks / Final CI | pass | `39983809520` 与合并后 `39984321217` 均成功，见 `provenance.json` |
+| 最终 Production Archive / 本地分发 export | pass | `archive.log` / `export-local.log` 成功；`provenance.json` 记录 reviewed source `6cd449d8…` 的来源与 hash，旧候选单独保留 |
+| TestFlight 上传 / ASC 处理 | pass；`VALID` / `IN_BETA_TESTING` | `export-upload.log` 于 `16:12:02Z` 上传成功；后续 `build-status.json` 回读最终 build `edf84cdb…` 已 VALID，internal IN_BETA_TESTING，external READY_FOR_BETA_SUBMISSION（未请求 external review） |
+| TestFlight 可用 / 四语 / CDN 图标 | pass | `groups.json` complete=true，Internal 既有 all-builds 访问；四语 exact readback，实际 152px / unmasked 1024px CDN 图标人工通过，最终 receipt `16:17:08Z` |
 
 ## 渲染覆盖的实际含义
 
@@ -141,7 +145,7 @@ canonical account 继续决定窗口是否存在、是否全局 blocked、是否
 
 本次 CR 未修改生产代码、未启动额外 build/test。Duo 正向 portrait、iPad、large phone、phone/landscape 编辑 final、外屏 landscape 与外屏 portrait 结果均来自中央测试日志，全部适用 native QA 已通过。保留 folded landscape 旧 phone-navigation 的 1 skip，因为该测试的 compact-width 前提不适用，不能记为第二项通过或额外旋转覆盖。
 
-本地验证记录在此冻结；pre-PR lint/四语已通过，在线 CR/合并与发布门禁仍待主工程执行。Hosting 大字截图不是真实 device pose 证明。最终用户可安装产物的来源记录写入 `04-release.md`。
+此处记录的是当时本地验证冻结点；pre-PR lint/四语已通过。后续线上 CR、合并与当前发布状态见本文末和 `04-release.md`。Hosting 大字截图不是真实 device pose 证明。最终用户可安装产物的来源记录写入 `04-release.md`。
 
 
 ## 线上 CR 第一轮：高频采样的时间跨度
@@ -166,3 +170,11 @@ PR #208 首轮审查 head `9d5c209e50908b1e26c66abd6dfcb2c82c98b275` 提出一�
 修复要求将历史与可验证的稳定账号来源绑定；身份丢失、首次确认或来源无法证明时不沿用旧 pattern，保留当前额度与诚实的均值估算。旧本地观测无 owner 证明时重新积累，卡片选择和配色保留。生产 UI、共享 wire、Mac 代码不变。修复后冻结四个模型/测试文件的独立静态复核已 clean，报告 `recovery-fix-review.md`，SHA-256 `deb7bd9038109d7b18706a2ff89ab6171f0f79e857822873526bcefed181a413`。新增 4 个测试（其中 1 个参数化）覆盖 weak→weak、stable→weak→stable、legacy 首次稳定身份、缺失/错误/正确 owner 证明，且保留当前值、均值回退、选择与颜色的断言。`recovery-identity-regression.log` / `.xcresult` 实际 **TEST SUCCEEDED**：40 个 Swift Testing tests / 4 suites、两个生产 render tests（34 配置 / 44 PNG）及 compact phone 原生四 Tab / 图例测试全部通过，0 failures / 0 skips。主工程查看最新 phone 浅色与宽屏深色原图，未发现此模型修复引入的视觉变化；没有改变 UI。此增量不冒充全量重跑，不将 a05 的线上 clean 用于后续 head。
 
 `recovery-identity-lint.log` 的 portable lint 全部通过（3143 files，0 violations，四语与 523 source keys 审核通过）；`git diff --check` 通过。对基线的 Mac `Sources`、根 `Tests`、`version.env`、Shared 和 CI workflow 差异为空。
+
+## 最终 exact-head 审查与发布前回读
+
+最终生产 source `6cd449d8ba69628db9242bdef4cc9f71b5b8d875`，tree `332f57ee4b3095c0b3188409394e73777b1d2170`。最终 [clean receipt](https://github.com/o1xhack/CodexBar-Mobile/pull/208#issuecomment-6369240831) 完成于 `2026-10-23T16:07:20Z`；`merge-gate-208.log` 明确 `rounds=3 unresolved=0`。PR #208 于 `16:08:48Z` 合并，merge commit `41dbf7cd313fc4c95007ab62c153a68c71d6bdff` 的 tree 与 reviewed source 一致。[PR Fast Checks 39983809520](https://github.com/o1xhack/CodexBar-Mobile/actions/runs/39983809520) 成功；[Final CI 39984321217](https://github.com/o1xhack/CodexBar-Mobile/actions/runs/39984321217) 已成功，状态记录于 `provenance.json`。
+
+已读取最新 `recovery-identity-regression.log` 的 40 Swift Testing tests / 4 suites、两个 render tests、一个 native UI 的成功记录及 `TEST SUCCEEDED`；参数展开结果为 60 passes，总计 43 tests，0 failures / 0 skips。两个 render tests 产出 34 配置 / 44 PNG。保留此前 1223 Swift Testing + 70 XCTest 只属于早期源码的边界，不把最终专项算成全量。
+
+最终 source 的 `archive.log` 为 `ARCHIVE SUCCEEDED`，`export-local.log` 为 `EXPORT SUCCEEDED`；实际 archive / distribution entitlement 与 hash 见 `provenance.json` 和 `04-release.md`。`export-upload.log` 明确 `2026-10-23T16:12:02Z` Upload succeeded / `EXPORT SUCCEEDED`；`upload-status.json` 回读 buildUpload `edf84cdb-4cee-4f7e-874d-d90fde2c4cff` 为 `PROCESSING`。后续 `build-status.json` 回读相同 ID 的最终 build 为 `VALID`，internal `IN_BETA_TESTING`、external `READY_FOR_BETA_SUBMISSION`。未请求 external review。`groups.json` 的 complete=true，Internal membership=`explicit-and-all-builds`、hasAccessToAllBuilds=true，确认既有自动访问；显式 add endpoint 返回 HTTP 422，不计作新 assignment，也不构成可用性阻断。`test-notes-readback.json` 的 en-US / zh-Hans / zh-Hant / ja 与待发布完整 3.2 文案 exact match。实际 altool iconAssetToken 152px 与 unmasked 1024px Apple CDN 图标均下载并人工验看为预期蓝色括号与双柱。`provenance.json` 最终 verificationCompletedAt 为 `2026-10-23T16:17:08.140550+00:00`；TestFlight 验收完成，Research 标记 `done`，上述历史测试及替代边界不变。
