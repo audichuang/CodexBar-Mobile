@@ -280,37 +280,59 @@ final class UsageQuotaOverviewStore: ObservableObject {
         _ observation: UsageQuotaObservation, binding: UsageQuotaBinding, stableOwner: [String],
         archive: inout UsageQuotaArchive)
     {
+        var observation = observation
         if let index = archive.histories.firstIndex(where: { $0.binding == binding }) {
             if archive.histories[index].stableAccountTokens != stableOwner {
                 archive.histories[index].observations.removeAll()
                 archive.histories[index].stableAccountTokens = stableOwner
             }
             var observations = archive.histories[index].observations
+            var replacementContinuity: Bool?
             if let last = observations.last {
                 guard observation.capturedAt >= last.capturedAt else { return }
-                if observation == last { return }
-                if observation.capturedAt == last.capturedAt { observations.removeLast() }
+                if observation.capturedAt == last.capturedAt, observation.usedPercent == last.usedPercent,
+                   observation.resetDate == last.resetDate, observation.windowDuration == last.windowDuration { return }
+                if observation.capturedAt == last.capturedAt {
+                    if abs(observation.resetDate.timeIntervalSince(last.resetDate)) <= 120,
+                       observation.windowDuration == last.windowDuration, observation.usedPercent >= last.usedPercent
+                    {
+                        replacementContinuity = last.startsSegment
+                    }
+                    observations.removeLast()
+                }
                 if abs(observation.resetDate.timeIntervalSince(last.resetDate)) > 120
                     || observation.windowDuration != last.windowDuration || observation.usedPercent < last.usedPercent
                 {
                     observations.removeAll()
                 }
             }
-            // Freeze endpoints far enough apart for the bounded archive to retain the
-            // forecasting span. The final, unfinished interval always keeps the newest
-            // actual capture/value, even when updates arrive faster than this cadence.
-            let cadence = max(
-                60, UsageQuotaProjection.minimumHistorySpan(windowDuration: observation.windowDuration)
-                    / Double(Self.maximumObservationsPerStream - 2))
-            if observations.count >= 2,
-               let last = observations.last,
-               last.capturedAt.timeIntervalSince(observations[observations.count - 2].capturedAt) < cadence
-            {
-                observations.removeLast()
+            observation.startsSegment = replacementContinuity ?? observations.last.map {
+                observation.capturedAt.timeIntervalSince($0.capturedAt)
+                    > UsageQuotaObservation.maximumContinuousGap(windowDuration: observation.windowDuration)
+            } ?? false
+            // Upgrade legacy samples before compression. Subsequent compaction must not
+            // confuse discarded intermediate samples with a real source-data interruption.
+            for offset in observations.indices where observations[offset].startsSegment == nil {
+                observations[offset].startsSegment = offset > 0 && observations[offset].capturedAt
+                    .timeIntervalSince(observations[offset - 1].capturedAt)
+                    > UsageQuotaObservation.maximumContinuousGap(windowDuration: observations[offset].windowDuration)
             }
             observations.append(observation)
-            archive.histories[index].observations = Array(observations.suffix(Self.maximumObservationsPerStream))
+            // Retain the whole observed cycle within the existing archive bound. Remove
+            // interior points at the closest time spacing, preserving the first and newest
+            // actual readings; no averaging or invented values enter the stored history.
+            while observations.count > Self.maximumObservationsPerStream {
+                let index = (1..<(observations.count - 1)).min {
+                    observations[$0 + 1].capturedAt.timeIntervalSince(observations[$0 - 1].capturedAt)
+                        < observations[$1 + 1].capturedAt.timeIntervalSince(observations[$1 - 1].capturedAt)
+                }!
+                observations[index + 1].startsSegment = observations[index + 1].startsSegment == true
+                    || observations[index].startsSegment == true
+                observations.remove(at: index)
+            }
+            archive.histories[index].observations = observations
         } else {
+            observation.startsSegment = false
             archive.histories.append(UsageQuotaHistory(
                 binding: binding, observations: [observation], stableAccountTokens: stableOwner))
         }

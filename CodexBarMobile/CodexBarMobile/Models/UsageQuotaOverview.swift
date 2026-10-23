@@ -64,6 +64,12 @@ struct UsageQuotaObservation: Codable, Equatable, Sendable {
     let usedPercent: Double
     let resetDate: Date
     var windowDuration: TimeInterval?
+    /// Captured before downsampling. Nil belongs to older archives without gap metadata.
+    var startsSegment: Bool?
+
+    static func maximumContinuousGap(windowDuration: TimeInterval?) -> TimeInterval {
+        max(1800, min(7200, (windowDuration ?? 18000) * 0.1))
+    }
 }
 
 struct UsageQuotaHistory: Codable, Equatable, Sendable {
@@ -77,15 +83,7 @@ struct UsageQuotaHistory: Codable, Equatable, Sendable {
 struct UsageQuotaPoint: Equatable, Sendable {
     let date: Date
     let remainingPercent: Double
-}
-
-enum UsageQuotaProjectionKind: String, Equatable, Sendable {
-    case none
-    /// A straight extrapolation of current consumption divided by known elapsed cycle time.
-    case uniformMean
-    /// Repeats measured local intervals in their original order, including measured pauses.
-    /// Still an estimate, never a claim that future consumption has been observed.
-    case observedPattern
+    var segment: Int = 0
 }
 
 struct UsageQuotaResolvedLine: Identifiable, Equatable, Sendable {
@@ -100,9 +98,7 @@ struct UsageQuotaResolvedLine: Identifiable, Equatable, Sendable {
     let currentRemainingPercent: Double?
     let observedAt: Date?
     let resetDate: Date?
-    let estimatedSamples: [UsageQuotaPoint]
-    let projectionKind: UsageQuotaProjectionKind
-    let estimatedDepletionAt: Date?
+    let observedSamples: [UsageQuotaPoint]
     let localObservationCount: Int
 
     var id: UUID {

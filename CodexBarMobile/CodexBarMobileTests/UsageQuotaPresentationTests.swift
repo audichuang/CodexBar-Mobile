@@ -130,7 +130,6 @@ struct UsageQuotaPresentationTests {
             selection: selection, provider: nil, accountTitle: selection.accountTitle,
             compactAccountTitle: nil, privateAccountTitle: nil, metricTitle: metric,
             state: .available, isStale: false, currentRemainingPercent: 80,
-            observedAt: nil, resetDate: nil, estimatedSamples: [], projectionKind: .none,
-            estimatedDepletionAt: nil, localObservationCount: 0)
+            observedAt: nil, resetDate: nil, observedSamples: [], localObservationCount: 0)
     }
 }

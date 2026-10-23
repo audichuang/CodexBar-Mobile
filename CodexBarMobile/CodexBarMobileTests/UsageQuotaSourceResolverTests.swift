@@ -46,13 +46,13 @@ struct UsageQuotaSourceResolverTests {
         #expect(line.observedAt == old)
         #expect(line.state == .stale)
         #expect(line.currentRemainingPercent == 80)
-        #expect(line.projectionKind == .none)
+        #expect(line.observedSamples.isEmpty)
         #expect(line.localObservationCount == 1)
-        #expect(store.overview(accounts: [account], now: Self.now).end == Self.now.addingTimeInterval(3600))
+        #expect(store.overview(accounts: [account], now: Self.now).end == Self.now)
     }
 
     @Test
-    func `missing proof refuses sampling and forecasting instead of trusting a merged account clock`() throws {
+    func `missing proof refuses sampling and charting instead of trusting a merged account clock`() throws {
         var account = Self.account()
         account.sourceReport = SyncProviderSourceReport(
             sourceDeviceID: "fictional-mac", sourceDeviceName: "Fictional Mac", sourceCapturedAt: Self.now,
@@ -64,7 +64,7 @@ struct UsageQuotaSourceResolverTests {
         #expect(line.observedAt == nil)
         #expect(line.currentRemainingPercent == nil)
         #expect(line.localObservationCount == 0)
-        #expect(line.projectionKind == .none)
+        #expect(line.observedSamples.isEmpty)
         #expect(UsageQuotaSourceResolver.evidence(
             account: Self.account(), windowID: "primary", sourceSnapshots: []) == nil)
         // Physical-device alias collapse is another derived merge, not raw source proof.
@@ -121,9 +121,9 @@ struct UsageQuotaSourceResolverTests {
         let line = try #require(overview.lines.first)
         #expect(line.state == .blocked)
         #expect(line.currentRemainingPercent == nil)
-        #expect(line.projectionKind == .none)
+        #expect(line.observedSamples.isEmpty)
         #expect(line.localObservationCount == 0)
-        #expect(overview.end == now.addingTimeInterval(3600))
+        #expect(overview.end == now)
     }
 
     @Test
@@ -141,7 +141,7 @@ struct UsageQuotaSourceResolverTests {
             now: Self.now)
         let missing = try #require(store.overview(accounts: [current], now: Self.now).lines.first)
         #expect(missing.state == .missingMetric)
-        #expect(missing.projectionKind == .none)
+        #expect(missing.observedSamples.isEmpty)
         #expect(missing.currentRemainingPercent == nil)
         let unavailable = Self.account(providerID: "codex", isError: true)
         #expect(UsageQuotaSourceResolver.evidence(
@@ -199,8 +199,8 @@ struct UsageQuotaSourceResolverTests {
         #expect(line.state == .available)
         #expect(line.currentRemainingPercent == 80)
         #expect(line.observedAt == capture)
-        #expect(line.projectionKind == .uniformMean)
-        #expect(line.estimatedSamples.first?.remainingPercent == 80)
+        #expect(line.observedSamples.count == 1)
+        #expect(line.observedSamples.first?.remainingPercent == 80)
         #expect(line.localObservationCount == 1)
         // Clock/window equality alone is insufficient: the original selected writer is absent.
         #expect(UsageQuotaSourceResolver.evidence(
@@ -212,6 +212,6 @@ struct UsageQuotaSourceResolverTests {
             accounts: merged.providers, sourceSnapshots: [newAlias], quotaSources: merged.providerQuotaSources,
             now: Self.now).lines.first { $0.selection.windowID == "primary" })
         #expect(missingSource.state == .unknown)
-        #expect(missingSource.estimatedSamples.isEmpty)
+        #expect(missingSource.observedSamples.isEmpty)
     }
 }

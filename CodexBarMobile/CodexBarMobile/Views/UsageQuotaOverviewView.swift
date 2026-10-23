@@ -2,7 +2,7 @@ import Charts
 import CodexBarSync
 import SwiftUI
 
-/// A shared date axis for independent account/window quotas. All future marks are estimates.
+/// A shared historical date axis for actual, independent account/window quota observations.
 struct UsageQuotaOverviewView: View {
     @ObservedObject var store: UsageQuotaOverviewStore
     let accounts: [ProviderUsageSnapshot]
@@ -16,7 +16,7 @@ struct UsageQuotaOverviewView: View {
     @State private var expanded = false
     @State private var showingEditor = false
     @State private var showingExplanation = false
-    @State private var nextDayOnly = false
+    @State private var lastDayOnly = false
     @State private var chartWidth: CGFloat = 0
 
     private var usesCompactLayout: Bool {
@@ -40,15 +40,15 @@ struct UsageQuotaOverviewView: View {
                 Form {
                     Text(
                         String(
-                            localized: "The chart starts at each account’s current remaining quota. Each line ends at that window’s reset, or when its quota is estimated to run out."))
+                            localized: "Each line shows actual remaining quota at the time it was observed, and stops at the latest reading."))
                     Text(
                         String(
-                            localized: "Future consumption is estimated. With enough observations, the estimate follows this account’s measured busy and idle periods. Until then, it uses the average consumption since the window began. Actual usage may differ."))
+                            localized: "No future usage is predicted. One reading appears as a point; missing history is not filled in, and long gaps break the line."))
                     Text(
                         String(
                             localized: "Observations are collected on this iPhone from synced account data. Missing or outdated readings are not treated as new activity."))
                 }
-                .navigationTitle(String(localized: "About Quota Estimates"))
+                .navigationTitle(String(localized: "About Quota History"))
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .confirmationAction) {
@@ -82,7 +82,7 @@ struct UsageQuotaOverviewView: View {
                 Text(String(localized: "Saved quota settings could not be read. They have been kept unchanged."))
                     .font(.caption).foregroundStyle(.secondary)
             } else if overview.lines.isEmpty {
-                Text(String(localized: "Choose up to 5 account quotas to compare their remaining time and balance."))
+                Text(String(localized: "Choose up to 5 account quotas to compare their remaining quota history."))
                     .font(.subheadline).foregroundStyle(.secondary)
                 Button(String(localized: "Choose quota lines")) { self.showingEditor = true }
                     .buttonStyle(.bordered)
@@ -131,7 +131,7 @@ struct UsageQuotaOverviewView: View {
 
     private var explanationButton: some View {
         Button { self.showingExplanation = true } label: {
-            Label(String(localized: "Estimated"), systemImage: "info.circle")
+            Label(String(localized: "Observed history"), systemImage: "info.circle")
                 .font(.caption)
         }
         .accessibilityIdentifier("usage-quota-info")
@@ -139,11 +139,11 @@ struct UsageQuotaOverviewView: View {
 
     private var rangeMenu: some View {
         Menu {
-            Button(String(localized: "All dates")) { self.nextDayOnly = false }
-            Button(String(localized: "Next 24 hours")) { self.nextDayOnly = true }
+            Button(String(localized: "All history")) { self.lastDayOnly = false }
+            Button(String(localized: "Last 24 hours")) { self.lastDayOnly = true }
         } label: {
             HStack(spacing: 4) {
-                Text(self.nextDayOnly ? String(localized: "Next 24 hours") : String(localized: "All dates"))
+                Text(self.lastDayOnly ? String(localized: "Last 24 hours") : String(localized: "All history"))
                 Image(systemName: "chevron.down").font(.caption2)
             }.font(.caption)
         }
@@ -151,29 +151,30 @@ struct UsageQuotaOverviewView: View {
     }
 
     private func chart(_ overview: UsageQuotaOverview) -> some View {
-        let end = self.nextDayOnly ? min(overview.end, overview.start.addingTimeInterval(86400)) : overview.end
+        let start = self.lastDayOnly ? max(overview.start, overview.end.addingTimeInterval(-86400)) : overview.start
+        let end = overview.end
         return Chart {
             ForEach(overview.lines) { line in
-                ForEach(Array(line.estimatedSamples.enumerated()), id: \.offset) { _, point in
+                ForEach(Array(line.observedSamples.enumerated()), id: \.offset) { _, point in
                     LineMark(
                         x: .value(String(localized: "Date"), point.date),
                         y: .value(String(localized: "Remaining Quota"), point.remainingPercent),
-                        series: .value(String(localized: "Quota"), line.id.uuidString))
+                        series: .value(String(localized: "Quota"), line.id.uuidString + "-" + String(point.segment)))
                         .interpolationMethod(.linear)
                         .lineStyle(StrokeStyle(lineWidth: 1.5, lineCap: .round, lineJoin: .round))
                         .foregroundStyle(self.color(line))
                 }
-                if line.state == .available, let remaining = line.currentRemainingPercent {
+                ForEach(Array(line.observedSamples.enumerated()), id: \.offset) { _, point in
                     PointMark(
-                        x: .value(String(localized: "Date"), overview.start),
-                        y: .value(String(localized: "Remaining Quota"), remaining))
+                        x: .value(String(localized: "Date"), point.date),
+                        y: .value(String(localized: "Remaining Quota"), point.remainingPercent))
                         .foregroundStyle(self.color(line))
-                        .symbolSize(16)
+                        .symbolSize(point.date == line.observedSamples.last?.date ? 16 : 4)
                 }
             }
         }
-        .chartXScale(domain: overview.start...max(end, overview.start.addingTimeInterval(60)))
-        .chartYScale(domain: 0...100)
+        .chartXScale(domain: start...end, range: .plotDimension(padding: 4))
+        .chartYScale(domain: 0...100, range: .plotDimension(padding: 4))
         .chartLegend(.hidden)
         .chartYAxis {
             AxisMarks(position: .leading, values: [0, 50, 100]) { value in
@@ -188,20 +189,20 @@ struct UsageQuotaOverviewView: View {
         }
         .chartXAxis {
             AxisMarks(values: self.dynamicTypeSize.isAccessibilitySize || self
-                .chartWidth < 300 ? [overview.start, end] : [
-                    overview.start,
-                    overview.start.addingTimeInterval(end.timeIntervalSince(overview.start) / 2),
+                .chartWidth < 300 ? [start, end] : [
+                    start,
+                    start.addingTimeInterval(end.timeIntervalSince(start) / 2),
                     end,
                 ]) { value in
                     AxisValueLabel(
-                        anchor: value.as(Date.self) == overview
-                            .start ? .topLeading : (value.as(Date.self) == end ? .topTrailing : .top),
+                        anchor: value
+                            .as(Date.self) == start ? .topLeading : (value.as(Date.self) == end ? .topTrailing : .top),
                         collisionResolution: .disabled)
                     {
                         if let date = value.as(Date.self) {
-                            if date == overview.start {
+                            if date == end {
                                 Text(String(localized: "Now")).font(.caption2)
-                            } else if end.timeIntervalSince(overview.start) <= 86400 {
+                            } else if end.timeIntervalSince(start) <= 86400 {
                                 Text(date, format: .dateTime.hour().minute()).font(.caption2)
                             } else {
                                 Text(date, format: .dateTime.month(.abbreviated).day()).font(.caption2)
@@ -213,7 +214,7 @@ struct UsageQuotaOverviewView: View {
         .chartPlotStyle { $0.clipped() }
         .frame(height: self.dynamicTypeSize.isAccessibilitySize ? 210 : (self.usesCompactLayout ? 140 : 170))
         .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { self.chartWidth = $0 }
-        .accessibilityLabel(String(localized: "Estimated remaining quota by date"))
+        .accessibilityLabel(String(localized: "Observed remaining quota by date"))
         .accessibilityIdentifier("usage-quota-chart")
     }
 

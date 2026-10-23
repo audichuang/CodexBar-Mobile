@@ -167,32 +167,28 @@ struct UsageQuotaOverviewTests {
         store.reconcile(accounts: [account], now: Self.now)
         let line = try #require(store.overview(accounts: [account], now: Self.now).lines.first)
         #expect(line.localObservationCount == 1)
-        #expect(line.projectionKind == .uniformMean)
-        #expect(line.estimatedSamples.count <= 3)
+        #expect(line.observedSamples.count == 1)
+        #expect(line.observedSamples.count <= 3)
     }
 
     @Test
-    func `enough real local observations preserve measured pauses and varying consumption as estimates`() throws {
+    func `real local observations preserve exact historical times values and pauses without forecasting`() throws {
         let store = Self.sampledStore()
         let latest = Self.account(windows: [Self.window(used: 30)])
-        let first = try #require(store.overview(accounts: [latest], now: Self.now).lines.first)
-        let second = try #require(store.overview(accounts: [latest], now: Self.now).lines.first)
-        #expect(first.localObservationCount == 9)
-        #expect(first.projectionKind == .observedPattern)
-        #expect(first.estimatedSamples == second.estimatedSamples)
-        #expect(first.estimatedSamples.first?.date == Self.now)
-        // The latest sufficient 900-second segment consumed 5, then 0, then 5 points.
-        let pause = first.estimatedSamples.filter {
-            $0.date >= Self.now.addingTimeInterval(300) && $0.date <= Self.now.addingTimeInterval(600)
-        }
-        #expect(pause.count > 1)
-        #expect(pause.allSatisfy { abs($0.remainingPercent - 65) < 0.000001 })
-        #expect(first.estimatedSamples.contains { $0.remainingPercent < 65 })
-        #expect(first.estimatedSamples.allSatisfy { (0...100).contains($0.remainingPercent) })
+        let overview = store.overview(accounts: [latest], now: Self.now)
+        let line = try #require(overview.lines.first)
+        #expect(line.observedSamples.map(\.remainingPercent) == [90, 90, 88, 82, 82, 80, 75, 75, 70])
+        #expect(line.observedSamples.map(\.date) == (0...8).map { Self.now.addingTimeInterval(Double($0 - 8) * 300) })
+        #expect(overview.start == Self.now.addingTimeInterval(-2400))
+        #expect(overview.end == Self.now)
+        #expect(line.observedSamples.last?.remainingPercent == 70)
+        #expect(line.observedSamples.allSatisfy { $0.date <= Self.now })
     }
 
     @Test(arguments: [60, 300])
-    func `frequent weekly observations retain elapsed span and real busy idle estimates`(intervalSeconds: Int) throws {
+    func `frequent weekly observations retain elapsed span and real busy idle observations`(
+        intervalSeconds: Int) throws
+    {
         let memory = UsageQuotaMemoryPersistence()
         let store = UsageQuotaOverviewStore(persistence: memory)
         let start = Self.now.addingTimeInterval(-8 * 3600)
@@ -209,7 +205,7 @@ struct UsageQuotaOverviewTests {
             let account = reading(at: elapsed)
             store.reconcile(accounts: [account], now: account.lastUpdated)
         }
-        func assertEstimate(elapsed: Int) throws {
+        func assertHistory(elapsed: Int) throws {
             let account = reading(at: elapsed)
             let line = try #require(store.overview(accounts: [account], now: account.lastUpdated).lines.first)
             let archive = try JSONDecoder().decode(UsageQuotaArchive.self, from: #require(memory.data))
@@ -220,16 +216,16 @@ struct UsageQuotaOverviewTests {
             #expect(latest.capturedAt.timeIntervalSince(first.capturedAt) >= 6 * 3600)
             #expect(latest.capturedAt == account.lastUpdated)
             #expect(latest.usedPercent == account.rateWindows[0].usedPercent)
-            #expect(line.projectionKind == .observedPattern)
-            #expect(line.estimatedSamples.first?.date == account.lastUpdated)
-            #expect(line.estimatedSamples.first?.remainingPercent == line.currentRemainingPercent)
-            let pairs = Array(zip(line.estimatedSamples, line.estimatedSamples.dropFirst()))
+            #expect(line.observedSamples.count > 1)
+            #expect(line.observedSamples.last?.date == account.lastUpdated)
+            #expect(line.observedSamples.last?.remainingPercent == line.currentRemainingPercent)
+            let pairs = Array(zip(line.observedSamples, line.observedSamples.dropFirst()))
             #expect(pairs.contains { $0.remainingPercent == $1.remainingPercent })
             #expect(pairs.contains { $0.remainingPercent > $1.remainingPercent })
             #expect(pairs.allSatisfy { $0.remainingPercent >= $1.remainingPercent })
-            #expect(line.estimatedSamples.allSatisfy { $0.date <= reset })
+            #expect(line.observedSamples.allSatisfy { $0.date <= reset })
         }
-        try assertEstimate(elapsed: 8 * 3600)
+        try assertHistory(elapsed: 8 * 3600)
         let beforeDuplicate = memory.data
         store.reconcile(accounts: [reading(at: 8 * 3600)], now: Self.now.addingTimeInterval(30))
         #expect(memory.data == beforeDuplicate, "A reader refresh cannot advance a source observation")
@@ -238,11 +234,11 @@ struct UsageQuotaOverviewTests {
             let account = reading(at: elapsed)
             store.reconcile(accounts: [account], now: account.lastUpdated)
         }
-        try assertEstimate(elapsed: 9 * 3600)
+        try assertHistory(elapsed: 9 * 3600)
     }
 
     @Test
-    func `subminute sampling retains the latest actual endpoint without disabling an eligible pattern`() throws {
+    func `subminute sampling retains the latest actual endpoint`() throws {
         let store = UsageQuotaOverviewStore.inMemory()
         let start = Self.now.addingTimeInterval(-1830)
         for elapsed in stride(from: 0, through: 1830, by: 30) {
@@ -255,8 +251,8 @@ struct UsageQuotaOverviewTests {
         let line = try #require(store.overview(accounts: [latest], now: Self.now).lines.first)
         #expect(line.observedAt == Self.now)
         #expect(line.currentRemainingPercent == 84)
-        #expect(line.projectionKind == .observedPattern)
-        #expect(line.estimatedSamples.first == UsageQuotaPoint(date: Self.now, remainingPercent: 84))
+        #expect(line.observedSamples.count > 1)
+        #expect(line.observedSamples.last == UsageQuotaPoint(date: Self.now, remainingPercent: 84))
         #expect(line.localObservationCount <= UsageQuotaOverviewStore.maximumObservationsPerStream)
     }
 
@@ -283,7 +279,7 @@ struct UsageQuotaOverviewTests {
             $1.capturedAt.timeIntervalSince($0.capturedAt) > 2 * 3600
         })
         let line = try #require(store.overview(accounts: [current], now: Self.now).lines.first)
-        #expect(line.projectionKind == .uniformMean)
+        #expect(Set(line.observedSamples.map(\.segment)).count == 2)
     }
 
     @Test
@@ -311,9 +307,85 @@ struct UsageQuotaOverviewTests {
         })
         let current = Self.account(windows: [Self.window(used: 10, minutes: 10080, reset: reset)])
         let line = try #require(store.overview(accounts: [current], now: Self.now).lines.first)
-        #expect(line.projectionKind == .observedPattern)
-        #expect(line.estimatedSamples.first?.date == Self.now)
-        #expect(line.estimatedSamples.allSatisfy { $0.remainingPercent == 90 })
+        #expect(line.observedSamples.count > 1)
+        #expect(line.observedSamples.last?.date == Self.now)
+        #expect(line.observedSamples.allSatisfy { $0.remainingPercent == 90 })
+    }
+
+    @Test(arguments: [10080, 43200])
+    func `full cycle compaction preserves endpoints and real continuity rather than inventing gaps`(
+        minutes: Int) throws
+    {
+        let memory = UsageQuotaMemoryPersistence()
+        let store = UsageQuotaOverviewStore(persistence: memory)
+        let interval = minutes == 10080 ? 300 : 3600
+        let count = minutes * 60 / interval - 1
+        let start = Self.now.addingTimeInterval(-Double(count * interval))
+        let reset = Self.now.addingTimeInterval(Double(interval))
+        var latest = Self.account()
+        for step in 0...count {
+            latest = Self.account(
+                capturedAt: start.addingTimeInterval(Double(step * interval)),
+                windows: [Self.window(used: Double(step) / Double(count) * 60, minutes: minutes, reset: reset)])
+            store.reconcile(accounts: [latest], now: latest.lastUpdated)
+        }
+        let line = try #require(store.overview(accounts: [latest], now: Self.now).lines.first)
+        #expect(line.observedSamples.count == UsageQuotaOverviewStore.maximumObservationsPerStream)
+        #expect(line.observedSamples.first?.date == start)
+        #expect(line.observedSamples.first?.remainingPercent == 100)
+        #expect(line.observedSamples.last?.date == Self.now)
+        #expect(line.observedSamples.last?.remainingPercent == 40)
+        #expect(Set(line.observedSamples.map(\.segment)) == [0])
+        #expect(line.observedSamples.allSatisfy { point in
+            let step = point.date.timeIntervalSince(start) / Double(interval)
+            return step.rounded() == step && abs(point.remainingPercent - (100 - step / Double(count) * 60)) < 0.000001
+        })
+        let beforeDuplicate = memory.data
+        store.reconcile(accounts: [latest], now: Self.now.addingTimeInterval(30))
+        #expect(memory.data == beforeDuplicate)
+        let reloaded = UsageQuotaOverviewStore(persistence: memory)
+        #expect(reloaded.overview(accounts: [latest], now: Self.now).lines.first?.observedSamples == line
+            .observedSamples)
+        let corrected = Self.account(windows: [Self.window(used: 61, minutes: minutes, reset: reset)])
+        let beforeReconcile = try #require(store.overview(accounts: [corrected], now: Self.now).lines.first)
+        #expect(Set(beforeReconcile.observedSamples.map(\.segment)) == [0])
+        #expect(beforeReconcile.observedSamples.last?.remainingPercent == 39)
+        store.reconcile(accounts: [corrected], now: Self.now)
+        let afterReconcile = try #require(store.overview(accounts: [corrected], now: Self.now).lines.first)
+        #expect(Set(afterReconcile.observedSamples.map(\.segment)) == [0])
+        #expect(afterReconcile.observedSamples.last?.remainingPercent == 39)
+    }
+
+    @Test
+    func `compaction retains genuine source interruptions and isolated actual readings`() throws {
+        let store = UsageQuotaOverviewStore.inMemory()
+        let reset = Self.now.addingTimeInterval(86400)
+        var latest = Self.account()
+        for step in 0...240 {
+            let gap = step >= 120 ? 4 * 3600 : 0
+            let capture = Self.now.addingTimeInterval(Double((step - 240) * 600 + gap - 4 * 3600))
+            latest = Self.account(capturedAt: capture, windows: [Self.window(
+                used: Double(step) / 4, minutes: 10080, reset: reset)])
+            store.reconcile(accounts: [latest], now: capture)
+        }
+        let line = try #require(store.overview(accounts: [latest], now: Self.now).lines.first)
+        #expect(Set(line.observedSamples.map(\.segment)) == [0, 1])
+        #expect(line.observedSamples.last?.date == Self.now)
+    }
+
+    @Test
+    func `isolated real readings survive as distinct single point segments`() throws {
+        let store = UsageQuotaOverviewStore.inMemory()
+        var latest = Self.account()
+        for step in 0...2 {
+            let capture = Self.now.addingTimeInterval(Double(step - 2) * 3 * 3600)
+            latest = Self.account(capturedAt: capture, windows: [Self.window(
+                used: Double(10 + step * 5), minutes: 10080, reset: Self.now.addingTimeInterval(86400))])
+            store.reconcile(accounts: [latest], now: capture)
+        }
+        let line = try #require(store.overview(accounts: [latest], now: Self.now).lines.first)
+        #expect(line.observedSamples.map(\.remainingPercent) == [90, 85, 80])
+        #expect(line.observedSamples.map(\.segment) == [0, 1, 2])
     }
 
     @Test
@@ -343,8 +415,7 @@ struct UsageQuotaOverviewTests {
         let line = try #require(store.overview(accounts: [account], now: Self.now).lines.first)
         #expect(line.observedAt == old)
         #expect(line.state == .stale)
-        #expect(line.projectionKind == .none)
-        #expect(line.estimatedSamples.isEmpty)
+        #expect(line.observedSamples.isEmpty)
         #expect(line.currentRemainingPercent == 80)
     }
 
@@ -378,9 +449,9 @@ struct UsageQuotaOverviewTests {
         })
         #expect(store.add(candidate))
         let lines = store.overview(accounts: [first, other], now: Self.now).lines
-        #expect(lines[0].projectionKind == .observedPattern)
+        #expect(lines[0].observedSamples.count == 9)
         #expect(lines[1].localObservationCount == 1)
-        #expect(lines[1].projectionKind == .uniformMean)
+        #expect(lines[1].observedSamples.count == 1)
         #expect(lines[1].currentRemainingPercent == 55)
     }
 
@@ -395,7 +466,7 @@ struct UsageQuotaOverviewTests {
             confirmedFromDeviceID: "fictional-phone")
         store.reconcile(accounts: [other], linkages: [link], now: Self.now)
         let linked = try #require(store.overview(accounts: [other], now: Self.now).lines.first)
-        #expect(linked.projectionKind == .uniformMean)
+        #expect(linked.observedSamples.count == 1)
         #expect(linked.localObservationCount == 0)
         store.reconcile(
             accounts: [other],
@@ -418,7 +489,7 @@ struct UsageQuotaOverviewTests {
         store.reconcile(accounts: [combined], now: Self.now)
         let line = try #require(store.overview(accounts: [combined], now: Self.now).lines.first)
         #expect(line.localObservationCount == 0)
-        #expect(line.projectionKind == .uniformMean)
+        #expect(line.observedSamples.count == 1)
         store.reconcile(accounts: [first, other], now: Self.now)
         #expect(store.overview(accounts: [first, other], now: Self.now).lines.first?.localObservationCount == 9)
     }
@@ -471,7 +542,7 @@ struct UsageQuotaOverviewTests {
         #expect(weakLine.state == .available)
         #expect(weakLine.currentRemainingPercent == 60)
         #expect(weakLine.localObservationCount == 0)
-        #expect(weakLine.projectionKind == .uniformMean)
+        #expect(weakLine.observedSamples.count == 1)
         let weakArchive = try JSONDecoder().decode(UsageQuotaArchive.self, from: #require(memory.data))
         #expect(weakArchive.histories.isEmpty)
         #expect(store.preferences.selections == saved)
@@ -480,7 +551,7 @@ struct UsageQuotaOverviewTests {
         let returned = try publish(Self.account(capturedAt: time, windows: [Self.window(used: 50)]))
         let returnedLine = try #require(store.overview(accounts: [returned], now: time).lines.first)
         #expect(returnedLine.localObservationCount == 1)
-        #expect(returnedLine.projectionKind == .uniformMean)
+        #expect(returnedLine.observedSamples.count == 1)
         #expect(returnedLine.currentRemainingPercent == 50)
         #expect(store.preferences.selections == saved)
     }
@@ -507,7 +578,7 @@ struct UsageQuotaOverviewTests {
         #expect(line.state == .available)
         #expect(line.currentRemainingPercent == 60)
         #expect(line.localObservationCount == 0)
-        #expect(line.projectionKind == .uniformMean)
+        #expect(line.observedSamples.count == 1)
     }
 
     @Test
@@ -535,7 +606,7 @@ struct UsageQuotaOverviewTests {
         let line = try #require(store.overview(accounts: [stable], now: Self.now).lines.first)
         #expect(line.currentRemainingPercent == 60)
         #expect(line.localObservationCount == 1)
-        #expect(line.projectionKind == .uniformMean)
+        #expect(line.observedSamples.count == 1)
         #expect(store.preferences.selections == [selection])
         let saved = try JSONDecoder().decode(UsageQuotaArchive.self, from: #require(memory.data))
         let history = try #require(saved.histories.first)
@@ -569,13 +640,13 @@ struct UsageQuotaOverviewTests {
             #expect(!store.isReadOnly)
             let before = try #require(store.overview(accounts: [account], now: Self.now).lines.first)
             #expect(before.currentRemainingPercent == 80)
-            #expect(before.projectionKind == (proof == stable ? .observedPattern : .uniformMean))
+            #expect(before.observedSamples.count == (proof == stable ? 4 : 1))
             #expect(before.localObservationCount == (proof == stable ? 4 : 0))
             #expect(store.preferences.selections == [selection])
             store.reconcile(accounts: [account], now: Self.now)
             let after = try #require(store.overview(accounts: [account], now: Self.now).lines.first)
             #expect(after.localObservationCount == (proof == stable ? 4 : 1))
-            #expect(after.projectionKind == (proof == stable ? .observedPattern : .uniformMean))
+            #expect(after.observedSamples.count == (proof == stable ? 4 : 1))
         }
         var preferences = UsageQuotaPreferences()
         preferences.accountAnchors = [anchor]
@@ -584,47 +655,35 @@ struct UsageQuotaOverviewTests {
     }
 
     @Test
-    func `calendar range includes unselected available windows and does not jump after removing a line`() throws {
-        let near = Self.now.addingTimeInterval(3600)
-        let far = Self.now.addingTimeInterval(3 * 86400)
+    func `calendar domain ends now and future resets cannot create future curves`() throws {
         let account = Self.account(windows: [
-            Self.window(reset: near),
-            Self.window(id: "secondary", minutes: 10080, reset: far),
+            Self.window(reset: Self.now.addingTimeInterval(3600)),
+            Self.window(id: "secondary", minutes: 10080, reset: Self.now.addingTimeInterval(3 * 86400)),
         ])
         let store = UsageQuotaOverviewStore.inMemory()
         store.reconcile(accounts: [account], now: Self.now)
         let overview = store.overview(accounts: [account], now: Self.now)
-        #expect(overview.start == Self.now)
-        #expect(overview.end == far)
-        let nearLine = try #require(overview.lines.first { $0.selection.windowID == "primary" })
-        let farLine = try #require(overview.lines.first { $0.selection.windowID == "secondary" })
-        #expect(nearLine.estimatedSamples.last?.date == near)
-        #expect(farLine.estimatedSamples.last?.date == far)
-        #expect(overview.lines.allSatisfy { line in line.estimatedSamples.allSatisfy { $0.date <= line.resetDate! } })
-        store.remove(id: farLine.id)
-        let withoutFarLine = store.overview(accounts: [account], now: Self.now)
-        #expect(withoutFarLine.end == far)
-        #expect(withoutFarLine.lines.count == 1)
-        #expect(withoutFarLine.lines.first?.selection.windowID == "primary")
+        #expect(overview.start == Self.now.addingTimeInterval(-60))
+        #expect(overview.end == Self.now)
+        #expect(overview.lines
+            .allSatisfy { $0.observedSamples == [UsageQuotaPoint(date: Self.now, remainingPercent: 80)] })
+        let weekly = try #require(overview.lines.first { $0.selection.windowID == "secondary" })
+        store.remove(id: weekly.id)
+        #expect(store.overview(accounts: [account], now: Self.now).end == Self.now)
     }
 
     @Test
-    func `future curve starts at visible current quota and stops at estimated exhaustion`() throws {
-        let account = Self.account(
-            capturedAt: Self.now.addingTimeInterval(-1800),
-            windows: [Self.window(used: 80, reset: Self.now.addingTimeInterval(3 * 3600))])
+    func `one observed reading stays at its capture time without projecting exhaustion or a full quota start`() throws {
+        let captured = Self.now.addingTimeInterval(-1800)
+        let account = Self.account(capturedAt: captured, windows: [Self.window(used: 80)])
         let store = UsageQuotaOverviewStore.inMemory()
         store.reconcile(accounts: [account], now: Self.now)
         let line = try #require(store.overview(accounts: [account], now: Self.now).lines.first)
         #expect(line.currentRemainingPercent == 20)
-        #expect(line.estimatedSamples.first?.date == Self.now)
-        #expect(line.estimatedSamples.first?.remainingPercent == 20)
-        #expect(line.observedAt == Self.now.addingTimeInterval(-1800))
-        let empty = try #require(line.estimatedDepletionAt)
-        #expect(empty < line.resetDate!)
-        #expect(line.estimatedSamples.last?.date == empty)
-        #expect(line.estimatedSamples.last?.remainingPercent == 0)
-        #expect(line.estimatedSamples.filter { $0.date > empty }.isEmpty)
+        #expect(line.observedAt == captured)
+        #expect(line.observedSamples == [UsageQuotaPoint(date: captured, remainingPercent: 20)])
+        let later = Self.now.addingTimeInterval(60)
+        #expect(store.overview(accounts: [account], now: later).lines.first?.observedSamples == line.observedSamples)
     }
 
     @Test
@@ -643,7 +702,7 @@ struct UsageQuotaOverviewTests {
             windows: [Self.window(reset: far)])
         let store = UsageQuotaOverviewStore.inMemory()
         store.reconcile(accounts: [valid, stale], now: Self.now)
-        #expect(store.overview(accounts: [valid, stale], now: Self.now).end == near)
+        #expect(store.overview(accounts: [valid, stale], now: Self.now).end == Self.now)
     }
 
     @Test
@@ -654,7 +713,7 @@ struct UsageQuotaOverviewTests {
         let line = try #require(store.overview(accounts: [account], now: Self.now).lines.first)
         #expect(line.state == .available)
         #expect(line.currentRemainingPercent == 100)
-        #expect(line.projectionKind == .none && line.estimatedSamples.isEmpty)
+        #expect(line.observedSamples == [UsageQuotaPoint(date: Self.now, remainingPercent: 100)])
         let unknown = Self.account(windows: [Self.window(used: 0, known: false)])
         #expect(store.overview(accounts: [unknown], now: Self.now).lines.first?.currentRemainingPercent == nil)
         let expired = Self.account(windows: [Self.window(reset: Self.now.addingTimeInterval(-1))])
@@ -688,8 +747,8 @@ struct UsageQuotaOverviewTests {
         let demo2 = UsageQuotaOverviewStore.demo(accounts: [account], now: Self.now)
         let first = try #require(demo1.overview(accounts: [account], now: Self.now).lines.first)
         let second = try #require(demo2.overview(accounts: [account], now: Self.now).lines.first)
-        #expect(first.projectionKind == .observedPattern)
-        #expect(first.estimatedSamples == second.estimatedSamples)
+        #expect(first.observedSamples.count > 1)
+        #expect(first.observedSamples == second.observedSamples)
         #expect(live.overview(accounts: [account], now: Self.now).lines.first?.localObservationCount == 1)
     }
 

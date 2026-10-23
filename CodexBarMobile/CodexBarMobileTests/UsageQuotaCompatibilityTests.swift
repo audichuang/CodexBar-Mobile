@@ -117,7 +117,8 @@ struct UsageQuotaCompatibilityTests {
             #expect(reader.quota?.preferences.selections == beforeRefresh?.selections)
             if let quota = reader.quota {
                 #expect(quota.overview(
-                    accounts: [], sourceSnapshots: reader.cache.buildDeviceSnapshots(), quotaSources: reader.quotaSources,
+                    accounts: [], sourceSnapshots: reader.cache.buildDeviceSnapshots(),
+                    quotaSources: reader.quotaSources,
                     now: Self.now)
                     .lines.allSatisfy { $0.provider == nil })
             }
@@ -173,8 +174,8 @@ struct UsageQuotaCompatibilityTests {
             #expect(inherited.currentRemainingPercent == 30)
             #expect(inherited.observedAt == oldCapture)
             #expect(inherited.state == .stale)
-            #expect(inherited.estimatedSamples.isEmpty)
-            #expect(overview.end == Self.now.addingTimeInterval(7200))
+            #expect(inherited.observedSamples.isEmpty)
+            #expect(overview.end == Self.now)
             let archive = try JSONDecoder().decode(UsageQuotaArchive.self, from: #require(reader.persistence.load()))
             let observations = try #require(archive.histories.first { $0.binding == extra.id }).observations
             #expect(observations.count == 1)
@@ -294,7 +295,8 @@ struct UsageQuotaCompatibilityTests {
 
         func reconcile(_ providers: [ProviderUsageSnapshot]) {
             self.quota?.reconcile(
-                accounts: providers, sourceSnapshots: self.cache.buildDeviceSnapshots(), quotaSources: self.quotaSources,
+                accounts: providers, sourceSnapshots: self.cache.buildDeviceSnapshots(),
+                quotaSources: self.quotaSources,
                 now: UsageQuotaCompatibilityTests.now)
         }
 
