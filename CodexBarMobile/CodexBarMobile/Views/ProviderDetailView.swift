@@ -129,6 +129,52 @@ struct ProviderDetailView: View {
     }
 
     var body: some View {
+        TimelineView(.periodic(from: .now, by: 60)) { clock in
+            self.detailContent(now: clock.date)
+        }
+        .navigationTitle(self.provider.providerName)
+        .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            if self.isMockProvider {
+                ToolbarItem(placement: .topBarTrailing) {
+                    MockBadgeView()
+                }
+            }
+            if let menu = self.cardMenu {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Button {
+                            menu.onTogglePin()
+                        } label: {
+                            if menu.isPinned {
+                                Label(String(localized: "Unpin"), systemImage: "pin.slash")
+                            } else {
+                                Label(String(localized: "Pin to Top"), systemImage: "pin")
+                            }
+                        }
+                        .accessibilityIdentifier("provider-menu-pin")
+                        Button {
+                            menu.onOpenSettings()
+                        } label: {
+                            Label(String(localized: "Provider Settings"), systemImage: "slider.horizontal.3")
+                        }
+                        .accessibilityIdentifier("provider-menu-settings")
+                    } label: {
+                        Label(String(localized: "More Actions"), systemImage: "ellipsis")
+                    }
+                    .accessibilityIdentifier("provider-more-menu")
+                }
+            }
+        }
+        .onChange(of: self.group.accounts.map(\.cardIdentityKey), initial: true) { _, keys in
+            if self.selectedAccountKey == nil || !keys.contains(self.selectedAccountKey ?? "") {
+                self.selectedAccountKey = keys.first
+                self.selectedDate = nil
+            }
+        }
+    }
+
+    private func detailContent(now: Date) -> some View {
         ScrollView {
             VStack(spacing: 16) {
                 if self.group.hasMultipleAccounts {
@@ -138,7 +184,7 @@ struct ProviderDetailView: View {
                     self.mockBanner
                 }
                 if !self.isDemoMode, let sourceStatus = ProviderSourceStatus.resolve(provider: self.provider),
-                   ProviderSourceNoticeContent(status: sourceStatus, now: Date()) != nil
+                   ProviderSourceNoticePlacement.resolve(status: sourceStatus, now: now) == .nearUsage
                 {
                     ProviderSourceNoticeView(status: sourceStatus)
                 }
@@ -383,50 +429,15 @@ struct ProviderDetailView: View {
                         self.dailyChartSection(availableDaily, currencyCode: cost.currencyCode)
                     }
                 }
+                if !self.isDemoMode, let sourceStatus = ProviderSourceStatus.resolve(provider: self.provider),
+                   ProviderSourceNoticePlacement.resolve(status: sourceStatus, now: now) == .footer
+                {
+                    ProviderSourceNoticeView(status: sourceStatus)
+                }
             }
             .padding(.horizontal, 20)
             .padding(.top, 8)
             .padding(.bottom, 24)
-        }
-        .navigationTitle(self.provider.providerName)
-        .navigationBarTitleDisplayMode(.large)
-        .toolbar {
-            if self.isMockProvider {
-                ToolbarItem(placement: .topBarTrailing) {
-                    MockBadgeView()
-                }
-            }
-            if let menu = self.cardMenu {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Menu {
-                        Button {
-                            menu.onTogglePin()
-                        } label: {
-                            if menu.isPinned {
-                                Label(String(localized: "Unpin"), systemImage: "pin.slash")
-                            } else {
-                                Label(String(localized: "Pin to Top"), systemImage: "pin")
-                            }
-                        }
-                        .accessibilityIdentifier("provider-menu-pin")
-                        Button {
-                            menu.onOpenSettings()
-                        } label: {
-                            Label(String(localized: "Provider Settings"), systemImage: "slider.horizontal.3")
-                        }
-                        .accessibilityIdentifier("provider-menu-settings")
-                    } label: {
-                        Label(String(localized: "More Actions"), systemImage: "ellipsis")
-                    }
-                    .accessibilityIdentifier("provider-more-menu")
-                }
-            }
-        }
-        .onChange(of: self.group.accounts.map(\.cardIdentityKey), initial: true) { _, keys in
-            if self.selectedAccountKey == nil || !keys.contains(self.selectedAccountKey ?? "") {
-                self.selectedAccountKey = keys.first
-                self.selectedDate = nil
-            }
         }
     }
 

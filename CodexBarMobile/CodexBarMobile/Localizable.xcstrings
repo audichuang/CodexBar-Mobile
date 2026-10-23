@@ -1,6 +1,874 @@
 {
   "sourceLanguage": "en",
   "strings": {
+  "Quota Lines": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Quota Lines"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "额度曲线"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "額度曲線"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "利用枠の線"
+        }
+      }
+    }
+  },
+  "Add quota": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Add quota"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "添加额度"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "新增額度"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "利用枠を追加"
+        }
+      }
+    }
+  },
+  "Line color": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Line color"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "曲线颜色"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "曲線顏色"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "線の色"
+        }
+      }
+    }
+  },
+  "Move up": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Move up"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "上移"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "上移"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "上へ移動"
+        }
+      }
+    }
+  },
+  "Move down": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Move down"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "下移"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "下移"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "下へ移動"
+        }
+      }
+    }
+  },
+  "Remove": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Remove"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "移除"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "移除"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "削除"
+        }
+      }
+    }
+  },
+  "No quota lines selected.": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "No quota lines selected."
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "尚未选择额度曲线。"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "尚未選擇額度曲線。"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "利用枠の線が選択されていません。"
+        }
+      }
+    }
+  },
+  "You can display up to 5 quota lines. Remove one to add another.": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "You can display up to 5 quota lines. Remove one to add another."
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "最多显示 5 条额度曲线。移除一条后即可添加其他额度。"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "最多顯示 5 條額度曲線。移除一條後即可新增其他額度。"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "最大5本の利用枠の線を表示できます。別の線を追加するには、既存の線を削除してください。"
+        }
+      }
+    }
+  },
+  "Quota settings are read-only because the saved data could not be read. Your saved settings have been kept.": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Quota settings are read-only because the saved data could not be read. Your saved settings have been kept."
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "无法读取已保存的额度设置，当前仅供查看。原有设置已保留。"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "無法讀取已儲存的額度設定，目前僅供檢視。原有設定已保留。"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "保存済みの利用枠設定を読み取れないため、現在は閲覧のみ可能です。元の設定は保持されています。"
+        }
+      }
+    }
+  },
+  "Cost Group Order": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Cost Group Order"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "费用分组排序"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "費用群組排序"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "費用グループの並び順"
+        }
+      }
+    }
+  },
+  "Move whole groups. Groups without data appear in their saved position when data becomes available.": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Move whole groups. Groups without data appear in their saved position when data becomes available."
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "拖动可调整整个分组的顺序。暂无数据的分组会在数据可用后按保存的位置显示。"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "拖移可調整整個群組的順序。暫無資料的群組會在資料可用後依儲存的位置顯示。"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "グループ全体を並べ替えられます。データのないグループは、データが利用可能になると保存した位置に表示されます。"
+        }
+      }
+    }
+  },
+  "Remaining Quota": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Remaining Quota"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "剩余额度"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "剩餘額度"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "残りの利用枠"
+        }
+      }
+    }
+  },
+  "Choose quota lines": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Choose quota lines"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "选择额度线"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "選擇額度線"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "表示する利用枠を選択"
+        }
+      }
+    }
+  },
+  "Saved quota settings could not be read. They have been kept unchanged.": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Saved quota settings could not be read. They have been kept unchanged."
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "无法读取已保存的额度设置，原设置已保留。"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "無法讀取已儲存的額度設定，原設定已保留。"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "保存済みの利用枠設定を読み込めませんでした。元の設定は変更されていません。"
+        }
+      }
+    }
+  },
+  "Choose up to 5 account quotas to compare their remaining time and balance.": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Choose up to 5 account quotas to compare their remaining time and balance."
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "最多选择 5 项账号额度，对比剩余时间与额度。"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "最多選擇 5 項帳號額度，比較剩餘時間與額度。"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "最大5つのアカウント利用枠を選び、残り時間と残量を比較できます。"
+        }
+      }
+    }
+  },
+  "The chart starts at each account’s current remaining quota. Each line ends at that window’s reset, or when its quota is estimated to run out.": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "The chart starts at each account’s current remaining quota. Each line ends at that window’s reset, or when its quota is estimated to run out."
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "图表从各账号当前的剩余额度开始。每条线在该额度重置或预估耗尽时结束。"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "圖表從各帳號目前的剩餘額度開始。每條線在該額度重置或預估耗盡時結束。"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "各線はアカウントの現在の残量から始まり、その利用枠のリセット時刻または推定使い切り時刻で終わります。"
+        }
+      }
+    }
+  },
+  "Future consumption is estimated. With enough observations, the estimate follows this account’s measured busy and idle periods. Until then, it uses the average consumption since the window began. Actual usage may differ.": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Future consumption is estimated. With enough observations, the estimate follows this account’s measured busy and idle periods. Until then, it uses the average consumption since the window began. Actual usage may differ."
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "未来消耗为估算值。观测充足时，估算会参考该账号实际的使用快慢和停顿；此前使用当前周期开始以来的平均消耗速度。实际用量可能不同。"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "未來消耗為估算值。觀測充足時，估算會參考該帳號實際的使用快慢和停頓；此前使用目前週期開始以來的平均消耗速度。實際用量可能不同。"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "将来の消費量は推定です。十分な観測がある場合は、そのアカウントで記録された使用と休止のパターンを参考にします。それまでは現在の期間の平均消費速度を使います。実際の使用量は異なる場合があります。"
+        }
+      }
+    }
+  },
+  "Observations are collected on this iPhone from synced account data. Missing or outdated readings are not treated as new activity.": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Observations are collected on this iPhone from synced account data. Missing or outdated readings are not treated as new activity."
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "本 iPhone 从同步的账号数据中积累观测。缺失或过期的读数不会计为新活动。"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "本 iPhone 從同步的帳號資料中累積觀測。缺失或過期的讀數不會計為新活動。"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "このiPhoneは同期されたアカウントデータから観測を蓄積します。欠落や古い値は新しい使用記録として扱いません。"
+        }
+      }
+    }
+  },
+  "About Quota Estimates": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "About Quota Estimates"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "关于额度估算"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "關於額度估算"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "利用枠の推定について"
+        }
+      }
+    }
+  },
+  "All dates": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "All dates"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "完整日期范围"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "完整日期範圍"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "すべての日付"
+        }
+      }
+    }
+  },
+  "Next 24 hours": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Next 24 hours"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "未来 24 小时"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "未來 24 小時"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "今後24時間"
+        }
+      }
+    }
+  },
+  "Estimated remaining quota by date": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Estimated remaining quota by date"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "按日期显示的预估剩余额度"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "依日期顯示的預估剩餘額度"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "日付ごとの推定残量"
+        }
+      }
+    }
+  },
+  "Collapse quota legend": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Collapse quota legend"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "收起额度图例"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "收合額度圖例"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "利用枠の凡例を閉じる"
+        }
+      }
+    }
+  },
+  "Expand quota legend": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Expand quota legend"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "展开额度图例"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "展開額度圖例"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "利用枠の凡例を開く"
+        }
+      }
+    }
+  },
+  "Your personal Summary, clearer quota planning": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Your personal Summary, clearer quota planning"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "个性化摘要，更清晰的额度规划"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "個人化摘要，更清晰的額度規劃"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "自分だけの概要と、わかりやすい利用枠の見通し"
+        }
+      }
+    }
+  },
+  "Compare your remaining quotas": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Compare your remaining quotas"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "对比你的剩余额度"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "比較你的剩餘額度"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "残りの利用枠を比較"
+        }
+      }
+    }
+  },
+  "Choose up to five account quotas, customize their colors, and compare estimated consumption until each reset. Expand the compact legend for account details.": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Choose up to five account quotas, customize their colors, and compare estimated consumption until each reset. Expand the compact legend for account details."
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "最多选择五项账号额度，自定义颜色，对比各自重置前的预估消耗。展开紧凑图例即可查看账号详情。"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "最多選擇五項帳號額度，自訂顏色，比較各自重置前的預估消耗。展開精簡圖例即可查看帳號詳情。"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "最大5つのアカウント利用枠を選び、色をカスタマイズして、各リセットまでの推定消費を比較できます。コンパクトな凡例を開くとアカウントの詳細を確認できます。"
+        }
+      }
+    }
+  },
+  "Put Cost groups in your order": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Put Cost groups in your order"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "按你的习惯排列费用分组"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "依你的習慣排列費用群組"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "費用グループを好きな順番に"
+        }
+      }
+    }
+  },
+  "Reorder entire Cost groups. Routine history and device-source notes now appear at the bottom, keeping your numbers in view.": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Reorder entire Cost groups. Routine history and device-source notes now appear at the bottom, keeping your numbers in view."
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "调整整个费用分组的顺序。普通历史范围和设备来源说明移至底部，让重要数字更醒目。"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "調整整個費用群組的順序。一般歷史範圍和裝置來源說明移至底部，讓重要數字更醒目。"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "費用グループ全体を並べ替えられます。通常の履歴範囲やデバイス情報の説明は下部に移動し、数値を見やすくしました。"
+        }
+      }
+    }
+  },
+  "Compare up to five remaining-quota estimates in Usage with custom colors and a compact legend. Reorder Cost groups and find routine source notes at the bottom.": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Compare up to five remaining-quota estimates in Usage with custom colors and a compact legend. Reorder Cost groups and find routine source notes at the bottom."
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "用量页支持最多五条剩余额度估算线、自定义颜色和紧凑图例。费用分组支持排序，普通来源说明移至底部。"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "用量頁支援最多五條剩餘額度估算線、自訂顏色和精簡圖例。費用群組支援排序，一般來源說明移至底部。"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "使用状況で最大5つの残量推定を、カスタムカラーとコンパクトな凡例で比較できます。費用グループの並べ替えに対応し、通常の出典説明は下部に移動しました。"
+        }
+      }
+    }
+  },
+  "This update uses data already synced from your Mac. No Mac update is required.": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "This update uses data already synced from your Mac. No Mac update is required."
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "本次更新使用 Mac 已同步的数据，无需更新 Mac 端。"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "本次更新使用 Mac 已同步的資料，無需更新 Mac 端。"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "この更新はMacから同期済みのデータを使用します。Macアプリの更新は不要です。"
+        }
+      }
+    }
+  },
   "Pin the metrics that matter, with simple text labels, reset countdowns and estimated depletion dates. Cards show the provider name or your own label. Names stay visible while editing. Summary and Settings match the rest of the app.": {
     "localizations": {
       "en": {

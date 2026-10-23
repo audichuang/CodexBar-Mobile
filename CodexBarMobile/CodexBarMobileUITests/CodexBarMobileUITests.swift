@@ -22,10 +22,27 @@ final class CodexBarMobileUITests: XCTestCase {
             let cost = app.nativeTab("Cost")
             XCTAssertTrue(cost.waitForExistence(timeout: 10))
             cost.tap()
+            XCTAssertTrue(app.buttons["cost-group-order-button"].waitForExistence(timeout: 15))
             let explanation = app.staticTexts["cost-data-scope"]
+            // Ordinary scope text is now the report footer. Wide layouts scroll the
+            // secondary pane; narrow layouts let that gesture reach the outer scroll view.
+            let secondary = app.scrollViews["workspace-secondary"]
+            for _ in 0..<24 where !(explanation.exists && explanation.isHittable) {
+                if secondary.exists, secondary.isHittable {
+                    secondary.swipeUp()
+                } else {
+                    app.swipeUp()
+                }
+            }
             XCTAssertTrue(explanation.waitForExistence(timeout: 5))
+            XCTAssertTrue(explanation.isHittable, "The footer explanation must be reachable by scrolling")
             XCTAssertTrue(explanation.label.hasPrefix(expected))
-            self.captureScreen(app, name: "Cost data scope \(language)")
+            for (index, screen) in XCUIScreen.screens.enumerated() {
+                let attachment = XCTAttachment(screenshot: screen.screenshot())
+                attachment.name = "Cost data scope \(language) - screen \(index)"
+                attachment.lifetime = .keepAlways
+                self.add(attachment)
+            }
             app.terminate()
         }
     }
@@ -141,14 +158,16 @@ final class CodexBarMobileUITests: XCTestCase {
         XCTAssertTrue(setup.waitForExistence(timeout: 8))
         XCTAssertEqual(setup.label, "Setup")
         XCTAssertTrue(app.navigationBars["Release Notes"].exists)
-        XCTAssertEqual(app.staticTexts["release-notes-version"].label, "CodexBar 3.1.0")
-        XCTAssertTrue(app.staticTexts["release-highlight-providers"].exists)
-        for id in ["calendar", "duo"] {
+        XCTAssertEqual(app.staticTexts["release-notes-version"].label, "CodexBar 3.2.0")
+        XCTAssertTrue(app.staticTexts["release-highlight-summary"].exists)
+        for id in ["quota-overview", "cost-order"] {
             let highlight = app.staticTexts["release-highlight-" + id]
-            for _ in 0..<6 where !highlight.exists || !highlight.isHittable { app.swipeUp() }
+            for _ in 0..<6 where !highlight.exists || !highlight.isHittable {
+                app.swipeUp()
+            }
             XCTAssertTrue(highlight.waitForExistence(timeout: 3))
         }
-        self.captureScreen(app, name: "3.1 release highlights")
+        self.captureScreen(app, name: "3.2 Summary, quota overview and Cost ordering release highlights")
         setup.tap()
         XCTAssertTrue(app.navigationBars["Setup Guide"].waitForExistence(timeout: 5))
         self.captureScreen(app, name: "Setup Guide opened from update notes")
