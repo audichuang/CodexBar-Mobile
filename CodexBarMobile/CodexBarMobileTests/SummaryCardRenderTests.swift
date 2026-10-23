@@ -57,10 +57,6 @@ final class SummaryCardRenderTests: XCTestCase {
                 resetDate: nil, forecast: nil,
                 amount: SummaryCardAmount(value: 24.58, currencyCode: "USD", observedAt: now, isEstimated: false)),
         ]
-        let directory = URL(
-            fileURLWithPath: "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Summary080-card-variants",
-            isDirectory: true)
-        try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: true)
         for (name, width, scheme, largeText) in [
             ("phone-light", CGFloat(390), ColorScheme.light, false),
             ("sidebar-dark", CGFloat(320), ColorScheme.dark, false),
@@ -88,7 +84,7 @@ final class SummaryCardRenderTests: XCTestCase {
             let image = UIGraphicsImageRenderer(size: size).image { _ in
                 controller.view.drawHierarchy(in: CGRect(origin: .zero, size: size), afterScreenUpdates: true)
             }
-            try XCTUnwrap(image.pngData()).write(to: directory.appendingPathComponent(name + ".png"))
+            _ = try XCTUnwrap(image.pngData())
             let attachment = XCTAttachment(image: image)
             attachment.name = "Synthetic Summary metric variants - " + name
             attachment.lifetime = .keepAlways
