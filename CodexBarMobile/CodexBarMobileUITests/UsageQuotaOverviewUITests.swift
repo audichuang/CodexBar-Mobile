@@ -35,15 +35,86 @@ final class UsageQuotaOverviewUITests: XCTestCase {
     }
 
     @MainActor private func reveal(_ element: XCUIElement, in app: XCUIApplication) {
-        for _ in 0..<10 where !(element.exists && element.isHittable) {
-            if app.buttons["quota-editor-done"].exists {
+        var visible = false
+        if app.buttons["quota-editor-done"].exists {
+            for _ in 0..<10 where !(element.exists && element.isHittable) {
                 self.scrollEditorForm(app, upward: true)
-            } else {
-                self.usageScroller(app).swipeUp()
             }
+            visible = element.exists && element.isHittable
+        } else {
+            visible = self.revealUsageElement(element, in: app)
+        }
+        if !visible {
+            self.attachHierarchy(app, name: "Element still obscured after bounded scrolling")
+            self.capture("Element still obscured after bounded scrolling")
         }
         XCTAssertTrue(element.waitForExistence(timeout: 3))
         XCTAssertTrue(element.isHittable)
+        XCTAssertTrue(visible, "The requested content must be reachable inside the unobscured scroll viewport")
+    }
+
+    @MainActor private func revealUsageElement(_ element: XCUIElement, in app: XCUIApplication) -> Bool {
+        let scroller = self.usageScroller(app)
+        let window = app.windows.containing(.scrollView, identifier: "usage-provider-list").firstMatch
+        XCTAssertTrue(window.exists)
+        let quotaElement = element.exists && element.identifier.hasPrefix("usage-quota-")
+        var lastFrame = element.exists ? element.frame : CGRect.null
+        for _ in 0..<12 {
+            let bounds = window.frame.intersection(scroller.frame)
+            var visible = bounds
+            let chrome = app.navigationBars.allElementsBoundByIndex + app.tabBars.allElementsBoundByIndex
+                + app.searchFields.allElementsBoundByIndex.filter(\.isHittable)
+            let tabBounds = ["Usage", "Summary", "Cost", "Setting"].map { app.nativeTab($0) }
+                .filter(\.exists).reduce(CGRect.null) { $0.union($1.frame) }
+            let obstructions = chrome.filter(\.exists).map(\.frame) + [tabBounds]
+            for frame in obstructions where !frame.isNull && frame.intersects(visible) {
+                if frame.width > frame.height {
+                    if frame.midY < bounds.midY {
+                        let bottom = visible.maxY
+                        visible.origin.y = max(visible.minY, frame.maxY)
+                        visible.size.height = max(0, bottom - visible.minY)
+                    } else {
+                        visible.size.height = max(0, min(visible.maxY, frame.minY) - visible.minY)
+                    }
+                } else if frame.midX < bounds.midX {
+                    let right = visible.maxX
+                    visible.origin.x = max(visible.minX, frame.maxX)
+                    visible.size.width = max(0, right - visible.minX)
+                } else {
+                    visible.size.width = max(0, min(visible.maxX, frame.minX) - visible.minX)
+                }
+            }
+            visible = visible.insetBy(dx: 8, dy: 8)
+            XCTAssertGreaterThan(visible.width, 100)
+            XCTAssertGreaterThan(visible.height, 80)
+            if element.exists {
+                lastFrame = element.frame
+                // Quota rows must clear the bars in full; a restored provider card
+                // only needs to be reachable, since it may be taller than this viewport.
+                let verticallyVisible = (!quotaElement && lastFrame.intersects(visible)) ||
+                    (quotaElement && (lastFrame.height <= visible.height
+                            ? lastFrame.minY >= visible.minY && lastFrame.maxY <= visible.maxY
+                            : visible.contains(CGPoint(x: lastFrame.midX, y: lastFrame.midY))))
+                if verticallyVisible, element.isHittable { return true }
+            } else if quotaElement {
+                lastFrame = .null
+            }
+            // A short, slow drag with a held end avoids flinging past the row.
+            // If the quota card was lazily unloaded, it is above the provider list.
+            let upward = lastFrame.isNull ? !quotaElement : lastFrame.midY > visible.midY
+            let distance = min(72, visible.height * 0.28)
+            let startY = visible.midY + (upward ? distance / 2 : -distance / 2)
+            let endY = startY + (upward ? -distance : distance)
+            let origin = scroller.coordinate(withNormalizedOffset: .zero)
+            let start = origin.withOffset(CGVector(
+                dx: visible.midX - scroller.frame.minX,
+                dy: startY - scroller.frame.minY))
+            let end = origin.withOffset(CGVector(
+                dx: visible.midX - scroller.frame.minX,
+                dy: endY - scroller.frame.minY))
+            start.press(forDuration: 0.05, thenDragTo: end, withVelocity: .slow, thenHoldForDuration: 0.2)
+        }
+        return false
     }
 
     @MainActor private func top(_ app: XCUIApplication) {
@@ -57,18 +128,16 @@ final class UsageQuotaOverviewUITests: XCTestCase {
             }
             XCTAssertTrue(count.exists && count.isHittable)
         } else {
-            let edit = app.buttons["usage-quota-edit"]
-            for _ in 0..<10 where !(edit.exists && edit.isHittable) {
-                self.usageScroller(app).swipeDown(velocity: .fast)
-            }
-            XCTAssertTrue(edit.exists && edit.isHittable)
+            self.reveal(app.buttons["usage-quota-edit"], in: app)
         }
     }
 
     @MainActor private func scrollEditorForm(_ app: XCUIApplication, upward: Bool) {
         let rowControl = NSPredicate(
             format: "identifier BEGINSWITH %@ OR identifier BEGINSWITH %@ OR identifier BEGINSWITH %@",
-            "quota-line-actions-", "quota-catalog-", "quota-candidate-")
+            "quota-line-actions-",
+            "quota-catalog-",
+            "quota-candidate-")
         let form = app.collectionViews.containing(rowControl).firstMatch
         let visible = form.frame.intersection(app.windows.firstMatch.frame)
         let reachableRow = form.buttons.matching(rowControl).allElementsBoundByIndex.contains {
@@ -79,7 +148,8 @@ final class UsageQuotaOverviewUITests: XCTestCase {
             self.capture("Quota editor scroll before geometry and row assertions")
             let attachment =
                 XCTAttachment(
-                    string: "Selected Form:\n\(form.debugDescription)\nCollection views:\n\(app.collectionViews.debugDescription)")
+                    string: "Selected Form:\n\(form.debugDescription)\nCollection views:\n"
+                        + app.collectionViews.debugDescription)
             attachment.name = "Quota editor selected Form and candidate geometry"
             attachment.lifetime = .keepAlways
             self.add(attachment)
@@ -102,10 +172,12 @@ final class UsageQuotaOverviewUITests: XCTestCase {
     }
 
     @MainActor private func usageScroller(_ app: XCUIApplication) -> XCUIElement {
-        // Usage has a separate detail scroll view on wide displays. Anchor to the
-        // production chart's edit control so gestures stay in its provider-list pane.
-        let scroller = app.scrollViews.containing(.button, identifier: "usage-quota-edit").firstMatch
+        // The chart is lazy and can leave the accessibility tree while scrolling.
+        // Identify the persistent provider-list pane rather than an offscreen child.
+        let scroller = app.scrollViews["usage-provider-list"]
         XCTAssertTrue(scroller.exists && scroller.isHittable, "The quota card's vertical list must be reachable")
+        XCTAssertGreaterThan(scroller.frame.width, 100)
+        XCTAssertGreaterThan(scroller.frame.height, 100)
         return scroller
     }
 
@@ -116,9 +188,188 @@ final class UsageQuotaOverviewUITests: XCTestCase {
     @MainActor private func legendRows(_ app: XCUIApplication) -> [XCUIElement] {
         let matches = app.descendants(matching: .any).matching(NSPredicate(
             format: "identifier BEGINSWITH %@ AND identifier != %@",
-            "usage-quota-legend-", "usage-quota-legend-toggle"))
+            "usage-quota-legend-",
+            "usage-quota-legend-toggle"))
         var seen = Set<String>()
         return matches.allElementsBoundByIndex.filter { seen.insert($0.identifier).inserted }
+    }
+
+    @MainActor private func assertQuotaClearsNativeChrome(_ app: XCUIApplication) {
+        let chart = app.descendants(matching: .any)["usage-quota-chart"].firstMatch
+        let legend = app.buttons["usage-quota-legend-toggle"]
+        let window = app.windows.containing(.any, identifier: "usage-quota-chart").firstMatch
+        let scroller = app.scrollViews.containing(.button, identifier: "usage-quota-edit").firstMatch
+        XCTAssertTrue(chart.exists && legend.exists && window.exists && scroller.exists)
+        // A hittable element may still be partly hidden. Check every edge of both
+        // production elements against their actual window, viewport and native bars.
+        let viewport = window.frame.intersection(scroller.frame)
+        let tabs = ["Usage", "Summary", "Cost", "Setting"].map { app.nativeTab($0) }
+        let chrome = app.navigationBars.allElementsBoundByIndex + app.tabBars.allElementsBoundByIndex
+            + app.searchFields.allElementsBoundByIndex.filter(\.isHittable) + tabs
+        var problems: [String] = []
+        if viewport.isNull || viewport.width <= 0 || viewport.height <= 0 {
+            problems.append("Quota viewport is empty: \(viewport)")
+        }
+        for tab in tabs where !tab.exists || !tab.isHittable {
+            problems.append("Native tab must remain reachable: \(tab)")
+        }
+        for element in [chart, legend] {
+            let frame = element.frame
+            if !viewport.insetBy(dx: -1, dy: -1).contains(frame) {
+                problems.append("\(element.identifier) \(frame) escapes visible viewport \(viewport)")
+            }
+            for obstruction in chrome where obstruction.exists && !obstruction.frame.isEmpty {
+                if frame.insetBy(dx: 1, dy: 1).intersects(obstruction.frame.insetBy(dx: 1, dy: 1)) {
+                    problems.append("\(element.identifier) overlaps \(obstruction.elementType) "
+                        + "\(obstruction.label) at \(obstruction.frame)")
+                }
+            }
+        }
+        if !legend.isHittable { problems.append("The collapsed legend must be directly tappable") }
+        if !problems.isEmpty {
+            self.attachHierarchy(app, name: "Quota native chrome overlap")
+            self.capture("Quota visibility failure with complete native app")
+        }
+        XCTAssertTrue(problems.isEmpty, problems.joined(separator: "\n"))
+    }
+
+    @MainActor private func waitForOrientation(_ app: XCUIApplication, landscape: Bool) {
+        let predicate = NSPredicate { _, _ in
+            landscape ? app.frame.width > app.frame.height : app.frame.height > app.frame.width
+        }
+        XCTAssertEqual(
+            XCTWaiter.wait(for: [XCTNSPredicateExpectation(predicate: predicate, object: app)], timeout: 8),
+            .completed)
+    }
+
+    @MainActor private func openProviderSearch(_ app: XCUIApplication) -> XCUIElement {
+        let field = app.searchFields.firstMatch
+        if !field.exists || !field.isHittable {
+            let search = app.buttons.matching(NSPredicate(
+                format: "label == %@ OR label == %@ OR identifier == %@",
+                "Search",
+                "Search providers",
+                "magnifyingglass")).firstMatch
+            if !search.waitForExistence(timeout: 5) {
+                self.attachHierarchy(app, name: "Missing native minimized search control")
+            }
+            XCTAssertTrue(search.exists && search.isHittable)
+            search.tap()
+        }
+        XCTAssertTrue(field.waitForExistence(timeout: 5) && field.isHittable)
+        field.tap()
+        self.dismissKeyboardIntroductionIfVisible(app)
+        return field
+    }
+
+    @MainActor private func dismissKeyboardIntroductionIfVisible(_ app: XCUIApplication) {
+        // Fresh Simulators can show the system's one-time Slide to Type tutorial.
+        // Dismiss only that observed onboarding view, never an arbitrary Continue action.
+        let introduction = app.otherElements["UIContinuousPathIntroductionView"]
+        guard introduction.waitForExistence(timeout: 2) else { return }
+        let explanation = introduction.staticTexts[
+            "Speed up your typing by sliding your finger across the letters to compose a word.",
+        ]
+        let continueButton = introduction.buttons["Continue"]
+        guard explanation.exists, explanation.frame.intersects(app.frame), continueButton.isHittable else { return }
+        continueButton.tap()
+        XCTAssertTrue(introduction.waitForNonExistence(timeout: 5), "System keyboard onboarding must close")
+    }
+
+    @MainActor func testPhoneQuotaChartAndLegendClearBarsThroughLandscapeSearchAndRotation() {
+        XCUIDevice.shared.orientation = .portrait
+        defer { XCUIDevice.shared.orientation = .portrait }
+        let app = self.launch()
+        self.waitForOrientation(app, landscape: false)
+        XCTAssertLessThan(app.frame.width, 600, "Run this regression on an ordinary compact iPhone")
+        self.assertQuotaClearsNativeChrome(app)
+        self.capture("Phone quota portrait first viewport with complete native app")
+        let toggle = app.buttons["usage-quota-legend-toggle"]
+        let selectedLines = toggle.value as? String
+
+        XCUIDevice.shared.orientation = .landscapeLeft
+        self.waitForOrientation(app, landscape: true)
+        // No scrolling before this assertion: revealing a clipped chart would hide the regression.
+        self.assertQuotaClearsNativeChrome(app)
+        self.capture("Phone quota landscape first viewport with complete native app")
+        let search = self.openProviderSearch(app)
+        search.typeText("Codex")
+        XCTAssertEqual(search.value as? String, "Codex")
+        XCTAssertTrue(app.buttons["provider-group-codex"].exists)
+        XCTAssertFalse(app.buttons["provider-group-claude"].exists, "Search must filter the provider list")
+        let clear = search.buttons["Clear text"]
+        XCTAssertTrue(clear.waitForExistence(timeout: 5) && clear.isHittable)
+        clear.tap()
+        let clearedValue = search.value as? String
+        let queryCleared = clearedValue?.isEmpty == true || clearedValue == search.placeholderValue
+        if !queryCleared {
+            self.attachHierarchy(app, name: "Native search clear-text state")
+            self.capture("Native search clear-text state")
+        }
+        XCTAssertTrue(queryCleared, "Clear text must leave an empty query or its native placeholder")
+        // The unfiltered LazyVGrid need not instantiate the offscreen Claude row.
+        // Search for it explicitly to verify the query can change providers.
+        search.typeText("Claude")
+        XCTAssertTrue(app.buttons["provider-group-claude"].waitForExistence(timeout: 5))
+        XCTAssertFalse(app.buttons["provider-group-codex"].exists)
+        clear.tap()
+        search.typeText("Codex")
+        XCTAssertEqual(search.value as? String, "Codex")
+        XCTAssertFalse(app.buttons["provider-group-claude"].exists)
+        self.attachHierarchy(app, name: "Active native landscape search")
+        self.capture("Phone quota active native landscape search")
+        let cancel = app.navigationBars.buttons.matching(NSPredicate(
+            format: "label IN %@", ["Cancel", "Cancel Search", "Close", "close"])).firstMatch
+        XCTAssertTrue(cancel.waitForExistence(timeout: 5) && cancel.isHittable)
+        cancel.tap()
+        // iOS 26 keeps a Close button on its idle toolbar search field; iOS 27
+        // collapses it. Verify the completed interaction, not that OS-specific shell.
+        let keyboardDismissed = app.keyboards.firstMatch.waitForNonExistence(timeout: 5)
+        let editOrder = app.buttons["usage-edit-order"]
+        let searchEnded = NSPredicate { _, _ in
+            let field = app.searchFields.firstMatch
+            let value = field.exists ? field.value as? String : nil
+            let emptyQuery = !field.exists || value?.isEmpty == true || value == field.placeholderValue
+            guard emptyQuery, editOrder.exists else { return false }
+            let frame = editOrder.frame
+            return frame.width > 0 && frame.height > 0 && app.windows.firstMatch.frame.intersects(frame)
+        }
+        let searchDismissed = XCTWaiter.wait(
+            for: [XCTNSPredicateExpectation(predicate: searchEnded, object: app)], timeout: 5) == .completed
+        if !searchDismissed || !keyboardDismissed {
+            self.attachHierarchy(app, name: "Native search dismissal state")
+            self.capture("Native search dismissal state")
+        }
+        XCTAssertTrue(searchDismissed, "Closing search must clear the query and restore normal navigation")
+        XCTAssertTrue(keyboardDismissed, "Closing native search must dismiss the keyboard")
+        self.assertQuotaClearsNativeChrome(app)
+        XCTAssertEqual(toggle.value as? String, selectedLines, "Search must not change selected quota lines")
+        // The first unfiltered provider proves clearing restored the list without
+        // scrolling past multiple full provider cards; Claude was verified by search above.
+        self.reveal(app.buttons["provider-group-antigravity"], in: app)
+        self.top(app)
+
+        toggle.tap()
+        let rows = self.legendRows(app)
+        XCTAssertEqual(rows.count, 5)
+        for row in rows {
+            self.reveal(row, in: app)
+        }
+        self.capture("Phone quota landscape expanded legend last row reachable")
+        self.top(app)
+        self.reveal(toggle, in: app)
+        toggle.tap()
+        self.top(app)
+        app.nativeTab("Summary").tap()
+        app.nativeTab("Usage").tap()
+        XCTAssertEqual(toggle.label, "Expand quota legend")
+        XCTAssertEqual(toggle.value as? String, selectedLines)
+
+        XCUIDevice.shared.orientation = .portrait
+        self.waitForOrientation(app, landscape: false)
+        self.top(app)
+        self.assertQuotaClearsNativeChrome(app)
+        self.capture("Phone quota portrait restored after search legend and rotation")
     }
 
     @MainActor func testNativeUsageChartInCurrentDisplayPose() {
@@ -128,7 +379,7 @@ final class UsageQuotaOverviewUITests: XCTestCase {
         XCTAssertTrue(card.waitForExistence(timeout: 5))
         XCTAssertTrue(chart.waitForExistence(timeout: 5))
         XCTAssertGreaterThan(chart.frame.width, 140)
-        XCTAssertGreaterThanOrEqual(chart.frame.height, 160)
+        XCTAssertGreaterThanOrEqual(chart.frame.height, 139)
         XCTAssertGreaterThanOrEqual(chart.frame.minX, card.frame.minX - 2)
         XCTAssertLessThanOrEqual(chart.frame.maxX, card.frame.maxX + 2)
         XCTAssertTrue(self.legendRows(app).isEmpty, "Detailed legend rows must start collapsed")
@@ -136,6 +387,7 @@ final class UsageQuotaOverviewUITests: XCTestCase {
         XCTAssertEqual(toggle.label, "Expand quota legend")
         XCTAssertTrue(app.staticTexts["+3"].exists, "Only two default labels and the remaining count should be shown")
         XCTAssertTrue(app.nativeTab("Usage").exists, "Capture must include the real native navigation surface")
+        self.assertQuotaClearsNativeChrome(app)
         self.capture("Usage quota collapsed with native tabs in current display pose")
 
         toggle.tap()

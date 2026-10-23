@@ -2,7 +2,7 @@
 
 All notable changes to the CodexBar iOS companion app will be documented in this file.
 
-## [3.2.0 (251)] — Unreleased
+## [3.2.0 (252)] — Unreleased
 
 ### Added
 - Usage remaining-quota overview compares up to five independently selected account/window lines on one reset-date axis, with custom colors and a collapsed legend. Device-local, account-scoped observations support explicitly labeled consumption estimates without reusing provider-shared history. Historical patterns require verified stable ownership; anonymous or changed identities restart observation history while preserving the current-quota fallback.
@@ -11,6 +11,7 @@ All notable changes to the CodexBar iOS companion app will be documented in this
 - Summary account bindings retain stable identity across Macs and reversible account linkages. Unknown, stale, reset-passed, blocked and unavailable observations stay distinct; credit units and balance observation ages retain their source semantics. Provider filters and card headings are text-only; headings default to the provider name or use a custom card name/account alias.
 
 ### Fixed
+- Compact iPhone landscape keeps the Usage quota chart and collapsed legend clear of the native search and tab bars, with minimized toolbar search and a shorter chart card. Larger text remains scrollable; portrait and expanded Duo retain their existing layouts.
 - Ordinary multi-Mac source and saved-history explanations move to the bottom of detail and Cost pages; failures and stale-data warnings remain near affected data.
 - Summary removes provider icons and automatic email/plan labels from card headings, keeps full account identities in details, and offers ordinary visible text inputs even when privacy mode is enabled. Shared account aliases are tucked into an expandable editor.
 - Summary default cards and the Settings home list now match Usage and Cost’s system canvas and material surfaces; custom card colors remain opt-in.

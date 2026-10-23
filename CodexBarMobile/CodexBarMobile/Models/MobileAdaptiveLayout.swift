@@ -5,6 +5,10 @@ struct MobileAdaptiveLayout: Equatable {
     var width: CGFloat = 0
     var height: CGFloat = 0
     var largeText = false
+    var usesShortHeight: Bool {
+        self.height > 0 && self.height < 500 && self.width > self.height
+    }
+
     var usesListDetail: Bool {
         self.width >= 760 && self.height >= 500 && !self.largeText
     }

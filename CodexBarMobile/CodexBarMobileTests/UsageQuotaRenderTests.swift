@@ -12,6 +12,8 @@ final class UsageQuotaRenderTests: XCTestCase {
         ("phone320", CGSize(width: 320, height: 568)),
         ("phone390", CGSize(width: 390, height: 844)),
         ("phone440", CGSize(width: 440, height: 956)),
+        ("phone-landscape667", CGSize(width: 667, height: 375)),
+        ("phone-landscape844", CGSize(width: 844, height: 390)),
         ("pad768", CGSize(width: 768, height: 1024)),
         ("duo-width768", CGSize(width: 768, height: 951)),
         ("sidebar300", CGSize(width: 300, height: 951)),
@@ -36,6 +38,8 @@ final class UsageQuotaRenderTests: XCTestCase {
                     .background(MobileSurfaceStyle.pageBackground)
                     .environment(\.colorScheme, scheme)
                     .environment(\.dynamicTypeSize, largeText ? .accessibility2 : .large)
+                    .environment(\.mobileAdaptiveLayout, MobileAdaptiveLayout(
+                        width: size.width, height: size.height, largeText: largeText))
                     .defaultAppStorage(QuotaRenderDefaults())
                     .frame(width: size.width, height: size.height)
                     let hosted = self.host(root, size: size, scheme: scheme)
@@ -44,6 +48,12 @@ final class UsageQuotaRenderTests: XCTestCase {
                     hosted.controller.view.layoutIfNeeded()
                     XCTAssertEqual(geometry.cardSize.width, size.width - 32, accuracy: 2, name)
                     XCTAssertGreaterThan(geometry.cardSize.height, largeText ? 250 : 220, name)
+                    if !largeText, size.width > size.height {
+                        XCTAssertLessThan(
+                            geometry.cardSize.height,
+                            size.height,
+                            "The complete collapsed card must fit the short container; native-bar clearance is tested in the app")
+                    }
                     let scroller = try XCTUnwrap(self.largestScroller(in: hosted.controller.view), name)
                     XCTAssertGreaterThan(scroller.bounds.width, size.width - 4)
                     XCTAssertLessThanOrEqual(

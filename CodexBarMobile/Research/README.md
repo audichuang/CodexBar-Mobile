@@ -17,6 +17,7 @@ This directory contains research documents for features being considered for Cod
 
 | # | Feature | Status | Blocker | File | Date |
 |---|---------|--------|---------|------|------|
+| 082 | Usage 普通 iPhone 横屏图表与图例首屏可见性修复 | `in-progress` | 原生搜索与短高图表布局已修；252 四语说明已准备，普通 iPhone/Duo 横竖屏、CR 与新 TestFlight 待验证 | [082-usage-landscape-chart/00-goal.md](082-usage-landscape-chart/00-goal.md) | 2026-10-23 |
 | 081 | Usage 剩余额度多曲线、Cost 整组排序与来源说明下移 | `done` | PR #208 exact-head clean/gate 后已合并，Final CI 成功；3.2.0 (251) Internal TestFlight 可用，四语/源图及 archive/CDN 图标验收通过；43 项最终专项与 16 组合 substituted，保留原生 skip/实体未验边界 | [081-usage-quota-overview/00-goal.md](081-usage-quota-overview/00-goal.md) | 2026-10-22 |
 | 080 | 独立 Summary Tab：紧凑自选指标、Provider 筛选、倒计时与耗尽预测、自定义与稳定账号绑定（#203） | `done` | 全宽独立指标网格；真实 Duo 内屏横竖屏 UI/完整截图、原生栏位与设计/review 已通过，见 04 修订记录 | [080-summary-tab/00-goal.md](080-summary-tab/00-goal.md) | 2026-10-22 |
 | 079 | v0.77.0–v0.79.0 单版本上游同步（#196）+ iOS 3.1.0 (246)：Future AGI/Munito、Gemini App、Claude Desktop/tcr、成本缓存与详情告警 | `done` | Mac live 0.79.0.1-mobile.3.1.0、公开下载/feed验收；iOS1156+67/四语/3.1(246)上传并提交审核MANUAL；PR199/200/201 clean、#196 completed；NO_DEPLOY，16组合substituted及风险保留 | [079-v079-upstream-sync/00-overview.md](079-v079-upstream-sync/00-overview.md) | 2026-10-21 |
