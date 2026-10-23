@@ -4927,16 +4927,31 @@ private struct NSEInvocationLogSection: View {
 enum MobileReleaseNotesCatalog {
     static let versions: [ReleaseNotesVersion] = [
         ReleaseNotesVersion(
-            version: "3.1.0",
+            version: "3.2.0",
             status: String(localized: "Latest"),
-            summary: String(
-                localized: "More providers and clearer account details."),
+            summary: String(localized: "Your personal Summary"),
             highlights: [
                 .init(
                     id: "summary",
                     symbol: "square.grid.2x2.fill",
                     title: String(localized: "Your personal Summary"),
-                    detail: String(localized: "Pin the metrics that matter, with compact cards, reset countdowns and estimated depletion dates.")),
+                    detail: String(
+                        localized: "Pin the metrics that matter, with compact cards, reset countdowns and estimated depletion dates.")),
+            ],
+            sections: [
+                .init(title: String(localized: "What's New"), items: [
+                    String(
+                        localized: "Pin the metrics that matter, with compact cards, reset countdowns and estimated depletion dates."),
+                    String(
+                        localized: "Summary uses usage data already synced from your Mac. No Mac update is required for this release."),
+                ]),
+            ]),
+        ReleaseNotesVersion(
+            version: "3.1.0",
+            status: "",
+            summary: String(
+                localized: "More providers and clearer account details."),
+            highlights: [
                 .init(
                     id: "providers",
                     symbol: "square.grid.2x2",
@@ -4968,7 +4983,6 @@ enum MobileReleaseNotesCatalog {
             ],
             sections: [
                 .init(title: String(localized: "What's New"), items: [
-                    String(localized: "Pin the metrics that matter, with compact cards, reset countdowns and estimated depletion dates."),
                     String(
                         localized: "Claude, Codex, and Grok details list every available reset credit with its exact expiry date and time."),
                     String(
