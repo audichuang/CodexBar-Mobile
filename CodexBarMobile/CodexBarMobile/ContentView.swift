@@ -25,12 +25,14 @@ enum CostChartStyle: String, CaseIterable, Identifiable {
 
 enum MobileRootTab: String, CaseIterable, Hashable {
     case usage
+    case summary
     case cost
     case settings
 
     var title: String {
         switch self {
         case .usage: String(localized: "Usage")
+        case .summary: String(localized: "Summary")
         case .cost: String(localized: "Cost")
         case .settings: String(localized: "Setting")
         }
@@ -39,6 +41,7 @@ enum MobileRootTab: String, CaseIterable, Hashable {
     var symbol: String {
         switch self {
         case .usage: "chart.bar.fill"
+        case .summary: "square.grid.2x2.fill"
         case .cost: "dollarsign.circle.fill"
         case .settings: "gearshape"
         }
@@ -58,6 +61,8 @@ struct ContentView: View {
     /// in-memory store so trying the demo never changes the real layout.
     @StateObject private var liveCardPreferences = UsageCardPreferencesStore.live()
     @StateObject private var demoCardPreferences = UsageCardPreferencesStore.inMemory()
+    @StateObject private var liveSummaryPreferences = SummaryPreferencesStore.live()
+    @StateObject private var demoSummaryPreferences = SummaryPreferencesStore.inMemory()
     /// Shared evaluation instant for Usage-list/detail cost surfaces. It moves
     /// at the earliest reader or producer midnight even without a CloudKit
     /// push, preventing an open detail screen from retaining yesterday's
@@ -210,6 +215,17 @@ struct ContentView: View {
                 .tag(MobileRootTab.usage)
                 .tabItem {
                     Label("Usage", systemImage: "chart.bar.fill")
+                }
+
+            SummaryTab(
+                usageData: self.usageData,
+                isDemoMode: self.$isDemoMode,
+                preferences: self.isDemoMode || self.isLayoutPreview
+                    || ProcessInfo.processInfo.arguments.contains("UI_TEST_PREVIEW_DATA")
+                    ? self.demoSummaryPreferences : self.liveSummaryPreferences)
+                .tag(MobileRootTab.summary)
+                .tabItem {
+                    Label(String(localized: "Summary"), systemImage: "square.grid.2x2.fill")
                 }
 
             CostTab(usageData: self.usageData, isDemoMode: self.$isDemoMode)
@@ -4917,6 +4933,11 @@ enum MobileReleaseNotesCatalog {
                 localized: "More providers and clearer account details."),
             highlights: [
                 .init(
+                    id: "summary",
+                    symbol: "square.grid.2x2.fill",
+                    title: String(localized: "Your personal Summary"),
+                    detail: String(localized: "Pin the metrics that matter, with compact cards, reset countdowns and estimated depletion dates.")),
+                .init(
                     id: "providers",
                     symbol: "square.grid.2x2",
                     title: String(localized: "See Future AGI and Munito"),
@@ -4947,6 +4968,7 @@ enum MobileReleaseNotesCatalog {
             ],
             sections: [
                 .init(title: String(localized: "What's New"), items: [
+                    String(localized: "Pin the metrics that matter, with compact cards, reset countdowns and estimated depletion dates."),
                     String(
                         localized: "Claude, Codex, and Grok details list every available reset credit with its exact expiry date and time."),
                     String(

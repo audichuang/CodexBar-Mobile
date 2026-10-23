@@ -2,9 +2,11 @@
 
 All notable changes to the CodexBar iOS companion app will be documented in this file.
 
-## [3.1.0 (246)] — Unreleased
+## [3.1.0 (248)] — Unreleased
 
 ### Added
+- Independent Summary tab with compact, individually selected account/window metrics, horizontal provider filters, white-by-default cards, per-card usage/reset emphasis, available balance/extra-usage metrics and observation-based depletion forecasts. The grid fills expanded windows instead of automatically opening a detail pane; tapping a card pushes full account details. Local names, account aliases, colors and manual ordering persist independently of Usage and Cost; demo layouts remain isolated.
+- Summary account bindings retain stable identity across Macs and reversible account linkages. Unknown, stale, reset-passed, blocked and unavailable observations stay distinct; credit units and balance observation ages retain their source semantics. Official OpenAI/OpenRouter assets include documented provenance and attribution; other Summary marks use neutral abbreviations.
 - Future AGI and Munito quota subscriptions, brand colors, billing/spend details and four-language labels. The catalog is append-only at 90 providers / 270 state zones; verified Munito organization keys merge across Macs while unknown identities remain device-separated.
 - Cached Claude claude-swap/tcr quota accounts from Mac 0.79.0.1, keeping workspaces distinct and counting each Mac's independent local-cost owner once.
 - Plugin detail warning/critical symbols with system colors and four-language VoiceOver labels in full details and teaser cards. Unknown severity remains compatible with older payloads.
