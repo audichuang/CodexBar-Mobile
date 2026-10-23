@@ -193,6 +193,11 @@ problem and revise the approach; do not keep stacking symptom-level patches.
 The PR comment must use the exact non-empty `Head`, `Repeated finding pattern`,
 `Root design/requirements problem`, and `Revised approach` fields documented in
 `$codexbar-git-workflow`.
+If review stops making progress, proactively follow the skill's
+"Stalled Review Diagnosis And Recovery" procedure: diagnose the stall, preserve
+evidence, and when justified retry once on the unchanged head. Do not wait for
+the user to chase it or continue unchanged polling indefinitely; recovery never
+waives the current-head review gate.
 Merge, tag creation, and public release/appcast work remain blocked until this gate passes.
 TestFlight is an independent beta workflow: an authorized upload does not require
 a PR, a clean CR gate, a merge, or remote CI completion. Keep local build/test,

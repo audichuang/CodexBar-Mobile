@@ -163,8 +163,10 @@ git push
 
 For every PR, including docs-only, review-fix, and release-closeout PRs:
 
-1. Record the current `headRefOid`, trigger `@codex review`, and keep polling.
-   Do not merge while the requested review is still in flight.
+1. Record the current `headRefOid`, review request URL/start time, last meaningful
+   progress time, and recovery-attempt count. Trigger `@codex review` and monitor
+   with the stalled-review procedure below. Do not merge while the requested
+   review is still in flight.
 2. Inspect thread-aware review state, not only checks or flat comments. Every
    finding must be fixed and retested.
 3. Reply to the finding with the fix commit/evidence, explicitly resolve the
@@ -197,6 +199,58 @@ Revised approach: <what will be redesigned or rewritten>
 For release/upstream-sync work, **merge, tag creation, Mac live release,
 and appcast publication are blocked until this PR review gate passes**.
 Review-fix and closeout PR merges are not exceptions.
+
+### Stalled Review Diagnosis And Recovery
+
+Own review progress without waiting for the user to notice or chase it.
+**By default, 15 minutes without meaningful review progress triggers diagnosis.**
+This is an operational threshold, not an OpenAI service guarantee; investigate
+earlier on an explicit error or a clear anomaly relative to comparable reviews.
+A repeated `Running` label, a new polling timestamp, or CI progress does not reset
+the review timer. Actual review-stage/log progress or a review result does.
+
+1. **Diagnose instead of repeating the same poll.** Re-read the live head,
+   review summary and its timestamps, request reactions, review threads, and CI.
+   Separate a CI failure from a stalled Codex review. Check available task/log
+   views, repository connection and account/workspace alignment, usage limits,
+   and official service status. Use supported tools and the user's configured
+   browser. An empty ordinary task list does not prove a review task is absent;
+   a null review-limit field does not prove quota is available; an operational
+   public status page does not rule out an individual failure. If internal logs
+   are unavailable, state that the exact cause is unknown rather than inventing
+   a queue, outage, or successful run.
+2. **Preserve evidence before recovery.** Save the PR URL, exact head, original
+   request/start and last-update times, observed responses/errors, and a concise
+   diagnosis. Keep observations separate from suspected causes and omit secrets.
+   Resolve an explicit authorization, quota, or configuration blocker within the
+   existing task scope before considering a retry.
+3. **Use at most one controlled retry per unchanged head.** When diagnosis
+   supports a stalled request or stale status, no actual ongoing review progress
+   is visible, and no explicit blocker explains it, existing authorization to
+   run the review covers one recovery request. Reconfirm the head is unchanged,
+   then post `@codex review` with the head, prior request time, and retry reason.
+   Preserve the original request. Do not push an empty commit, change code or
+   settings merely to force a trigger, enable paid overages, or repeatedly
+   retrigger. This recovery does not reset the code-fix review-round audit.
+4. **Verify acceptance and completion separately.** Record whether the bot
+   responds or the review start time advances; neither is a clean review. Track
+   the recovery attempt and apply the same progress deadline. Merge only after
+   the latest requested review finishes clean on the current head, all threads
+   are resolved, CI passes, and the existing review gate passes immediately
+   before merge. Keep recovery evidence separate from release provenance.
+5. **Escalate a failed recovery; do not poll indefinitely.** If the retry is
+   rejected, fails, or again exceeds the progress deadline without a further
+   authorized remedy, record the external blocker, prepare support-ready
+   evidence, and give the user one concise update with the next available step.
+   Contacting support still requires authorization. Continue independent work;
+   stop a polling-only follow-up once its recovery budget is exhausted. Do not
+   create another retry loop or label the review passed.
+
+Automated follow-ups must carry the exact head, last meaningful progress time,
+deadline, and retry count forward. They must perform diagnosis when overdue,
+not merely return the same `Running` status on every run. Keep ordinary unchanged
+pending checks quiet, report material recovery/results/blockers, and remove the
+follow-up when its work is complete or its bounded recovery plan is exhausted.
 
 ## Independent TestFlight Beta Uploads
 
