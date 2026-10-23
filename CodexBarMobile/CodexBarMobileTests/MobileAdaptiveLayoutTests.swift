@@ -29,6 +29,28 @@ final class MobileAdaptiveLayoutTests: XCTestCase {
         }
     }
 
+    func testShortHeightOnlyCompactsTheOuterLandscapeWorkspace() {
+        for size in [CGSize(width: 667, height: 375), CGSize(width: 844, height: 390)] {
+            let layout = MobileAdaptiveLayout(width: size.width, height: size.height)
+            XCTAssertTrue(layout.usesShortHeight)
+            XCTAssertFalse(layout.usesListDetail)
+            XCTAssertTrue(
+                MobileAdaptiveLayout(
+                    width: size.width, height: size.height, largeText: true).usesShortHeight,
+                "Search placement must retain the short-height workspace even when text requires scrolling")
+        }
+        for size in [
+            CGSize.zero,
+            CGSize(width: 390, height: 844),
+            CGSize(width: 768, height: 951),
+            CGSize(width: 951, height: 768),
+        ] {
+            XCTAssertFalse(
+                MobileAdaptiveLayout(width: size.width, height: size.height).usesShortHeight,
+                "Portrait and both interior poses must retain their existing presentation")
+        }
+    }
+
     func testRenderActualPagesAtIllustrativeContainerSizes() async throws {
         let directory = URL(
             fileURLWithPath: ProcessInfo.processInfo.environment["MOBILE_LAYOUT_ARTIFACTS"]

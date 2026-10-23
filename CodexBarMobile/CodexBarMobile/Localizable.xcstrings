@@ -729,30 +729,30 @@
       }
     }
   },
-  "Choose up to five account quotas, customize their colors, and compare estimated consumption until each reset. Expand the compact legend for account details.": {
+  "Choose up to five account quotas, customize their colors, and compare estimated consumption until each reset. Expand the compact legend for account details. Landscape on iPhone keeps the chart and legend clear of the search and tab bars.": {
     "localizations": {
       "en": {
         "stringUnit": {
           "state": "translated",
-          "value": "Choose up to five account quotas, customize their colors, and compare estimated consumption until each reset. Expand the compact legend for account details."
+          "value": "Choose up to five account quotas, customize their colors, and compare estimated consumption until each reset. Expand the compact legend for account details. Landscape on iPhone keeps the chart and legend clear of the search and tab bars."
         }
       },
       "zh-Hans": {
         "stringUnit": {
           "state": "translated",
-          "value": "最多选择五项账号额度，自定义颜色，对比各自重置前的预估消耗。展开紧凑图例即可查看账号详情。"
+          "value": "最多选择五项账号额度，自定义颜色，对比各自重置前的预估消耗。展开紧凑图例即可查看账号详情。iPhone 横屏时，图表和图例不会被搜索栏或标签栏挡住。"
         }
       },
       "zh-Hant": {
         "stringUnit": {
           "state": "translated",
-          "value": "最多選擇五項帳號額度，自訂顏色，比較各自重置前的預估消耗。展開精簡圖例即可查看帳號詳情。"
+          "value": "最多選擇五項帳號額度，自訂顏色，比較各自重置前的預估消耗。展開精簡圖例即可查看帳號詳情。iPhone 橫向顯示時，圖表與圖例不會被搜尋列或標籤列遮住。"
         }
       },
       "ja": {
         "stringUnit": {
           "state": "translated",
-          "value": "最大5つのアカウント利用枠を選び、色をカスタマイズして、各リセットまでの推定消費を比較できます。コンパクトな凡例を開くとアカウントの詳細を確認できます。"
+          "value": "最大5つのアカウント利用枠を選び、色をカスタマイズして、各リセットまでの推定消費を比較できます。コンパクトな凡例を開くとアカウントの詳細を確認できます。iPhoneの横向き表示では、グラフと凡例が検索バーやタブバーに隠れません。"
         }
       }
     }
@@ -813,30 +813,30 @@
       }
     }
   },
-  "Compare up to five remaining-quota estimates in Usage with custom colors and a compact legend. Reorder Cost groups and find routine source notes at the bottom.": {
+  "Compare up to five remaining-quota estimates in Usage with custom colors and a compact legend. Landscape on iPhone keeps the chart and legend clear of the search and tab bars. Reorder Cost groups and find routine source notes at the bottom.": {
     "localizations": {
       "en": {
         "stringUnit": {
           "state": "translated",
-          "value": "Compare up to five remaining-quota estimates in Usage with custom colors and a compact legend. Reorder Cost groups and find routine source notes at the bottom."
+          "value": "Compare up to five remaining-quota estimates in Usage with custom colors and a compact legend. Landscape on iPhone keeps the chart and legend clear of the search and tab bars. Reorder Cost groups and find routine source notes at the bottom."
         }
       },
       "zh-Hans": {
         "stringUnit": {
           "state": "translated",
-          "value": "用量页支持最多五条剩余额度估算线、自定义颜色和紧凑图例。费用分组支持排序，普通来源说明移至底部。"
+          "value": "用量页支持最多五条剩余额度估算线、自定义颜色和紧凑图例。iPhone 横屏时，图表和图例不会被搜索栏或标签栏挡住。费用分组支持排序，普通来源说明移至底部。"
         }
       },
       "zh-Hant": {
         "stringUnit": {
           "state": "translated",
-          "value": "用量頁支援最多五條剩餘額度估算線、自訂顏色和精簡圖例。費用群組支援排序，一般來源說明移至底部。"
+          "value": "用量頁支援最多五條剩餘額度估算線、自訂顏色和精簡圖例。iPhone 橫向顯示時，圖表與圖例不會被搜尋列或標籤列遮住。費用群組支援排序，一般來源說明移至底部。"
         }
       },
       "ja": {
         "stringUnit": {
           "state": "translated",
-          "value": "使用状況で最大5つの残量推定を、カスタムカラーとコンパクトな凡例で比較できます。費用グループの並べ替えに対応し、通常の出典説明は下部に移動しました。"
+          "value": "使用状況で最大5つの残量推定を、カスタムカラーとコンパクトな凡例で比較できます。iPhoneの横向き表示では、グラフと凡例が検索バーやタブバーに隠れません。費用グループの並べ替えに対応し、通常の出典説明は下部に移動しました。"
         }
       }
     }

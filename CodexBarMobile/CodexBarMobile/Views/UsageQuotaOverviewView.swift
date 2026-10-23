@@ -11,12 +11,17 @@ struct UsageQuotaOverviewView: View {
     var quotaSources: [String: SyncProviderQuotaSource]?
     let publicationRevision: String
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.mobileAdaptiveLayout) private var layout
     @AppStorage(MobileSettingsKeys.hidePersonalInfo) private var hidesPersonalInfo = false
     @State private var expanded = false
     @State private var showingEditor = false
     @State private var showingExplanation = false
     @State private var nextDayOnly = false
     @State private var chartWidth: CGFloat = 0
+
+    private var usesCompactLayout: Bool {
+        self.layout.usesShortHeight && !self.dynamicTypeSize.isAccessibilitySize
+    }
 
     var body: some View {
         TimelineView(.periodic(from: .now, by: 30)) { context in
@@ -55,16 +60,23 @@ struct UsageQuotaOverviewView: View {
     }
 
     private func card(overview: UsageQuotaOverview) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(alignment: .firstTextBaseline) {
-                Text(String(localized: "Remaining Quota")).font(.headline)
-                Spacer(minLength: 8)
-                Button { self.showingEditor = true } label: {
-                    Image(systemName: "slider.horizontal.3")
-                        .frame(minWidth: 32, minHeight: 32)
+        VStack(alignment: .leading, spacing: self.usesCompactLayout ? 8 : 12) {
+            if self.usesCompactLayout, !self.store.isReadOnly, !overview.lines.isEmpty {
+                ViewThatFits(in: .horizontal) {
+                    HStack(spacing: 12) {
+                        self.title.fixedSize()
+                        Spacer(minLength: 8)
+                        self.explanationButton.fixedSize()
+                        self.rangeMenu.fixedSize()
+                        self.editButton
+                    }
+                    VStack(alignment: .leading, spacing: 8) {
+                        self.header
+                        self.chartControls
+                    }
                 }
-                .accessibilityLabel(String(localized: "Choose quota lines"))
-                .accessibilityIdentifier("usage-quota-edit")
+            } else {
+                self.header
             }
             if self.store.isReadOnly {
                 Text(String(localized: "Saved quota settings could not be read. They have been kept unchanged."))
@@ -75,32 +87,67 @@ struct UsageQuotaOverviewView: View {
                 Button(String(localized: "Choose quota lines")) { self.showingEditor = true }
                     .buttonStyle(.bordered)
             } else {
-                HStack {
-                    Button { self.showingExplanation = true } label: {
-                        Label(String(localized: "Estimated"), systemImage: "info.circle")
-                            .font(.caption)
-                    }
-                    .accessibilityIdentifier("usage-quota-info")
-                    Spacer(minLength: 6)
-                    Menu {
-                        Button(String(localized: "All dates")) { self.nextDayOnly = false }
-                        Button(String(localized: "Next 24 hours")) { self.nextDayOnly = true }
-                    } label: {
-                        HStack(spacing: 4) {
-                            Text(self.nextDayOnly ? String(localized: "Next 24 hours") : String(localized: "All dates"))
-                            Image(systemName: "chevron.down").font(.caption2)
-                        }.font(.caption)
-                    }
-                    .accessibilityIdentifier("usage-quota-range")
+                if !self.usesCompactLayout {
+                    self.chartControls
                 }
                 self.chart(overview)
                 self.legend(overview)
             }
         }
-        .padding(16)
+        .padding(self.usesCompactLayout ? 12 : 16)
         .background(MobileSurfaceStyle.cardMaterial, in: RoundedRectangle(cornerRadius: 20))
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("usage-quota-overview")
+    }
+
+    private var title: some View {
+        Text(String(localized: "Remaining Quota")).font(.headline)
+    }
+
+    private var header: some View {
+        HStack(alignment: .firstTextBaseline) {
+            self.title
+            Spacer(minLength: 8)
+            self.editButton
+        }
+    }
+
+    private var editButton: some View {
+        Button { self.showingEditor = true } label: {
+            Image(systemName: "slider.horizontal.3")
+                .frame(minWidth: 32, minHeight: 32)
+        }
+        .accessibilityLabel(String(localized: "Choose quota lines"))
+        .accessibilityIdentifier("usage-quota-edit")
+    }
+
+    private var chartControls: some View {
+        HStack {
+            self.explanationButton
+            Spacer(minLength: 6)
+            self.rangeMenu
+        }
+    }
+
+    private var explanationButton: some View {
+        Button { self.showingExplanation = true } label: {
+            Label(String(localized: "Estimated"), systemImage: "info.circle")
+                .font(.caption)
+        }
+        .accessibilityIdentifier("usage-quota-info")
+    }
+
+    private var rangeMenu: some View {
+        Menu {
+            Button(String(localized: "All dates")) { self.nextDayOnly = false }
+            Button(String(localized: "Next 24 hours")) { self.nextDayOnly = true }
+        } label: {
+            HStack(spacing: 4) {
+                Text(self.nextDayOnly ? String(localized: "Next 24 hours") : String(localized: "All dates"))
+                Image(systemName: "chevron.down").font(.caption2)
+            }.font(.caption)
+        }
+        .accessibilityIdentifier("usage-quota-range")
     }
 
     private func chart(_ overview: UsageQuotaOverview) -> some View {
@@ -164,7 +211,7 @@ struct UsageQuotaOverviewView: View {
                 }
         }
         .chartPlotStyle { $0.clipped() }
-        .frame(height: self.dynamicTypeSize.isAccessibilitySize ? 210 : 170)
+        .frame(height: self.dynamicTypeSize.isAccessibilitySize ? 210 : (self.usesCompactLayout ? 140 : 170))
         .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { self.chartWidth = $0 }
         .accessibilityLabel(String(localized: "Estimated remaining quota by date"))
         .accessibilityIdentifier("usage-quota-chart")

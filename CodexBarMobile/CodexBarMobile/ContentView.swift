@@ -637,7 +637,6 @@ private struct ProviderListView: View {
         let otherCards = arranged.others.filter(matches)
         return ScrollView {
             LazyVStack(spacing: 16) {
-                MockProviderBanner(snapshot: self.snapshot)
                 UsageQuotaOverviewView(
                     store: self.quotaPreferences, accounts: liveProviders,
                     linkages: self.isDemoMode ? [] : self.usageData.providerLinkages,
@@ -648,6 +647,7 @@ private struct ProviderListView: View {
                     publicationRevision: "\(self.isDemoMode)|\(self.usageData.publicationRevision)|"
                         + liveProviders.map { "\($0.cardIdentityKey)|\($0.lastUpdated)" }.joined(separator: ";")
                         + self.usageData.providerLinkages.map { "\($0.recordID)|\($0.unmerge)" }.sorted().joined(separator: ";"))
+                MockProviderBanner(snapshot: self.snapshot)
                 if !pinnedCards.isEmpty {
                     self.sectionHeader(String(localized: "Pinned"), identifier: "usage-section-pinned")
                     self.cardGrid(
@@ -695,11 +695,14 @@ private struct ProviderListView: View {
             await self.usageData.refresh()
         }
         .modifier(SoftScrollEdgeModifier())
+        .accessibilityIdentifier("usage-provider-list")
         .searchable(
             text: self.$searchText,
             isPresented: self.$isSearching,
-            placement: .navigationBarDrawer(displayMode: .always),
+            placement: self.layout.usesShortHeight ? .toolbar : .navigationBarDrawer(displayMode: .always),
             prompt: Text("Search providers"))
+        .modifier(UsageSearchToolbarModifier(
+            usesShortHeight: self.layout.usesShortHeight, isSearching: self.isSearching))
     }
 
     private func sectionHeader(_ title: String, identifier: String) -> some View {
@@ -845,6 +848,22 @@ private struct ProviderListView: View {
             return "provider-account-card-\(card.providerID)-\(ordinal)"
         }
         return "provider-group-\(card.providerID)"
+    }
+}
+
+/// Keeps search available without reserving a permanent drawer in a short landscape viewport.
+private struct UsageSearchToolbarModifier: ViewModifier {
+    let usesShortHeight: Bool
+    let isSearching: Bool
+
+    func body(content: Content) -> some View {
+        if #available(iOS 26, *) {
+            // Minimize only while idle. Active search needs automatic presentation
+            // so its native cancel action can finish the search interaction.
+            content.searchToolbarBehavior(self.usesShortHeight && !self.isSearching ? .minimize : .automatic)
+        } else {
+            content
+        }
     }
 }
 
@@ -5061,7 +5080,7 @@ enum MobileReleaseNotesCatalog {
                 .init(
                     id: "quota-overview", symbol: "chart.xyaxis.line",
                     title: String(localized: "Compare your remaining quotas"),
-                    detail: String(localized: "Choose up to five account quotas, customize their colors, and compare estimated consumption until each reset. Expand the compact legend for account details.")),
+                    detail: String(localized: "Choose up to five account quotas, customize their colors, and compare estimated consumption until each reset. Expand the compact legend for account details. Landscape on iPhone keeps the chart and legend clear of the search and tab bars.")),
                 .init(
                     id: "cost-order", symbol: "arrow.up.arrow.down",
                     title: String(localized: "Put Cost groups in your order"),
@@ -5072,7 +5091,7 @@ enum MobileReleaseNotesCatalog {
                     String(
                         localized: "Pin the metrics that matter, with simple text labels, reset countdowns and estimated depletion dates. Cards show the provider name or your own label. Names stay visible while editing. Summary and Settings match the rest of the app."),
                     String(
-                        localized: "Compare up to five remaining-quota estimates in Usage with custom colors and a compact legend. Reorder Cost groups and find routine source notes at the bottom."),
+                        localized: "Compare up to five remaining-quota estimates in Usage with custom colors and a compact legend. Landscape on iPhone keeps the chart and legend clear of the search and tab bars. Reorder Cost groups and find routine source notes at the bottom."),
                     String(localized: "This update uses data already synced from your Mac. No Mac update is required."),
                 ]),
             ]),
