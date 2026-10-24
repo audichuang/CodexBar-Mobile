@@ -2,15 +2,16 @@
 
 All notable changes to the CodexBar iOS companion app will be documented in this file.
 
-## [3.2.0 (254)] — Unreleased
+## [3.2.0 (255)] — Unreleased
 
 ### Added
-- Usage remaining-quota overview compares up to five independently selected account/window lines on one shared 144-hour calendar ending at the nearest upcoming Weekly reset across all user providers, with seven date marks and automatic rollover, with custom colors and a collapsed legend. Device-local, account-scoped observations show actual consumption and stop at the latest source reading, without predictions or reused provider-shared history. History requires verified stable ownership; linking a known account to old anonymous publications preserves sampling from its known source, while multiple stable owners remain isolated.
+- Usage remaining-quota overview compares up to five independently selected account/window lines on one shared 144-hour calendar ending at the nearest upcoming Weekly reset across all user providers, with seven date marks and automatic rollover, with custom colors and a collapsed legend. Device-local account observations and read-only, unambiguous provider-synced history show actual consumption and stop at the latest source reading, without predictions. Provider history retains its provider-level provenance and is never persisted as verified account observations. History requires verified stable ownership; linking a known account to old anonymous publications preserves sampling from its known source, while multiple stable owners remain isolated.
 - Cost dashboard groups can be reordered together, retaining saved positions when data is temporarily unavailable.
 - Independent Summary tab with compact, individually selected account/window metrics, horizontal provider filters, neutral material cards by default, per-card usage/reset emphasis, available balance/extra-usage metrics and observation-based depletion forecasts. The grid fills expanded windows instead of automatically opening a detail pane; tapping a card pushes full account details. Local names, account aliases, colors and manual ordering persist independently of Usage and Cost; demo layouts remain isolated.
 - Summary account bindings retain stable identity across Macs and reversible account linkages. Unknown, stale, reset-passed, blocked and unavailable observations stay distinct; credit units and balance observation ages retain their source semantics. Provider filters and card headings are text-only; headings default to the provider name or use a custom card name/account alias.
 
 ### Fixed
+- Remaining Quota now includes available synchronized history already shown in provider details, rather than starting only when this iPhone collected its first point. Seven date labels remain centered and evenly spaced, with symmetric edge padding to prevent clipping.
 - Remaining Quota now plots actual observations rather than extrapolating future exhaustion. A single reading stays a point at its source timestamp; gaps and reset cycles stay separate, and bounded retention preserves the earliest and newest observed values.
 - Compact iPhone landscape keeps the Usage quota chart and collapsed legend clear of the native search and tab bars, with minimized toolbar search and a shorter chart card. Larger text remains scrollable; portrait and expanded Duo retain their existing layouts.
 - Ordinary multi-Mac source and saved-history explanations move to the bottom of detail and Cost pages; failures and stale-data warnings remain near affected data.

@@ -5080,7 +5080,7 @@ enum MobileReleaseNotesCatalog {
                 .init(
                     id: "quota-overview", symbol: "chart.xyaxis.line",
                     title: String(localized: "Compare your remaining quotas"),
-                    detail: String(localized: "Choose up to five account quotas and customize their colors. Compare actual remaining quota over the six days leading to your nearest weekly reset, with seven date marks and an automatically updating timeline. Expand the compact legend for account details. The chart stays clear of the search and tab bars in iPhone landscape.")),
+                    detail: String(localized: "Choose up to five account quotas and customize their colors. Include available synced provider history and compare actual remaining quota over the six days leading to your nearest weekly reset, with seven evenly spaced date marks and an automatically updating timeline. Expand the compact legend for account details. The chart stays clear of the search and tab bars in iPhone landscape.")),
                 .init(
                     id: "cost-order", symbol: "arrow.up.arrow.down",
                     title: String(localized: "Put Cost groups in your order"),

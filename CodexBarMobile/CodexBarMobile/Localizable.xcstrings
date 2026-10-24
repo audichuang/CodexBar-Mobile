@@ -1,6 +1,34 @@
 {
   "sourceLanguage": "en",
   "strings": {
+  "Includes synced provider history": {
+    "localizations": {
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Includes synced provider history"
+        }
+      },
+      "ja": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "プロバイダの同期履歴を含む"
+        }
+      },
+      "zh-Hans": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "包含服务商同步历史"
+        }
+      },
+      "zh-Hant": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "包含服務商同步歷史"
+        }
+      }
+    }
+  },
   "The chart ends at your nearest upcoming weekly reset across providers and starts 144 hours earlier, with seven date marks. It updates as resets pass or new data arrives. Lines show only actual readings.": {
     "localizations": {
       "zh-Hans": {
@@ -29,34 +57,34 @@
       }
     }
   },
-  "Choose up to five account quotas and customize their colors. Compare actual remaining quota over the six days leading to your nearest weekly reset, with seven date marks and an automatically updating timeline. Expand the compact legend for account details. The chart stays clear of the search and tab bars in iPhone landscape.": {
-    "localizations": {
-      "zh-Hans": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "最多选择五项账号额度并自定义颜色。以最近的每周重置时间为终点，查看此前六天的真实剩余额度，显示七个日期刻度并自动更新。展开紧凑图例查看账号详情。iPhone 横屏时，图表不会被搜索栏和标签栏遮挡。"
-        }
-      },
-      "zh-Hant": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "最多選擇五項帳號額度並自訂顏色。以最近的每週重置時間為終點，查看此前六天的真實剩餘額度，顯示七個日期刻度並自動更新。展開精簡圖例查看帳號詳情。iPhone 橫向時，圖表不會被搜尋列和標籤列遮擋。"
-        }
-      },
-      "ja": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "最大5つのアカウント枠を選び、色を変更できます。最も近い週間リセットまでの6日間の実際の残量を、7つの日付目盛りで比較できます。期間は自動更新され、凡例を開くとアカウントの詳細を確認できます。iPhoneの横向きでも検索バーやタブバーがグラフを遮りません。"
-        }
-      },
-      "en": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Choose up to five account quotas and customize their colors. Compare actual remaining quota over the six days leading to your nearest weekly reset, with seven date marks and an automatically updating timeline. Expand the compact legend for account details. The chart stays clear of the search and tab bars in iPhone landscape."
+  "Choose up to five account quotas and customize their colors. Include available synced provider history and compare actual remaining quota over the six days leading to your nearest weekly reset, with seven evenly spaced date marks and an automatically updating timeline. Expand the compact legend for account details. The chart stays clear of the search and tab bars in iPhone landscape.": {
+      "localizations": {
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "显示已有服务商同步历史，七个日期标签保持等距。最多选择五项账号额度并自定义颜色。以最近的每周重置时间为终点，查看此前六天的真实剩余额度，显示七个日期刻度并自动更新。展开紧凑图例查看账号详情。iPhone 横屏时，图表不会被搜索栏和标签栏遮挡。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "顯示已有服務商同步歷史，七個日期標籤保持等距。最多選擇五項帳號額度並自訂顏色。以最近的每週重置時間為終點，查看此前六天的真實剩餘額度，顯示七個日期刻度並自動更新。展開精簡圖例查看帳號詳情。iPhone 橫向時，圖表不會被搜尋列和標籤列遮擋。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "既存のプロバイダ同期履歴を表示し、7つの日付ラベルを等間隔に配置します。最大5つのアカウント枠を選び、色を変更できます。最も近い週間リセットまでの6日間の実際の残量を、7つの日付目盛りで比較できます。期間は自動更新され、凡例を開くとアカウントの詳細を確認できます。iPhoneの横向きでも検索バーやタブバーがグラフを遮りません。"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose up to five account quotas and customize their colors. Include available synced provider history and compare actual remaining quota over the six days leading to your nearest weekly reset, with seven evenly spaced date marks and an automatically updating timeline. Expand the compact legend for account details. The chart stays clear of the search and tab bars in iPhone landscape."
+          }
         }
       }
-    }
-  },
+    },
   "Compare up to five actual quota histories in Usage on one weekly timeline, with custom colors and a compact legend. Lines stop at the latest reading without predicting future usage. Landscape on iPhone keeps the chart and legend clear of the search and tab bars. Reorder Cost groups and find routine source notes at the bottom.": {
     "localizations": {
       "en": {
@@ -197,34 +225,34 @@
       }
     }
   },
-  "No future usage is predicted. One reading appears as a point; missing history is not filled in, and long gaps break the line.": {
-    "localizations": {
-      "en": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "No future usage is predicted. One reading appears as a point; missing history is not filled in, and long gaps break the line."
-        }
-      },
-      "zh-Hans": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "此图不预测未来用量。只有一个读数时显示为点；缺失历史不会补造，长时间缺测会断开曲线。"
-        }
-      },
-      "zh-Hant": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "此圖不預測未來用量。只有一個讀數時顯示為點；缺失歷史不會補造，長時間缺測會斷開曲線。"
-        }
-      },
-      "ja": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "将来の使用量は予測しません。測定値が1件の場合は点で表示し、欠けた履歴は補完せず、長い欠測区間では線を切ります。"
+  "No future usage is predicted or missing readings invented. Synced provider history follows the detail chart; long gaps between local readings break the line.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No future usage is predicted or missing readings invented. Synced provider history follows the detail chart; long gaps between local readings break the line."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不预测未来用量，也不补造缺失读数。服务商同步历史与详情图表一致；本机读数之间的长时间缺口会断开连线。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不預測未來用量，也不補造缺失讀數。服務商同步歷史與詳情圖表一致；本機讀數之間的長時間缺口會斷開連線。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "将来の利用を予測せず、欠落した記録を作りません。プロバイダ同期履歴は詳細グラフと同じように表示し、本機の記録に長い空白がある場合は線を区切ります。"
+          }
         }
       }
-    }
-  },
+    },
   "About Quota History": {
     "localizations": {
       "en": {
@@ -841,34 +869,34 @@
       }
     }
   },
-  "Observations are collected on this iPhone from synced account data. Missing or outdated readings are not treated as new activity.": {
-    "localizations": {
-      "en": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Observations are collected on this iPhone from synced account data. Missing or outdated readings are not treated as new activity."
-        }
-      },
-      "zh-Hans": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "本 iPhone 从同步的账号数据中积累观测。缺失或过期的读数不会计为新活动。"
-        }
-      },
-      "zh-Hant": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "本 iPhone 從同步的帳號資料中累積觀測。缺失或過期的讀數不會計為新活動。"
-        }
-      },
-      "ja": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "このiPhoneは同期されたアカウントデータから観測を蓄積します。欠落や古い値は新しい使用記録として扱いません。"
+  "The chart combines readings saved on this iPhone with available provider history shown in the details. Provider history is not account-verified and is omitted when multiple accounts or conflicting sources make it ambiguous. Missing or outdated readings are not new activity.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The chart combines readings saved on this iPhone with available provider history shown in the details. Provider history is not account-verified and is omitted when multiple accounts or conflicting sources make it ambiguous. Missing or outdated readings are not new activity."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "このiPhoneに保存した記録と、詳細画面にある利用可能なプロバイダ履歴を組み合わせます。プロバイダ履歴はアカウント所有を確認できないため、複数アカウントや提供元の不一致で曖昧な場合は表示しません。欠落・古い記録は新しい利用として扱いません。"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "图表结合本机保存的读数与详情中的可用服务商历史。服务商历史未经账号归属验证；存在多个账号或来源冲突、无法明确区分时不展示。缺失或过期读数不会作为新活动。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "圖表結合本機儲存的讀數與詳情中的可用服務商歷史。服務商歷史未經帳號歸屬驗證；存在多個帳號或來源衝突、無法明確區分時不顯示。缺失或過期讀數不會視為新活動。"
+          }
         }
       }
-    }
-  },
+    },
   "About Quota Estimates": {
     "localizations": {
       "en": {
