@@ -156,7 +156,7 @@ struct UsageQuotaOverviewTests {
     }
 
     @Test
-    func `shared wire history never seeds account-specific curves even with one visible account`() throws {
+    func `read only provider history restores observations without becoming verified local account history`() throws {
         let history = SyncUtilizationSeries(name: "session", windowMinutes: 300, entries: [
             SyncUtilizationEntry(capturedAt: Self.now.addingTimeInterval(-1800), usedPercent: 1, resetsAt: nil),
             SyncUtilizationEntry(capturedAt: Self.now.addingTimeInterval(-900), usedPercent: 19, resetsAt: nil),
@@ -167,8 +167,91 @@ struct UsageQuotaOverviewTests {
         store.reconcile(accounts: [account], now: Self.now)
         let line = try #require(store.overview(accounts: [account], now: Self.now).lines.first)
         #expect(line.localObservationCount == 1)
-        #expect(line.observedSamples.count == 1)
-        #expect(line.observedSamples.count <= 3)
+        #expect(line.usesSyncedProviderHistory)
+        #expect(line.observedSamples.map(\.remainingPercent) == [99, 81, 81, 80])
+        #expect(line.observedSamples.first?.date == Self.now.addingTimeInterval(-1800))
+        #expect(line.observedSamples.allSatisfy { $0.segment == 0 })
+    }
+
+    @Test
+    func `synced history uses exact source account cycle and local receipts win timestamp conflicts`() throws {
+        let reset = Self.now.addingTimeInterval(2 * 86400)
+        let old = Self.now.addingTimeInterval(-2 * 86400)
+        let localTime = Self.now.addingTimeInterval(-300)
+        let history = SyncUtilizationSeries(name: "weekly", windowMinutes: 10080, entries: [
+            SyncUtilizationEntry(capturedAt: old, usedPercent: 2, resetsAt: reset),
+            SyncUtilizationEntry(capturedAt: localTime, usedPercent: 10, resetsAt: reset),
+            SyncUtilizationEntry(capturedAt: Self.now.addingTimeInterval(-120), usedPercent: 15, resetsAt: reset),
+            SyncUtilizationEntry(capturedAt: Self.now, usedPercent: 20, resetsAt: reset),
+            // Neither another cycle nor future readings may contaminate this curve.
+            SyncUtilizationEntry(
+                capturedAt: old.addingTimeInterval(60),
+                usedPercent: 70,
+                resetsAt: reset.addingTimeInterval(-7 * 86400)),
+            SyncUtilizationEntry(capturedAt: Self.now.addingTimeInterval(60), usedPercent: 80, resetsAt: reset),
+        ])
+        let store = UsageQuotaOverviewStore.inMemory()
+        let local = Self.account(capturedAt: localTime, windows: [Self.window(
+            id: "secondary", used: 30, minutes: 10080, reset: reset)])
+        store.reconcile(accounts: [local], now: localTime)
+        let raw = Self.account(windows: [Self.window(
+            id: "secondary", used: 40, minutes: 10080, reset: reset)], wireHistory: [history])
+        let source = SyncedUsageSnapshot(
+            providers: [raw], syncTimestamp: Self.now, deviceName: "Fictional source", deviceID: "source")
+        let merged = Self.account(windows: [Self.window(
+            id: "secondary", used: 40, minutes: 10080, reset: reset)], wireHistory: [
+            SyncUtilizationSeries(name: "weekly", windowMinutes: 10080, entries: [
+                SyncUtilizationEntry(capturedAt: old, usedPercent: 99, resetsAt: reset),
+            ]),
+        ])
+        store.reconcile(accounts: [merged], sourceSnapshots: [source], now: Self.now)
+        let line = try #require(store.overview(accounts: [merged], now: Self.now).lines.first)
+        #expect(line.observedSamples.map(\.remainingPercent) == [98, 70, 60])
+        #expect(line.observedSamples.map(\.date) == [old, localTime, Self.now])
+    }
+
+    @Test
+    func `different account older writer and conflicting equal time histories cannot supply a curve`() {
+        let past = Self.now.addingTimeInterval(-600)
+        func history(_ used: Double) -> [SyncUtilizationSeries] {
+            [SyncUtilizationSeries(name: "session", windowMinutes: 300, entries: [
+                SyncUtilizationEntry(capturedAt: past, usedPercent: used, resetsAt: nil),
+            ])]
+        }
+        func source(_ account: ProviderUsageSnapshot, _ id: String) -> SyncedUsageSnapshot {
+            SyncedUsageSnapshot(providers: [account], syncTimestamp: Self.now, deviceName: id, deviceID: id)
+        }
+        let current = Self.account()
+        let otherAccount = Self.account(id: "different-owner", wireHistory: history(1))
+        let oldWriter = Self.account(capturedAt: Self.now.addingTimeInterval(-60), wireHistory: history(2))
+        let store = UsageQuotaOverviewStore.inMemory()
+        store.reconcile(accounts: [current], sourceSnapshots: [
+            source(current, "current"), source(otherAccount, "other"), source(oldWriter, "older"),
+        ], now: Self.now)
+        #expect(store.overview(accounts: [current], now: Self.now).lines.first?.observedSamples.count == 1)
+        let first = Self.account(wireHistory: history(1))
+        let second = Self.account(wireHistory: history(2))
+        for sources in [
+            [source(first, "first"), source(second, "second")],
+            [source(second, "second"), source(first, "first")],
+        ] {
+            store.reconcile(accounts: [current], sourceSnapshots: sources, now: Self.now)
+            #expect(store.overview(accounts: [current], now: Self.now).lines.first?.observedSamples.count == 1)
+        }
+    }
+
+    @Test
+    func `multiple visible accounts cannot duplicate provider wide history into independent account curves`() {
+        let series = SyncUtilizationSeries(name: "session", windowMinutes: 300, entries: [
+            SyncUtilizationEntry(capturedAt: Self.now.addingTimeInterval(-300), usedPercent: 1, resetsAt: nil),
+        ])
+        let accounts = [Self.account(wireHistory: [series]), Self.account(
+            id: "other-owner", record: "other-record", wireHistory: [series])]
+        let store = UsageQuotaOverviewStore.inMemory()
+        store.reconcile(accounts: accounts, now: Self.now)
+        let overview = store.overview(accounts: accounts, now: Self.now)
+        #expect(overview.lines.count == 2)
+        #expect(overview.lines.allSatisfy { !$0.usesSyncedProviderHistory && $0.observedSamples.count == 1 })
     }
 
     @Test

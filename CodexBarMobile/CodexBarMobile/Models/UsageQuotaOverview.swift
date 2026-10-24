@@ -100,6 +100,8 @@ struct UsageQuotaResolvedLine: Identifiable, Equatable, Sendable {
     let resetDate: Date?
     let observedSamples: [UsageQuotaPoint]
     let localObservationCount: Int
+    /// Read-only provider-level history; the legacy wire does not prove per-entry account ownership.
+    var usesSyncedProviderHistory = false
 
     var id: UUID {
         self.selection.id

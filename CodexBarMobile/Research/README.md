@@ -17,6 +17,7 @@ This directory contains research documents for features being considered for Cod
 
 | # | Feature | Status | Blocker | File | Date |
 |---|---------|--------|---------|------|------|
+| 085 | 总览复用真实同步历史与等距日期轴 | `done` | Air真实多日曲线、1319单测/1条件跳过、四姿态及本地CR通过；远端CR/TF255以本轮发布回执为准 | [085-quota-synced-history-axis/00-goal.md](085-quota-synced-history-axis/00-goal.md) | 2026-10-23 |
 | 084 | 最近 Weekly 重置驱动的144小时额度历史 | `done` | 本地/远端CR与TF254待完成 | [084-quota-nearest-weekly-reset/00-goal.md](084-quota-nearest-weekly-reset/00-goal.md) | 2026-10-23 |
 | 083 | Usage 真实额度消耗历史，删除预测线 | `done` | 真实历史与固定周轴已实现；1311 unit通过/1 skip，最终40专项/52状态渲染、Air实机及普通iPhone/Duo完整横竖屏通过；远端CR/TF253以发布回执为准 | [083-quota-observed-history/00-goal.md](083-quota-observed-history/00-goal.md) | 2026-10-23 |
 | 082 | Usage 普通 iPhone 横屏图表与图例首屏可见性修复 | `done` | iOS 26/27 原生全流程及 Duo 横竖屏通过；PR #210 CR/合并/Final CI 完成，3.2.0 (252) Internal TestFlight 可用，实际上传 IPA/四语/Apple CDN 图标均验收通过；无 Mac 发布 | [082-usage-landscape-chart/00-goal.md](082-usage-landscape-chart/00-goal.md) | 2026-10-23 |

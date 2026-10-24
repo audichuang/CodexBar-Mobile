@@ -41,10 +41,10 @@ struct UsageQuotaOverviewView: View {
                             localized: "The chart ends at your nearest upcoming weekly reset across providers and starts 144 hours earlier, with seven date marks. It updates as resets pass or new data arrives. Lines show only actual readings."))
                     Text(
                         String(
-                            localized: "No future usage is predicted. One reading appears as a point; missing history is not filled in, and long gaps break the line."))
+                            localized: "No future usage is predicted or missing readings invented. Synced provider history follows the detail chart; long gaps between local readings break the line."))
                     Text(
                         String(
-                            localized: "Observations are collected on this iPhone from synced account data. Missing or outdated readings are not treated as new activity."))
+                            localized: "The chart combines readings saved on this iPhone with available provider history shown in the details. Provider history is not account-verified and is omitted when multiple accounts or conflicting sources make it ambiguous. Missing or outdated readings are not new activity."))
                 }
                 .navigationTitle(String(localized: "About Quota History"))
                 .navigationBarTitleDisplayMode(.inline)
@@ -165,7 +165,7 @@ struct UsageQuotaOverviewView: View {
                 }
             }
         }
-        .chartXScale(domain: start...end, range: .plotDimension(padding: 4))
+        .chartXScale(domain: start...end, range: .plotDimension(padding: 12))
         .chartYScale(domain: 0...100, range: .plotDimension(padding: 4))
         .chartLegend(.hidden)
         .chartYAxis {
@@ -181,10 +181,7 @@ struct UsageQuotaOverviewView: View {
         }
         .chartXAxis {
             AxisMarks(values: overview.dateTicks()) { value in
-                AxisValueLabel(
-                    anchor: value.index == 0 ? .topLeading : (value.index == 6 ? .topTrailing : .top),
-                    collisionResolution: .disabled)
-                {
+                AxisValueLabel(anchor: .top, collisionResolution: .disabled) {
                     if let date = value.as(Date.self) {
                         Text(Calendar.autoupdatingCurrent.component(.day, from: date).formatted())
                             .font(.caption2).monospacedDigit()
@@ -254,6 +251,10 @@ struct UsageQuotaOverviewView: View {
                     providerID: line.selection.providerID, anchorID: line.selection.accountAnchorID,
                     preferences: self.store.preferences, hidesPersonalInfo: self.hidesPersonalInfo))
                     .font(.caption).foregroundStyle(.secondary).fixedSize(horizontal: false, vertical: true)
+                if line.usesSyncedProviderHistory {
+                    Text(String(localized: "Includes synced provider history"))
+                        .font(.caption2).foregroundStyle(.secondary)
+                }
                 if line.state == .available, let reset = line.resetDate {
                     Text(String(
                         format: String(localized: "Resets %@"),

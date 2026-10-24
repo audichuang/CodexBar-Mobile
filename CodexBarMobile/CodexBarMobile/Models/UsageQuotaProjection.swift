@@ -53,14 +53,37 @@ enum UsageQuotaProjection {
             let storedHistory = histories.first { $0.binding == selection.binding }
             let verifiedOwner = storedHistory.map { self.historyMatchesAnchor($0, preferences: preferences) } == true
             let history = canonical == nil || !unambiguous || !verifiedOwner ? [] : storedHistory?.observations ?? []
-            let samples = self.observedSamples(card: card, observations: history, now: now)
+            let singleProviderAccount = accounts.filter { $0.providerID == selection.providerID }.count == 1
+            let synced = canonical == nil || !unambiguous || !singleProviderAccount ? [] : self.syncedObservations(
+                card: card, windowID: selection.windowID,
+                sourceSnapshots: sourceSnapshots, quotaSources: quotaSources, now: now)
+            // Local receipts supersede an older synced value at the same timestamp. The
+            // current authoritative source reading is applied last by observedSamples.
+            // A conflicting provider-wide sample must not erase verified local receipts
+            // through the replenishment/decreasing-usage reset rule below.
+            let compatibleSynced = synced.filter { sample in
+                !history.contains { local in
+                    abs(local.resetDate.timeIntervalSince(sample.resetDate)) <= 120
+                        && local.windowDuration == sample.windowDuration
+                        && ((local.capturedAt < sample.capturedAt && local.usedPercent > sample.usedPercent)
+                            || (local.capturedAt > sample.capturedAt && local.usedPercent < sample.usedPercent))
+                }
+            }
+            var combined = Dictionary(
+                compatibleSynced.map { ($0.capturedAt, $0) },
+                uniquingKeysWith: { _, latest in latest })
+            for observation in history {
+                combined[observation.capturedAt] = observation
+            }
+            let samples = self.observedSamples(card: card, observations: Array(combined.values), now: now)
             return UsageQuotaResolvedLine(
                 selection: selection, provider: card.provider, accountTitle: card.accountTitle,
                 compactAccountTitle: card.compactAccountTitle, privateAccountTitle: card.privateAccountTitle,
                 metricTitle: card.metricTitle, state: card.state, isStale: card.isStale,
                 currentRemainingPercent: card.usedPercent.map { 100 - $0 },
                 observedAt: card.observedAt, resetDate: card.resetDate,
-                observedSamples: samples, localObservationCount: history.count)
+                observedSamples: samples, localObservationCount: history.count,
+                usesSyncedProviderHistory: compatibleSynced.contains { $0.capturedAt < (card.observedAt ?? now) })
         }
         // The calendar is shared by all providers, not resized to selected lines or
         // this iPhone's available samples. The nearest future valid Weekly reset anchors it.
@@ -136,6 +159,61 @@ enum UsageQuotaProjection {
         }
         guard let minutes = window.windowMinutes, minutes > 0, minutes < 1440 else { return nil }
         return Double(minutes) * 60
+    }
+
+    /// Read-only provider history, matching the detail chart's legacy wire semantics.
+    /// The raw writer proves the current reading, NOT ownership of historical entries:
+    /// legacy producers can attach provider-wide history to an account publication.
+    /// Never persist these entries as verified local account observations, and suppress
+    /// them when multiple known accounts or conflicting current writers make attribution ambiguous.
+    private static func syncedObservations(
+        card: SummaryResolvedCard, windowID: String,
+        sourceSnapshots: [SyncedUsageSnapshot]?, quotaSources: [String: SyncProviderQuotaSource]?, now: Date)
+        -> [UsageQuotaObservation]
+    {
+        guard card.state == .available, !card.isStale, let account = card.provider,
+              let evidence = UsageQuotaSourceResolver.evidence(
+                  account: account, windowID: windowID,
+                  sourceSnapshots: sourceSnapshots, quotaSources: quotaSources),
+              evidence.capturedAt == card.observedAt,
+              let lane = MobileQuotaBurndown.nativeLanes(for: evidence.account).first(where: {
+                  $0.window == evidence.window
+              }),
+              let series = evidence.account.utilizationHistory?.filter({
+                  $0.name == lane.seriesName && $0.windowMinutes == evidence.window.windowMinutes
+              }), series.count == 1,
+              let model = MobileQuotaBurndown(
+                  series: series[0], window: evidence.window,
+                  capturedAt: evidence.capturedAt, referenceDate: now),
+              let duration = self.duration(
+                  window: evidence.window, providerID: account.providerID, capturedAt: evidence.capturedAt)
+        else { return [] }
+        // Equal-time writers can agree on current quota while disagreeing on history.
+        // Do not let source array order choose which historical curve is presented.
+        if let sourceSnapshots {
+            let stable = UsageAccountIdentity.tokens(for: evidence.account).filter(UsageAccountIdentity.isStable)
+            let conflictingOwner = sourceSnapshots.flatMap(\.providers).contains { raw in
+                guard raw.providerID == account.providerID else { return false }
+                let rawStable = UsageAccountIdentity.tokens(for: raw).filter(UsageAccountIdentity.isStable)
+                return !rawStable.isEmpty && stable.isDisjoint(with: rawStable)
+            }
+            guard !conflictingOwner else { return [] }
+            for snapshot in sourceSnapshots {
+                guard let peer = UsageQuotaSourceResolver.evidence(
+                    account: account, windowID: windowID,
+                    sourceSnapshots: [snapshot], quotaSources: quotaSources),
+                    peer.capturedAt == evidence.capturedAt, !peer.account.isError else { continue }
+                let peerSeries = peer.account.utilizationHistory?.filter {
+                    $0.name == lane.seriesName && $0.windowMinutes == evidence.window.windowMinutes
+                } ?? []
+                guard peerSeries == series else { return [] }
+            }
+        }
+        return model.samples.map {
+            UsageQuotaObservation(
+                capturedAt: $0.date, usedPercent: 100 - $0.remainingPercent,
+                resetDate: model.reset, windowDuration: duration, startsSegment: false)
+        }
     }
 
     private static func observedSamples(
