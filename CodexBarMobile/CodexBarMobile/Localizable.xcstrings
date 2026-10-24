@@ -1,58 +1,58 @@
 {
   "sourceLanguage": "en",
   "strings": {
-  "The chart spans seven days ending at the latest weekly reset across providers. Each line shows actual remaining quota and stops at its latest reading.": {
+  "The chart ends at your nearest upcoming weekly reset across providers and starts 144 hours earlier, with seven date marks. It updates as resets pass or new data arrives. Lines show only actual readings.": {
     "localizations": {
-      "en": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "The chart spans seven days ending at the latest weekly reset across providers. Each line shows actual remaining quota and stops at its latest reading."
-        }
-      },
       "zh-Hans": {
         "stringUnit": {
           "state": "translated",
-          "value": "图表显示以所有服务商中最晚的每周重置时间为终点的完整七天。每条线显示实际剩余额度，并停在最新采样处。"
+          "value": "图表以你的所有服务商中最近一次即将到来的每周重置时间为终点，往前显示 144 小时，共七个日期刻度。重置到期或收到新数据时自动更新。曲线仅显示真实读数。"
         }
       },
       "zh-Hant": {
         "stringUnit": {
           "state": "translated",
-          "value": "圖表顯示以所有服務商中最晚的每週重置時間為終點的完整七天。每條線顯示實際剩餘額度，並停在最新取樣處。"
+          "value": "圖表以你的所有服務商中最近一次即將到來的每週重置時間為終點，往前顯示 144 小時，共七個日期刻度。重置到期或收到新資料時自動更新。曲線僅顯示真實讀數。"
         }
       },
       "ja": {
         "stringUnit": {
           "state": "translated",
-          "value": "全プロバイダーの最も遅い週次リセットを終点とする7日間を表示します。各線は実際の残り利用枠を示し、最新の測定値で止まります。"
+          "value": "プロバイダ全体で最も近い次の週間リセット時刻を終点に、144時間前から7つの日付目盛りで表示します。リセット時刻を過ぎるか新しいデータが届くと更新されます。線は実際の記録だけを表示します。"
+        }
+      },
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "The chart ends at your nearest upcoming weekly reset across providers and starts 144 hours earlier, with seven date marks. It updates as resets pass or new data arrives. Lines show only actual readings."
         }
       }
     }
   },
-  "Choose up to five account quotas, customize their colors, and compare actual remaining quota on a shared weekly timeline. Expand the compact legend for account details. Landscape on iPhone keeps the chart and legend clear of the search and tab bars.": {
+  "Choose up to five account quotas and customize their colors. Compare actual remaining quota over the six days leading to your nearest weekly reset, with seven date marks and an automatically updating timeline. Expand the compact legend for account details. The chart stays clear of the search and tab bars in iPhone landscape.": {
     "localizations": {
-      "en": {
-        "stringUnit": {
-          "state": "translated",
-          "value": "Choose up to five account quotas, customize their colors, and compare actual remaining quota on a shared weekly timeline. Expand the compact legend for account details. Landscape on iPhone keeps the chart and legend clear of the search and tab bars."
-        }
-      },
       "zh-Hans": {
         "stringUnit": {
           "state": "translated",
-          "value": "最多选择五项账号额度，自定义颜色，在同一每周时间轴上对比实际剩余额度。展开紧凑图例可查看账号详情。iPhone 横屏时图表和图例避开搜索栏及标签栏。"
+          "value": "最多选择五项账号额度并自定义颜色。以最近的每周重置时间为终点，查看此前六天的真实剩余额度，显示七个日期刻度并自动更新。展开紧凑图例查看账号详情。iPhone 横屏时，图表不会被搜索栏和标签栏遮挡。"
         }
       },
       "zh-Hant": {
         "stringUnit": {
           "state": "translated",
-          "value": "最多選擇五項帳號額度，自訂顏色，在同一每週時間軸上比較實際剩餘額度。展開精簡圖例可查看帳號詳情。iPhone 橫向時圖表與圖例避開搜尋列及標籤列。"
+          "value": "最多選擇五項帳號額度並自訂顏色。以最近的每週重置時間為終點，查看此前六天的真實剩餘額度，顯示七個日期刻度並自動更新。展開精簡圖例查看帳號詳情。iPhone 橫向時，圖表不會被搜尋列和標籤列遮擋。"
         }
       },
       "ja": {
         "stringUnit": {
           "state": "translated",
-          "value": "アカウントの利用枠を最大5件選び、色を変えて共通の週次時間軸で実際の残り利用枠を比較できます。凡例を展開するとアカウントの詳細を確認できます。iPhoneの横向き表示ではグラフと凡例が検索バーやタブバーに重なりません。"
+          "value": "最大5つのアカウント枠を選び、色を変更できます。最も近い週間リセットまでの6日間の実際の残量を、7つの日付目盛りで比較できます。期間は自動更新され、凡例を開くとアカウントの詳細を確認できます。iPhoneの横向きでも検索バーやタブバーがグラフを遮りません。"
+        }
+      },
+      "en": {
+        "stringUnit": {
+          "state": "translated",
+          "value": "Choose up to five account quotas and customize their colors. Compare actual remaining quota over the six days leading to your nearest weekly reset, with seven date marks and an automatically updating timeline. Expand the compact legend for account details. The chart stays clear of the search and tab bars in iPhone landscape."
         }
       }
     }

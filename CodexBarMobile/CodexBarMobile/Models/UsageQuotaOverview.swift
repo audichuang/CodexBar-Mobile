@@ -111,13 +111,11 @@ struct UsageQuotaOverview: Equatable, Sendable {
     let end: Date
     let lines: [UsageQuotaResolvedLine]
 
-    /// Seven calendar labels ending on the reset day. The plot itself retains the
-    /// complete 7 x 24 hours, including the preceding day's unlabeled left edge.
-    func dateTicks(calendar: Calendar = .autoupdatingCurrent) -> [Date] {
-        let lastDay = calendar.startOfDay(for: self.end)
-        return (0..<7).reversed().compactMap {
-            calendar.date(byAdding: .day, value: -$0, to: lastDay)
-        }.map { max(self.start, $0) }.filter { $0 <= self.end }
+    /// Seven evenly spaced labels include both ends of the exact 144-hour domain.
+    /// Absolute spacing preserves the selected reset time across DST changes; local
+    /// date formatting can repeat or skip a calendar day near midnight at a transition.
+    func dateTicks(calendar _: Calendar = .autoupdatingCurrent) -> [Date] {
+        (0...6).map { self.start.addingTimeInterval(self.end.timeIntervalSince(self.start) * Double($0) / 6) }
     }
 }
 

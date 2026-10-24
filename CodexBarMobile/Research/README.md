@@ -17,6 +17,7 @@ This directory contains research documents for features being considered for Cod
 
 | # | Feature | Status | Blocker | File | Date |
 |---|---------|--------|---------|------|------|
+| 084 | 最近 Weekly 重置驱动的144小时额度历史 | `done` | 本地/远端CR与TF254待完成 | [084-quota-nearest-weekly-reset/00-goal.md](084-quota-nearest-weekly-reset/00-goal.md) | 2026-10-23 |
 | 083 | Usage 真实额度消耗历史，删除预测线 | `done` | 真实历史与固定周轴已实现；1311 unit通过/1 skip，最终40专项/52状态渲染、Air实机及普通iPhone/Duo完整横竖屏通过；远端CR/TF253以发布回执为准 | [083-quota-observed-history/00-goal.md](083-quota-observed-history/00-goal.md) | 2026-10-23 |
 | 082 | Usage 普通 iPhone 横屏图表与图例首屏可见性修复 | `done` | iOS 26/27 原生全流程及 Duo 横竖屏通过；PR #210 CR/合并/Final CI 完成，3.2.0 (252) Internal TestFlight 可用，实际上传 IPA/四语/Apple CDN 图标均验收通过；无 Mac 发布 | [082-usage-landscape-chart/00-goal.md](082-usage-landscape-chart/00-goal.md) | 2026-10-23 |
 | 081 | Usage 剩余额度多曲线、Cost 整组排序与来源说明下移 | `done` | PR #208 exact-head clean/gate 后已合并，Final CI 成功；3.2.0 (251) Internal TestFlight 可用，四语/源图及 archive/CDN 图标验收通过；43 项最终专项与 16 组合 substituted，保留原生 skip/实体未验边界 | [081-usage-quota-overview/00-goal.md](081-usage-quota-overview/00-goal.md) | 2026-10-22 |

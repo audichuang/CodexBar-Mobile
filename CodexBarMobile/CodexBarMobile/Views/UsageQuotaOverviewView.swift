@@ -38,7 +38,7 @@ struct UsageQuotaOverviewView: View {
                 Form {
                     Text(
                         String(
-                            localized: "The chart spans seven days ending at the latest weekly reset across providers. Each line shows actual remaining quota and stops at its latest reading."))
+                            localized: "The chart ends at your nearest upcoming weekly reset across providers and starts 144 hours earlier, with seven date marks. It updates as resets pass or new data arrives. Lines show only actual readings."))
                     Text(
                         String(
                             localized: "No future usage is predicted. One reading appears as a point; missing history is not filled in, and long gaps break the line."))
@@ -181,7 +181,10 @@ struct UsageQuotaOverviewView: View {
         }
         .chartXAxis {
             AxisMarks(values: overview.dateTicks()) { value in
-                AxisValueLabel(anchor: .top, collisionResolution: .disabled) {
+                AxisValueLabel(
+                    anchor: value.index == 0 ? .topLeading : (value.index == 6 ? .topTrailing : .top),
+                    collisionResolution: .disabled)
+                {
                     if let date = value.as(Date.self) {
                         Text(Calendar.autoupdatingCurrent.component(.day, from: date).formatted())
                             .font(.caption2).monospacedDigit()
