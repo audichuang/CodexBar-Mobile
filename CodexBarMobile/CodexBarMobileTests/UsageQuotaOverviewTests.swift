@@ -179,7 +179,7 @@ struct UsageQuotaOverviewTests {
         let line = try #require(overview.lines.first)
         #expect(line.observedSamples.map(\.remainingPercent) == [90, 90, 88, 82, 82, 80, 75, 75, 70])
         #expect(line.observedSamples.map(\.date) == (0...8).map { Self.now.addingTimeInterval(Double($0 - 8) * 300) })
-        #expect(overview.start == Self.now.addingTimeInterval(-7 * 86400))
+        #expect(overview.start == Self.now.addingTimeInterval(-6 * 86400))
         #expect(overview.end == Self.now)
         #expect(line.observedSamples.last?.remainingPercent == 70)
         #expect(line.observedSamples.allSatisfy { $0.date <= Self.now })
@@ -725,7 +725,7 @@ struct UsageQuotaOverviewTests {
     }
 
     @Test
-    func `all current weekly resets anchor seven days even when their lines are unselected`() throws {
+    func `the nearest weekly reset anchors six elapsed days even when its line is unselected`() throws {
         let account = Self.account(windows: [
             Self.window(reset: Self.now.addingTimeInterval(3600)),
             Self.window(id: "secondary", minutes: 10080, reset: Self.now.addingTimeInterval(3 * 86400)),
@@ -733,7 +733,7 @@ struct UsageQuotaOverviewTests {
         let store = UsageQuotaOverviewStore.inMemory()
         store.reconcile(accounts: [account], now: Self.now)
         let overview = store.overview(accounts: [account], now: Self.now)
-        #expect(overview.start == Self.now.addingTimeInterval(-4 * 86400))
+        #expect(overview.start == Self.now.addingTimeInterval(-3 * 86400))
         #expect(overview.end == Self.now.addingTimeInterval(3 * 86400))
         #expect(overview.lines
             .allSatisfy { $0.observedSamples == [UsageQuotaPoint(date: Self.now, remainingPercent: 80)] })
@@ -745,23 +745,23 @@ struct UsageQuotaOverviewTests {
     @Test
     func `shared weekly window preserves different cycle balances at the same left boundary`() throws {
         let store = UsageQuotaOverviewStore.inMemory()
-        let start = Self.now.addingTimeInterval(-86400)
+        let start = Self.now.addingTimeInterval(-4 * 86400)
         var accounts: [ProviderUsageSnapshot] = []
-        for hour in 0...24 {
+        for hour in 0...96 {
             let captured = start.addingTimeInterval(Double(hour) * 3600)
             accounts = [
                 Self.account(providerID: "claude", capturedAt: captured, windows: [Self.window(
-                    id: "secondary", used: 30 + Double(hour) * 10 / 24, minutes: 10080,
+                    id: "secondary", used: 30 + Double(hour) * 10 / 96, minutes: 10080,
                     reset: Self.now.addingTimeInterval(2 * 86400))]),
                 Self.account(id: "fictional-codex", providerID: "codex", capturedAt: captured, windows: [Self.window(
-                    id: "secondary", used: Double(hour) * 20 / 24, minutes: 10080,
-                    reset: Self.now.addingTimeInterval(6 * 86400))]),
+                    id: "secondary", used: Double(hour) * 20 / 96, minutes: 10080,
+                    reset: Self.now.addingTimeInterval(3 * 86400))]),
             ]
             store.reconcile(accounts: accounts, now: captured)
         }
         let overview = store.overview(accounts: accounts, now: Self.now)
         #expect(overview.start == start)
-        #expect(overview.end == Self.now.addingTimeInterval(6 * 86400))
+        #expect(overview.end == Self.now.addingTimeInterval(2 * 86400))
         let claude = try #require(overview.lines.first { $0.selection.providerID == "claude" })
         let codex = try #require(overview.lines.first { $0.selection.providerID == "codex" })
         #expect(claude.observedSamples.first == UsageQuotaPoint(date: start, remainingPercent: 70))
@@ -772,47 +772,98 @@ struct UsageQuotaOverviewTests {
     }
 
     @Test
-    func `weekly plot includes the 23rd while its seven date labels run from the 24th through the 30th`() throws {
+    func `nearest reset on the 25th produces seven dates from the 19th through the 25th`() throws {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = try #require(TimeZone(secondsFromGMT: 0))
         let end = try #require(calendar.date(from: DateComponents(
-            year: 2026,
-            month: 10,
-            day: 30,
-            hour: 10,
-            minute: 41)))
-        let overview = UsageQuotaOverview(start: end.addingTimeInterval(-7 * 86400), end: end, lines: [])
-        #expect(calendar.component(.day, from: overview.start) == 23)
-        #expect(overview.end.timeIntervalSince(overview.start) == 7 * 86400)
+            year: 2026, month: 10, day: 25, hour: 15)))
+        let overview = UsageQuotaOverview(start: end.addingTimeInterval(-6 * 86400), end: end, lines: [])
+        #expect(overview.end.timeIntervalSince(overview.start) == 6 * 86400)
         #expect(overview.dateTicks(calendar: calendar).map { calendar.component(.day, from: $0) } == [
-            24,
-            25,
-            26,
-            27,
-            28,
-            29,
-            30,
+            19, 20, 21, 22, 23, 24, 25,
         ])
-        #expect(overview.dateTicks(calendar: calendar).allSatisfy { overview.start <= $0 && $0 <= overview.end })
+        #expect(overview.dateTicks(calendar: calendar).first == overview.start)
+        #expect(overview.dateTicks(calendar: calendar).last == overview.end)
     }
 
     @Test
-    func `seven local date labels survive daylight saving transitions without moving the weekly domain`() throws {
+    func `clock expiry switches to the next weekly reset before fresh data arrives`() {
+        let nearestReset = Self.now.addingTimeInterval(30)
+        let nextReset = Self.now.addingTimeInterval(2 * 86400)
+        let nearest = Self.account(windows: [Self.window(
+            id: "secondary", minutes: 10080, reset: nearestReset)])
+        let other = Self.account(id: "fictional-codex", providerID: "codex", windows: [Self.window(
+            id: "secondary", minutes: 10080, reset: nextReset)])
+        let store = UsageQuotaOverviewStore.inMemory()
+        let accounts = [nearest, other]
+        store.reconcile(accounts: accounts, now: Self.now)
+        #expect(store.overview(accounts: accounts, now: Self.now).end == nearestReset)
+        // No reconciliation or network receipt: a TimelineView clock tick alone advances the axis.
+        let expired = store.overview(accounts: accounts, now: nearestReset)
+        #expect(expired.end == nextReset)
+        #expect(expired.start == nextReset.addingTimeInterval(-6 * 86400))
+        #expect(expired.lines.first { $0.selection.providerID == "claude" }?.observedSamples.isEmpty == true)
+        let refreshed = Self.account(capturedAt: nearestReset, windows: [Self.window(
+            id: "secondary", used: 0, minutes: 10080, reset: nearestReset.addingTimeInterval(7 * 86400))])
+        store.reconcile(accounts: [refreshed, other], now: nearestReset)
+        let overview = store.overview(accounts: [refreshed, other], now: nearestReset)
+        #expect(overview.end == nextReset)
+        #expect(overview.lines.first { $0.selection.providerID == "claude" }?.observedSamples == [
+            UsageQuotaPoint(date: nearestReset, remainingPercent: 100),
+        ])
+    }
+
+    @Test
+    func `different users and unselected accounts determine their own nearest weekly boundary`() throws {
+        let nearest = Self.account(id: "fictional-nearest", windows: [Self.window(
+            id: "secondary", minutes: 10080, reset: Self.now.addingTimeInterval(86400))])
+        let later = Self.account(id: "fictional-later", record: "install-later", windows: [Self.window(
+            id: "secondary", minutes: 10080, reset: Self.now.addingTimeInterval(4 * 86400))])
+        let store = UsageQuotaOverviewStore.inMemory()
+        store.reconcile(accounts: [nearest, later], now: Self.now)
+        let selected = try #require(store.overview(accounts: [nearest, later], now: Self.now).lines.first {
+            $0.resetDate == Self.now.addingTimeInterval(86400)
+        })
+        store.remove(id: selected.id)
+        #expect(store.overview(accounts: [later, nearest], now: Self.now).end == Self.now.addingTimeInterval(86400))
+        let anotherUser = UsageQuotaOverviewStore.inMemory()
+        anotherUser.reconcile(accounts: [later], now: Self.now)
+        #expect(anotherUser.overview(accounts: [later], now: Self.now).end == Self.now.addingTimeInterval(4 * 86400))
+    }
+
+    @Test
+    func `seven absolute ticks retain endpoints and spacing through daylight saving transitions`() throws {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = try #require(TimeZone(identifier: "America/Los_Angeles"))
         for (month, day) in [(11, 7), (3, 14)] {
-            let end = try #require(calendar.date(from: DateComponents(
-                year: 2026, month: month, day: day, hour: 23, minute: 30)))
-            let start = end.addingTimeInterval(-7 * 86400)
-            let overview = UsageQuotaOverview(start: start, end: end, lines: [])
-            let ticks = overview.dateTicks(calendar: calendar)
-            #expect(ticks.count == 7)
-            #expect(Set(ticks.map { calendar.startOfDay(for: $0) }).count == 7)
-            #expect(ticks.allSatisfy { start <= $0 && $0 <= end })
-            #expect(calendar.component(.day, from: ticks[0]) == day - 6)
-            #expect(calendar.component(.day, from: ticks[6]) == day)
-            #expect(overview.end.timeIntervalSince(overview.start) == 7 * 86400)
+            for hour in [0, 12, 23] {
+                let end = try #require(calendar.date(from: DateComponents(
+                    year: 2026, month: month, day: day, hour: hour, minute: 30)))
+                let start = end.addingTimeInterval(-6 * 86400)
+                let overview = UsageQuotaOverview(start: start, end: end, lines: [])
+                let ticks = overview.dateTicks(calendar: calendar)
+                #expect(ticks.count == 7)
+                #expect(Set(ticks).count == 7)
+                #expect(ticks.first == start)
+                #expect(ticks.last == end)
+                #expect(zip(ticks, ticks.dropFirst()).allSatisfy { $0.1.timeIntervalSince($0.0) == 86400 })
+                #expect(overview.end.timeIntervalSince(overview.start) == 6 * 86400)
+            }
         }
+    }
+
+    @Test
+    func `a newly reset week can put current readings before the six day domain without moving samples`() throws {
+        let reset = Self.now.addingTimeInterval(7 * 86400 - 60)
+        let account = Self.account(windows: [Self.window(id: "secondary", minutes: 10080, reset: reset)])
+        let store = UsageQuotaOverviewStore.inMemory()
+        store.reconcile(accounts: [account], now: Self.now)
+        let overview = store.overview(accounts: [account], now: Self.now)
+        #expect(overview.end == reset)
+        #expect(overview.start == Self.now.addingTimeInterval(86400 - 60))
+        #expect(overview.start > Self.now)
+        let line = try #require(overview.lines.first)
+        #expect(line.observedSamples == [UsageQuotaPoint(date: Self.now, remainingPercent: 80)])
     }
 
     @Test
@@ -824,7 +875,7 @@ struct UsageQuotaOverviewTests {
         store.reconcile(accounts: [account], now: Self.now)
         let overview = store.overview(accounts: [account], now: Self.now)
         #expect(overview.end == Self.now)
-        #expect(overview.start == Self.now.addingTimeInterval(-7 * 86400))
+        #expect(overview.start == Self.now.addingTimeInterval(-6 * 86400))
         #expect(overview.lines.allSatisfy { $0.observedSamples.allSatisfy { $0.date <= overview.end } })
     }
 
@@ -856,9 +907,9 @@ struct UsageQuotaOverviewTests {
     }
 
     @Test
-    func `unknown blocked and stale windows cannot extend the calendar domain`() {
+    func `unknown blocked and stale windows cannot capture the nearest weekly boundary`() {
         let near = Self.now.addingTimeInterval(3600)
-        let far = Self.now.addingTimeInterval(30 * 86400)
+        let far = Self.now.addingTimeInterval(60)
         let valid = Self.account(windows: [
             Self.window(id: "secondary", minutes: 10080, reset: near),
             Self.window(id: "unknown", minutes: 10080, reset: far, known: false),
@@ -868,7 +919,7 @@ struct UsageQuotaOverviewTests {
             id: "stale",
             record: "stale-install",
             capturedAt: Self.now.addingTimeInterval(-7 * 3600),
-            windows: [Self.window(reset: far)])
+            windows: [Self.window(id: "secondary", minutes: 10080, reset: far)])
         let store = UsageQuotaOverviewStore.inMemory()
         store.reconcile(accounts: [valid, stale], now: Self.now)
         #expect(store.overview(accounts: [valid, stale], now: Self.now).end == near)

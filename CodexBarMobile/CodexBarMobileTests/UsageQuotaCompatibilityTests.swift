@@ -175,7 +175,7 @@ struct UsageQuotaCompatibilityTests {
             #expect(inherited.observedAt == oldCapture)
             #expect(inherited.state == .stale)
             #expect(inherited.observedSamples.isEmpty)
-            #expect(overview.end == Self.now.addingTimeInterval(7200))
+            #expect(overview.end == Self.now.addingTimeInterval(3600))
             let archive = try JSONDecoder().decode(UsageQuotaArchive.self, from: #require(reader.persistence.load()))
             let observations = try #require(archive.histories.first { $0.binding == extra.id }).observations
             #expect(observations.count == 1)

@@ -63,7 +63,8 @@ enum UsageQuotaProjection {
                 observedSamples: samples, localObservationCount: history.count)
         }
         // The calendar is shared by all providers, not resized to selected lines or
-        // this iPhone's available samples. Only a current, valid Weekly reset anchors it.
+        // this iPhone's available samples. The nearest future valid Weekly reset anchors it.
+        // Keep the full seven-day validity bound even though the displayed span is six days.
         let week: TimeInterval = 7 * 86400
         let resets = accounts.flatMap { account -> [Date] in
             guard !account.isError, account.sourceReport?.allFailed != true else { return [] }
@@ -84,8 +85,8 @@ enum UsageQuotaProjection {
                 return reset
             }
         }
-        let end = resets.max() ?? now
-        return UsageQuotaOverview(start: end.addingTimeInterval(-week), end: end, lines: lines)
+        let end = resets.min() ?? now
+        return UsageQuotaOverview(start: end.addingTimeInterval(-6 * 86400), end: end, lines: lines)
     }
 
     static func hasUnambiguousHistorySource(
