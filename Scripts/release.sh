@@ -65,7 +65,8 @@ artifact_matches_current_inputs() {
 
 artifact_pair_matches() {
   local zip=$1 dsym_zip=$2 temp_dir status=0
-  local scratch_root="${CODEXBAR_RELEASE_STAGE_BASE:-/Volumes/StudioSSD/Developer/BuildScratch/CodexBar}"
+  local scratch_root="${CODEXBAR_RELEASE_STAGE_BASE:-${CODEXBAR_BUILD_SCRATCH:-$HOME/Library/Developer/CodexBarBuildScratch}/CodexBar}"
+  mkdir -p "$scratch_root" 2>/dev/null || true
   [[ -d "$scratch_root" && -w "$scratch_root" ]] || \
     err "Release scratch directory is missing or not writable: $scratch_root"
   temp_dir=$(mktemp -d "$scratch_root/codexbar-artifact-pair.XXXXXX")

@@ -8,15 +8,15 @@ source "$ROOT/Scripts/package_product_paths.sh"
 unset CODEXBAR_WIDGET_DERIVED_DATA_ROOT CODEXBAR_RELEASE_STAGE_BASE CODEXBAR_PACKAGE_STAGE_ROOT
 
 [[ "$(codexbar_widget_derived_data_dir "$ROOT" release)" == "$ROOT/.build/xcode-widget-extension-release" ]]
-[[ "$(CODEXBAR_PACKAGE_STAGE_ROOT=/Volumes/StudioSSD/Developer/BuildScratch/CodexBar \
+[[ "$(CODEXBAR_PACKAGE_STAGE_ROOT=/tmp/codexbar-scratch-test/CodexBar \
   codexbar_widget_derived_data_dir "$ROOT" release)" == \
-  "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/xcode-widget-extension-release" ]]
-[[ "$(CODEXBAR_RELEASE_STAGE_BASE=/Volumes/StudioSSD/Developer/BuildScratch/CodexBar \
+  "/tmp/codexbar-scratch-test/CodexBar/xcode-widget-extension-release" ]]
+[[ "$(CODEXBAR_RELEASE_STAGE_BASE=/tmp/codexbar-scratch-test/CodexBar \
   codexbar_widget_derived_data_dir "$ROOT" release)" == \
-  "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/xcode-widget-extension-release" ]]
-[[ "$(CODEXBAR_WIDGET_DERIVED_DATA_ROOT=/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/custom \
+  "/tmp/codexbar-scratch-test/CodexBar/xcode-widget-extension-release" ]]
+[[ "$(CODEXBAR_WIDGET_DERIVED_DATA_ROOT=/tmp/codexbar-scratch-test/CodexBar/custom \
   codexbar_widget_derived_data_dir "$ROOT" debug)" == \
-  "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/custom/xcode-widget-extension-debug" ]]
+  "/tmp/codexbar-scratch-test/CodexBar/custom/xcode-widget-extension-debug" ]]
 
 TEMP_DIR=$(mktemp -d "${TMPDIR:-/tmp}/codexbar-package-paths.XXXXXX")
 trap 'rm -rf "$TEMP_DIR"' EXIT
