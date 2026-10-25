@@ -1,0 +1,9 @@
+{
+  "id" : "6766bcb0-5ecd-43cb-b8ea-6000b396e1db",
+  "targets" : [
+    {
+      "id" : "807c0ff8-37e7-4956-8f8d-f5142238b789",
+      "name" : "CodexBarMobile"
+    }
+  ]
+}
