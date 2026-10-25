@@ -141,7 +141,7 @@ stapler validate "$APP_BUNDLE"
 # actually try to launch the binary.
 echo "Launch verification — isolated direct exec of stapled bundle, must stay alive 2s"
 if CODEXBAR_LAUNCH_SMOKE_SECONDS=2 \
-  CODEXBAR_REQUIRE_LAUNCH_SURVIVAL="${CODEXBAR_REQUIRE_LAUNCH_SURVIVAL:-1}" \
+  CODEXBAR_REQUIRE_LAUNCH_SURVIVAL=1 \
   "$ROOT/Scripts/verify_packaged_app_launch.sh" "$APP_BUNDLE"; then
   echo "Launch verification: OK"
 else
