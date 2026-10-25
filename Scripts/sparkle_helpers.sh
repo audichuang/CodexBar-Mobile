@@ -199,7 +199,7 @@ check_assets() {
   # --repo pinned to fork explicitly. Without it, gh inspects local
   # remotes and may pick the upstream remote (steipete/CodexBar)
   # which doesn't have our fork's tags. See feedback_gh_release_repo_pin.md.
-  assets=$(gh release view "$tag" --repo o1xhack/CodexBar-Mobile --json assets -q '.assets[].name' 2>&1) || {
+  assets=$(gh release view "$tag" --repo audichuang/CodexBar-Mobile --json assets -q '.assets[].name' 2>&1) || {
     err "gh release view failed for $tag: $assets"
   }
   if ! printf "%s\n" "$assets" | grep -Fxq "${basename}.zip"; then

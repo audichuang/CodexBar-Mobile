@@ -28,7 +28,7 @@ for case,expected_exit in expected_codes.items():
   # Model BSD stat for this macOS-only release helper on portable CI hosts.
   (bindir/'stat').write_text('#!/usr/bin/env python3\nimport pathlib,sys\nassert sys.argv[1] == "-f%z"\nprint(pathlib.Path(sys.argv[2]).stat().st_size)\n');(bindir/'stat').chmod(0o755)
   if case=='phase2-post-verify-publish-failure':
-   (s/'make_appcast.sh').write_text("#!/bin/bash\ncat > appcast.xml <<'XML'\n<rss xmlns:s=\"http://www.andymatuschak.org/xml-namespaces/sparkle\"><channel><item><s:shortVersionString>0.0.0.1</s:shortVersionString><enclosure url=\"https://github.com/o1xhack/CodexBar-Mobile/releases/download/v0.0.0.1-mobile.0.0.1/CodexBar-0.0.0.1-mobile.0.0.1.zip\" s:edSignature=\"fixture\" length=\"7\"/></item></channel></rss>\nXML\n")
+   (s/'make_appcast.sh').write_text("#!/bin/bash\ncat > appcast.xml <<'XML'\n<rss xmlns:s=\"http://www.andymatuschak.org/xml-namespaces/sparkle\"><channel><item><s:shortVersionString>0.0.0.1</s:shortVersionString><enclosure url=\"https://github.com/audichuang/CodexBar-Mobile/releases/download/v0.0.0.1-mobile.0.0.1/CodexBar-0.0.0.1-mobile.0.0.1.zip\" s:edSignature=\"fixture\" length=\"7\"/></item></channel></rss>\nXML\n")
   driver='''#!/bin/bash
 set -euo pipefail
 source "$(dirname "$0")/functions.sh"

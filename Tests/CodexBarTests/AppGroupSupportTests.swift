@@ -13,11 +13,11 @@ struct AppGroupSupportTests {
             AppGroupSupport.currentGroupID(teamID: "ABCDE12345", bundleID: "com.steipete.codexbar.debug")
                 == "ABCDE12345.com.steipete.codexbar.debug")
         #expect(
-            AppGroupSupport.currentGroupID(teamID: "3TUERHN53E", bundleID: "com.o1xhack.codexbar")
-                == "3TUERHN53E.com.steipete.codexbar")
+            AppGroupSupport.currentGroupID(teamID: "37HFR5V2JJ", bundleID: "com.audichuang.codexbar")
+                == "37HFR5V2JJ.com.steipete.codexbar")
         #expect(
-            AppGroupSupport.currentGroupID(teamID: "3TUERHN53E", bundleID: "com.o1xhack.codexbar.debug.widget")
-                == "3TUERHN53E.com.steipete.codexbar.debug")
+            AppGroupSupport.currentGroupID(teamID: "37HFR5V2JJ", bundleID: "com.audichuang.codexbar.debug.widget")
+                == "37HFR5V2JJ.com.steipete.codexbar.debug")
         #expect(
             AppGroupSupport.legacyGroupID(for: "com.steipete.codexbar")
                 == "group.com.steipete.codexbar")
@@ -387,7 +387,7 @@ private struct MigrationFixture {
 
     func migrateFallback(currentDefaultsAvailable: Bool = true) -> AppGroupSupport.MigrationResult {
         AppGroupSupport.migrateWidgetFallbackDataIfNeeded(
-            bundleID: "com.o1xhack.codexbar",
+            bundleID: "com.audichuang.codexbar",
             standardDefaults: self.standardDefaults,
             fileManager: self.fileManager,
             homeDirectory: self.root.appendingPathComponent("home"),
