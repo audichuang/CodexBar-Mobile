@@ -10,7 +10,10 @@ source "$ROOT/version.env"
 source "$ROOT/Scripts/load-release-secrets.sh"
 source "$ROOT/Scripts/package_product_paths.sh"
 source "$ROOT/Scripts/release_dsym_paths.sh"
-RELEASE_ASSET_BASENAME="${APP_NAME}-${MARKETING_VERSION}-mobile.${MOBILE_VERSION}"
+# FORK_PATCH (version.env) appends our own release counter: -mobile.X-audi.N.
+# CFBundleShortVersionString stays ${MARKETING_VERSION}.
+RELEASE_VERSION_SUFFIX="mobile.${MOBILE_VERSION}${FORK_PATCH:+-audi.${FORK_PATCH}}"
+RELEASE_ASSET_BASENAME="${APP_NAME}-${MARKETING_VERSION}-${RELEASE_VERSION_SUFFIX}"
 ZIP_NAME="${RELEASE_ASSET_BASENAME}.zip"
 DSYM_ZIP="${RELEASE_ASSET_BASENAME}.dSYM.zip"
 RELEASE_STAGE_BASE=${CODEXBAR_RELEASE_STAGE_BASE:-${TMPDIR:-/tmp}}
@@ -139,7 +142,8 @@ stapler validate "$APP_BUNDLE"
 # (POSIX 163). The only way to catch this class of failure is to
 # actually try to launch the binary.
 echo "Launch verification — isolated direct exec of stapled bundle, must stay alive 2s"
-if CODEXBAR_LAUNCH_SMOKE_SECONDS=2 CODEXBAR_REQUIRE_LAUNCH_SURVIVAL=1 \
+if CODEXBAR_LAUNCH_SMOKE_SECONDS=2 \
+  CODEXBAR_REQUIRE_LAUNCH_SURVIVAL="${CODEXBAR_REQUIRE_LAUNCH_SURVIVAL:-1}" \
   "$ROOT/Scripts/verify_packaged_app_launch.sh" "$APP_BUNDLE"; then
   echo "Launch verification: OK"
 else
