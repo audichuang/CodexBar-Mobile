@@ -21,4 +21,7 @@ fi
 grep -Fq '!= "Aqua"' "$WORKFLOW" || \
   fail "release-mac.yml must refuse to release without an Aqua session"
 
+grep -Eq '^[[:space:]]+ARCHES: arm64$' "$WORKFLOW" || \
+  fail "release-mac.yml must build arm64 only (ARCHES: arm64)"
+
 echo "release-mac workflow contract passed"
