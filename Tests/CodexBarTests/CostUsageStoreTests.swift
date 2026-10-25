@@ -962,6 +962,7 @@ extension CostUsageStoreTests {
         "3f88178bf03ad704",
         "0d41437dcd95c17e", // Published 0.73.0.1 with the ledger pricing fix.
         "68cbd75ed0e591d9", // Published 0.74.1.1 with the ledger pricing fix on upstream 0.74.1.
+        "a47b70abaf8ad86c", // 0.77.0 before archived-rollout mirrors; rows and checkpoints are unchanged.
         "fc698834d6329beb", // Before opt-in request observation; saved rows and cursors are unchanged.
         "f406dae284de4a55", // Current main before the Auto-review creator-account reparse.
         "379b799bb4b91683", // Current main before on-demand tool inspection.
