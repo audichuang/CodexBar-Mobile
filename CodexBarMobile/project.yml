@@ -2,7 +2,7 @@ name: CodexBarMobile
 options:
   bundleIdPrefix: com.audichuang.codexbar
   deploymentTarget:
-    iOS: "27.1"
+    iOS: "17.0"
   xcodeVersion: "26.0"
   generateEmptyDirectories: true
 
