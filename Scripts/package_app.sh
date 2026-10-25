@@ -173,8 +173,15 @@ fi
 
 KEYBOARD_SHORTCUTS_UTIL="$ROOT/.build/checkouts/KeyboardShortcuts/Sources/KeyboardShortcuts/Utilities.swift"
 if [[ ! -f "$KEYBOARD_SHORTCUTS_UTIL" ]]; then
-  swift build "${BUILD_ARGS[@]}" -c "$CONF" --arch "${ARCH_LIST[0]}"
+  # Only materialize .build/checkouts so the patch lands before the first compile;
+  # a bootstrap `swift build` would compile everything and then be rebuilt after patching.
+  swift package resolve
+  if [[ ! -f "$KEYBOARD_SHORTCUTS_UTIL" ]]; then
+    echo "ERROR: swift package resolve did not produce $KEYBOARD_SHORTCUTS_UTIL" >&2
+    exit 1
+  fi
 fi
+# Idempotent: skips a checkout that already carries the keyboardShortcutsSafeBundle patch.
 patch_keyboard_shortcuts
 
 # Resolve SwiftPM's current output path without relying on a fixed build-system layout.
