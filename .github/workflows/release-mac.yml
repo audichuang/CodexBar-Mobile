@@ -10,7 +10,8 @@ name: Release Mac
 #   APP_STORE_CONNECT_KEY_ID / APP_STORE_CONNECT_ISSUER_ID / APP_STORE_CONNECT_API_KEY_P8
 #   SPARKLE_PRIVATE_KEY
 #
-# Does not generate or commit an appcast and does not touch Homebrew taps.
+# Does not generate or commit an appcast. The Homebrew tap is updated by
+# release-mac-verify.yml after the published zip passes its launch check.
 
 on:
   workflow_dispatch:
