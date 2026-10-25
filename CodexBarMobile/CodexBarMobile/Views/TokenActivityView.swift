@@ -243,7 +243,7 @@ private struct TokenActivityCharts: View {
     }
 }
 
-private struct TokenActivityGrid: View {
+struct TokenActivityGrid: View {
     let series: [TokenActivitySeries]
     let color: Color
     let label: String
@@ -267,18 +267,54 @@ private struct TokenActivityGrid: View {
         return (0..<371).compactMap { self.calendar.date(byAdding: .day, value: $0, to: weekStart) }
     }
 
+    /// Month label width tracks Dynamic Type, so at accessibility sizes two
+    /// neighbouring month labels (`9月` `10月`) would overlap. A label is only
+    /// drawn when it clears the newer label kept to its right (one column = 16pt).
+    @ScaledMetric(relativeTo: .caption2) private var monthLabelWidth: CGFloat = 30
+
+    /// Column indices (every 7th grid index = one week column) whose month label
+    /// should be drawn. Walks newest to oldest so the most recent month always
+    /// survives; an older label is dropped when it would overlap the one kept to
+    /// its right. Leading labels extend right from their column, labels in the
+    /// last 21 columns are right-aligned and extend left.
+    static func visibleMonthLabelIndices(
+        monthStartFlags: [Bool],
+        labelWidth: CGFloat,
+        columnPitch: CGFloat = 16,
+        slotWidth: CGFloat = 12) -> Set<Int>
+    {
+        let count = monthStartFlags.count
+        func extent(_ index: Int) -> (CGFloat, CGFloat) {
+            let x = CGFloat(index / 7) * columnPitch
+            return index >= count - 21 ? (x + slotWidth - labelWidth, x + slotWidth) : (x, x + labelWidth)
+        }
+        var kept = Set<Int>()
+        var keptLeft: CGFloat?
+        for index in stride(from: 0, to: count, by: 7).reversed() where monthStartFlags[index] {
+            let (left, right) = extent(index)
+            if let keptLeft, right > keptLeft { continue }
+            kept.insert(index)
+            keptLeft = left
+        }
+        return kept
+    }
+
     var body: some View {
         let gridDates = self.dates
+        let visibleMonths = Self.visibleMonthLabelIndices(
+            monthStartFlags: gridDates.map { self.calendar.component(.day, from: $0) <= 7 },
+            labelWidth: self.monthLabelWidth)
         let points = TokenActivity.dailyTotals(self.series)
         let scale = TokenActivityColorScale(values: points.values.compactMap(\.value))
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 4) {
                 ForEach(Array(stride(from: 0, to: gridDates.count, by: 7)), id: \.self) { index in
                     let date = gridDates[index]
-                    Text(self.calendar.component(.day, from: date) <= 7 ? date
+                    let trailing = index >= gridDates.count - 21
+                    Text(visibleMonths.contains(index) ? date
                         .formatted(.dateTime.month(.abbreviated)) : "")
                         .font(.caption2).fixedSize().frame(
-                            width: 12, alignment: index >= gridDates.count - 21 ? .trailing : .leading)
+                            width: 12, alignment: trailing ? .trailing : .leading)
                 }
             }
             LazyHGrid(rows: Array(repeating: GridItem(.fixed(12), spacing: 4), count: 7), spacing: 4) {

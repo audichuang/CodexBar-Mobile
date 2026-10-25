@@ -144,6 +144,33 @@ struct MobileDisplayFormattingTests {
         #expect(ProviderDetailView.dailyAxisDayKeys(for: points) == ["2026-06-01"])
     }
 
+    @Test("Heatmap month labels keep the newest month and drop older colliding ones")
+    func heatmapMonthLabelSelection() {
+        // 53 week columns; month starts every ~4.4 weeks, newest in the last column group.
+        var flags = Array(repeating: false, count: 53 * 7)
+        let monthColumns = [3, 7, 12, 16, 21, 25, 30, 34, 38, 43, 47, 51]
+        for c in monthColumns { flags[c * 7] = true }
+        let normal = TokenActivityGrid.visibleMonthLabelIndices(monthStartFlags: flags, labelWidth: 30)
+        #expect(normal == Set(monthColumns.map { $0 * 7 }))
+        let large = TokenActivityGrid.visibleMonthLabelIndices(monthStartFlags: flags, labelWidth: 90)
+        #expect(large.contains(51 * 7))
+        #expect(!large.contains(47 * 7))
+        #expect(large.count < monthColumns.count)
+    }
+
+    @Test("Provider daily spend day keys round-trip through plotted Dates")
+    func providerDailySpendDayKeyDateRoundTrip() {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(secondsFromGMT: -5 * 3600)!
+        let date = ProviderDetailView.dayDate(from: "2026-06-15", calendar: cal)
+        #expect(date != nil)
+        #expect(ProviderDetailView.dayKey(from: date!, calendar: cal) == "2026-06-15")
+        let next = ProviderDetailView.dayDate(from: "2026-06-22", calendar: cal)!
+        #expect(next.timeIntervalSince(date!) == 7 * 86400)
+        #expect(ProviderDetailView.dayDate(from: "not-a-date", calendar: cal) == nil)
+        #expect(ProviderDetailView.dayDate(from: "2026-6-5", calendar: cal) == nil)
+    }
+
     @Test("Provider daily spend axis label uses compact month slash day text")
     func providerDailySpendAxisLabelUsesCompactText() {
         #expect(ProviderDetailView.dailyAxisLabel(for: "2026-06-15") == "6/15")
