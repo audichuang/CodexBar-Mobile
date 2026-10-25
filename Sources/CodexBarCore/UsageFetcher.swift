@@ -12,10 +12,15 @@ public struct RateWindow: Codable, Equatable, Sendable {
     /// Provider usage value, intentionally not normalized globally. Pace and provider-specific diagnostics may
     /// preserve raw over-quota values; display-only projections should use `UsagePercent.displayClamped`.
     public let usedPercent: Double
+    /// Optional provider-supplied label for generic usage-window presentation.
+    public let title: String?
     public let windowMinutes: Int?
     public let resetsAt: Date?
     /// Optional textual reset description (used by Claude CLI UI scrape).
     public let resetDescription: String?
+    /// Absolute allowance and its unit, when reported alongside the percentage.
+    public let quotaLimit: Double?
+    public let quotaUnit: String?
     /// Optional percent restored on the next regeneration tick for providers with rolling recovery.
     public let nextRegenPercent: Double?
     /// Stable provider identity for windows promoted into a primary/secondary
@@ -42,16 +47,22 @@ public struct RateWindow: Codable, Equatable, Sendable {
         windowMinutes: Int?,
         resetsAt: Date?,
         resetDescription: String?,
+        quotaLimit: Double? = nil,
+        quotaUnit: String? = nil,
         nextRegenPercent: Double? = nil,
         period: RateWindowPeriod? = nil,
         id: String? = nil,
         label: String? = nil,
-        isSyntheticPlaceholder: Bool = false)
+        isSyntheticPlaceholder: Bool = false,
+        title: String? = nil)
     {
         self.usedPercent = usedPercent
+        self.title = title
         self.windowMinutes = windowMinutes
         self.resetsAt = resetsAt
         self.resetDescription = resetDescription
+        self.quotaLimit = quotaLimit
+        self.quotaUnit = quotaUnit
         self.nextRegenPercent = nextRegenPercent
         self.period = period
         self.id = id
@@ -61,9 +72,12 @@ public struct RateWindow: Codable, Equatable, Sendable {
 
     private enum CodingKeys: String, CodingKey {
         case usedPercent
+        case title
         case windowMinutes
         case resetsAt
         case resetDescription
+        case quotaLimit
+        case quotaUnit
         case nextRegenPercent
         case period
         case id
@@ -74,9 +88,12 @@ public struct RateWindow: Codable, Equatable, Sendable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.usedPercent = try container.decode(Double.self, forKey: .usedPercent)
+        self.title = try container.decodeIfPresent(String.self, forKey: .title)
         self.windowMinutes = try container.decodeIfPresent(Int.self, forKey: .windowMinutes)
         self.resetsAt = try container.decodeIfPresent(Date.self, forKey: .resetsAt)
         self.resetDescription = try container.decodeIfPresent(String.self, forKey: .resetDescription)
+        self.quotaLimit = try container.decodeIfPresent(Double.self, forKey: .quotaLimit)
+        self.quotaUnit = try container.decodeIfPresent(String.self, forKey: .quotaUnit)
         self.nextRegenPercent = try container.decodeIfPresent(Double.self, forKey: .nextRegenPercent)
         self.period = try container.decodeIfPresent(RateWindowPeriod.self, forKey: .period)
         self.id = try container.decodeIfPresent(String.self, forKey: .id)
@@ -88,9 +105,12 @@ public struct RateWindow: Codable, Equatable, Sendable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(self.usedPercent, forKey: .usedPercent)
+        try container.encodeIfPresent(self.title, forKey: .title)
         try container.encodeIfPresent(self.windowMinutes, forKey: .windowMinutes)
         try container.encodeIfPresent(self.resetsAt, forKey: .resetsAt)
         try container.encodeIfPresent(self.resetDescription, forKey: .resetDescription)
+        try container.encodeIfPresent(self.quotaLimit, forKey: .quotaLimit)
+        try container.encodeIfPresent(self.quotaUnit, forKey: .quotaUnit)
         try container.encodeIfPresent(self.nextRegenPercent, forKey: .nextRegenPercent)
         try container.encodeIfPresent(self.period, forKey: .period)
         try container.encodeIfPresent(self.id, forKey: .id)
@@ -125,13 +145,16 @@ public struct RateWindow: Codable, Equatable, Sendable {
             windowMinutes: windowMinutes,
             resetsAt: cachedReset,
             resetDescription: self.resetDescription ?? cached?.resetDescription,
+            quotaLimit: self.quotaLimit,
+            quotaUnit: self.quotaUnit,
             nextRegenPercent: self.nextRegenPercent,
             period: self.period ?? cached?.period,
             id: self.id ?? cached?.id,
             label: self.label ?? cached?.label,
             // Preserve the placeholder marker: backfilling a stale reset onto Claude web's null-session
             // placeholder must not let it masquerade as a real session lane.
-            isSyntheticPlaceholder: self.isSyntheticPlaceholder)
+            isSyntheticPlaceholder: self.isSyntheticPlaceholder,
+            title: self.title)
     }
 }
 
@@ -775,7 +798,8 @@ public enum UsageLimitsAvailability: Equatable, Sendable {
         // whether a successful payload actually contains subscription limits.
         if provider == .claude {
             if let snapshot {
-                return snapshot.primary?.isSyntheticPlaceholder == true && snapshot.measuredRateWindows.isEmpty
+                return snapshot.measuredRateWindows.isEmpty
+                    && (snapshot.primary?.isSyntheticPlaceholder == true || snapshot.providerCost == nil)
                     ? .unavailable : .available
             }
             return ClaudeStatusProbe.isSubscriptionQuotaUnavailableDescription(lastErrorDescription)

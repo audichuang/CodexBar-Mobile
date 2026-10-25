@@ -74,6 +74,9 @@ WorkBuddy uses this shared cookie host for its billing-only plugin. Its descript
 version because the website binds sessions to the browser User-Agent; cookie values stay opaque to the script.
 See [WorkBuddy](workbuddy.md) for the request contract, bounded optional reset lookup, and account coverage.
 
+[abliteration.ai](abliteration.md) uses a fixed-origin bearer request to read prepaid USD credits. It reuses the
+standard API-key field and classified errors, with no browser access or inferred reset schedule.
+
 [X API](xapi.md) uses the same cookie host with a bundled `ct0` header echo for account discovery and developer-console
 credits. Its script preserves dollar balances and debt without receiving cookie values or adding a native fetcher.
 
@@ -145,13 +148,18 @@ defineProvider({
 - `topLevel` (optional, default `true`): gives an enabled plugin its own provider-switcher tab when Merge Icons is on. Set to `false` to keep an appended card.
   Plugin tabs show a quota gauge from the most constrained reported seven-day window, otherwise the first available
   primary, secondary, tertiary, or extra window. They follow the used/remaining display preference; unknown usage
-  stays unavailable. Enabled plugins can also be selected in **Settings → Menu Bar → Overview**; they share the
+  stays unavailable. Merged meter icons use the primary window for the thick lane and the secondary window for the
+  thin lane, following the used/remaining preference. When both are absent, the existing tertiary/extra-window
+  single-meter fallback remains. The switcher gauge and Icon & percent value retain their weekly-first selection.
+  Enabled plugins can also be selected in **Settings → Menu Bar → Overview**; they share the
   six-provider limit and render their existing usage card. Overview selections retain the same string-array format,
   so older builds can still read the built-in providers while ignoring unknown plugin IDs.
 - `endpoints`: 1–16 declared network origins. A fixed endpoint is a normalized HTTPS origin such as
   `https://api.example.com` (no path, query, fragment, or user info). A settings-derived endpoint is
   `{setting: "BASE_URL", policy: "https"}`, `{setting: "BASE_URL", policy: "https-or-loopback-http"}`, or
   `{setting: "BASE_URL", policy: "https-or-private-network-http"}`. Its setting must be declared as `plain`.
+  A missing, empty, or whitespace-only value is required configuration, not an invalid manifest. CodexBar identifies
+  the plugin and missing setting; fetching stays blocked until a valid endpoint is configured and approved.
   `https-or-loopback-http` preserves the unauthenticated loopback-only rule. `https-or-private-network-http` also permits
   authenticated HTTP for loopback, RFC 1918 IPv4, IPv4 link-local, IPv6 unique-local/link-local, and `.local` targets,
   but only through the separate typed approval described below. Public targets always require HTTPS.
@@ -351,7 +359,7 @@ Return at least one rate window, cost object, detail section, or non-empty ident
 
 ```js
 return {
-  primary: { usedPercent: 25, resetsAt: new Date(), windowMinutes: 300 },
+  primary: { title: "Requests", usedPercent: 25, resetsAt: new Date(), windowMinutes: 300 },
   secondary: { usedPercent: 40, resetsAt: "2026-08-10T00:00:00Z", windowMinutes: 10080 },
   tertiary: { usedPercent: 5 },
   extraWindows: [{ id: "daily", title: "Daily", window: { usedPercent: 12 } }],
@@ -376,6 +384,19 @@ Percentages must be finite and are clamped to 0–100. Window minutes are positi
 and a three-letter uppercase currency. Dates are JavaScript `Date` values or ISO-8601 strings. Snapshot identity is
 always scoped to the manifest's instance ID. Data confidence defaults to `unknown`. Details allow at most 8 sections, 24 rows per section, 120 chart points,
 and 120 characters per detail string. Wrong types and limit violations fail the whole fetch instead of truncating it.
+
+Standard windows (`primary`, `secondary`, and `tertiary`) may include an optional `title`. Generic menu cards and
+`plugins fetch` text output use it instead of Primary, Secondary, or Tertiary. Titles are trimmed, limited to 256 UTF-8
+bytes, and must be strings; omitted, null, or blank titles use the default label. JSON snapshots retain the title.
+
+Plugin cards show `resetsAt` using the app's countdown or absolute-time preference. When no usable timestamp is
+available, `resetDescription` supplies the reset text through the same formatter as built-in providers. A refresh
+failure appears alongside the last successful usage until a subsequent refresh succeeds.
+
+Rate windows may include `quotaLimit` (a positive finite number) and `quotaUnit` (`credits`, `requests`, or an
+ISO currency code) alongside `usedPercent`. Built-in provider cards use these units for monthly daily targets;
+without an absolute allowance it retains percentage units. Do not invent an allowance or reset date.
+
 Named extra windows accept an optional `usageKnown` boolean (default `true`). Set it to `false` for reset-only limits:
 the window remains visible as **Unavailable**, and its placeholder `usedPercent` is not presented as measured usage.
 Detail rows accept optional `progress` (a finite consumed fraction from 0 through 1) and `usageValue` (finite raw usage).
@@ -392,6 +413,21 @@ organization, plan/login-method, and account-ID fields in the menu and CLI. A ve
 may return `{empty: true}` with optional identity. This creates no artificial rate window; every supplied field is still
 validated. An empty object, an empty `identity` object, or metadata such as confidence and subscription dates without
 displayable usage or identity remains invalid unless `empty: true` is explicitly declared.
+
+## External hooks
+
+Installed user plugins appear in the existing Hooks provider picker. Rules can select the manifest ID or match any
+provider. Successful, current app refreshes emit `usage_updated` with the existing primary and secondary payload.
+`quota_low` uses primary and secondary threshold crossings; `quota_reached` uses a measured primary session window.
+`quota_reset` uses the app's confirmed session/weekly reset detection: a session needs a declared cadence of at most
+six hours, and a weekly lane needs an unambiguous seven-day cadence. A durationless primary can report depletion but
+cannot report a session reset. Custom titles do not change the hook window identifiers.
+
+Hooks retain the existing opt-in commands, privacy setting, and rate limiter. Failed, cancelled, and obsolete refreshes
+never publish usage/quota hooks. Disablement, fetch-setting changes, plugin replacement, and deletion clear quota
+baselines; display-only changes preserve depletion/reset baselines. As with built-ins, `quota_low` starts a fresh
+crossing baseline after a configuration edit. These plugin events come from the macOS app; `hooks watch` keeps its
+built-in-provider polling scope. See [configuration](configuration.md#external-event-hooks) for rule and payload details.
 
 ## Fetch result envelope
 
@@ -472,6 +508,9 @@ error and can also be deleted.
 
 ## Security and limitations
 
+User-plugin HTTP sessions are scoped to a single request and released after success or failure.
+Reloading or removing plugins does not leave inactive sessions retained by their delegates. Redirect and credential-isolation rules remain unchanged.
+
 Treat a plugin like code you run locally, even though its host capabilities are narrow. Read the manifest and source,
 verify every origin, and avoid installing files from untrusted repositories. Approval grants the listed origin network
 authority; DNS changes after approval are outside CodexBar's threat model. Secrets are never placed in URLs or logged,
@@ -493,6 +532,8 @@ disabled, all plugins retain appended-card placement regardless of `topLevel`.
 A single plugin works without a redundant switcher, and multiple plugin tabs work even with no built-in providers
 enabled. Refresh and Cmd-R refresh the selected plugin; each card’s refresh button targets that card. Completed
 refreshes update visible plugin cards, and repeated requests for the same plugin share its in-flight refresh.
+When a refresh fails, the card keeps the last successful usage and shows the error plus how long ago that usage was
+captured. A later successful refresh clears both warnings.
 Overview continues to summarize built-in providers. This setting changes placement only: it grants no additional host
 capabilities and does not change network approval.
 
@@ -564,6 +605,9 @@ evicts only the cached entry observed by that fetch (each domain is pinned for t
 are never erased. User plugins have no persistent cookie cache, so rejection is a validated no-op for them.
 
 ## Bundled provider examples
+
+[Trae CN](traecn.md) uses the shared browser-session broker and two read-only JSON POSTs. Its short-lived
+service token stays within one refresh; no native fetcher or parallel credential store is needed.
 
 Bundled scripts own requests, error classification, and snapshot mapping; Swift supplies registration, settings, and credential/origin validation. These examples illustrate contracts that differ from the minimal plugin:
 

@@ -31,6 +31,8 @@ interface CodexBarSetting {
 }
 
 interface CodexBarRateWindow {
+  /** Optional label for generic cards and CLI text; trimmed, at most 256 UTF-8 bytes. */
+  title?: string | null;
   /** Stable identity and provider-authored label for a promoted named window. */
   id?: string | null;
   label?: string | null;
@@ -40,6 +42,9 @@ interface CodexBarRateWindow {
   period?: "session" | "daily" | "weekly" | "monthly" | "lifetime" | null;
   resetsAt?: Date | string | null;
   resetDescription?: string | null;
+  /** Absolute allowance; unit is credits, requests, or an ISO currency code. */
+  quotaLimit?: number | null;
+  quotaUnit?: string | null;
   nextRegenPercent?: number | null;
 }
 

@@ -4,8 +4,7 @@ import SwiftUI
 @MainActor
 struct AboutPane: View {
     let updater: UpdaterProviding
-    var rootRequests = 0
-    @State private var path: [AboutRoute] = []
+    @Bindable var selection: PreferencesSelection
     @State private var iconHover = false
     @AppStorage("autoUpdateEnabled") private var autoUpdateEnabled: Bool = true
     @AppStorage(UpdateChannel.userDefaultsKey)
@@ -37,19 +36,10 @@ struct AboutPane: View {
     }
 
     var body: some View {
-        NavigationStack(path: self.$path) {
-            // Pushed pages retitle the window; the root title restores it when they pop.
+        if self.selection.destination.aboutRoute == .acknowledgements {
+            AcknowledgementsView(acknowledgements: Acknowledgement.load())
+        } else {
             self.form
-                .navigationTitle(SettingsPane.about.title)
-                .navigationDestination(for: AboutRoute.self) { route in
-                    switch route {
-                    case .acknowledgements:
-                        AcknowledgementsView(acknowledgements: Acknowledgement.load())
-                    }
-                }
-        }
-        .onChange(of: self.rootRequests) { _, _ in
-            self.path = []
         }
     }
 
@@ -71,15 +61,23 @@ struct AboutPane: View {
                 AboutLinkRow(icon: "globe", title: L("link_website"), url: "https://codexbarios.o1xhack.com")
                 AboutLinkRow(icon: "bird", title: L("link_twitter"), url: "https://x.com/o1xhack")
                 AboutLinkRow(icon: "envelope", title: L("link_email"), url: "mailto:o1xhack@gmail.com")
-                NavigationLink(value: AboutRoute.acknowledgements) {
-                    Label {
-                        Text(L("link_acknowledgements"))
-                    } icon: {
+                Button {
+                    self.selection.showAcknowledgements()
+                } label: {
+                    HStack(spacing: 8) {
                         Image(systemName: "heart.text.square")
                             .frame(width: 18)
                             .foregroundStyle(.secondary)
+                        Text(L("link_acknowledgements"))
+                        Spacer()
+                        Image(systemName: "chevron.forward")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(.tertiary)
                     }
+                    .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
+                .accessibilityLabel(L("link_acknowledgements"))
             } header: {
                 Text(L("section_links"))
             } footer: {

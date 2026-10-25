@@ -1642,7 +1642,7 @@ extension UsageStore {
                 sessionRestoredNotificationPending: sessionRestored)
             guard self.isCurrentProviderRefreshGeneration(provider, generation: generation) else { return }
             self.emitUsageUpdatedHook(
-                provider: provider,
+                provider: provider.instanceID,
                 snapshot: backfilled,
                 rateKey: warningAccountDiscriminator)
         case let .failure(error):

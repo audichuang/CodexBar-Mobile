@@ -269,15 +269,22 @@ enum ProviderPluginSnapshotMapper {
         }
         let id = try self.optionalString(value, property: "id", path: path)
         let label = try self.optionalString(value, property: "label", path: path)
-        return RateWindow(
+        let quotaLimit = try self.optionalFiniteNumber(value, property: "quotaLimit", path: path)
+        if let quotaLimit, quotaLimit <= 0 {
+            throw ProviderPluginError.invalidSnapshot("\(path).quotaLimit must be positive")
+        }
+        return try RateWindow(
             usedPercent: usedPercent,
             windowMinutes: windowMinutes,
             resetsAt: resetsAt,
             resetDescription: resetDescription,
+            quotaLimit: quotaLimit,
+            quotaUnit: self.optionalString(value, property: "quotaUnit", path: path),
             nextRegenPercent: nextRegenPercent.map { min(100, max(0, $0)) },
             period: period,
             id: id,
-            label: label)
+            label: label,
+            title: self.optionalString(value, property: "title", path: path))
     }
 
     private static func extraWindows(
