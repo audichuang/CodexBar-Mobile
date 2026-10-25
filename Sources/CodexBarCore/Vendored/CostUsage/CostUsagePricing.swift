@@ -537,6 +537,8 @@ enum CostUsagePricing {
     /// stores rebuild instead of adopting rows corrupted by the 0.72 request-ledger migration.
     /// Version 21: v0.74.0-v0.74.1 merged Codex turn-performance timing, cached-input coverage, and shared
     /// turn identifiers; published 0.73.0.1 stores adopt like upstream 0.73.0 stores.
+    /// Version 24: v0.80.0-v0.81.0 merged Claude Cowork de-duplication and Codex `.jsonl.zst` archived
+    /// rollouts (steipete #4534); roll every cache so both axes re-scan with the merged scanners.
     static let parserLogicVersion = 24
 
     /// Stable string fingerprint of the pricing tables + parser logic.
