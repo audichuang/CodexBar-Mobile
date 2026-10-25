@@ -781,6 +781,7 @@ struct ProviderDetailView: View {
         let xAxisDates = Self.dailyAxisDayKeys(for: sortedDaily).compactMap { key in
             Self.dayDate(from: key).flatMap { calendar.date(byAdding: .hour, value: 12, to: $0) }
         }
+        let newestDayKey = sortedDaily.last?.dayKey
         let viewport = Self.dailyViewport(dayKeys: sortedDaily.map(\.dayKey))
         // Precompute axis values once per section build. `daily` is stable across
         // `selectedDate` hover changes, so pulling this out of the `.chartYAxis`
@@ -841,10 +842,15 @@ struct ProviderDetailView: View {
             .chartScrollPosition(initialX: viewport?.start ?? Date())
             .environment(\.calendar, calendar)
             .chartXAxis {
-                AxisMarks(values: xAxisDates) { value in
+                // `.aligned` + `centered: false` puts each label directly under its
+                // tick / bar centre; the default offsets labels of a unit-binned
+                // axis by roughly a bar. A tick on the newest day sits at the plot's
+                // right edge where its label would be clipped, so it keeps only the
+                // grid line.
+                AxisMarks(preset: .aligned, values: xAxisDates) { value in
                     AxisGridLine()
-                    AxisValueLabel(anchor: .top) {
-                        if let date = value.as(Date.self) {
+                    AxisValueLabel(centered: false, anchor: .top) {
+                        if let date = value.as(Date.self), Self.dayKey(from: date) != newestDayKey {
                             Text(Self.dailyAxisLabel(for: Self.dayKey(from: date)))
                                 .font(.caption2)
                         }
