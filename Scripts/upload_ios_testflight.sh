@@ -36,11 +36,10 @@ echo "==> Pre-flight lint (Swift + i18n)..."
 "$ROOT/Scripts/lint.sh" lint
 
 STAMP=$(date +%Y%m%d-%H%M%S)
-SCRATCH_ROOT=/Volumes/StudioSSD/Developer/BuildScratch
-EXPECTED_VOLUME_UUID=9D5FE511-B66C-4765-BB8F-61E5ACB3969D
-ACTUAL_VOLUME_UUID=$(diskutil info -plist /Volumes/StudioSSD | plutil -extract VolumeUUID raw -o - -)
-if [[ "$ACTUAL_VOLUME_UUID" != "$EXPECTED_VOLUME_UUID" || ! -w "$SCRATCH_ROOT" ]]; then
-  echo "StudioSSD build scratch is unavailable or the volume UUID changed" >&2
+SCRATCH_ROOT="${CODEXBAR_BUILD_SCRATCH:-$HOME/Library/Developer/CodexBarBuildScratch}"
+mkdir -p "$SCRATCH_ROOT"
+if [[ ! -w "$SCRATCH_ROOT" ]]; then
+  echo "Build scratch directory is not writable: $SCRATCH_ROOT" >&2
   exit 1
 fi
 SCRATCH_DIR="$SCRATCH_ROOT/CodexBar/TestFlight-$STAMP"
@@ -87,7 +86,8 @@ xcodebuild archive \
 
 echo ""
 echo "==> Signing + uploading to App Store Connect (cloud signing via Xcode session)..."
-xcodebuild -exportArchive \
+# System PATH only: Homebrew rsync on PATH breaks Xcode IPA packaging ("Copy failed").
+PATH=/usr/bin:/bin:/usr/sbin:/sbin xcodebuild -exportArchive \
   -archivePath "$ARCHIVE_PATH" \
   -exportOptionsPlist "$OPTIONS_PLIST" \
   -exportPath "$EXPORT_PATH" \
