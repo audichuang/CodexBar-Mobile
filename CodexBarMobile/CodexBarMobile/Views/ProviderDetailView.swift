@@ -772,8 +772,20 @@ struct ProviderDetailView: View {
     // MARK: - Daily Chart
 
     private func dailyChartSection(_ daily: [SyncDailyPoint], currencyCode: String?) -> some View {
-        let sortedDaily = Self.sortedDailyPoints(daily)
-        let xAxisDates = Self.dailyAxisDayKeys(for: sortedDaily).compactMap { Self.dayDate(from: $0) }
+        // Drop points whose day key does not parse so one bad key cannot stretch
+        // the date axis (e.g. to year 1).
+        let sortedDaily = Self.sortedDailyPoints(daily).filter { Self.dayDate(from: $0.dayKey) != nil }
+        let plotted = sortedDaily.compactMap { point in
+            Self.dayDate(from: point.dayKey).map { (point: point, date: $0) }
+        }
+        // Marks use `unit: .day`, so each bar occupies [start of day, next start)
+        // and is centred at noon; ticks sit at noon so grid lines and labels
+        // line up with the bars.
+        let calendar = Self.chartCalendar()
+        let xAxisDates = Self.dailyAxisDayKeys(for: sortedDaily).compactMap { key in
+            Self.dayDate(from: key).flatMap { calendar.date(byAdding: .hour, value: 12, to: $0) }
+        }
+        let viewport = Self.dailyViewport(dayKeys: sortedDaily.map(\.dayKey))
         // Precompute axis values once per section build. `daily` is stable across
         // `selectedDate` hover changes, so pulling this out of the `.chartYAxis`
         // closure eliminates redundant axis recomputation on every chart re-render.
@@ -790,36 +802,38 @@ struct ProviderDetailView: View {
             .accessibilityElement(children: .combine)
             .accessibilityIdentifier("provider-daily-spend-title")
 
-            Chart(sortedDaily, id: \.dayKey) { point in
+            Chart(plotted, id: \.point.dayKey) { entry in
+                let point = entry.point
+                let date = entry.date
                 switch self.chartStyle {
                 case .bars:
                     BarMark(
-                        x: .value(String(localized: "Date"), Self.dayDate(from: point.dayKey) ?? .distantPast),
+                        x: .value(String(localized: "Date"), date, unit: .day),
                         y: .value(String(localized: "Cost"), point.costUSD))
                         .foregroundStyle(self.providerColor.gradient)
                         .cornerRadius(3)
                 case .line:
                     AreaMark(
-                        x: .value(String(localized: "Date"), Self.dayDate(from: point.dayKey) ?? .distantPast),
+                        x: .value(String(localized: "Date"), date, unit: .day),
                         y: .value(String(localized: "Cost"), point.costUSD))
                         .foregroundStyle(self.providerColor.opacity(0.16))
                         .interpolationMethod(.catmullRom)
 
                     LineMark(
-                        x: .value(String(localized: "Date"), Self.dayDate(from: point.dayKey) ?? .distantPast),
+                        x: .value(String(localized: "Date"), date, unit: .day),
                         y: .value(String(localized: "Cost"), point.costUSD))
                         .foregroundStyle(self.providerColor)
                         .lineStyle(.init(lineWidth: 2.5, lineCap: .round, lineJoin: .round))
                         .interpolationMethod(.catmullRom)
                 }
 
-                if let selected = self.selectedDate, Self.dayKey(from: selected) == point.dayKey {
-                    RuleMark(x: .value(String(localized: "Selected Date"), Self.dayDate(from: point.dayKey) ?? .distantPast))
+                if let selected = self.selectedDate, Self.selectedDayKey(from: selected) == point.dayKey {
+                    RuleMark(x: .value(String(localized: "Selected Date"), date, unit: .day))
                         .foregroundStyle(self.providerColor.opacity(0.3))
                         .lineStyle(.init(lineWidth: 1, dash: [4, 4]))
 
                     PointMark(
-                        x: .value(String(localized: "Selected Date"), Self.dayDate(from: point.dayKey) ?? .distantPast),
+                        x: .value(String(localized: "Selected Date"), date, unit: .day),
                         y: .value(String(localized: "Selected Cost"), point.costUSD))
                         .foregroundStyle(self.providerColor)
                         .symbolSize(80)
@@ -827,8 +841,9 @@ struct ProviderDetailView: View {
             }
             .chartXSelection(value: self.$selectedDate)
             .chartScrollableAxes(.horizontal)
-            .chartXVisibleDomain(length: min(sortedDaily.count, Self.chartVisibleDays) * 24 * 60 * 60)
-            .chartScrollPosition(initialX: Self.dayDate(from: Self.chartScrollInitialDayKey(daily: sortedDaily)) ?? .distantPast)
+            .chartXVisibleDomain(length: viewport?.length ?? Double(Self.chartVisibleDays) * 86400)
+            .chartScrollPosition(initialX: viewport?.start ?? Date())
+            .environment(\.calendar, calendar)
             .chartXAxis {
                 AxisMarks(values: xAxisDates) { value in
                     AxisGridLine()
@@ -863,7 +878,7 @@ struct ProviderDetailView: View {
             .padding(16)
             .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
 
-            if let selectedDate, let point = sortedDaily.first(where: { $0.dayKey == Self.dayKey(from: selectedDate) }) {
+            if let selectedDate, let point = sortedDaily.first(where: { $0.dayKey == Self.selectedDayKey(from: selectedDate) }) {
                 VStack(alignment: .leading, spacing: 2) {
                     HStack {
                         Text(point.dayKey)
@@ -905,24 +920,57 @@ struct ProviderDetailView: View {
         }
     }
 
-    /// Parses a `yyyy-MM-dd` day key into the start of that day in the current
-    /// calendar. The chart plots real `Date` values (like the Cost tab chart):
-    /// categorical `String` x values ignore `AxisMarks(values:)` once the axis
-    /// is scrollable, which drew a label for every day.
-    static func dayDate(from dayKey: String, calendar: Calendar = .current) -> Date? {
-        let parts = dayKey.split(separator: "-").compactMap { Int($0) }
-        guard parts.count == 3, dayKey.count == 10 else { return nil }
-        var components = DateComponents()
-        components.year = parts[0]
-        components.month = parts[1]
-        components.day = parts[2]
-        return calendar.date(from: components)
+    /// Gregorian calendar in the device time zone. Day keys are Gregorian
+    /// `yyyy-MM-dd`, so the user's display calendar (Umm al-Qura, Buddhist, ...)
+    /// must never influence key <-> Date mapping or the chart's day binning.
+    static func chartCalendar(timeZone: TimeZone = .current) -> Calendar {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = timeZone
+        return calendar
     }
 
-    /// Inverse of `dayDate(from:)`; maps chart selection / ticks back to day keys.
-    static func dayKey(from date: Date, calendar: Calendar = .current) -> String {
-        let c = calendar.dateComponents([.year, .month, .day], from: date)
+    /// Parses a `yyyy-MM-dd` day key into the start of that day. The chart plots
+    /// real `Date` values (like the Cost tab chart): categorical `String` x values
+    /// ignore `AxisMarks(values:)` once the axis is scrollable, which drew a label
+    /// for every day. Returns nil for malformed or impossible keys.
+    static func dayDate(from dayKey: String, timeZone: TimeZone = .current) -> Date? {
+        let parts = dayKey.split(separator: "-").compactMap { Int($0) }
+        guard parts.count == 3, dayKey.count == 10 else { return nil }
+        let calendar = self.chartCalendar(timeZone: timeZone)
+        let components = DateComponents(year: parts[0], month: parts[1], day: parts[2])
+        guard let date = calendar.date(from: components),
+              calendar.dateComponents([.year, .month, .day], from: date) == components
+        else { return nil }
+        return date
+    }
+
+    /// Inverse of `dayDate(from:timeZone:)`; floors any instant to its day key.
+    static func dayKey(from date: Date, timeZone: TimeZone = .current) -> String {
+        let c = self.chartCalendar(timeZone: timeZone).dateComponents([.year, .month, .day], from: date)
         return String(format: "%04d-%02d-%02d", c.year ?? 0, c.month ?? 0, c.day ?? 0)
+    }
+
+    /// Maps a raw `chartXSelection` date (any instant inside the bar's day bin)
+    /// to the day key of the bar it touches.
+    static func selectedDayKey(from raw: Date, timeZone: TimeZone = .current) -> String {
+        self.dayKey(from: raw, timeZone: timeZone)
+    }
+
+    /// Visible x-domain for the scrollable chart, from the real calendar span of
+    /// the data (first...last day inclusive, capped at `chartVisibleDays`) rather
+    /// than the record count, anchored so the newest day is fully visible.
+    static func dailyViewport(
+        dayKeys: [String],
+        timeZone: TimeZone = .current) -> (start: Date, length: TimeInterval)?
+    {
+        let dates = dayKeys.compactMap { self.dayDate(from: $0, timeZone: timeZone) }
+        guard let first = dates.min(), let last = dates.max() else { return nil }
+        let calendar = self.chartCalendar(timeZone: timeZone)
+        let spanDays = (calendar.dateComponents([.day], from: first, to: last).day ?? 0) + 1
+        let visibleDays = min(spanDays, self.chartVisibleDays)
+        let start = calendar.date(byAdding: .day, value: -(visibleDays - 1), to: last) ?? first
+        let end = calendar.date(byAdding: .day, value: 1, to: last) ?? last.addingTimeInterval(86400)
+        return (start, end.timeIntervalSince(start))
     }
 
     static func dailyAxisLabel(for dayKey: String) -> String {
@@ -942,11 +990,6 @@ struct ProviderDetailView: View {
         outputFormatter.timeZone = TimeZone(secondsFromGMT: 0)
         outputFormatter.dateFormat = "M/d"
         return outputFormatter.string(from: date)
-    }
-
-    static func chartScrollInitialDayKey(daily: [SyncDailyPoint]) -> String {
-        let startIndex = max(0, daily.count - self.chartVisibleDays)
-        return daily[startIndex].dayKey
     }
 
     // MARK: - Helpers
