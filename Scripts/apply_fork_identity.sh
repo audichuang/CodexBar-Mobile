@@ -45,7 +45,7 @@ changed=0
 while IFS= read -r f; do
   [[ -f "$f" && ! -L "$f" ]] || continue
   case "$f" in
-    "$SELF"|*.md|Archive/*|appcast.xml|CodexBarMobile/Research/*|release-notes/*|CHANGELOG*|*/CHANGELOG*|CodexBarMobile/AppStoreMetadata/*|.github/FUNDING.yml|*.xcstrings) continue ;;
+    "$SELF"|Scripts/test_apply_fork_identity.sh|*.md|Archive/*|appcast.xml|CodexBarMobile/Research/*|release-notes/*|CHANGELOG*|*/CHANGELOG*|CodexBarMobile/AppStoreMetadata/*|.github/FUNDING.yml|*.xcstrings) continue ;;
   esac
   # Skip binary files.
   grep -Iq . "$f" 2>/dev/null || continue
