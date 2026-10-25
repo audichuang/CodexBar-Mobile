@@ -8,7 +8,7 @@ import Testing
 @testable import CodexBarWidget
 
 @Suite(.serialized)
-struct UserProviderPluginTests {
+struct UserProviderPluginTests { // swiftlint:disable:this type_body_length
     @Test
     func `JavaScript plugin discovers approves fetches and produces a generic snapshot`() async throws {
         let fixture = try Fixture()
