@@ -15,6 +15,9 @@ permissions:
 
 jobs:
   build-cli:
+    # Fork Mac releases are published by release-mac.yml; do not let the
+    # release:published event attach Linux/CLI assets. Manual dispatch only.
+    if: github.event_name == 'workflow_dispatch'
     strategy:
       fail-fast: false
       matrix:
