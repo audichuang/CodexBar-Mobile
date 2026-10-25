@@ -219,28 +219,7 @@ struct ProviderUsageView: View {
                 }
             }
 
-            HStack(spacing: 8) {
-                if let line = self.subtitleLine() {
-                    HStack(spacing: 4) {
-                        Image(systemName: "person.circle.fill")
-                            .font(.caption)
-                        Text(line)
-                            .font(.subheadline)
-                            .accessibilityIdentifier("provider-card-subtitle-\(self.provider.providerID)")
-                    }
-                    .foregroundStyle(.secondary)
-                }
-
-                if let plan = self.provider.loginMethod {
-                    Text(MobilePersonalInfoRedactor.redactEmails(in: plan, isEnabled: self.hidePersonalInfo) ?? plan)
-                        .font(.caption)
-                        .fontWeight(.medium)
-                        .padding(.horizontal, 8)
-                        .padding(.vertical, 3)
-                        .background(.quaternary, in: Capsule())
-                }
-            }
-
+            self.accountRow
             HStack(spacing: 4) {
                 Text(self.provider.lastUpdated.formatted(.relative(presentation: .named)))
                 if let status = self.sourceStatus, let device = status.sourceDeviceName,
@@ -259,6 +238,60 @@ struct ProviderUsageView: View {
             .font(.caption)
             .foregroundStyle(.tertiary)
             .accessibilityElement(children: .combine)
+        }
+    }
+
+    // MARK: - Account row
+
+    /// Email + plan badge. The email stays on one line (middle truncation);
+    /// when it cannot fit beside the badge (large Dynamic Type, long email) the
+    /// badge drops below it instead of squeezing the email into a char-wrapped column.
+    @ViewBuilder
+    private var accountRow: some View {
+        let line = self.subtitleLine()
+        let plan = self.provider.loginMethod.map {
+            MobilePersonalInfoRedactor.redactEmails(in: $0, isEnabled: self.hidePersonalInfo) ?? $0
+        }
+        if line != nil || plan != nil {
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 8) {
+                    self.accountEmailLabel(line)
+                    self.planBadge(plan)
+                }
+                VStack(alignment: .leading, spacing: 4) {
+                    self.accountEmailLabel(line)
+                    self.planBadge(plan)
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func accountEmailLabel(_ line: String?) -> some View {
+        if let line {
+            HStack(spacing: 4) {
+                Image(systemName: "person.circle.fill")
+                    .font(.caption)
+                Text(line)
+                    .font(.subheadline)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+                    .accessibilityIdentifier("provider-card-subtitle-\(self.provider.providerID)")
+            }
+            .foregroundStyle(.secondary)
+        }
+    }
+
+    @ViewBuilder
+    private func planBadge(_ plan: String?) -> some View {
+        if let plan {
+            Text(plan)
+                .font(.caption)
+                .fontWeight(.medium)
+                .lineLimit(1)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 3)
+                .background(.quaternary, in: Capsule())
         }
     }
 
