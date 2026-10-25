@@ -64,7 +64,8 @@ if ! command -v generate_appcast >/dev/null; then
   exit 1
 fi
 
-APPCAST_STAGE_BASE="${CODEXBAR_RELEASE_STAGE_BASE:-/Volumes/StudioSSD/Developer/BuildScratch/CodexBar}"
+APPCAST_STAGE_BASE="${CODEXBAR_RELEASE_STAGE_BASE:-${CODEXBAR_BUILD_SCRATCH:-$HOME/Library/Developer/CodexBarBuildScratch}/CodexBar}"
+mkdir -p "$APPCAST_STAGE_BASE" 2>/dev/null || true
 [[ -d "$APPCAST_STAGE_BASE" && -w "$APPCAST_STAGE_BASE" ]] || {
   echo "Appcast scratch directory is missing or not writable: $APPCAST_STAGE_BASE" >&2
   exit 1
