@@ -1380,19 +1380,19 @@
 				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					59BBAD176F2AF8C44F838B73 = {
-						DevelopmentTeam = 3TUERHN53E;
+						DevelopmentTeam = 37HFR5V2JJ;
 					};
 					7916284950C20C9B23853D0B = {
-						DevelopmentTeam = 3TUERHN53E;
+						DevelopmentTeam = 37HFR5V2JJ;
 					};
 					9C83063937EAADDC78C3C7F9 = {
-						DevelopmentTeam = 3TUERHN53E;
+						DevelopmentTeam = 37HFR5V2JJ;
 					};
 					A02A488005F484BB2BC37276 = {
 						TestTargetID = BFE9125269D971C3EB23E583;
 					};
 					BFE9125269D971C3EB23E583 = {
-						DevelopmentTeam = 3TUERHN53E;
+						DevelopmentTeam = 37HFR5V2JJ;
 					};
 				};
 			};
@@ -1901,7 +1901,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = CodexBarMobileWidgets/WidgetExtension.entitlements;
 				CURRENT_PROJECT_VERSION = 258;
-				DEVELOPMENT_TEAM = 3TUERHN53E;
+				DEVELOPMENT_TEAM = 37HFR5V2JJ;
 				INFOPLIST_FILE = CodexBarMobileWidgets/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1909,7 +1909,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 3.2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.o1xhack.codexbar.mobile.widgets;
+				PRODUCT_BUNDLE_IDENTIFIER = com.audichuang.codexbar.mobile.widgets;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1932,7 +1932,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 3.2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.o1xhack.codexbar.sync;
+				PRODUCT_BUNDLE_IDENTIFIER = com.audichuang.codexbar.sync;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1946,7 +1946,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = CodexBarMobileWidgets/WidgetExtension.entitlements;
 				CURRENT_PROJECT_VERSION = 258;
-				DEVELOPMENT_TEAM = 3TUERHN53E;
+				DEVELOPMENT_TEAM = 37HFR5V2JJ;
 				INFOPLIST_FILE = CodexBarMobileWidgets/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1954,7 +1954,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 3.2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.o1xhack.codexbar.mobile.widgets;
+				PRODUCT_BUNDLE_IDENTIFIER = com.audichuang.codexbar.mobile.widgets;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2092,7 +2092,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.o1xhack.codexbar.mobile.tests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.audichuang.codexbar.mobile.tests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CodexBarMobile.app/CodexBarMobile";
@@ -2109,7 +2109,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.o1xhack.codexbar.mobile.tests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.audichuang.codexbar.mobile.tests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CodexBarMobile.app/CodexBarMobile";
@@ -2121,7 +2121,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = CodexBarMobilePushExtension/PushExtension.entitlements;
 				CURRENT_PROJECT_VERSION = 258;
-				DEVELOPMENT_TEAM = 3TUERHN53E;
+				DEVELOPMENT_TEAM = 37HFR5V2JJ;
 				INFOPLIST_FILE = CodexBarMobilePushExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2129,7 +2129,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 3.2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.o1xhack.codexbar.mobile.pushextension;
+				PRODUCT_BUNDLE_IDENTIFIER = com.audichuang.codexbar.mobile.pushextension;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2142,7 +2142,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = CodexBarMobileWidgetOptions/WidgetOptions.entitlements;
 				CURRENT_PROJECT_VERSION = 258;
-				DEVELOPMENT_TEAM = 3TUERHN53E;
+				DEVELOPMENT_TEAM = 37HFR5V2JJ;
 				INFOPLIST_FILE = CodexBarMobileWidgetOptions/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2150,7 +2150,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 3.2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.o1xhack.codexbar.mobile.widgetoptions;
+				PRODUCT_BUNDLE_IDENTIFIER = com.audichuang.codexbar.mobile.widgetoptions;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2164,14 +2164,14 @@
 				CODE_SIGN_ENTITLEMENTS = CodexBarMobile/CodexBarMobile.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 258;
-				DEVELOPMENT_TEAM = 3TUERHN53E;
+				DEVELOPMENT_TEAM = 37HFR5V2JJ;
 				INFOPLIST_FILE = CodexBarMobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 3.2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.o1xhack.codexbar.mobile;
+				PRODUCT_BUNDLE_IDENTIFIER = com.audichuang.codexbar.mobile;
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2188,7 +2188,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.o1xhack.codexbar.mobile.uitests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.audichuang.codexbar.mobile.uitests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = CodexBarMobile;
@@ -2201,7 +2201,7 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = CodexBarMobileWidgetOptions/WidgetOptions.entitlements;
 				CURRENT_PROJECT_VERSION = 258;
-				DEVELOPMENT_TEAM = 3TUERHN53E;
+				DEVELOPMENT_TEAM = 37HFR5V2JJ;
 				INFOPLIST_FILE = CodexBarMobileWidgetOptions/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2209,7 +2209,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 3.2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.o1xhack.codexbar.mobile.widgetoptions;
+				PRODUCT_BUNDLE_IDENTIFIER = com.audichuang.codexbar.mobile.widgetoptions;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2223,14 +2223,14 @@
 				CODE_SIGN_ENTITLEMENTS = CodexBarMobile/CodexBarMobile.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 258;
-				DEVELOPMENT_TEAM = 3TUERHN53E;
+				DEVELOPMENT_TEAM = 37HFR5V2JJ;
 				INFOPLIST_FILE = CodexBarMobile/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 3.2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.o1xhack.codexbar.mobile;
+				PRODUCT_BUNDLE_IDENTIFIER = com.audichuang.codexbar.mobile;
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2247,7 +2247,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.o1xhack.codexbar.mobile.uitests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.audichuang.codexbar.mobile.uitests;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = CodexBarMobile;
@@ -2270,7 +2270,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 3.2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.o1xhack.codexbar.sync;
+				PRODUCT_BUNDLE_IDENTIFIER = com.audichuang.codexbar.sync;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2283,7 +2283,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = CodexBarMobilePushExtension/PushExtension.entitlements;
 				CURRENT_PROJECT_VERSION = 258;
-				DEVELOPMENT_TEAM = 3TUERHN53E;
+				DEVELOPMENT_TEAM = 37HFR5V2JJ;
 				INFOPLIST_FILE = CodexBarMobilePushExtension/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2291,7 +2291,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 3.2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.o1xhack.codexbar.mobile.pushextension;
+				PRODUCT_BUNDLE_IDENTIFIER = com.audichuang.codexbar.mobile.pushextension;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";

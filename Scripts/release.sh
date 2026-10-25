@@ -26,10 +26,10 @@ source "$ROOT/Scripts/sparkle_helpers.sh"
 APPCAST="$ROOT/appcast.xml"
 APP_NAME="CodexBar"
 RELEASE_ASSET_BASENAME="${APP_NAME}-${MARKETING_VERSION}-mobile.${MOBILE_VERSION}"
-BUNDLE_ID="com.o1xhack.codexbar"
+BUNDLE_ID="com.audichuang.codexbar"
 RELEASE_BRANCH="mobile-dev"
 export CODEXBAR_RELEASE_BRANCH="$RELEASE_BRANCH"
-FEED_URL="https://raw.githubusercontent.com/o1xhack/CodexBar-Mobile/${RELEASE_BRANCH}/appcast.xml"
+FEED_URL="https://raw.githubusercontent.com/audichuang/CodexBar-Mobile/${RELEASE_BRANCH}/appcast.xml"
 TAG="v${MARKETING_VERSION}-mobile.${MOBILE_VERSION}"
 RELEASE_TITLE="${APP_NAME} ${MARKETING_VERSION} Mobile ${MOBILE_VERSION}"
 ARTIFACT_INPUTS=(
@@ -89,7 +89,7 @@ require_remote_asset_matches_local() {
   local local_path=$1 asset_name asset_record remote_size remote_digest local_size local_digest
   asset_name=$(basename "$local_path")
   asset_record=$(gh release view "$TAG" \
-    --repo o1xhack/CodexBar-Mobile \
+    --repo audichuang/CodexBar-Mobile \
     --json assets \
     --jq ".assets | map(select(.name == \"${asset_name}\")) | if length == 1 then .[0] | [.size, .digest] | @tsv else empty end")
   [[ -n "$asset_record" ]] || err "Draft release must contain exactly one asset named ${asset_name}."
@@ -132,7 +132,7 @@ for item in root.findall("./channel/item"):
 else:
     raise SystemExit(f"No appcast entry found for {version}")
 PY
-  expected_url="https://github.com/o1xhack/CodexBar-Mobile/releases/download/${TAG}/$(basename "$zip")"
+  expected_url="https://github.com/audichuang/CodexBar-Mobile/releases/download/${TAG}/$(basename "$zip")"
   [[ "$(sed -n '1p' "$metadata")" == "$expected_url" ]] || {
     rm -f "$metadata"
     err "Generated appcast enclosure URL does not match the release asset."
@@ -232,17 +232,17 @@ phase1() {
   # any fresh one we create. Sweep those out before creating the new draft
   # so the user doesn't see two "CodexBar 0.20.x" entries in the UI.
   if [[ "${DRAFT_NO_TAG_PUSH:-0}" != "1" ]]; then
-    orphan_ids=$(gh api "repos/o1xhack/CodexBar-Mobile/releases" \
+    orphan_ids=$(gh api "repos/audichuang/CodexBar-Mobile/releases" \
       --jq ".[] | select(.tag_name == \"$TAG\" and .draft == true) | .id" 2>/dev/null || true)
     for id in $orphan_ids; do
       echo "Cleaning up orphan draft id=$id for $TAG (from a previous phase 1 run)."
-      gh api -X DELETE "repos/o1xhack/CodexBar-Mobile/releases/$id" >/dev/null
+      gh api -X DELETE "repos/audichuang/CodexBar-Mobile/releases/$id" >/dev/null
     done
   fi
 
   # Pin --repo to our fork explicitly. Without it, gh inspects local
   # remotes and may pick the upstream remote (steipete/CodexBar) since
-  # both `origin` (o1xhack/CodexBar-Mobile) and `upstream` exist —
+  # both `origin` (audichuang/CodexBar-Mobile) and `upstream` exist —
   # which fails with "tag exists locally but has not been pushed to
   # steipete/CodexBar". Fork tags only live on origin; hard-code the
   # repo to match the orphan-cleanup gh api call above.
@@ -260,14 +260,14 @@ phase1() {
   fi
   gh release create "$TAG" \
     "${RELEASE_ASSET_BASENAME}.zip" "${RELEASE_ASSET_BASENAME}.dSYM.zip" \
-    --repo o1xhack/CodexBar-Mobile \
+    --repo audichuang/CodexBar-Mobile \
     --draft \
     "${draft_target_args[@]}" \
     --title "${RELEASE_TITLE}" \
     --notes-file "$NOTES_FILE"
 
   local draft_url
-  draft_url=$(gh release view "$TAG" --repo o1xhack/CodexBar-Mobile --json url -q .url)
+  draft_url=$(gh release view "$TAG" --repo audichuang/CodexBar-Mobile --json url -q .url)
 
   cat <<EOF
 
@@ -294,7 +294,7 @@ authorization to merge, push a tag, and publish. Then:
   2. Verify the reviewed release commit and staged assets, then from $RELEASE_BRANCH run:
        git tag -a -m "${RELEASE_TITLE}" "$TAG"
        git push origin "$TAG"
-       gh release edit "$TAG" --repo o1xhack/CodexBar-Mobile --target "$RELEASE_BRANCH" --draft
+       gh release edit "$TAG" --repo audichuang/CodexBar-Mobile --target "$RELEASE_BRANCH" --draft
   3. Verify the draft target and tag point to the reviewed release commit.
   4. Run ./Scripts/release.sh --finalize only when live publication is authorized.
 EOF
@@ -329,7 +329,7 @@ phase2() {
     err "Release dSYM does not match the app binary; rerun phase 1."
 
   local is_draft
-  if ! is_draft=$(gh release view "$TAG" --repo o1xhack/CodexBar-Mobile --json isDraft -q .isDraft 2>&1); then
+  if ! is_draft=$(gh release view "$TAG" --repo audichuang/CodexBar-Mobile --json isDraft -q .isDraft 2>&1); then
     err "No release found for tag $TAG. Run phase 1 first (./Scripts/release.sh)."
   fi
   [[ "$is_draft" == "true" ]] || \
@@ -347,7 +347,7 @@ phase2() {
 
   SPARKLE_PRIVATE_KEY_FILE="$KEY_FILE" \
     SPARKLE_RELEASE_VERSION="$MARKETING_VERSION" \
-    SPARKLE_DOWNLOAD_URL_PREFIX="https://github.com/o1xhack/CodexBar-Mobile/releases/download/${TAG}/" \
+    SPARKLE_DOWNLOAD_URL_PREFIX="https://github.com/audichuang/CodexBar-Mobile/releases/download/${TAG}/" \
     "$ROOT/Scripts/make_appcast.sh" \
     "${RELEASE_ASSET_BASENAME}.zip" \
     "$FEED_URL"
@@ -357,7 +357,7 @@ phase2() {
     "$KEY_FILE"
 
   echo "Publishing reviewed draft release $TAG..."
-  gh release edit "$TAG" --repo o1xhack/CodexBar-Mobile --draft=false
+  gh release edit "$TAG" --repo audichuang/CodexBar-Mobile --draft=false
 
   verify_appcast_entry "$APPCAST" "$MARKETING_VERSION" "$KEY_FILE"
 
@@ -384,7 +384,7 @@ phase2() {
 ============================================================
 Phase 2 complete — Release ${MARKETING_VERSION} is LIVE.
 
-  Release:    https://github.com/o1xhack/CodexBar-Mobile/releases/tag/$TAG
+  Release:    https://github.com/audichuang/CodexBar-Mobile/releases/tag/$TAG
   Appcast:    $FEED_URL
   CFBundle:   ${BUILD_NUMBER}.${MOBILE_VERSION}
 
