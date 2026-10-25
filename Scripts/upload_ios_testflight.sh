@@ -58,7 +58,7 @@ cat > "$OPTIONS_PLIST" <<PLIST
     <key>method</key>
     <string>app-store-connect</string>
     <key>teamID</key>
-    <string>3TUERHN53E</string>
+    <string>37HFR5V2JJ</string>
     <key>destination</key>
     <string>upload</string>
     <key>manageAppVersionAndBuildNumber</key>

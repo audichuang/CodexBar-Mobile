@@ -232,12 +232,12 @@ if [[ -f "$ICON_SOURCE" ]]; then
   iconutil --convert icns --output "$ICON_TARGET" "$ICON_SOURCE"
 fi
 
-BUNDLE_ID="com.o1xhack.codexbar"
+BUNDLE_ID="com.audichuang.codexbar"
 RELEASE_BRANCH="${CODEXBAR_RELEASE_BRANCH:-mobile-dev}"
-FEED_URL="https://raw.githubusercontent.com/o1xhack/CodexBar-Mobile/${RELEASE_BRANCH}/appcast.xml"
+FEED_URL="https://raw.githubusercontent.com/audichuang/CodexBar-Mobile/${RELEASE_BRANCH}/appcast.xml"
 AUTO_CHECKS=true
 if [[ "$LOWER_CONF" == "debug" ]]; then
-  BUNDLE_ID="com.o1xhack.codexbar.debug"
+  BUNDLE_ID="com.audichuang.codexbar.debug"
   FEED_URL=""
   AUTO_CHECKS=false
 fi
@@ -250,10 +250,10 @@ WIDGET_BUNDLE_ID="${BUNDLE_ID}.widget"
 # to o1xhack's team ID. APP_TEAM_ID is referenced in CFBundleInfo plist
 # embeds (CodexBarTeamID key) at line ~324 / ~420 — required for app group
 # discovery between the main app and Widget extension.
-APP_TEAM_ID="${APP_TEAM_ID:-3TUERHN53E}"
+APP_TEAM_ID="${APP_TEAM_ID:-37HFR5V2JJ}"
 # Match AppGroupSupport.currentGroupID; Team-prefixed macOS groups need no profile.
 APP_GROUP_ID="${APP_TEAM_ID}.com.steipete.codexbar"
-ICLOUD_KVS_ID="${CODEXBAR_ICLOUD_KVS_ID:-3TUERHN53E.com.codexbar.shared}"
+ICLOUD_KVS_ID="${CODEXBAR_ICLOUD_KVS_ID:-37HFR5V2JJ.com.codexbar.shared}"
 INCLUDE_SHARED_ENTITLEMENTS=1
 if [[ "$BUNDLE_ID" == *".debug"* ]]; then
   APP_GROUP_ID="${APP_TEAM_ID}.com.steipete.codexbar.debug"
@@ -275,7 +275,7 @@ NEEDS_GET_TASK_ALLOW=0
 if [[ "$ALLOW_LLDB" == "1" ]]; then
   NEEDS_GET_TASK_ALLOW=1
 elif [[ "$SIGNING_MODE" != "adhoc" ]]; then
-  _EFFECTIVE_ID="${APP_IDENTITY:-Developer ID Application: Yuxiao Wang (3TUERHN53E)}"
+  _EFFECTIVE_ID="${APP_IDENTITY:-Developer ID Application: Yung Chun Chuang (37HFR5V2JJ)}"
   if [[ "$_EFFECTIVE_ID" == "Apple Development:"* ]]; then
     NEEDS_GET_TASK_ALLOW=1
   fi
@@ -287,9 +287,9 @@ cat > "$APP_ENTITLEMENTS" <<PLIST
 <dict>
     $(if [[ "$INCLUDE_SHARED_ENTITLEMENTS" == "1" ]]; then cat <<EOF
 <key>com.apple.application-identifier</key>
-    <string>3TUERHN53E.${BUNDLE_ID}</string>
+    <string>37HFR5V2JJ.${BUNDLE_ID}</string>
     <key>com.apple.developer.team-identifier</key>
-    <string>3TUERHN53E</string>
+    <string>37HFR5V2JJ</string>
     <key>com.apple.security.application-groups</key>
     <array>
         <string>${APP_GROUP_ID}</string>
@@ -302,7 +302,7 @@ cat > "$APP_ENTITLEMENTS" <<PLIST
     </array>
     <key>com.apple.developer.icloud-container-identifiers</key>
     <array>
-        <string>iCloud.com.o1xhack.codexbar</string>
+        <string>iCloud.com.audichuang.codexbar</string>
     </array>
     <key>com.apple.developer.icloud-container-environment</key>
     <string>Production</string>
@@ -362,7 +362,7 @@ cat > "$APP/Contents/Info.plist" <<PLIST
     <key>CFBundleIconFile</key><string>Icon</string>
     <key>NSHumanReadableCopyright</key><string>Based on CodexBar by Peter Steinberger. © 2026 Yuxiao Wang. MIT License.</string>
     <key>SUFeedURL</key><string>${FEED_URL}</string>
-    <key>SUPublicEDKey</key><string>eBPpE8Yx+2Dbl/viiieSBqdfSC8t20g657Dgas+Xw3o=</string>
+    <key>SUPublicEDKey</key><string>Ap5ROjdeTY0W74UZvHhNXUquirI11sGKZBBr+g8yu2M=</string>
     <key>SUEnableAutomaticChecks</key><${AUTO_CHECKS}/>
     <key>CodexMobileVersion</key><string>${MOBILE_VERSION}</string>
     <key>SUAutomaticallyUpdate</key><true/>
@@ -578,7 +578,7 @@ elif [[ "$ALLOW_LLDB" == "1" ]]; then
   CODESIGN_ID="-"
   CODESIGN_ARGS=(--force --sign "$CODESIGN_ID")
 else
-  CODESIGN_ID="${APP_IDENTITY:-Developer ID Application: Yuxiao Wang (3TUERHN53E)}"
+  CODESIGN_ID="${APP_IDENTITY:-Developer ID Application: Yung Chun Chuang (37HFR5V2JJ)}"
   if [[ "$CODESIGN_ID" == "Apple Development:"* ]]; then
     CODESIGN_ARGS=(--force --sign "$CODESIGN_ID")
   else

@@ -3486,10 +3486,10 @@ private struct SettingsTab: View {
                 }
 
                 Section("Open Source") {
-                    Link(destination: URL(string: "https://github.com/o1xhack/CodexBar-Mobile")!) {
+                    Link(destination: URL(string: "https://github.com/audichuang/CodexBar-Mobile")!) {
                         Label {
                             VStack(alignment: .leading, spacing: 4) {
-                                Text("o1xhack/CodexBar-Mobile")
+                                Text("audichuang/CodexBar-Mobile")
                                     .fontWeight(.medium)
                                 Text("Install the Mac app from this repo")
                                     .font(.caption)
@@ -3642,7 +3642,7 @@ private struct AboutSyncDetailView: View {
                                 .foregroundStyle(.secondary)
                         }
                     }
-                    Link(destination: URL(string: "https://github.com/o1xhack/CodexBar-Mobile/releases")!) {
+                    Link(destination: URL(string: "https://github.com/audichuang/CodexBar-Mobile/releases")!) {
                         Label("Download Latest Mac Version", systemImage: "arrow.down.circle")
                     }
                 }

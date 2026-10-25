@@ -22,8 +22,8 @@
 # and grepping for `accountEmail`.
 set -euo pipefail
 
-TEAM_ID="3TUERHN53E"
-CONTAINER_ID="iCloud.com.o1xhack.codexbar"
+TEAM_ID="37HFR5V2JJ"
+CONTAINER_ID="iCloud.com.audichuang.codexbar"
 SCHEMA_OUT="/tmp/codexbar-ck-prod-schema.ckdb"
 SCHEMA_PATCHED="/tmp/codexbar-ck-prod-schema.patched.ckdb"
 
@@ -50,14 +50,14 @@ then
 
     A) Save a token first (one-time setup):
        1. Open https://icloud.developer.apple.com
-       2. Select container iCloud.com.o1xhack.codexbar
+       2. Select container iCloud.com.audichuang.codexbar
        3. Tokens → Create Management Token (full schema scope)
        4. xcrun cktool save-token --type management --token "<paste>"
        5. Re-run this script.
 
     B) Manual Dashboard deploy (no token needed):
        1. Open https://icloud.developer.apple.com
-       2. Container iCloud.com.o1xhack.codexbar → Schema
+       2. Container iCloud.com.audichuang.codexbar → Schema
        3. Record Types → QuotaTransition
        4. Add Field: accountEmail (String)
        5. Click "Deploy Schema Changes to Production"
@@ -156,7 +156,7 @@ echo "==> Step 1 complete. Step 2 (MANUAL):"
 cat <<'EOF'
 
     Open https://icloud.developer.apple.com
-    → Container iCloud.com.o1xhack.codexbar
+    → Container iCloud.com.audichuang.codexbar
     → Schema
     → Click "Deploy Schema Changes to Production" (top right)
     → Verify the dialog shows: QuotaTransition + accountEmail (STRING)

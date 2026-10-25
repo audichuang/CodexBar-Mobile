@@ -30,7 +30,7 @@ struct CodexBarStatusTimelineProvider: IntentTimelineProvider {
         let quota = StatusWidgetConfigurationAdapter.overviewQuota(from: intent)
         #if DEBUG
         let providerIDs = (configuration.providers ?? []).map(\.id).joined(separator: ",")
-        Logger(subsystem: "com.o1xhack.codexbar.mobile.widgets", category: "status")
+        Logger(subsystem: "com.audichuang.codexbar.mobile.widgets", category: "status")
             .notice(
                 """
                 sirikit status timeline mode=\(configuration.mode.rawValue, privacy: .public), \
@@ -76,7 +76,7 @@ struct QuotaPaceTimelineProvider: IntentTimelineProvider {
         let windowChoice = StatusWidgetConfigurationAdapter.paceWindowChoice(from: intent)
         #if DEBUG
         let providerIDs = (configuration.providers ?? []).map(\.id).joined(separator: ",")
-        Logger(subsystem: "com.o1xhack.codexbar.mobile.widgets", category: "pace")
+        Logger(subsystem: "com.audichuang.codexbar.mobile.widgets", category: "pace")
             .notice(
                 """
                 sirikit pace timeline style=\(configuration.colorStyle.rawValue, privacy: .public), \
@@ -95,7 +95,7 @@ struct QuotaPaceTimelineProvider: IntentTimelineProvider {
 
 // MARK: - App Intents (iOS 27 and later, Research/072)
 
-private let appIntentTimelineLogger = Logger(subsystem: "com.o1xhack.codexbar.mobile.widgets", category: "appintent")
+private let appIntentTimelineLogger = Logger(subsystem: "com.audichuang.codexbar.mobile.widgets", category: "appintent")
 
 @available(iOS 27.0, *)
 struct StatusAppIntentTimelineProvider: AppIntentTimelineProvider {

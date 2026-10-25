@@ -164,7 +164,7 @@ enum QuotaPaceWindowChoice {
 
 enum WidgetProviderCatalogue {
     static func fileURL() -> URL? {
-        FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.o1xhack.codexbar")?
+        FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.audichuang.codexbar")?
             .appendingPathComponent("widget-provider-catalogue-v1.json")
     }
 

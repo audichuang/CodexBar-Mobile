@@ -20,7 +20,7 @@ public enum CloudOperationDeadlineError: Error, Sendable, Equatable, LocalizedEr
 
 enum CloudOperationDeadline {
     private static let timeoutQueue = DispatchQueue(
-        label: "com.o1xhack.codexbar.cloudkit-deadlines",
+        label: "com.audichuang.codexbar.cloudkit-deadlines",
         qos: .utility)
 
     static func run<Value: Sendable>(

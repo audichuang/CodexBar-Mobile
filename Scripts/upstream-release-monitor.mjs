@@ -4,7 +4,7 @@ import fs from "node:fs/promises";
 import process from "node:process";
 import { pathToFileURL } from "node:url";
 
-const DEFAULT_REPO = process.env.GITHUB_REPOSITORY || "o1xhack/CodexBar-Mobile";
+const DEFAULT_REPO = process.env.GITHUB_REPOSITORY || "audichuang/CodexBar-Mobile";
 const DEFAULT_UPSTREAM = "steipete/CodexBar";
 const DEFAULT_VERSION_ENV = "version.env";
 const GENERIC_ISSUE_TITLE = "🔄 Upstream Changes Available for Review";

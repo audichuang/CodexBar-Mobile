@@ -19,7 +19,7 @@ write_fixture() {
   cat > "$FIXTURES/$name.json" <<EOF
 {
   "number": 100,
-  "url": "https://github.com/o1xhack/CodexBar-Mobile/pull/100",
+  "url": "https://github.com/audichuang/CodexBar-Mobile/pull/100",
   "state": "OPEN",
   "isDraft": false,
   "headRefOid": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
@@ -42,7 +42,7 @@ expect_fail() {
 }
 
 codex='{"login":"chatgpt-codex-connector"}'
-owner='{"login":"o1xhack"}'
+owner='{"login":"audichuang"}'
 clean_body='Codex Review: Didn'"'"'t find any major issues. Hooray! **Reviewed commit:** `aaaaaaaaaa`'
 clean_comment="[{\"author\":$codex,\"body\":\"$clean_body\",\"createdAt\":\"2026-08-17T00:00:06Z\"}]"
 
@@ -198,7 +198,7 @@ expect_fail truncated
 # Independent reviews are owner-published completed agent reports, never flat comments.
 independent_body=$'Codex independent subthread review\nReviewed commit: `aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa`\nReviewer: /root/release_review\nResult: clean\nReport: Research/062-release/review.md\nReport SHA256: cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc'
 independent=$(jq -nc --arg body "$independent_body" '[{
-  author:{login:"o1xhack"},state:"COMMENTED",body:$body,
+  author:{login:"audichuang"},state:"COMMENTED",body:$body,
   submittedAt:"2026-08-17T00:00:08Z",
   commit:{oid:"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},comments:{nodes:[]}
 }]')
@@ -228,7 +228,7 @@ expect_fail independent-flat-comment
 write_fixture independent-unresolved "$independent" '[]' "$unresolved"
 expect_fail independent-unresolved
 write_fixture independent-request-in-flight "$independent" \
-  '[{"author":{"login":"o1xhack"},"body":"@codex review","createdAt":"2026-08-17T00:00:09Z"}]' '[]'
+  '[{"author":{"login":"audichuang"},"body":"@codex review","createdAt":"2026-08-17T00:00:09Z"}]' '[]'
 expect_fail independent-request-in-flight
 
 later_bot_finding=$(jq -c '.[0].submittedAt = "2026-08-17T00:00:09Z"' <<< "$footerless_finding")

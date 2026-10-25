@@ -126,7 +126,7 @@ import tempfile
 from pathlib import Path
 
 source = Path(sys.argv[1]).read_text()
-start = source.index('BUNDLE_ID="com.o1xhack.codexbar"')
+start = source.index('BUNDLE_ID="com.audichuang.codexbar"')
 end = source.index('BUILD_TIMESTAMP=', start)
 generation = source[start:end]
 start = source.index('PROVISION_PROFILE="$ROOT/Provisioning/CodexBar_Dev.provisionprofile"')
@@ -148,7 +148,7 @@ for configuration, signing, profile_present, allow_lldb in itertools.product(
         upstream = root / 'Scripts/profiles/CodexBar-DeveloperID.provisionprofile'
         upstream.parent.mkdir(parents=True)
         upstream.write_text('incompatible upstream profile marker\n')
-        env = dict(os.environ, ROOT=str(root), APP=str(app), APP_TEAM_ID='3TUERHN53E',
+        env = dict(os.environ, ROOT=str(root), APP=str(app), APP_TEAM_ID='37HFR5V2JJ',
                    CONF=configuration, LOWER_CONF=configuration, SIGNING_MODE=signing, ALLOW_LLDB=allow_lldb)
         result = subprocess.run(['bash', '-eu', '-c', generation + '\n' + embedding],
                                 env=env, capture_output=True, text=True)
@@ -163,10 +163,10 @@ for configuration, signing, profile_present, allow_lldb in itertools.product(
         cli_entitlements = plistlib.loads((root / '.build/entitlements/CodexBarCLI.entitlements').read_bytes())
         cloudkit = signing == 'identity'
         if cloudkit:
-            assert app_entitlements['com.apple.developer.team-identifier'] == '3TUERHN53E'
+            assert app_entitlements['com.apple.developer.team-identifier'] == '37HFR5V2JJ'
             assert app_entitlements['com.apple.developer.icloud-container-environment'] == 'Production'
-            assert app_entitlements['com.apple.developer.icloud-container-identifiers'] == ['iCloud.com.o1xhack.codexbar']
-            group = '3TUERHN53E.com.steipete.codexbar' + ('.debug' if configuration == 'debug' else '')
+            assert app_entitlements['com.apple.developer.icloud-container-identifiers'] == ['iCloud.com.audichuang.codexbar']
+            group = '37HFR5V2JJ.com.steipete.codexbar' + ('.debug' if configuration == 'debug' else '')
             assert app_entitlements['com.apple.security.application-groups'] == [group]
             assert widget_entitlements['com.apple.security.application-groups'] == [group]
             assert cli_entitlements['com.apple.security.application-groups'] == [group]

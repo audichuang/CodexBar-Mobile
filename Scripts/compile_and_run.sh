@@ -282,8 +282,8 @@ if [[ "${SIGNING_MODE:-adhoc}" == "adhoc" && "${CLEAR_ADHOC_KEYCHAIN}" == "1" ]]
   log "==> Clearing CodexBar keychain entries (adhoc signing)"
   # Clear our fork-owned bundle ID keychain entries (note we use com.o1xhack
   # not com.steipete) when developers explicitly want a clean reset.
-  delete_keychain_service_items "com.o1xhack.CodexBar"
-  delete_keychain_service_items "com.o1xhack.codexbar.cache"
+  delete_keychain_service_items "com.audichuang.CodexBar"
+  delete_keychain_service_items "com.audichuang.codexbar.cache"
 elif [[ "${SIGNING_MODE:-adhoc}" == "adhoc" ]]; then
   log "==> Preserving CodexBar keychain entries (pass --clear-adhoc-keychain to reset adhoc keychain state)"
 fi
