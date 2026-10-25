@@ -172,17 +172,26 @@ if [[ "${CONF}" == "release" && "${SIGNING_MODE:-}" != "adhoc" ]]; then
 fi
 
 KEYBOARD_SHORTCUTS_UTIL="$ROOT/.build/checkouts/KeyboardShortcuts/Sources/KeyboardShortcuts/Utilities.swift"
+KEYBOARD_SHORTCUTS_CHECKOUT="$ROOT/.build/checkouts/KeyboardShortcuts"
+# Always resolve before compiling, and from a clean checkout: a restored CI cache
+# can hold an older, already-patched KeyboardShortcuts. Without the reset, the
+# patch marker would skip patching and `swift build` would then move the checkout
+# to the new pin unpatched. Resolving (instead of a bootstrap `swift build`) only
+# materializes .build/checkouts, so the patch lands before the first compile.
+if [[ -d "$KEYBOARD_SHORTCUTS_CHECKOUT/.git" || -f "$KEYBOARD_SHORTCUTS_CHECKOUT/.git" ]]; then
+  git -C "$KEYBOARD_SHORTCUTS_CHECKOUT" checkout -q -- . 2>/dev/null || true
+fi
+swift package resolve
 if [[ ! -f "$KEYBOARD_SHORTCUTS_UTIL" ]]; then
-  # Only materialize .build/checkouts so the patch lands before the first compile;
-  # a bootstrap `swift build` would compile everything and then be rebuilt after patching.
-  swift package resolve
-  if [[ ! -f "$KEYBOARD_SHORTCUTS_UTIL" ]]; then
-    echo "ERROR: swift package resolve did not produce $KEYBOARD_SHORTCUTS_UTIL" >&2
-    exit 1
-  fi
+  echo "ERROR: swift package resolve did not produce $KEYBOARD_SHORTCUTS_UTIL" >&2
+  exit 1
 fi
 # Idempotent: skips a checkout that already carries the keyboardShortcutsSafeBundle patch.
 patch_keyboard_shortcuts
+if ! grep -q "keyboardShortcutsSafeBundle" "$KEYBOARD_SHORTCUTS_UTIL"; then
+  echo "ERROR: KeyboardShortcuts is not patched (keyboardShortcutsSafeBundle missing in $KEYBOARD_SHORTCUTS_UTIL)" >&2
+  exit 1
+fi
 
 # Resolve SwiftPM's current output path without relying on a fixed build-system layout.
 # The output variable keeps the per-arch cache in this shell instead of losing it to
