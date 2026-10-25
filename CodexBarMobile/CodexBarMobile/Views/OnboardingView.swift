@@ -38,7 +38,7 @@ struct OnboardingView: View {
                         .foregroundStyle(.orange)
                     Text("v1.2.0 — New Mac App Required")
                         .font(.subheadline.weight(.semibold))
-                    Text("Subscription Utilization and Mac→iPhone push notifications need CodexBar Mac 0.19.0 (Build 54.1.2.0) or later. Get it from github.com/audichuang/CodexBar-Mobile/releases.")
+                    Text("Subscription Utilization and Mac→iPhone push notifications need CodexBar Mac 0.19.0 (Build 54.1.2.0) or later. Get it from github.com/o1xhack/CodexBar-Mobile/releases.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
