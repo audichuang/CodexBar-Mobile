@@ -41,7 +41,7 @@ The release is complete only after the release assets, live appcast, and tap agr
 
 Local read-only helpers remain: `Scripts/check-release-assets.sh`, `Scripts/verify_appcast.sh`, and `Scripts/generate-release-notes.sh` (where present). They need the shared `agent-scripts` helper but no signing credentials: `Scripts/verify_appcast.sh <version>` downloads that appcast entry's enclosure, checks its length and EdDSA signature against `SUPublicEDKey`, then verifies the app's code signature, Gatekeeper assessment, and stapled notarization. Local packaging and development scripts remain available, but publication belongs to CI. When installing a ZIP manually, use `ditto -x -k` or Finder to preserve the signed bundle and avoid AppleDouble files.
 
-The app and dSYM are universal arm64/x86_64. The release also contains both architectures of the macOS CLI, Linux glibc CLI, Linux musl CLI, and Linux desktop. Homebrew receives both the app cask and CLI formula updates.
+This fork's CI release (`release-mac.yml` sets `ARCHES: arm64`) ships the app and dSYM as arm64 only, matching the cask's `depends_on arch: :arm64`; there is no x86_64 slice. Upstream releases are universal arm64/x86_64 (unset `ARCHES` to get that). The upstream release also contains both architectures of the macOS CLI, Linux glibc CLI, Linux musl CLI, and Linux desktop. Homebrew receives both the app cask and CLI formula updates.
 
 All macOS release jobs use Apple Silicon `xcode-27` runners and Xcode 27 while
 retaining the macOS 14 deployment target. The x86_64 CLI is cross-built and
