@@ -10,7 +10,7 @@ ARTIFACT_BASENAME="CodexBar-${TAG#v}"
 check_assets "$TAG" "$ARTIFACT_BASENAME"
 
 VERSION=${TAG#v}
-assets=$(gh release view "$TAG" --repo o1xhack/CodexBar-Mobile --json assets --jq '.assets[].name')
+assets=$(gh release view "$TAG" --repo audichuang/CodexBar-Mobile --json assets --jq '.assets[].name')
 missing=0
 for target in \
   macos-arm64 \

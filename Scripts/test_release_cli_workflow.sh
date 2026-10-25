@@ -19,7 +19,7 @@ fail() {
 # upstream's CodexBar-macos-<arch>-<version> convention.
 grep -Fq 'ARTIFACT_BASENAME="CodexBar-${TAG#v}"' "$ASSET_CHECKER" || \
   fail "release asset checker must use the fork tag-derived app basename"
-grep -Fq 'gh release view "$TAG" --repo o1xhack/CodexBar-Mobile' "$ASSET_CHECKER" || \
+grep -Fq 'gh release view "$TAG" --repo audichuang/CodexBar-Mobile' "$ASSET_CHECKER" || \
   fail "release asset checker must pin GitHub reads to the fork"
 
 asset_test_dir=$(mktemp -d)

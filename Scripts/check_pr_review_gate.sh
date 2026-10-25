@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-REPO="o1xhack/CodexBar-Mobile"
+REPO="audichuang/CodexBar-Mobile"
 
 usage() {
   cat <<'EOF'
@@ -29,7 +29,7 @@ elif [[ -n "${1:-}" ]]; then
   pr_number=$(gh pr view "$1" --repo "$REPO" --json number --jq '.number')
   pr_json=$(gh api graphql -F number="$pr_number" -f query='
     query($number: Int!) {
-      repository(owner: "o1xhack", name: "CodexBar-Mobile") {
+      repository(owner: "audichuang", name: "CodexBar-Mobile") {
         pullRequest(number: $number) {
           number
           url
@@ -89,7 +89,7 @@ summary=$(jq -c '
   def is_codex:
     ((.author.login // "") | test("^chatgpt-codex-connector(\\[bot\\])?$"));
   def is_independent_review:
-    ((.author.login // "") == "o1xhack")
+    ((.author.login // "") == "audichuang")
       and ((.body // "") | test("(?m)^Codex independent subthread review[ \\t]*$"));
   def independent_review_oid:
     (.body // ""

@@ -53,7 +53,7 @@ struct CodexBarApp: App {
         let storedLevel = CodexBarLog.parseLevel(UserDefaults.standard.string(forKey: "debugLogLevel")) ?? .verbose
         let level = CodexBarLog.parseLevel(env["CODEXBAR_LOG_LEVEL"]) ?? storedLevel
         CodexBarLog.bootstrapIfNeeded(.init(
-            destination: .oslog(subsystem: "com.o1xhack.codexbar"),
+            destination: .oslog(subsystem: "com.audichuang.codexbar"),
             level: level,
             json: false))
 
@@ -133,7 +133,7 @@ struct CodexBarApp: App {
             }
             CommandGroup(replacing: .help) {
                 Button(L("CodexBar Help")) {
-                    guard let url = URL(string: "https://github.com/o1xhack/CodexBar-Mobile/blob/mobile-dev/README.md")
+                    guard let url = URL(string: "https://github.com/audichuang/CodexBar-Mobile/blob/mobile-dev/README.md")
                     else { return }
                     NSWorkspace.shared.open(url)
                 }
