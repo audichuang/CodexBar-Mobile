@@ -33,6 +33,10 @@ jobs:
   verify:
     runs-on: macos-14
     timeout-minutes: 15
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
+      zip: ${{ steps.ver.outputs.zip }}
+      skip: ${{ steps.gate.outputs.skip }}
     steps:
       - name: Resolve tag from event
         id: tag
@@ -156,3 +160,126 @@ jobs:
             echo "::error::Mitigation: draft the release on GitHub immediately."
             exit 1
           fi
+
+  # Publishes the verified zip to audichuang/homebrew-tap as
+  # `audichuang/tap/codexbar-mobile`. Runs only after `verify` passed on the
+  # published release, so the tap never points at a zip that failed to launch.
+  # Writes over SSH with the repo-scoped deploy key HOMEBREW_TAP_DEPLOY_KEY
+  # (write access to the tap only); github.token cannot push to another repo.
+  homebrew-tap:
+    needs: verify
+    if: >-
+      github.repository == 'audichuang/CodexBar-Mobile' &&
+      needs.verify.outputs.skip == 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    concurrency:
+      group: homebrew-tap-codexbar-mobile
+      cancel-in-progress: false
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: ${{ needs.verify.outputs.tag }}
+      ZIP: ${{ needs.verify.outputs.zip }}
+    steps:
+      - name: Resolve release metadata
+        id: meta
+        run: |
+          set -euo pipefail
+          json="$(gh api "repos/${{ github.repository }}/releases/tags/${TAG}")"
+          if [[ "$(jq -r '.prerelease' <<<"$json")" == "true" ]]; then
+            echo "Release $TAG is a prerelease; the tap keeps the last stable version."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # Checksum from GitHub's server-side digest of the uploaded bytes;
+          # a missing or empty-file digest fails instead of shipping to the tap.
+          sha="$(jq -r --arg n "$ZIP" '.assets[] | select(.name == $n) | (.digest // "") | sub("^sha256:"; "")' <<<"$json")"
+          if ! [[ "$sha" =~ ^[0-9a-f]{64}$ ]] || [[ "$sha" == e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 ]]; then
+            echo "::error::no usable sha256 for $ZIP (got '${sha}')"
+            exit 1
+          fi
+          version="${TAG#v}"
+          [[ "CodexBar-${version}.zip" == "$ZIP" ]] || { echo "::error::zip $ZIP does not match tag $TAG"; exit 1; }
+          {
+            echo "version=$version"
+            echo "sha=$sha"
+            echo "skip=false"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Checkout Homebrew tap
+        if: steps.meta.outputs.skip == 'false'
+        uses: actions/checkout@v6
+        with:
+          repository: audichuang/homebrew-tap
+          ssh-key: ${{ secrets.HOMEBREW_TAP_DEPLOY_KEY }}
+          path: tap
+
+      - name: Write cask and README row
+        if: steps.meta.outputs.skip == 'false'
+        env:
+          VERSION: ${{ steps.meta.outputs.version }}
+          SHA: ${{ steps.meta.outputs.sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p tap/Casks
+          cat > tap/Casks/codexbar-mobile.rb <<EOF
+          cask "codexbar-mobile" do
+            version "${VERSION}"
+            sha256 "${SHA}"
+
+            url "https://github.com/audichuang/CodexBar-Mobile/releases/download/v#{version}/CodexBar-#{version}.zip"
+            name "CodexBar Mobile Mac Companion"
+            desc "AI provider usage monitor with iCloud sync to the iOS companion"
+            homepage "https://github.com/audichuang/CodexBar-Mobile"
+
+            livecheck do
+              url :url
+              regex(/^v?(\d+(?:\.\d+)+-mobile\.\d+(?:\.\d+)+-audi\.\d+)\$/i)
+              strategy :github_releases
+            end
+
+            # The machines update this app with mac-codexbar-update.sh, which
+            # restarts it through the managed LaunchAgent; auto_updates keeps a
+            # generic \`brew upgrade\` from swapping it underneath that agent.
+            auto_updates true
+            conflicts_with cask: "codexbar"
+            depends_on arch: :arm64
+            depends_on macos: :sonoma
+
+            app "CodexBar.app"
+            binary "#{appdir}/CodexBar.app/Contents/Helpers/CodexBarCLI", target: "codexbar"
+          end
+          EOF
+          # The heredoc above is indented for YAML; strip the common indent.
+          sed -i 's/^          //' tap/Casks/codexbar-mobile.rb
+          # shellcheck disable=SC2016 # backticks are Markdown, not command substitution
+          row='| **codexbar-mobile** | `brew install --cask audichuang/tap/codexbar-mobile` | CodexBar Mac companion with iCloud sync to the iPhone app, from [audichuang/CodexBar-Mobile](https://github.com/audichuang/CodexBar-Mobile). Apple Silicon only. Notarized. |'
+          if ! grep -q '^| \*\*codexbar-mobile\*\*' tap/README.md; then
+            awk -v row="$row" '{print} /^\| \*\*orca-fork\*\*/ && !done {print row; done=1}' tap/README.md > tap/README.md.new
+            grep -q '^| \*\*codexbar-mobile\*\*' tap/README.md.new || { echo "::error::could not place README row"; exit 1; }
+            mv tap/README.md.new tap/README.md
+          fi
+          ruby -c tap/Casks/codexbar-mobile.rb
+          cat tap/Casks/codexbar-mobile.rb
+
+      - name: Commit and push
+        if: steps.meta.outputs.skip == 'false'
+        working-directory: tap
+        env:
+          VERSION: ${{ steps.meta.outputs.version }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Casks/codexbar-mobile.rb README.md
+          if git diff --cached --quiet; then
+            echo "Tap already at ${VERSION}."
+            exit 0
+          fi
+          git commit -m "codexbar-mobile ${VERSION}"
+          for _ in 1 2 3; do
+            git push origin HEAD:main && exit 0
+            git pull --rebase origin main
+          done
+          echo "::error::could not push to the tap"
+          exit 1
