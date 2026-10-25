@@ -42,6 +42,7 @@ with open(sys.argv[1], "w", encoding="utf-8") as fh:
 ' "$KEYS_FILE"
 
 changed=0
+swift_changed=()
 while IFS= read -r f; do
   [[ -f "$f" && ! -L "$f" ]] || continue
   case "$f" in
@@ -82,7 +83,22 @@ while IFS= read -r f; do
   if [[ "$before" != "$after" ]]; then
     echo "changed: $f"
     changed=$((changed + 1))
+    case "$f" in
+      Sources/*.swift|Tests/*.swift) swift_changed+=("$f") ;;
+    esac
   fi
 done < <(git ls-files)
+
+# Longer replacement strings can push a line past the formatter's width, which
+# the macOS CI lint (swiftformat Sources Tests --lint) rejects. Reformat what we
+# touched with the repo's pinned SwiftFormat so the rewrite stays lint-clean.
+if (( ${#swift_changed[@]} > 0 )); then
+  SWIFTFORMAT_BIN="${SWIFTFORMAT_BIN:-.build/lint-tools/bin/swiftformat}"
+  if [[ ! -x "$SWIFTFORMAT_BIN" ]]; then
+    echo "apply_fork_identity: $SWIFTFORMAT_BIN missing; run Scripts/install_lint_tools.sh, then rerun" >&2
+    exit 1
+  fi
+  "$SWIFTFORMAT_BIN" --quiet "${swift_changed[@]}"
+fi
 
 echo "apply_fork_identity: $changed file(s) changed"
