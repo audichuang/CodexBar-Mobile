@@ -152,13 +152,15 @@ jobs:
           APP_STORE_CONNECT_API_KEY_P8: ${{ secrets.APP_STORE_CONNECT_API_KEY_P8 }}
         run: |
           set -euo pipefail
-          # Hosted runners may lack an Aqua session; the packaged-app launch
-          # smoke then still fails on resource-bundle traps but tolerates a
-          # non-surviving GUI process. release-mac-verify.yml re-tests launch.
+          # sign-and-notarize.sh launches the stapled app and requires it to
+          # stay alive; that needs a GUI (Aqua) session. This is the only launch
+          # gate: release-mac-verify.yml is not triggered by releases created
+          # with github.token, so never relax it.
           manager="$(launchctl managername 2>/dev/null || true)"
           echo "launchctl managername: ${manager:-unknown}"
           if [[ "$manager" != "Aqua" ]]; then
-            export CODEXBAR_REQUIRE_LAUNCH_SURVIVAL=0
+            echo "::error::No Aqua session on this runner; refusing to release without the launch check"
+            exit 1
           fi
           ./Scripts/sign-and-notarize.sh
           ls -la "$ZIP" "$DSYM_ZIP"
