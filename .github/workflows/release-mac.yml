@@ -44,6 +44,9 @@ jobs:
       # so skip the x86_64 slice. sign-and-notarize.sh and package_app.sh derive
       # the SwiftPM build, lipo, dSYM merge and widget ARCHS from this.
       ARCHES: arm64
+      # Keep the widget Xcode DerivedData inside the workspace so actions/cache can
+      # persist it (default is under $TMPDIR, which is not cached).
+      CODEXBAR_WIDGET_DERIVED_DATA_ROOT: ${{ github.workspace }}/.widget-derived
       # package_app.sh caps the widget-extension xcodebuild at 900 s;
       # hosted runners have needed longer (audi.2 first attempt was cut off there).
       CODEXBAR_WIDGET_EXTENSION_TIMEOUT_SECONDS: "2400"
@@ -65,6 +68,44 @@ jobs:
           export DEVELOPER_DIR="${candidate}/Contents/Developer"
           [[ "$(/usr/bin/xcodebuild -version)" == Xcode\ 26.* ]]
           /usr/bin/xcodebuild -version
+
+      - name: Compute build cache keys
+        id: cachekeys
+        run: |
+          set -euo pipefail
+          # Xcode version + build number (selects the Swift toolchain and SDK).
+          xcode="$(/usr/bin/xcodebuild -version | tr '\n' '-' | tr -c 'A-Za-z0-9.\n-' '_')"
+          echo "xcode=${xcode}" >> "$GITHUB_OUTPUT"
+
+      # Caches are an optimization only: SwiftPM and Xcode recompile anything whose
+      # sources changed, and package_app.sh re-validates arch, minos and SDK of every
+      # staged binary. Restore-only here; saved after a successful build below.
+      - name: Restore SwiftPM build cache
+        id: swiftpm-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            .build
+            !.build/package-products
+            !.build/entitlements
+            ~/Library/Caches/org.swift.swiftpm
+          key: release-swiftpm-${{ runner.os }}-${{ runner.arch }}-${{ steps.cachekeys.outputs.xcode }}-${{ hashFiles('Package.resolved', 'Package.swift') }}-${{ github.sha }}
+          restore-keys: |
+            release-swiftpm-${{ runner.os }}-${{ runner.arch }}-${{ steps.cachekeys.outputs.xcode }}-${{ hashFiles('Package.resolved', 'Package.swift') }}-
+            release-swiftpm-${{ runner.os }}-${{ runner.arch }}-${{ steps.cachekeys.outputs.xcode }}-
+
+      - name: Restore widget DerivedData cache
+        id: widget-cache
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            .widget-derived
+            !.widget-derived/**/Results
+            !.widget-derived/**/xcodebuild.log
+          key: release-widget-${{ runner.os }}-${{ runner.arch }}-${{ steps.cachekeys.outputs.xcode }}-${{ hashFiles('Package.resolved', 'Package.swift', 'WidgetExtension/project.yml', 'WidgetExtension/CodexBarWidgetExtension.xcodeproj/project.pbxproj') }}-${{ github.sha }}
+          restore-keys: |
+            release-widget-${{ runner.os }}-${{ runner.arch }}-${{ steps.cachekeys.outputs.xcode }}-${{ hashFiles('Package.resolved', 'Package.swift', 'WidgetExtension/project.yml', 'WidgetExtension/CodexBarWidgetExtension.xcodeproj/project.pbxproj') }}-
+            release-widget-${{ runner.os }}-${{ runner.arch }}-${{ steps.cachekeys.outputs.xcode }}-
 
       - name: Compute version, tag and asset names
         run: |
@@ -155,6 +196,7 @@ jobs:
           echo "SPARKLE_PRIVATE_KEY_FILE=${KEY_FILE}" >> "$GITHUB_ENV"
 
       - name: Build, sign, notarize and package
+        id: build
         env:
           APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
           APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
@@ -173,6 +215,27 @@ jobs:
           fi
           ./Scripts/sign-and-notarize.sh
           ls -la "$ZIP" "$DSYM_ZIP"
+
+      - name: Save SwiftPM build cache
+        if: steps.build.outcome == 'success'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            .build
+            !.build/package-products
+            !.build/entitlements
+            ~/Library/Caches/org.swift.swiftpm
+          key: release-swiftpm-${{ runner.os }}-${{ runner.arch }}-${{ steps.cachekeys.outputs.xcode }}-${{ hashFiles('Package.resolved', 'Package.swift') }}-${{ github.sha }}
+
+      - name: Save widget DerivedData cache
+        if: steps.build.outcome == 'success'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            .widget-derived
+            !.widget-derived/**/Results
+            !.widget-derived/**/xcodebuild.log
+          key: release-widget-${{ runner.os }}-${{ runner.arch }}-${{ steps.cachekeys.outputs.xcode }}-${{ hashFiles('Package.resolved', 'Package.swift', 'WidgetExtension/project.yml', 'WidgetExtension/CodexBarWidgetExtension.xcodeproj/project.pbxproj') }}-${{ github.sha }}
 
       - name: Verify release zip
         run: |
