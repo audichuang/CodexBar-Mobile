@@ -225,8 +225,8 @@ struct CloudSyncSettingsTests {
     @Test
     func `fleet sync uses the fork CloudKit container and state namespace`() {
         #expect(CloudSyncEngine.containerIdentifier == CloudSyncConstants.containerIdentifier)
-        #expect(CloudSyncEngine.containerIdentifier == "iCloud.com.o1xhack.codexbar")
-        #expect(CloudSyncPersistence.defaultFileURL().path.contains("/com.o1xhack.codexbar/sync/"))
+        #expect(CloudSyncEngine.containerIdentifier == "iCloud.com.audichuang.codexbar")
+        #expect(CloudSyncPersistence.defaultFileURL().path.contains("/com.audichuang.codexbar/sync/"))
     }
 
     @Test

@@ -29,8 +29,8 @@ fi
 
 # CodexBar Mobile fork CloudKit identity. Never point this script at upstream's
 # container: the fleet zone coexists with the existing Mac-to-iPhone schema.
-TEAM_ID="3TUERHN53E"
-CONTAINER_ID="iCloud.com.o1xhack.codexbar"
+TEAM_ID="37HFR5V2JJ"
+CONTAINER_ID="iCloud.com.audichuang.codexbar"
 SCHEMA_FILE="$(cd "$(dirname "$0")" && pwd)/schema.ckdb"
 
 TOKEN_ARGS=()

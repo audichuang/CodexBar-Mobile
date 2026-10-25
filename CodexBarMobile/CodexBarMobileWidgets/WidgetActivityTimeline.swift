@@ -4,7 +4,7 @@ import Intents
 import OSLog
 import WidgetKit
 
-private let widgetActivityLogger = Logger(subsystem: "com.o1xhack.codexbar.mobile.widgets", category: "activity")
+private let widgetActivityLogger = Logger(subsystem: "com.audichuang.codexbar.mobile.widgets", category: "activity")
 
 enum WidgetActivityTimeline {
     static func sourceID(_ choice: TokenActivitySource) -> String {
