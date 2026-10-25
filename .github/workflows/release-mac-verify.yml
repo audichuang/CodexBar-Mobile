@@ -37,6 +37,7 @@ jobs:
       tag: ${{ steps.tag.outputs.tag }}
       zip: ${{ steps.ver.outputs.zip }}
       skip: ${{ steps.gate.outputs.skip }}
+      zip_sha: ${{ steps.download.outputs.sha }}
     steps:
       - name: Resolve tag from event
         id: tag
@@ -95,6 +96,7 @@ jobs:
 
       - name: Download release zip from GitHub
         if: steps.gate.outputs.skip != 'true'
+        id: download
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -105,6 +107,8 @@ jobs:
             --pattern "${{ steps.ver.outputs.zip }}" \
             --dir /tmp/release-verify
           ls -la /tmp/release-verify/
+          # The tap job publishes exactly these bytes, not whatever the asset is later.
+          echo "sha=$(shasum -a 256 "/tmp/release-verify/${{ steps.ver.outputs.zip }}" | awk '{print $1}')" >> "$GITHUB_OUTPUT"
 
       - name: Extract bundle
         if: steps.gate.outputs.skip != 'true'
@@ -180,14 +184,17 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       TAG: ${{ needs.verify.outputs.tag }}
       ZIP: ${{ needs.verify.outputs.zip }}
+      VERIFIED_SHA: ${{ needs.verify.outputs.zip_sha }}
     steps:
       - name: Resolve release metadata
         id: meta
         run: |
           set -euo pipefail
           json="$(gh api "repos/${{ github.repository }}/releases/tags/${TAG}")"
-          if [[ "$(jq -r '.prerelease' <<<"$json")" == "true" ]]; then
-            echo "Release $TAG is a prerelease; the tap keeps the last stable version."
+          # Fresh metadata: the release may have been redrafted or marked
+          # prerelease while verify ran or this job waited for the concurrency slot.
+          if [[ "$(jq -r '.draft or .prerelease' <<<"$json")" != "false" ]]; then
+            echo "Release $TAG is a draft or prerelease; the tap keeps the last stable version."
             echo "skip=true" >> "$GITHUB_OUTPUT"
             exit 0
           fi
@@ -196,6 +203,10 @@ jobs:
           sha="$(jq -r --arg n "$ZIP" '.assets[] | select(.name == $n) | (.digest // "") | sub("^sha256:"; "")' <<<"$json")"
           if ! [[ "$sha" =~ ^[0-9a-f]{64}$ ]] || [[ "$sha" == e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 ]]; then
             echo "::error::no usable sha256 for $ZIP (got '${sha}')"
+            exit 1
+          fi
+          if [[ "$sha" != "$VERIFIED_SHA" ]]; then
+            echo "::error::asset $ZIP changed after verification (verified ${VERIFIED_SHA}, now ${sha})"
             exit 1
           fi
           version="${TAG#v}"

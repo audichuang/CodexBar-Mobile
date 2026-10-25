@@ -27,6 +27,7 @@ on:
 
 permissions:
   contents: write
+  actions: write # dispatch release-mac-verify.yml after a direct (non-draft) publish
 
 concurrency:
   group: release-mac
@@ -228,6 +229,14 @@ jobs:
             --title "CodexBar ${MARKETING_VERSION} (mobile ${MOBILE_VERSION}, audi.${FORK_PATCH})" \
             --notes-file "$NOTES_FILE" \
             ${flags[@]+"${flags[@]}"}
+
+      - name: Dispatch release verification
+        # Releases created with github.token fire no `release: published`
+        # event, so a direct publish would never reach release-mac-verify.yml
+        # (clean-runner launch check, then the Homebrew tap). Drafts are
+        # verified when they are published by hand.
+        if: ${{ !inputs.draft }}
+        run: gh workflow run release-mac-verify.yml --repo "$GITHUB_REPOSITORY" --ref mobile-dev -f tag="$TAG"
 
       - name: Cleanup secrets and keychain
         if: always()
