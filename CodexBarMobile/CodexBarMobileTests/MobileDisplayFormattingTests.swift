@@ -158,17 +158,80 @@ struct MobileDisplayFormattingTests {
         #expect(large.count < monthColumns.count)
     }
 
-    @Test("Provider daily spend day keys round-trip through plotted Dates")
+    @Test("Provider daily spend day keys round-trip every day of 2026 and 2028 in any time zone")
     func providerDailySpendDayKeyDateRoundTrip() {
+        let zones = ["UTC", "America/Los_Angeles", "Asia/Taipei", "Pacific/Kiritimati", "Pacific/Pago_Pago"]
+            .compactMap(TimeZone.init(identifier:))
+        var gregorian = Calendar(identifier: .gregorian)
+        for zone in zones {
+            gregorian.timeZone = zone
+            for year in [2026, 2028] {
+                var day = gregorian.date(from: DateComponents(year: year, month: 1, day: 1))!
+                var previous: Date?
+                while gregorian.component(.year, from: day) == year {
+                    let key = String(
+                        format: "%04d-%02d-%02d",
+                        year, gregorian.component(.month, from: day), gregorian.component(.day, from: day))
+                    let date = ProviderDetailView.dayDate(from: key, timeZone: zone)
+                    #expect(date == day, "\(key) in \(zone.identifier)")
+                    #expect(ProviderDetailView.dayKey(from: date ?? .distantPast, timeZone: zone) == key)
+                    if let previous, let date { #expect(date > previous) }
+                    previous = date
+                    day = gregorian.date(byAdding: .day, value: 1, to: day)!
+                }
+            }
+        }
+        #expect(ProviderDetailView.dayDate(from: "not-a-date") == nil)
+        #expect(ProviderDetailView.dayDate(from: "2026-6-5") == nil)
+        #expect(ProviderDetailView.dayDate(from: "2026-02-31") == nil)
+    }
+
+    @Test("Chart selection maps both halves of a day to the same day key")
+    func providerDailySpendSelectionFloorsToDay() {
+        let zone = TimeZone(identifier: "Asia/Taipei")!
         var cal = Calendar(identifier: .gregorian)
-        cal.timeZone = TimeZone(secondsFromGMT: -5 * 3600)!
-        let date = ProviderDetailView.dayDate(from: "2026-06-15", calendar: cal)
-        #expect(date != nil)
-        #expect(ProviderDetailView.dayKey(from: date!, calendar: cal) == "2026-06-15")
-        let next = ProviderDetailView.dayDate(from: "2026-06-22", calendar: cal)!
-        #expect(next.timeIntervalSince(date!) == 7 * 86400)
-        #expect(ProviderDetailView.dayDate(from: "not-a-date", calendar: cal) == nil)
-        #expect(ProviderDetailView.dayDate(from: "2026-6-5", calendar: cal) == nil)
+        cal.timeZone = zone
+        let start = ProviderDetailView.dayDate(from: "2026-06-15", timeZone: zone)!
+        let early = cal.date(byAdding: .minute, value: 30, to: start)!
+        let late = cal.date(byAdding: .minute, value: 23 * 60 + 30, to: start)!
+        #expect(ProviderDetailView.selectedDayKey(from: early, timeZone: zone) == "2026-06-15")
+        #expect(ProviderDetailView.selectedDayKey(from: late, timeZone: zone) == "2026-06-15")
+        #expect(ProviderDetailView.selectedDayKey(from: start, timeZone: zone) == "2026-06-15")
+    }
+
+    @Test("Chart viewport covers the real calendar span and ends on the newest day")
+    func providerDailySpendViewport() {
+        let zone = TimeZone(identifier: "America/Los_Angeles")!
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = zone
+        func days(_ n: Int) -> [String] {
+            let first = ProviderDetailView.dayDate(from: "2026-05-01", timeZone: zone)!
+            return (0..<n).map {
+                ProviderDetailView.dayKey(from: cal.date(byAdding: .day, value: $0, to: first)!, timeZone: zone)
+            }
+        }
+        func span(_ v: (start: Date, length: TimeInterval)) -> Int {
+            cal.dateComponents([.day], from: v.start, to: v.start.addingTimeInterval(v.length)).day ?? -1
+        }
+
+        // Dense 45 days: last 30, newest (2026-06-14) fully inside.
+        let dense = days(45)
+        let denseView = ProviderDetailView.dailyViewport(dayKeys: dense, timeZone: zone)!
+        #expect(ProviderDetailView.dayKey(from: denseView.start, timeZone: zone) == dense[15])
+        #expect(span(denseView) == 30)
+
+        // Sparse 3 points, 14 days apart: viewport covers June 1...June 15.
+        let sparse = ["2026-06-01", "2026-06-08", "2026-06-15"]
+        let sparseView = ProviderDetailView.dailyViewport(dayKeys: sparse, timeZone: zone)!
+        #expect(ProviderDetailView.dayKey(from: sparseView.start, timeZone: zone) == "2026-06-01")
+        #expect(span(sparseView) == 15)
+
+        // Single point: one day.
+        let single = ProviderDetailView.dailyViewport(dayKeys: ["2026-06-15"], timeZone: zone)!
+        #expect(ProviderDetailView.dayKey(from: single.start, timeZone: zone) == "2026-06-15")
+        #expect(span(single) == 1)
+
+        #expect(ProviderDetailView.dailyViewport(dayKeys: [], timeZone: zone) == nil)
     }
 
     @Test("Provider daily spend axis label uses compact month slash day text")
