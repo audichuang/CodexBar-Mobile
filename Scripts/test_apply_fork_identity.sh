@@ -5,12 +5,26 @@
 set -euo pipefail
 
 SCRIPT=$(cd "$(dirname "${1:-$(dirname "$0")/apply_fork_identity.sh}")" && pwd)/$(basename "${1:-apply_fork_identity.sh}")
+REPO_ROOT=$(cd "$(dirname "$0")/.." && pwd)
+# The repo's pinned SwiftFormat (Scripts/install_lint_tools.sh) keeps the width check honest.
+SWIFTFORMAT_BIN="$REPO_ROOT/.build/lint-tools/bin/swiftformat"
+[[ -x "$SWIFTFORMAT_BIN" ]] || { echo "SKIP width case: run Scripts/install_lint_tools.sh"; SWIFTFORMAT_BIN=""; }
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT
 cd "$TMP"
 git init -q
-mkdir -p Scripts App
+mkdir -p Scripts App Sources
 cp "$SCRIPT" Scripts/apply_fork_identity.sh
+cp "$REPO_ROOT/.swiftformat" .swiftformat
+# 119 columns before the rewrite, 122 after: the rewrite must re-wrap it.
+cat > Sources/Long.swift <<'SWIFT'
+func openReadme() {
+    guard let url = URL(string: "https://github.com/o1xhack/CodexBar-Mobile/blob/mobile-dev/README-longer-x.md") else {
+        return
+    }
+    _ = url
+}
+SWIFT
 
 cat > App/Views.swift <<'SWIFT'
 Text("Get it from github.com/o1xhack/CodexBar-Mobile/releases.")
@@ -37,7 +51,11 @@ cp App/Views.swift /tmp/_views.$$
 fail=0
 check() { if ! "$@"; then echo "FAIL: $*"; fail=1; fi; }
 
-bash Scripts/apply_fork_identity.sh >/dev/null
+SWIFTFORMAT_BIN="$SWIFTFORMAT_BIN" bash Scripts/apply_fork_identity.sh >/dev/null
+check grep -q 'github.com/audichuang/CodexBar-Mobile/blob/mobile-dev/README-longer-x.md' Sources/Long.swift
+if [[ -n "$SWIFTFORMAT_BIN" ]]; then
+  check "$SWIFTFORMAT_BIN" --quiet --lint Sources/Long.swift
+fi
 check cmp -s /tmp/_views.$$ App/Views.swift
 rm -f /tmp/_views.$$
 check grep -q 'static let id = "group.com.audichuang.codexbar"' App/Constants.swift
@@ -46,7 +64,7 @@ check grep -q 'URL(string: "https://github.com/audichuang/CodexBar-Mobile/x"); T
 check grep -q '^Text("Get it from github.com/o1xhack/CodexBar-Mobile/releases.") //' App/Constants.swift
 
 cp -R App /tmp/_app.$$
-bash Scripts/apply_fork_identity.sh >/dev/null
+SWIFTFORMAT_BIN="$SWIFTFORMAT_BIN" bash Scripts/apply_fork_identity.sh >/dev/null
 check diff -r /tmp/_app.$$ App >/dev/null
 rm -rf /tmp/_app.$$
 
