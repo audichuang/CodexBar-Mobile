@@ -49,7 +49,10 @@ enum StatusWidgetConfigurationAdapter {
 
     @available(iOS 27.0, *)
     static func overviewSelection(from intent: StatusWidgetAppIntent) -> WidgetOverviewSelection {
-        self.overviewSelection(
+        if intent.providerSelection == .accounts {
+            return .accounts(count: intent.providerCount.count)
+        }
+        return self.overviewSelection(
             soonestWeeklyReset: intent.providerSelection == .soonestWeeklyReset,
             count: intent.providerCount.count)
     }
