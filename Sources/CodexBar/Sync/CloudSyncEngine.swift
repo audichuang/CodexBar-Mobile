@@ -867,6 +867,27 @@ enum CloudSyncSnapshotMigration {
         pendingSaveHashes[recordName] != nil
     }
 
+    enum SaveQueueState: Equatable {
+        case notQueued
+        case inFlight
+        /// The app still remembers a save that CKSyncEngine no longer holds: a staged
+        /// delete, a batch without the prepared record, or an event dropped on cancellation
+        /// removed it without a save result. Treating it as in flight would stall the record
+        /// until relaunch, so it must be queued again.
+        case orphaned
+    }
+
+    static func saveQueueState(
+        recordName: String,
+        pendingSaveHashes: [String: String],
+        engineHasPendingSave: Bool) -> SaveQueueState
+    {
+        guard self.hasInFlightSave(recordName: recordName, pendingSaveHashes: pendingSaveHashes) else {
+            return .notQueued
+        }
+        return engineHasPendingSave ? .inFlight : .orphaned
+    }
+
     static func mergingPendingSnapshots(
         _ pending: [AccountSnapshotSyncPayload],
         with extras: [AccountSnapshotSyncPayload]) -> [AccountSnapshotSyncPayload]
@@ -2423,15 +2444,24 @@ extension CloudSyncEngine {
                     }
                     continue
                 }
-                if CloudSyncSnapshotMigration.hasInFlightSave(
+                let recordID = self.recordID(named: payload.recordName)
+                // CKSyncEngine's pending changes are the source of truth for what will be sent;
+                // `pendingSaveHashes` only remembers which payload a save carries.
+                switch CloudSyncSnapshotMigration.saveQueueState(
                     recordName: payload.recordName,
-                    pendingSaveHashes: self.pendingSaveHashes)
+                    pendingSaveHashes: self.pendingSaveHashes,
+                    engineHasPendingSave: engine.state.pendingRecordZoneChanges.contains(.saveRecord(recordID)))
                 {
+                case .inFlight:
                     self.persistenceEnvelope.fleetSnapshots[payload.recordName] = payload
                     stillPending.append(payload)
                     continue
+                case .orphaned:
+                    self.logger.warning("Re-queueing snapshot save CKSyncEngine no longer holds: \(payload.recordName)")
+                    self.pendingSaveHashes.removeValue(forKey: payload.recordName)
+                case .notQueued:
+                    break
                 }
-                let recordID = self.recordID(named: payload.recordName)
                 let record = self.record(type: .accountSnapshot, id: recordID)
                 record["schemaVersion"] = payload.schemaVersion as CKRecordValue
                 record["provider"] = payload.provider.rawValue as CKRecordValue
