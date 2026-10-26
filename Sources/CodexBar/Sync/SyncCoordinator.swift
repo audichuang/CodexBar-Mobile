@@ -1222,7 +1222,8 @@ final class SyncCoordinator {
         clearSharedCostOwnership: Bool = false,
         accountRecordKey requestedAccountRecordKey: String? = nil,
         statusNote: String? = nil,
-        accountIdentityOverrides: [String]? = nil) -> ProviderUsageSnapshot
+        accountIdentityOverrides: [String]? = nil,
+        accountLabel: String? = nil) -> ProviderUsageSnapshot
     {
         // Build dynamic rate windows array with labels from metadata.
         var rateWindows: [SyncRateWindow] = []
@@ -1479,6 +1480,7 @@ final class SyncCoordinator {
             providerAmount: providerAmount,
             accountRecordKey: accountRecordKey,
             accountOrganization: snapshot?.identity?.accountOrganization,
+            accountLabel: accountLabel,
             zoomMateCredits: zoomMateCredits,
             resetCreditInventory: resetCreditInventory,
             details: details)
@@ -1580,6 +1582,12 @@ final class SyncCoordinator {
 
     static func tokenAccountRecordKey(_ account: ProviderTokenAccount) -> String {
         "token-\(account.id.uuidString.lowercased())"
+    }
+
+    /// The name the user gave a token account, published so iPhone can title its card.
+    static func syncedAccountLabel(_ label: String) -> String? {
+        let trimmed = label.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? nil : trimmed
     }
 
     private func buildOpenRouterManagementCostSnapshot(
@@ -2286,7 +2294,8 @@ final class SyncCoordinator {
                     sharedUtilizationHistory: sharedUtilizationHistory,
                     clearSharedCostOwnership: usesStableProviderCostOwner
                         || (!usesAccountNativeCostSummaries && entryIndex != providerLevelCostOwnerIndex),
-                    accountRecordKey: Self.tokenAccountRecordKey(entry.account))
+                    accountRecordKey: Self.tokenAccountRecordKey(entry.account),
+                    accountLabel: Self.syncedAccountLabel(entry.account.label))
                 self.multiAccountCache.record(
                     perAccount,
                     providerID: providerID,
