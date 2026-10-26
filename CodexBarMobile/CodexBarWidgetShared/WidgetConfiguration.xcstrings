@@ -91,6 +91,36 @@
         }
       }
     },
+    "Accounts of One Provider" : {
+      "comment" : "Widget configuration (App Intents, iOS 27+): overview choice showing up to four accounts of one provider side by side.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accounts of One Provider"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "同一服务商的各账号"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "同一服務商的各帳號"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "同じプロバイダーの各アカウント"
+          }
+        }
+      }
+    },
     "All" : {
       "comment" : "Widget configuration (App Intents, iOS 27+); same wording as SiriKit CBWall.",
       "extractionState" : "manual",

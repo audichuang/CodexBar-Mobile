@@ -67,6 +67,9 @@ enum WidgetOverviewSelection: Equatable, Sendable {
     /// The `count` providers whose weekly reset comes soonest, whatever order
     /// the app's Usage cards use.
     case soonestWeeklyReset(count: Int)
+    /// Up to `count` accounts of one provider side by side: the first
+    /// provider slot, or the provider with the most accounts when it is empty.
+    case accounts(count: Int)
 
     static let counts = 2...4
     /// Readable in every widget size, and the small widget's automatic count.
@@ -82,6 +85,7 @@ enum WidgetOverviewSelection: Equatable, Sendable {
         switch self {
         case .manual: "manual"
         case let .soonestWeeklyReset(count): "soonestWeeklyReset(\(count))"
+        case let .accounts(count): "accounts(\(count))"
         }
     }
 }
@@ -100,7 +104,58 @@ enum WidgetProviderSelection {
             self.resolve(from: providers, selected: selected, family: family, now: now)
         case let .soonestWeeklyReset(count):
             self.soonestWeeklyReset(from: providers, count: count, now: now)
+        case let .accounts(count):
+            self.accounts(from: providers, selected: selected?.first, count: count, now: now)
         }
+    }
+
+    /// The accounts of one provider, ordered by account label so each keeps
+    /// its column between refreshes. Without a configured provider the one
+    /// with the most accounts is used, ties going to the snapshot order. A
+    /// configured provider without data shows one unavailable tile.
+    static func accounts(
+        from providers: [CodexBarWidgetProviderSummary],
+        selected: WidgetProviderEntity?,
+        count: Int,
+        now: Date) -> [CodexBarWidgetProviderSummary]
+    {
+        let providerID: String
+        if let selected {
+            providerID = selected.id
+        } else {
+            var counts: [String: Int] = [:]
+            for provider in providers { counts[provider.providerID, default: 0] += 1 }
+            guard let busiest = providers.max(by: { lhs, rhs in
+                counts[lhs.providerID, default: 0] < counts[rhs.providerID, default: 0]
+            }) else { return [] }
+            // `max` keeps the last of equal elements; take the first instead.
+            let most = counts[busiest.providerID, default: 0]
+            providerID = providers.first { counts[$0.providerID] == most }?.providerID ?? busiest.providerID
+        }
+        let accounts = providers
+            .filter { $0.providerID == providerID }
+            .sorted { lhs, rhs in
+                let left = lhs.accountLabel ?? ""
+                let right = rhs.accountLabel ?? ""
+                if left != right { return left.localizedStandardCompare(right) == .orderedAscending }
+                return lhs.id < rhs.id
+            }
+            .prefix(WidgetOverviewSelection.clampedCount(count))
+        if accounts.isEmpty, let selected {
+            return [CodexBarWidgetProviderSummary(
+                id: "unavailable|\(selected.id)",
+                providerName: selected.name,
+                providerID: selected.id,
+                loginMethod: nil,
+                usagePercent: nil,
+                todayCostUSD: nil,
+                thirtyDayCostUSD: nil,
+                tokensToday: nil,
+                isError: true,
+                statusMessage: String(localized: "Unavailable"),
+                lastUpdated: now)]
+        }
+        return Array(accounts)
     }
 
     /// The app's "Weekly Reset (Soonest First)" comparison

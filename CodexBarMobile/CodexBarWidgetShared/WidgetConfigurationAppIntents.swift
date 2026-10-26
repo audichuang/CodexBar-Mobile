@@ -76,6 +76,8 @@ enum StatusWidgetColorStyleAppEnum: String, AppEnum {
 enum StatusWidgetProviderSelectionAppEnum: String, AppEnum {
     case manual
     case soonestWeeklyReset
+    /// App Intents only: SiriKit widgets keep the two original choices.
+    case accounts
 
     static let typeDisplayRepresentation = TypeDisplayRepresentation(name: LocalizedStringResource(
         "Provider Selection",
@@ -87,6 +89,9 @@ enum StatusWidgetProviderSelectionAppEnum: String, AppEnum {
             table: "WidgetConfiguration")),
         .soonestWeeklyReset: DisplayRepresentation(title: LocalizedStringResource(
             "By Weekly Reset (Soonest First)",
+            table: "WidgetConfiguration")),
+        .accounts: DisplayRepresentation(title: LocalizedStringResource(
+            "Accounts of One Provider",
             table: "WidgetConfiguration")),
     ]
 }
@@ -368,6 +373,7 @@ struct StatusWidgetAppIntent: WidgetConfigurationIntent {
 
     /// The provider selection belongs to the overview; the provider slots to
     /// manual selection and the count to "By weekly reset" (Research/073).
+    /// "Accounts of one provider" shows the first slot and the count.
     /// SiriKit gives each parameter one parent and does not hide the
     /// children of a hidden parameter, so there the slots stay under `mode`
     /// and also show with "By weekly reset" (where they are ignored).
@@ -381,14 +387,25 @@ struct StatusWidgetAppIntent: WidgetConfigurationIntent {
                     \.$providerCount
                 }
             } otherwise: {
-                Summary {
-                    \.$mode
-                    \.$colorStyle
-                    \.$providerSelection
-                    \.$provider1
-                    \.$provider2
-                    \.$provider3
-                    \.$provider4
+                When(\.$providerSelection, .equalTo, StatusWidgetProviderSelectionAppEnum.accounts) {
+                    // Provider 1 picks the provider; empty follows the one with the most accounts.
+                    Summary {
+                        \.$mode
+                        \.$colorStyle
+                        \.$providerSelection
+                        \.$provider1
+                        \.$providerCount
+                    }
+                } otherwise: {
+                    Summary {
+                        \.$mode
+                        \.$colorStyle
+                        \.$providerSelection
+                        \.$provider1
+                        \.$provider2
+                        \.$provider3
+                        \.$provider4
+                    }
                 }
             }
         } otherwise: {
