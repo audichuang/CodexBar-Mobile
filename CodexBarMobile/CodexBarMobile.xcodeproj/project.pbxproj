@@ -44,6 +44,7 @@
 		1D2AE3752C11CCEED90D386F /* WidgetConfiguration.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 198A369D4D16AD6BDDB7038B /* WidgetConfiguration.xcstrings */; };
 		1D71AA32CE0BCA8576493CCF /* UsageQuotaOverviewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337A25A7DE28D4EF46B329D9 /* UsageQuotaOverviewStore.swift */; };
 		1E05BEE4F76DC16C3AA0C014 /* CloudSyncReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC8949E5A683B18E778EAC3 /* CloudSyncReader.swift */; };
+		1F4EF002EEF01AA559228197 /* AccountsWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D613E309154EB2240DEBBA /* AccountsWidgetView.swift */; };
 		206F92B9B80E07A74CE7A413 /* CodexBarWidgetEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = B104ED97657787EFCD6B769B /* CodexBarWidgetEntry.swift */; };
 		20A731CBCE5E1484CDE609D3 /* UsageQuotaSourceResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C9E6D314B2CB4BDCFE90A6E /* UsageQuotaSourceResolver.swift */; };
 		2454FC869F1C8C693320BD25 /* MockBadgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6469C96DB80CE222DDD8EC78 /* MockBadgeView.swift */; };
@@ -171,6 +172,7 @@
 		77AF491945589ACEFFCD2342 /* SwiftDataSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B39BE9838341CBABA2ED1F6 /* SwiftDataSchema.swift */; };
 		77CF9F560A2873DDC19B0A3D /* QuotaTransitionSubscriptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DDEAEEF583AFDE3D29A18C3 /* QuotaTransitionSubscriptionsTests.swift */; };
 		78A8D4ECC85D519DB04C6B07 /* DeepgramUsageCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA293C8F7A388B3FE79C2856 /* DeepgramUsageCard.swift */; };
+		78ED489734DD85F54C710584 /* AccountsWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34D613E309154EB2240DEBBA /* AccountsWidgetView.swift */; };
 		7921A012D44F975F8AFC63DE /* CostShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8515047932479670A9749119 /* CostShareSheet.swift */; };
 		79CB19B99E02908405F7DA54 /* CostTabInsightsResolverTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA78FB043B1F158AEA970465 /* CostTabInsightsResolverTests.swift */; };
 		7A9DE15571A46049A59F2713 /* V082KimiReaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E37485A0E48480EE09F016 /* V082KimiReaderTests.swift */; };
@@ -486,6 +488,7 @@
 		337A25A7DE28D4EF46B329D9 /* UsageQuotaOverviewStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageQuotaOverviewStore.swift; sourceTree = "<group>"; };
 		33F82F1127C024B177B420DE /* OpenCodeGoZenBalanceCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenCodeGoZenBalanceCard.swift; sourceTree = "<group>"; };
 		342E84EEC0EB349DE2BEB11B /* SyncQuotaWarningConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncQuotaWarningConfig.swift; sourceTree = "<group>"; };
+		34D613E309154EB2240DEBBA /* AccountsWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsWidgetView.swift; sourceTree = "<group>"; };
 		36903C779CD4AE98147A83BB /* ClaudeExtraUsageCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClaudeExtraUsageCard.swift; sourceTree = "<group>"; };
 		36BE920A5E08CEB9BAA514AD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/WidgetActivity.strings; sourceTree = "<group>"; };
 		3786C6898A111474E86E69D7 /* CostFormattingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostFormattingTests.swift; sourceTree = "<group>"; };
@@ -897,6 +900,7 @@
 		40AE898ED982B754716E1841 /* CodexBarWidgetShared */ = {
 			isa = PBXGroup;
 			children = (
+				34D613E309154EB2240DEBBA /* AccountsWidgetView.swift */,
 				B104ED97657787EFCD6B769B /* CodexBarWidgetEntry.swift */,
 				E024B1E38E5CEBF63EDB05E3 /* CodexBarWidgetIntent.swift */,
 				9DBC184E006E219F42F8B58F /* CodexBarWidgetSnapshot.swift */,
@@ -1588,6 +1592,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				78ED489734DD85F54C710584 /* AccountsWidgetView.swift in Sources */,
 				3C2F66625233FC74F5086B81 /* AdaptiveReportPanes.swift in Sources */,
 				66A54A05F64B57FC828A2C40 /* AlibabaTokenPlanCard.swift in Sources */,
 				0D7C4FE104FBA31F17F8A591 /* AntigravityAccountSwitcher.swift in Sources */,
@@ -1796,6 +1801,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F4EF002EEF01AA559228197 /* AccountsWidgetView.swift in Sources */,
 				206F92B9B80E07A74CE7A413 /* CodexBarWidgetEntry.swift in Sources */,
 				923EAFD177F69D9DB697A002 /* CodexBarWidgetIntent.swift in Sources */,
 				1CE94C4274A941A28BAB8BB6 /* CodexBarWidgetSnapshot.swift in Sources */,

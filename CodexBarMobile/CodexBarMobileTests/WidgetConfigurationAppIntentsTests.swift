@@ -70,9 +70,7 @@ struct WidgetConfigurationAppIntentsTests {
     private static let enumCases: [String: [String]] = [
         "StatusWidgetModeAppEnum": StatusWidgetModeAppEnum.allCases.map(\.rawValue),
         "StatusWidgetColorStyleAppEnum": StatusWidgetColorStyleAppEnum.allCases.map(\.rawValue),
-        // `accounts` exists only on the App Intent; SiriKit keeps its two choices.
-        "StatusWidgetProviderSelectionAppEnum": StatusWidgetProviderSelectionAppEnum.allCases
-            .filter { $0 != .accounts }.map(\.rawValue),
+        "StatusWidgetProviderSelectionAppEnum": StatusWidgetProviderSelectionAppEnum.allCases.map(\.rawValue),
         "StatusWidgetProviderCountAppEnum": StatusWidgetProviderCountAppEnum.allCases.map(\.rawValue),
         "TokenActivitySourceAppEnum": TokenActivitySourceAppEnum.allCases.map(\.rawValue),
     ]
