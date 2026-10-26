@@ -45,6 +45,50 @@ final class WidgetProviderSelectionTests: XCTestCase {
         XCTAssertEqual(WidgetProviderSelection.columns(count: 2, family: .systemSmall), 1)
     }
 
+    func testAccountsShowEveryAccountOfOneProviderInLabelOrder() {
+        func account(_ provider: String, _ label: String?) -> CodexBarWidgetProviderSummary {
+            CodexBarWidgetProviderSummary(
+                id: "\(provider)|\(label ?? "_")", providerName: provider.capitalized, providerID: provider,
+                loginMethod: nil, usagePercent: 10, todayCostUSD: nil, thirtyDayCostUSD: nil, tokensToday: nil,
+                isError: false, statusMessage: nil, lastUpdated: self.now, accountLabel: label)
+        }
+        let providers = [
+            account("codex", "solo"),
+            account("claude", "work"),
+            account("claude", "Personal"),
+            account("codex", "team"),
+            account("claude", "side"),
+        ]
+        let automatic = WidgetProviderSelection.overview(
+            from: providers, selected: nil, selection: .accounts(count: 4), family: .systemMedium, now: self.now)
+        XCTAssertEqual(automatic.map(\.accountLabel), ["Personal", "side", "work"])
+
+        let codex = WidgetProviderSelection.overview(
+            from: providers, selected: [.init(id: "codex", name: "Codex")], selection: .accounts(count: 4),
+            family: .systemMedium, now: self.now)
+        XCTAssertEqual(codex.map(\.accountLabel), ["solo", "team"])
+
+        XCTAssertEqual(
+            WidgetProviderSelection.accounts(from: providers, selected: nil, count: 2, now: self.now).count,
+            2)
+
+        let missing = WidgetProviderSelection.accounts(
+            from: providers, selected: .init(id: "gemini", name: "Gemini"), count: 3, now: self.now)
+        XCTAssertEqual(missing.map(\.providerID), ["gemini"])
+        XCTAssertEqual(missing.first?.isError, true)
+        XCTAssertTrue(WidgetProviderSelection.accounts(from: [], selected: nil, count: 3, now: self.now).isEmpty)
+        XCTAssertEqual(WidgetProviderSelection.columns(count: 3, family: .systemMedium), 3)
+    }
+
+    func testAccountLabelUsesEmailLocalPartThenOrganization() {
+        XCTAssertEqual(
+            CodexBarWidgetSnapshotBuilder.accountLabel(email: " someone@example.com ", organization: "Org"),
+            "someone")
+        XCTAssertEqual(CodexBarWidgetSnapshotBuilder.accountLabel(email: "Team key", organization: nil), "Team key")
+        XCTAssertEqual(CodexBarWidgetSnapshotBuilder.accountLabel(email: "", organization: "Acme"), "Acme")
+        XCTAssertNil(CodexBarWidgetSnapshotBuilder.accountLabel(email: nil, organization: " "))
+    }
+
     func testMissingProviderNeverSubstitutesAnotherProvider() {
         let providers = CodexBarWidgetSnapshot.placeholder(now: self.now).topProviders
         let result = WidgetProviderSelection.resolve(
