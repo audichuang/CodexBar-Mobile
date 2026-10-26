@@ -737,6 +737,10 @@ struct SoonestWeeklyResetTests {
         #expect(StatusWidgetConfigurationAdapter.overviewSelection(from: StatusWidgetAppIntent(
             mode: .overview, providerSelection: .soonestWeeklyReset, providerCount: .three))
             == .soonestWeeklyReset(count: 3))
+        // App Intents only: the accounts overview has no SiriKit counterpart.
+        #expect(StatusWidgetConfigurationAdapter.overviewSelection(from: StatusWidgetAppIntent(
+            mode: .overview, providerSelection: .accounts, providerCount: .three))
+            == .accounts(count: 3))
     }
 
     /// SiriKit parent relations (independent scalar parameters, not a
