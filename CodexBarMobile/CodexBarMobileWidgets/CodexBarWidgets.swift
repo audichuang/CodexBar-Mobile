@@ -25,6 +25,9 @@ struct CodexBarWidgetsBundle: WidgetBundle {
         if #available(iOS 27.0, *) {
             CodexBarQuotaPaceAppIntentWidget()
         }
+        if #available(iOS 27.0, *) {
+            CodexBarAccountsAppIntentWidget()
+        }
     }
 }
 
@@ -220,6 +223,23 @@ struct CodexBarQuotaPaceAppIntentWidget: Widget {
         .configurationDisplayName("Quota pace")
         .description("See whether a provider's quota lasts until it resets.")
         .supportedFamilies([.systemSmall, .systemMedium, .systemLarge, .systemExtraLarge])
+        .contentMarginsDisabled()
+    }
+}
+
+@available(iOS 27.0, *)
+struct CodexBarAccountsAppIntentWidget: Widget {
+    var body: some WidgetConfiguration {
+        AppIntentConfiguration(
+            kind: WidgetKinds.accountsAppIntent,
+            intent: AccountsWidgetAppIntent.self,
+            provider: AccountsAppIntentTimelineProvider())
+        { entry in
+            AccountsWidgetView(entry: entry)
+        }
+        .configurationDisplayName("Account Quotas")
+        .description("Compare the session and weekly usage of each account of one provider.")
+        .supportedFamilies([.systemSmall, .systemMedium, .systemLarge])
         .contentMarginsDisabled()
     }
 }

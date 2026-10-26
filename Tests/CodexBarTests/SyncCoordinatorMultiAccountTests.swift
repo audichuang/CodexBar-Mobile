@@ -579,6 +579,46 @@ struct SyncCoordinatorMultiAccountTests {
                 SyncCoordinator.tokenAccountRecordKey(bobAccount)) == true,
             "Bob's opaque account record should be the one deleted")
     }
+
+    @Test
+    func `Token account labels are published with each account`() async throws {
+        let settings = self.makeSettingsStore(suite: "TokenAccountLabels")
+        settings.iCloudSyncEnabled = true
+        try settings.setProviderEnabled(
+            provider: .claude,
+            metadata: #require(ProviderDefaults.metadata[.claude]),
+            enabled: true)
+
+        let store = self.makeUsageStore(settings: settings)
+        settings.addTokenAccount(
+            provider: .claude, label: " la ", token: "tok-alice")
+        settings.addTokenAccount(
+            provider: .claude, label: "ethan", token: "tok-bob")
+        settings.setActiveTokenAccountIndex(0, for: .claude)
+        let configuredAccounts = settings.tokenAccounts(for: .claude)
+        let alice = try self.makeTokenAccountUsageSnapshot(
+            provider: .claude,
+            accountLabel: "la", accountEmail: "alice@anthropic.com",
+            account: #require(configuredAccounts.first))
+        let bob = try self.makeTokenAccountUsageSnapshot(
+            provider: .claude,
+            accountLabel: "ethan", accountEmail: "bob@anthropic.com",
+            account: #require(configuredAccounts.last))
+        store._setSnapshotForTesting(alice.snapshot, provider: .claude)
+        store.accountSnapshots[.claude] = [alice, bob]
+
+        let mock = MockSyncPusher()
+        let coordinator = SyncCoordinator(
+            store: store, settings: settings, syncManager: mock)
+        await coordinator.pushCurrentSnapshot()
+
+        let claudes = mock.lastSnapshot?.providers.filter { $0.providerID == "claude" } ?? []
+        let labels = Dictionary(uniqueKeysWithValues: claudes.compactMap { provider in
+            provider.accountEmail.map { ($0, provider.accountLabel) }
+        })
+        #expect(labels["alice@anthropic.com"] == "la")
+        #expect(labels["bob@anthropic.com"] == "ethan")
+    }
 }
 
 // swiftlint:enable multiline_arguments
