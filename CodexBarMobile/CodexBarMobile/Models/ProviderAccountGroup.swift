@@ -56,11 +56,16 @@ struct ProviderAccountGroup: Identifiable {
 
     /// Short label for tab `index`. Used by the segmented control at
     /// the top of `ProviderDetailView` when `hasMultipleAccounts`.
-    /// Strategy (first non-empty wins): account-email local-part →
-    /// loginMethod → `Account N`.
+    /// Strategy (first non-empty wins): name given on the Mac →
+    /// account-email local-part → loginMethod → `Account N`.
     func tabLabel(forIndex index: Int, locale: Locale = .current) -> String {
         guard self.accounts.indices.contains(index) else { return "" }
         let snapshot = self.accounts[index]
+        if let label = CodexBarWidgetSnapshotBuilder.accountLabel(
+            label: snapshot.accountLabel, email: nil, organization: nil)
+        {
+            return label
+        }
         if let email = snapshot.accountEmail,
            !email.isEmpty
         {

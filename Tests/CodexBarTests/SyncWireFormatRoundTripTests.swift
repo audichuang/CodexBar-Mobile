@@ -54,6 +54,33 @@ struct SyncWireFormatRoundTripTests {
     }
 
     @Test
+    func `Account label round-trips and remains optional for old payloads`() throws {
+        let labeled = ProviderUsageSnapshot(
+            providerID: "claude",
+            providerName: "Claude",
+            primary: nil,
+            secondary: nil,
+            accountEmail: "someone@example.com",
+            loginMethod: "Max",
+            statusMessage: nil,
+            isError: false,
+            lastUpdated: Date(timeIntervalSince1970: 1_700_000_000),
+            accountLabel: "Audi")
+
+        let encoded = try self.encoder().encode(labeled)
+        let decoded = try self.decoder().decode(ProviderUsageSnapshot.self, from: encoded)
+        #expect(decoded.accountLabel == "Audi")
+        #expect(decoded.with(quotaWarnings: nil).accountLabel == "Audi")
+
+        let oldPayload = try #require(
+            JSONSerialization.jsonObject(with: encoded) as? [String: Any])
+            .filter { $0.key != "accountLabel" }
+        let oldData = try JSONSerialization.data(withJSONObject: oldPayload)
+        let oldDecoded = try self.decoder().decode(ProviderUsageSnapshot.self, from: oldData)
+        #expect(oldDecoded.accountLabel == nil)
+    }
+
+    @Test
     func `Per-provider publication metadata stays off the wire and falls back safely`() throws {
         let provider = ProviderUsageSnapshot(
             providerID: "codex",

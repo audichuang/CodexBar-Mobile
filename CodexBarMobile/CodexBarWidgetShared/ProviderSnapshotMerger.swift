@@ -949,6 +949,8 @@ enum ProviderSnapshotMerger {
                 presentationEntries, sourceDeviceIDs: presentationDeviceIDs, \.accountRecordKey),
             accountOrganization: Self.latestNonNil(
                 presentationEntries, sourceDeviceIDs: presentationDeviceIDs, \.accountOrganization),
+            accountLabel: Self.latestNonNil(
+                presentationEntries, sourceDeviceIDs: presentationDeviceIDs, \.accountLabel),
             zoomMateCredits: Self.latestNonNil(entries, sourceDeviceIDs: sourceDeviceIDs, \.zoomMateCredits),
             resetCreditInventory: Self.latestResetCreditInventory(entries, sourceDeviceIDs: sourceDeviceIDs),
             details: Self.mergedDetails(
@@ -1638,6 +1640,7 @@ extension ProviderUsageSnapshot {
             providerAmount: self.providerAmount,
             accountRecordKey: self.accountRecordKey,
             accountOrganization: self.accountOrganization,
+            accountLabel: self.accountLabel,
             zoomMateCredits: self.zoomMateCredits,
             resetCreditInventory: self.resetCreditInventory,
             details: self.details,

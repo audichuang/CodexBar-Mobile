@@ -27,6 +27,7 @@ enum WidgetKinds {
     static let quotaPace = "CodexBarQuotaPaceWidget"
     static let statusAppIntent = "CodexBarStatusWidgetAppIntent"
     static let quotaPaceAppIntent = "CodexBarQuotaPaceWidgetAppIntent"
+    static let accountsAppIntent = "CodexBarAccountsWidgetAppIntent"
 }
 
 // MARK: - Enums
@@ -76,8 +77,6 @@ enum StatusWidgetColorStyleAppEnum: String, AppEnum {
 enum StatusWidgetProviderSelectionAppEnum: String, AppEnum {
     case manual
     case soonestWeeklyReset
-    /// App Intents only: SiriKit widgets keep the two original choices.
-    case accounts
 
     static let typeDisplayRepresentation = TypeDisplayRepresentation(name: LocalizedStringResource(
         "Provider Selection",
@@ -89,9 +88,6 @@ enum StatusWidgetProviderSelectionAppEnum: String, AppEnum {
             table: "WidgetConfiguration")),
         .soonestWeeklyReset: DisplayRepresentation(title: LocalizedStringResource(
             "By Weekly Reset (Soonest First)",
-            table: "WidgetConfiguration")),
-        .accounts: DisplayRepresentation(title: LocalizedStringResource(
-            "Accounts of One Provider",
             table: "WidgetConfiguration")),
     ]
 }
@@ -480,7 +476,6 @@ struct StatusWidgetAppIntent: WidgetConfigurationIntent {
     /// manual selection and the count to "By weekly reset" (Research/073).
     /// Each slot's window follows its provider; the quota display belongs to
     /// both overview selections (issue #223).
-    /// "Accounts of one provider" shows the first slot and the count.
     /// SiriKit gives each parameter one parent and does not hide the
     /// children of a hidden parameter, so there the slots stay under `mode`
     /// and also show with "By weekly reset" (where they are ignored).
@@ -495,31 +490,19 @@ struct StatusWidgetAppIntent: WidgetConfigurationIntent {
                     \.$quotaDisplay
                 }
             } otherwise: {
-                When(\.$providerSelection, .equalTo, StatusWidgetProviderSelectionAppEnum.accounts) {
-                    // Provider 1 picks the provider; empty follows the one with the most accounts.
-                    Summary {
-                        \.$mode
-                        \.$colorStyle
-                        \.$providerSelection
-                        \.$quotaDisplay
-                        \.$provider1
-                        \.$providerCount
-                    }
-                } otherwise: {
-                    Summary {
-                        \.$mode
-                        \.$colorStyle
-                        \.$providerSelection
-                        \.$quotaDisplay
-                        \.$provider1
-                        \.$window1
-                        \.$provider2
-                        \.$window2
-                        \.$provider3
-                        \.$window3
-                        \.$provider4
-                        \.$window4
-                    }
+                Summary {
+                    \.$mode
+                    \.$colorStyle
+                    \.$providerSelection
+                    \.$quotaDisplay
+                    \.$provider1
+                    \.$window1
+                    \.$provider2
+                    \.$window2
+                    \.$provider3
+                    \.$window3
+                    \.$provider4
+                    \.$window4
                 }
             }
         } otherwise: {
@@ -556,6 +539,27 @@ struct StatusWidgetAppIntent: WidgetConfigurationIntent {
         self.window2 = windowSlots[1]
         self.window3 = windowSlots[2]
         self.window4 = windowSlots[3]
+    }
+}
+
+/// Configuration of the accounts widget (`WidgetKinds.accountsAppIntent`):
+/// every account of one provider with its session and weekly usage. It has
+/// no SiriKit counterpart.
+@available(iOS 27.0, *)
+struct AccountsWidgetAppIntent: WidgetConfigurationIntent {
+    static let title = LocalizedStringResource("Account Quotas", table: "WidgetConfiguration")
+    static let description = IntentDescription(LocalizedStringResource(
+        "Compare the session and weekly usage of each account of one provider.",
+        table: "WidgetConfiguration"))
+
+    /// Empty follows the provider with the most accounts.
+    @Parameter(title: LocalizedStringResource("Provider", table: "WidgetConfiguration"))
+    var provider: StatusWidgetProviderAppEntity?
+
+    init() {}
+
+    init(provider: StatusWidgetProviderAppEntity?) {
+        self.provider = provider
     }
 }
 
