@@ -1262,6 +1262,9 @@ public struct ProviderUsageSnapshot: Codable, Sendable, Equatable {
     /// Optional provider workspace/organization label. Added in iOS 1.20.0;
     /// old payloads decode as nil and old clients ignore the key.
     public let accountOrganization: String?
+    /// Name the user gave this account on the Mac (token account label), e.g. "Audi".
+    /// Additive: old payloads decode as nil and old clients ignore the key.
+    public let accountLabel: String?
     public let statusMessage: String?
     public let isError: Bool
     public let lastUpdated: Date
@@ -1690,6 +1693,7 @@ public struct ProviderUsageSnapshot: Codable, Sendable, Equatable {
         providerAmount: SyncProviderAmount? = nil,
         accountRecordKey: String? = nil,
         accountOrganization: String? = nil,
+        accountLabel: String? = nil,
         zoomMateCredits: SyncZoomMateCredits? = nil,
         resetCreditInventory: SyncResetCreditInventory? = nil,
         details: [SyncProviderDetailSection] = [],
@@ -1704,6 +1708,7 @@ public struct ProviderUsageSnapshot: Codable, Sendable, Equatable {
         self.accountEmail = accountEmail
         self.loginMethod = loginMethod
         self.accountOrganization = accountOrganization
+        self.accountLabel = accountLabel
         self.statusMessage = statusMessage
         self.isError = isError
         self.lastUpdated = lastUpdated
@@ -1807,6 +1812,7 @@ public struct ProviderUsageSnapshot: Codable, Sendable, Equatable {
             providerAmount: self.providerAmount,
             accountRecordKey: self.accountRecordKey,
             accountOrganization: self.accountOrganization,
+            accountLabel: self.accountLabel,
             zoomMateCredits: self.zoomMateCredits,
             resetCreditInventory: self.resetCreditInventory,
             details: self.details,
@@ -1826,6 +1832,7 @@ public struct ProviderUsageSnapshot: Codable, Sendable, Equatable {
         self.accountEmail = try container.decodeIfPresent(String.self, forKey: .accountEmail)
         self.loginMethod = try container.decodeIfPresent(String.self, forKey: .loginMethod)
         self.accountOrganization = try container.decodeIfPresent(String.self, forKey: .accountOrganization)
+        self.accountLabel = try container.decodeIfPresent(String.self, forKey: .accountLabel)
         self.statusMessage = try container.decodeIfPresent(String.self, forKey: .statusMessage)
         self.isError = try container.decode(Bool.self, forKey: .isError)
         self.lastUpdated = try container.decode(Date.self, forKey: .lastUpdated)

@@ -59,13 +59,11 @@ final class WidgetProviderSelectionTests: XCTestCase {
             account("codex", "team"),
             account("claude", "side"),
         ]
-        let automatic = WidgetProviderSelection.overview(
-            from: providers, selected: nil, selection: .accounts(count: 4), family: .systemMedium, now: self.now)
+        let automatic = WidgetProviderSelection.accounts(from: providers, selected: nil, count: 6, now: self.now)
         XCTAssertEqual(automatic.map(\.accountLabel), ["Personal", "side", "work"])
 
-        let codex = WidgetProviderSelection.overview(
-            from: providers, selected: [.init(id: "codex", name: "Codex")], selection: .accounts(count: 4),
-            family: .systemMedium, now: self.now)
+        let codex = WidgetProviderSelection.accounts(
+            from: providers, selected: .init(id: "codex", name: "Codex"), count: 6, now: self.now)
         XCTAssertEqual(codex.map(\.accountLabel), ["solo", "team"])
 
         XCTAssertEqual(
@@ -80,13 +78,65 @@ final class WidgetProviderSelectionTests: XCTestCase {
         XCTAssertEqual(WidgetProviderSelection.columns(count: 3, family: .systemMedium), 3)
     }
 
-    func testAccountLabelUsesEmailLocalPartThenOrganization() {
-        XCTAssertEqual(
-            CodexBarWidgetSnapshotBuilder.accountLabel(email: " someone@example.com ", organization: "Org"),
-            "someone")
-        XCTAssertEqual(CodexBarWidgetSnapshotBuilder.accountLabel(email: "Team key", organization: nil), "Team key")
-        XCTAssertEqual(CodexBarWidgetSnapshotBuilder.accountLabel(email: "", organization: "Acme"), "Acme")
-        XCTAssertNil(CodexBarWidgetSnapshotBuilder.accountLabel(email: nil, organization: " "))
+    func testAccountLabelPrefersMacNameThenEmailLocalPartThenOrganization() {
+        let label = CodexBarWidgetSnapshotBuilder.accountLabel
+        XCTAssertEqual(label(" la ", "someone@example.com", "Org"), "la")
+        XCTAssertEqual(label("someone@example.com", nil, nil), "someone")
+        XCTAssertEqual(label(" ", " someone@example.com ", "Org"), "someone")
+        XCTAssertEqual(label(nil, "Team key", nil), "Team key")
+        XCTAssertEqual(label(nil, "", "Acme"), "Acme")
+        XCTAssertNil(label(nil, nil, " "))
+    }
+
+    func testSessionIsTheShortestWindowUnderADayAndRestartsAfterItsReset() {
+        func window(_ minutes: Int?, used: Double, resetsIn hours: Double?) -> SyncRateWindow {
+            SyncRateWindow(
+                usedPercent: used,
+                windowMinutes: minutes,
+                resetsAt: hours.map { self.now.addingTimeInterval($0 * 3600) },
+                resetDescription: nil)
+        }
+        let provider = ProviderUsageSnapshot(
+            providerID: "claude",
+            providerName: "Claude",
+            primary: window(300, used: 40, resetsIn: 2),
+            secondary: window(10080, used: 8, resetsIn: 100),
+            accountEmail: nil,
+            loginMethod: nil,
+            statusMessage: nil,
+            isError: false,
+            lastUpdated: self.now)
+        let session = CodexBarWidgetSnapshotBuilder.summary(for: provider, now: self.now)
+        XCTAssertEqual(session.sessionUsedPercent, 40)
+        XCTAssertEqual(session.sessionWindowMinutes, 300)
+        XCTAssertNotNil(session.sessionResetsAt)
+        XCTAssertEqual(session.weeklyUsedPercent, 8)
+
+        let expired = ProviderUsageSnapshot(
+            providerID: "claude",
+            providerName: "Claude",
+            primary: window(300, used: 90, resetsIn: -1),
+            secondary: window(10080, used: 8, resetsIn: 100),
+            accountEmail: nil,
+            loginMethod: nil,
+            statusMessage: nil,
+            isError: false,
+            lastUpdated: self.now)
+        let idle = CodexBarWidgetSnapshotBuilder.summary(for: expired, now: self.now)
+        XCTAssertEqual(idle.sessionUsedPercent, 0)
+        XCTAssertNil(idle.sessionResetsAt)
+
+        let weeklyOnly = ProviderUsageSnapshot(
+            providerID: "codex",
+            providerName: "Codex",
+            primary: window(10080, used: 30, resetsIn: 50),
+            secondary: nil,
+            accountEmail: nil,
+            loginMethod: nil,
+            statusMessage: nil,
+            isError: false,
+            lastUpdated: self.now)
+        XCTAssertNil(CodexBarWidgetSnapshotBuilder.summary(for: weeklyOnly, now: self.now).sessionUsedPercent)
     }
 
     func testMissingProviderNeverSubstitutesAnotherProvider() {
@@ -243,6 +293,35 @@ final class WidgetProviderSelectionTests: XCTestCase {
                         add(attachment)
                     }
                 }
+            }
+        }
+    }
+
+    func testAccountsWidgetRendersEveryFamily() throws {
+        let families: [(WidgetFamily, CGSize)] = [
+            (.systemSmall, .init(width: 158, height: 158)),
+            (.systemMedium, .init(width: 338, height: 158)),
+            (.systemLarge, .init(width: 338, height: 354)),
+        ]
+        for (family, size) in families {
+            for scheme in [ColorScheme.light, .dark] {
+                let view = AccountsWidgetView(
+                    entry: .init(
+                        date: self.now,
+                        configuration: .init(mode: .overview),
+                        snapshot: .accountsPreview(now: self.now)),
+                    previewFamily: family)
+                    .environment(\.colorScheme, scheme)
+                    .frame(width: size.width, height: size.height)
+                    .background(scheme == .dark ? Color.black : Color.white)
+                let renderer = ImageRenderer(content: view)
+                renderer.scale = 3
+                let image = try XCTUnwrap(renderer.uiImage)
+                XCTAssertEqual(image.size.width, size.width)
+                let attachment = XCTAttachment(image: image)
+                attachment.name = "Accounts-\(family)-\(scheme)"
+                attachment.lifetime = .keepAlways
+                add(attachment)
             }
         }
     }

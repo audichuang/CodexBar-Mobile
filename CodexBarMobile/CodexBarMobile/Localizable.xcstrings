@@ -1,6 +1,8 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "Account Quotas": {"extractionState": "manual", "localizations": {"en": {"stringUnit": {"state": "translated", "value": "Account Quotas"}}, "zh-Hans": {"stringUnit": {"state": "translated", "value": "多账号额度"}}, "zh-Hant": {"stringUnit": {"state": "translated", "value": "多帳號額度"}}, "ja": {"stringUnit": {"state": "translated", "value": "アカウント別クォータ"}}}},
+    "Compare the session and weekly usage of each account of one provider.": {"extractionState": "manual", "localizations": {"en": {"stringUnit": {"state": "translated", "value": "Compare the session and weekly usage of each account of one provider."}}, "zh-Hans": {"stringUnit": {"state": "translated", "value": "并排比较同一服务商各账号的当前周期与每周用量。"}}, "zh-Hant": {"stringUnit": {"state": "translated", "value": "並排比較同一服務商各帳號的當前週期與每週用量。"}}, "ja": {"stringUnit": {"state": "translated", "value": "同じプロバイダーの各アカウントのセッションと週間の使用量を比べます。"}}}},
   "Latest observations": {
     "extractionState": "manual",
     "localizations": {

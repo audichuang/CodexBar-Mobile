@@ -35,10 +35,15 @@ struct CodexBarWidgetProviderSummary: Codable, Equatable, Identifiable, Sendable
     /// current, or the fullest reset-less weekly window when none reports a
     /// reset. Nil without a weekly window, or after a missed reset.
     let weeklyUsedPercent: Double?
-    /// Short account name for telling a provider's accounts apart: the
-    /// email's local part, else the synced label or organization. Nil for
-    /// summaries cached before it existed and for providers without one.
+    /// Short account name for telling a provider's accounts apart: the name
+    /// given on the Mac, else the email's local part, else the organization.
+    /// Nil for summaries cached before it existed and for providers without one.
     let accountLabel: String?
+    /// Used percent and reset of the shortest window under a day (Claude's
+    /// 5-hour session). Nil when the provider has no such window.
+    let sessionUsedPercent: Double?
+    let sessionResetsAt: Date?
+    let sessionWindowMinutes: Int?
 
     init(
         id: String,
@@ -57,7 +62,10 @@ struct CodexBarWidgetProviderSummary: Codable, Equatable, Identifiable, Sendable
         quotaPace: CodexBarWidgetPaceSummary? = nil,
         weeklyResetsAt: Date? = nil,
         weeklyUsedPercent: Double? = nil,
-        accountLabel: String? = nil)
+        accountLabel: String? = nil,
+        sessionUsedPercent: Double? = nil,
+        sessionResetsAt: Date? = nil,
+        sessionWindowMinutes: Int? = nil)
     {
         self.id = id
         self.providerName = providerName
@@ -76,6 +84,9 @@ struct CodexBarWidgetProviderSummary: Codable, Equatable, Identifiable, Sendable
         self.weeklyResetsAt = weeklyResetsAt
         self.weeklyUsedPercent = weeklyUsedPercent
         self.accountLabel = accountLabel
+        self.sessionUsedPercent = sessionUsedPercent
+        self.sessionResetsAt = sessionResetsAt
+        self.sessionWindowMinutes = sessionWindowMinutes
     }
 
     /// The same provider with its pace data pointed at another window.
@@ -97,7 +108,10 @@ struct CodexBarWidgetProviderSummary: Codable, Equatable, Identifiable, Sendable
             quotaPace: quotaPace,
             weeklyResetsAt: self.weeklyResetsAt,
             weeklyUsedPercent: self.weeklyUsedPercent,
-            accountLabel: self.accountLabel)
+            accountLabel: self.accountLabel,
+            sessionUsedPercent: self.sessionUsedPercent,
+            sessionResetsAt: self.sessionResetsAt,
+            sessionWindowMinutes: self.sessionWindowMinutes)
     }
 
     var displaySubtitle: String? {
@@ -616,8 +630,7 @@ struct CodexBarWidgetSnapshot: Codable, Equatable, Sendable {
                         sessionUsed: 17,
                         extraWindows: [(id: "claude-weekly-scoped-fable", label: "Fable only", used: 71)]),
                     weeklyResetsAt: self.sampleWeeklyReset(now: now, days: 3.6),
-                    weeklyUsedPercent: 54,
-                    accountLabel: "work"),
+                    weeklyUsedPercent: 54),
                 CodexBarWidgetProviderSummary(
                     id: "raycast|sample", providerName: "Raycast", providerID: "raycast",
                     loginMethod: nil, usagePercent: 30, resetsAt: now.addingTimeInterval(3.6 * 86400),
@@ -671,27 +684,6 @@ struct CodexBarWidgetSnapshot: Codable, Equatable, Sendable {
         return CodexBarWidgetSnapshotBuilder.summary(for: grok, now: now)
     }
 
-    /// Two more Claude accounts for the "Accounts of One Provider" overview.
-    static func simulatorClaudeAccounts(now: Date) -> [CodexBarWidgetProviderSummary] {
-        [("personal", 88.0, 1.2), ("side", 12.0, 6.4)].map { label, used, days in
-            CodexBarWidgetProviderSummary(
-                id: "claude|\(label)",
-                providerName: "Claude",
-                providerID: "claude",
-                loginMethod: "Max",
-                usagePercent: used,
-                todayCostUSD: nil,
-                thirtyDayCostUSD: nil,
-                tokensToday: nil,
-                isError: false,
-                statusMessage: nil,
-                lastUpdated: now.addingTimeInterval(-240),
-                weeklyResetsAt: self.sampleWeeklyReset(now: now, days: days),
-                weeklyUsedPercent: used,
-                accountLabel: label)
-        }
-    }
-
     static func simulatorMock(now: Date = .now) -> CodexBarWidgetSnapshot {
         let sample = Self.placeholder(now: now)
         return CodexBarWidgetSnapshot(
@@ -706,11 +698,68 @@ struct CodexBarWidgetSnapshot: Codable, Equatable, Sendable {
             todayTokens: sample.todayTokens,
             maxUsagePercent: sample.maxUsagePercent,
             // Appended so automatic and configured selections stay as before.
-            topProviders: sample.topProviders + [Self.simulatorGrok(now: now)] + Self.simulatorClaudeAccounts(now: now),
+            // The sample Claude becomes the first of three accounts in place.
+            topProviders: Self.withSampleClaudeAccounts(sample.topProviders, now: now)
+                + [Self.simulatorGrok(now: now)],
             message: sample.message,
             isStale: sample.isStale)
     }
+
+    private static func withSampleClaudeAccounts(
+        _ providers: [CodexBarWidgetProviderSummary],
+        now: Date) -> [CodexBarWidgetProviderSummary]
+    {
+        let accounts = Self.sampleClaudeAccounts(now: now)
+        return providers.flatMap { $0.id == "claude|sample" ? [accounts[0]] : [$0] } + accounts.dropFirst()
+    }
     #endif
+
+    /// Three Claude accounts for the accounts widget's gallery preview.
+    static func sampleClaudeAccounts(now: Date) -> [CodexBarWidgetProviderSummary] {
+        let samples: [(label: String, session: Double?, sessionHours: Double, weekly: Double, days: Double)] = [
+            ("Work", 12, 2.6, 8, 6.0),
+            ("Personal", 81, 0.9, 64, 2.4),
+            ("Side", nil, 0, 5, 5.6),
+        ]
+        return samples.map { sample in
+            CodexBarWidgetProviderSummary(
+                id: "claude|\(sample.label)",
+                providerName: "Claude",
+                providerID: "claude",
+                loginMethod: "Max",
+                usagePercent: max(sample.session ?? 0, sample.weekly),
+                todayCostUSD: nil,
+                thirtyDayCostUSD: nil,
+                tokensToday: nil,
+                isError: false,
+                statusMessage: nil,
+                lastUpdated: now.addingTimeInterval(-240),
+                weeklyResetsAt: self.sampleWeeklyReset(now: now, days: sample.days),
+                weeklyUsedPercent: sample.weekly,
+                accountLabel: sample.label,
+                sessionUsedPercent: sample.session,
+                sessionResetsAt: sample.session.map { _ in now.addingTimeInterval(sample.sessionHours * 3600) },
+                sessionWindowMinutes: 300)
+        }
+    }
+
+    static func accountsPreview(now: Date = .now) -> CodexBarWidgetSnapshot {
+        let accounts = Self.sampleClaudeAccounts(now: now)
+        return CodexBarWidgetSnapshot(
+            state: .placeholder,
+            generatedAt: now,
+            latestSyncAt: now.addingTimeInterval(-240),
+            deviceCount: 1,
+            providerCount: accounts.count,
+            errorCount: 0,
+            todayCostUSD: nil,
+            thirtyDayCostUSD: nil,
+            todayTokens: nil,
+            maxUsagePercent: accounts.compactMap(\.usagePercent).max(),
+            topProviders: accounts,
+            message: nil,
+            isStale: false)
+    }
 
     static func syncing(now: Date = .now) -> CodexBarWidgetSnapshot {
         CodexBarWidgetSnapshot(
@@ -938,6 +987,8 @@ enum CodexBarWidgetSnapshotBuilder {
         let resetsAt = budgetLeads ? provider.budget?.resetsAt : leadingWindow?.resetsAt
         let accountKey = provider.accountEmail ?? "_"
         let weekly = WeeklyResetWindow.soonest(for: provider, now: now)
+        let session = self.sessionWindow(for: provider)
+        let sessionExpired = session?.resetsAt.map { $0 <= now } ?? false
         // A weekly window whose reset has passed is stale and shows no usage; only a
         // provider without any weekly reset falls back to the resetless weekly usage.
         let weeklyUsed: Double? = if let weekly {
@@ -962,10 +1013,33 @@ enum CodexBarWidgetSnapshotBuilder {
             quotaPace: CodexBarWidgetPaceSummary(provider: provider, now: now),
             weeklyResetsAt: weekly?.nextReset,
             weeklyUsedPercent: weeklyUsed,
-            accountLabel: self.accountLabel(email: provider.accountEmail, organization: provider.accountOrganization))
+            accountLabel: self.accountLabel(
+                label: provider.accountLabel,
+                email: provider.accountEmail,
+                organization: provider.accountOrganization),
+            // A session whose reset has passed has started over at zero.
+            sessionUsedPercent: session.map { sessionExpired ? 0 : $0.usedPercent },
+            sessionResetsAt: sessionExpired ? nil : session?.resetsAt,
+            sessionWindowMinutes: session?.windowMinutes)
     }
 
-    static func accountLabel(email: String?, organization: String?) -> String? {
+    /// The shortest window under a day, e.g. Claude's 5-hour session.
+    static func sessionWindow(for provider: ProviderUsageSnapshot) -> SyncRateWindow? {
+        provider.allRateWindows
+            .filter { window in
+                guard window.usageKnown, !window.isSyntheticPlaceholder, window.usedPercent.isFinite,
+                      let minutes = window.windowMinutes
+                else { return false }
+                return minutes > 0 && minutes < 24 * 60
+            }
+            .min { ($0.windowMinutes ?? 0) < ($1.windowMinutes ?? 0) }
+    }
+
+    static func accountLabel(label: String?, email: String?, organization: String?) -> String? {
+        if let label = label?.trimmingCharacters(in: .whitespacesAndNewlines), !label.isEmpty {
+            // Labels that are emails (Antigravity names accounts by address) keep the local part.
+            return label.contains("@") ? self.accountLabel(label: nil, email: label, organization: nil) : label
+        }
         if let email = email?.trimmingCharacters(in: .whitespacesAndNewlines), !email.isEmpty {
             let local = email.split(separator: "@", maxSplits: 1).first.map(String.init) ?? email
             return local.isEmpty ? email : local

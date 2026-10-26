@@ -49,10 +49,7 @@ enum StatusWidgetConfigurationAdapter {
 
     @available(iOS 27.0, *)
     static func overviewSelection(from intent: StatusWidgetAppIntent) -> WidgetOverviewSelection {
-        if intent.providerSelection == .accounts {
-            return .accounts(count: intent.providerCount.count)
-        }
-        return self.overviewSelection(
+        self.overviewSelection(
             soonestWeeklyReset: intent.providerSelection == .soonestWeeklyReset,
             count: intent.providerCount.count)
     }
@@ -78,6 +75,16 @@ enum StatusWidgetConfigurationAdapter {
         CodexBarWidgetConfigurationIntent(
             mode: .quotaPace,
             colorStyle: self.colorStyle(colorful: intent.colorStyle == .colorful),
+            providers: self.providers([(id: intent.provider?.id, name: intent.provider?.displayString)]))
+    }
+
+    /// The accounts widget shows one provider's accounts; no provider
+    /// follows the one with the most accounts.
+    @available(iOS 27.0, *)
+    static func configuration(from intent: AccountsWidgetAppIntent) -> CodexBarWidgetConfigurationIntent {
+        CodexBarWidgetConfigurationIntent(
+            mode: .overview,
+            colorStyle: .colorful,
             providers: self.providers([(id: intent.provider?.id, name: intent.provider?.displayString)]))
     }
 

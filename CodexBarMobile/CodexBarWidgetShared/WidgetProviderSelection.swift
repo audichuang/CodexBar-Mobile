@@ -67,9 +67,6 @@ enum WidgetOverviewSelection: Equatable, Sendable {
     /// The `count` providers whose weekly reset comes soonest, whatever order
     /// the app's Usage cards use.
     case soonestWeeklyReset(count: Int)
-    /// Up to `count` accounts of one provider side by side: the first
-    /// provider slot, or the provider with the most accounts when it is empty.
-    case accounts(count: Int)
 
     static let counts = 2...4
     /// Readable in every widget size, and the small widget's automatic count.
@@ -85,7 +82,6 @@ enum WidgetOverviewSelection: Equatable, Sendable {
         switch self {
         case .manual: "manual"
         case let .soonestWeeklyReset(count): "soonestWeeklyReset(\(count))"
-        case let .accounts(count): "accounts(\(count))"
         }
     }
 }
@@ -104,8 +100,6 @@ enum WidgetProviderSelection {
             self.resolve(from: providers, selected: selected, family: family, now: now)
         case let .soonestWeeklyReset(count):
             self.soonestWeeklyReset(from: providers, count: count, now: now)
-        case let .accounts(count):
-            self.accounts(from: providers, selected: selected?.first, count: count, now: now)
         }
     }
 
@@ -140,7 +134,7 @@ enum WidgetProviderSelection {
                 if left != right { return left.localizedStandardCompare(right) == .orderedAscending }
                 return lhs.id < rhs.id
             }
-            .prefix(WidgetOverviewSelection.clampedCount(count))
+            .prefix(max(1, count))
         if accounts.isEmpty, let selected {
             return [CodexBarWidgetProviderSummary(
                 id: "unavailable|\(selected.id)",

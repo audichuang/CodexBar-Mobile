@@ -20,7 +20,8 @@ struct ProviderAccountGroupTests {
         providerID: String,
         providerName: String,
         accountEmail: String? = nil,
-        loginMethod: String? = nil) -> ProviderUsageSnapshot
+        loginMethod: String? = nil,
+        accountLabel: String? = nil) -> ProviderUsageSnapshot
     {
         ProviderUsageSnapshot(
             providerID: providerID,
@@ -31,7 +32,8 @@ struct ProviderAccountGroupTests {
             loginMethod: loginMethod,
             statusMessage: nil,
             isError: false,
-            lastUpdated: Date(timeIntervalSince1970: 1_700_000_000))
+            lastUpdated: Date(timeIntervalSince1970: 1_700_000_000),
+            accountLabel: accountLabel)
     }
 
     // MARK: - groupedByProvider
@@ -108,6 +110,21 @@ struct ProviderAccountGroupTests {
     }
 
     // MARK: - tabLabel
+
+    @Test("tabLabel prefers the name given on the Mac over the email")
+    func tabLabelPrefersMacName() {
+        let group = ProviderAccountGroup(
+            providerID: "claude",
+            providerName: "Claude",
+            accounts: [
+                Self.snapshot(
+                    providerID: "claude", providerName: "Claude",
+                    accountEmail: "00550336@example.com",
+                    loginMethod: "Team",
+                    accountLabel: "la"),
+            ])
+        #expect(group.tabLabel(forIndex: 0) == "la")
+    }
 
     @Test("tabLabel prefers email local-part over login method")
     func tabLabelPrefersEmail() {
