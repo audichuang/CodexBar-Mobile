@@ -35,6 +35,10 @@ struct CodexBarWidgetProviderSummary: Codable, Equatable, Identifiable, Sendable
     /// current, or the fullest reset-less weekly window when none reports a
     /// reset. Nil without a weekly window, or after a missed reset.
     let weeklyUsedPercent: Double?
+    /// Short account name for telling a provider's accounts apart: the
+    /// email's local part, else the synced label or organization. Nil for
+    /// summaries cached before it existed and for providers without one.
+    let accountLabel: String?
 
     init(
         id: String,
@@ -52,7 +56,8 @@ struct CodexBarWidgetProviderSummary: Codable, Equatable, Identifiable, Sendable
         lastUpdated: Date,
         quotaPace: CodexBarWidgetPaceSummary? = nil,
         weeklyResetsAt: Date? = nil,
-        weeklyUsedPercent: Double? = nil)
+        weeklyUsedPercent: Double? = nil,
+        accountLabel: String? = nil)
     {
         self.id = id
         self.providerName = providerName
@@ -70,6 +75,7 @@ struct CodexBarWidgetProviderSummary: Codable, Equatable, Identifiable, Sendable
         self.quotaPace = quotaPace
         self.weeklyResetsAt = weeklyResetsAt
         self.weeklyUsedPercent = weeklyUsedPercent
+        self.accountLabel = accountLabel
     }
 
     /// The same provider with its pace data pointed at another window.
@@ -90,7 +96,8 @@ struct CodexBarWidgetProviderSummary: Codable, Equatable, Identifiable, Sendable
             lastUpdated: self.lastUpdated,
             quotaPace: quotaPace,
             weeklyResetsAt: self.weeklyResetsAt,
-            weeklyUsedPercent: self.weeklyUsedPercent)
+            weeklyUsedPercent: self.weeklyUsedPercent,
+            accountLabel: self.accountLabel)
     }
 
     var displaySubtitle: String? {
@@ -609,7 +616,8 @@ struct CodexBarWidgetSnapshot: Codable, Equatable, Sendable {
                         sessionUsed: 17,
                         extraWindows: [(id: "claude-weekly-scoped-fable", label: "Fable only", used: 71)]),
                     weeklyResetsAt: self.sampleWeeklyReset(now: now, days: 3.6),
-                    weeklyUsedPercent: 54),
+                    weeklyUsedPercent: 54,
+                    accountLabel: "work"),
                 CodexBarWidgetProviderSummary(
                     id: "raycast|sample", providerName: "Raycast", providerID: "raycast",
                     loginMethod: nil, usagePercent: 30, resetsAt: now.addingTimeInterval(3.6 * 86400),
@@ -663,6 +671,27 @@ struct CodexBarWidgetSnapshot: Codable, Equatable, Sendable {
         return CodexBarWidgetSnapshotBuilder.summary(for: grok, now: now)
     }
 
+    /// Two more Claude accounts for the "Accounts of One Provider" overview.
+    static func simulatorClaudeAccounts(now: Date) -> [CodexBarWidgetProviderSummary] {
+        [("personal", 88.0, 1.2), ("side", 12.0, 6.4)].map { label, used, days in
+            CodexBarWidgetProviderSummary(
+                id: "claude|\(label)",
+                providerName: "Claude",
+                providerID: "claude",
+                loginMethod: "Max",
+                usagePercent: used,
+                todayCostUSD: nil,
+                thirtyDayCostUSD: nil,
+                tokensToday: nil,
+                isError: false,
+                statusMessage: nil,
+                lastUpdated: now.addingTimeInterval(-240),
+                weeklyResetsAt: self.sampleWeeklyReset(now: now, days: days),
+                weeklyUsedPercent: used,
+                accountLabel: label)
+        }
+    }
+
     static func simulatorMock(now: Date = .now) -> CodexBarWidgetSnapshot {
         let sample = Self.placeholder(now: now)
         return CodexBarWidgetSnapshot(
@@ -677,7 +706,7 @@ struct CodexBarWidgetSnapshot: Codable, Equatable, Sendable {
             todayTokens: sample.todayTokens,
             maxUsagePercent: sample.maxUsagePercent,
             // Appended so automatic and configured selections stay as before.
-            topProviders: sample.topProviders + [Self.simulatorGrok(now: now)],
+            topProviders: sample.topProviders + [Self.simulatorGrok(now: now)] + Self.simulatorClaudeAccounts(now: now),
             message: sample.message,
             isStale: sample.isStale)
     }
@@ -932,7 +961,19 @@ enum CodexBarWidgetSnapshotBuilder {
             lastUpdated: provider.lastUpdated,
             quotaPace: CodexBarWidgetPaceSummary(provider: provider, now: now),
             weeklyResetsAt: weekly?.nextReset,
-            weeklyUsedPercent: weeklyUsed)
+            weeklyUsedPercent: weeklyUsed,
+            accountLabel: self.accountLabel(email: provider.accountEmail, organization: provider.accountOrganization))
+    }
+
+    static func accountLabel(email: String?, organization: String?) -> String? {
+        if let email = email?.trimmingCharacters(in: .whitespacesAndNewlines), !email.isEmpty {
+            let local = email.split(separator: "@", maxSplits: 1).first.map(String.init) ?? email
+            return local.isEmpty ? email : local
+        }
+        guard let organization = organization?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !organization.isEmpty
+        else { return nil }
+        return organization
     }
 
     private static func todayTotals(

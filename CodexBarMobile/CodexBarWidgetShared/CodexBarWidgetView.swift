@@ -973,7 +973,9 @@ private extension CodexBarWidgetView {
                                             providers[index],
                                             index: index,
                                             compact: height < 85,
-                                            narrow: width < 100)
+                                            // Account tiles drop the provider mark, so three
+                                            // fit a medium widget without the narrow layout.
+                                            narrow: width < (self.showsAccounts ? 80 : 100))
                                             .frame(width: width, height: height, alignment: .leading)
                                     } else {
                                         Color.clear.frame(width: width, height: height)
@@ -994,27 +996,36 @@ private extension CodexBarWidgetView {
         return (min(100, max(0, value)) / 100).formatted(.percent.precision(.fractionLength(0)))
     }
 
+    private var showsAccounts: Bool {
+        if case .accounts = self.entry.overviewSelection { return true }
+        return false
+    }
+
     private func overviewTile(
         _ provider: CodexBarWidgetProviderSummary,
         index: Int,
         compact: Bool,
         narrow: Bool) -> some View
     {
-        let accent = self.palette.isColorful && !provider.isError
+        // Accounts of one provider share its color, so they take the per-index
+        // accents instead and the tile names the account rather than the provider.
+        let accent = self.palette.isColorful && !provider.isError && !self.showsAccounts
             ? ProviderColorPalette.color(for: provider.providerID)
             : self.palette.providerAccent(index: index, isError: provider.isError)
+        let title = self.showsAccounts ? provider.accountLabel ?? provider.providerName : provider.providerName
         let figures = WidgetProviderSelection.overviewFigures(
             for: provider,
             selection: self.entry.overviewSelection,
             now: self.entry.date)
         return VStack(alignment: .leading, spacing: compact ? 4 : 8) {
             HStack(spacing: 5) {
-                if !narrow { self.providerMark(provider, accent: accent) }
-                Text(provider.providerName)
+                if !narrow, !self.showsAccounts { self.providerMark(provider, accent: accent) }
+                Text(title)
                     .font(.system(size: compact ? 11 : 13, weight: .semibold))
                     .foregroundStyle(self.palette.secondary)
                     .lineLimit(1)
-                    .minimumScaleFactor(0.8)
+                    .minimumScaleFactor(0.7)
+                    .privacySensitive(self.showsAccounts)
             }
             HStack(alignment: .firstTextBaseline, spacing: 4) {
                 Text(provider.isError
