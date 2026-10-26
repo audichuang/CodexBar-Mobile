@@ -719,6 +719,18 @@ struct CloudSyncSnapshotMigrationSaveThenDeleteTests {
     }
 
     @Test
+    func `a remembered save the engine no longer holds is orphaned, not in flight`() {
+        let hashes = ["snap-claude-a": "hash"]
+        #expect(CloudSyncSnapshotMigration.saveQueueState(
+            recordName: "snap-claude-a", pendingSaveHashes: hashes, engineHasPendingSave: true) == .inFlight)
+        // A staged delete or a dropped batch removed the engine's save; waiting would stall forever.
+        #expect(CloudSyncSnapshotMigration.saveQueueState(
+            recordName: "snap-claude-a", pendingSaveHashes: hashes, engineHasPendingSave: false) == .orphaned)
+        #expect(CloudSyncSnapshotMigration.saveQueueState(
+            recordName: "snap-claude-b", pendingSaveHashes: hashes, engineHasPendingSave: true) == .notQueued)
+    }
+
+    @Test
     func `already published replacements still delete newly obsolete predecessors`() throws {
         let slot = Self.claudeSnapshot(accountID: "claude-swap:2", email: "owner@example.com")
         let predecessor = try #require(slot.emailKeyedPredecessorRecordName())
