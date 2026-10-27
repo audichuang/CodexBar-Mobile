@@ -1860,6 +1860,8 @@ extension CloudSyncEngine {
         _ context: CKSyncEngine.SendChangesContext,
         syncEngine: CKSyncEngine) async -> CKSyncEngine.RecordZoneChangeBatch?
     {
+        // A retired engine's late callback must not read or record the current engine's saves.
+        guard self.enabled, self.engine === syncEngine else { return nil }
         let changes = syncEngine.state.pendingRecordZoneChanges.filter(context.options.scope.contains)
         let build = UUID()
         self.providedSaveHashes[build] = [:]
@@ -1867,10 +1869,12 @@ extension CloudSyncEngine {
             guard let self else { return nil }
             return await self.recordForPendingSave(recordID, syncEngine: syncEngine, batch: build)
         }
+        let provided = self.providedSaveHashes.removeValue(forKey: build) ?? [:]
+        guard self.enabled, self.engine === syncEngine else { return nil }
         // A full batch can ask for a record and then leave it out; only the records it kept are sent.
         CloudSyncSnapshotMigration.recordSentSaveHashes(
             batchRecordNames: batch?.recordsToSave.map(\.recordID.recordName) ?? [],
-            providedHashes: self.providedSaveHashes.removeValue(forKey: build) ?? [:],
+            providedHashes: provided,
             sentSaveHashes: &self.sentSaveHashes)
         return batch
     }
@@ -1880,6 +1884,9 @@ extension CloudSyncEngine {
         syncEngine: CKSyncEngine? = nil,
         batch: UUID? = nil) -> CKRecord?
     {
+        if batch != nil {
+            guard self.enabled, self.engine === syncEngine else { return nil }
+        }
         let record = CloudSyncBatchRecordProvider.record(for: recordID, desiredRecords: self.desiredRecords) { change in
             syncEngine?.state.remove(pendingRecordZoneChanges: [change])
         }
