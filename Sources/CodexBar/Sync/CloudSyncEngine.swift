@@ -870,27 +870,30 @@ enum CloudSyncSnapshotMigration {
     enum SaveQueueState: Equatable {
         case notQueued
         case inFlight
-        /// The app still remembers a save that CKSyncEngine no longer holds, for example one a
-        /// batch dropped because its prepared record was missing. Treating it as in flight would
-        /// stall the record until relaunch, so it is queued again; a delayed result of the older
-        /// save is reconciled by `takeSupersededSaveResults`.
+        /// The app still remembers a save that CKSyncEngine no longer holds and no batch has sent,
+        /// for example one a batch dropped because its prepared record was missing. Treating it as
+        /// in flight would stall the record until relaunch, so it is queued again.
         case orphaned
     }
 
     static func saveQueueState(
         recordName: String,
         pendingSaveHashes: [String: String],
-        engineHasPendingSave: Bool) -> SaveQueueState
+        engineHasPendingSave: Bool,
+        hasUnprocessedSend: Bool) -> SaveQueueState
     {
         guard self.hasInFlightSave(recordName: recordName, pendingSaveHashes: pendingSaveHashes) else {
             return .notQueued
         }
-        return engineHasPendingSave ? .inFlight : .orphaned
+        // A sent save leaves the engine's pending changes before its result is processed. Queuing it
+        // again then would send a second save on the change tag the first one already replaced.
+        return engineHasPendingSave || hasUnprocessedSend ? .inFlight : .orphaned
     }
 
     /// Returns the save results that finished an older payload than the one now pending for their
-    /// record, keyed by record name with the hash that was actually sent. They happen when a
-    /// snapshot was queued again before the older save's result was processed, and must not
+    /// record, keyed by record name with the hash that was actually sent. A save with an
+    /// unprocessed send stays in flight, so this only happens if a record's remembered hash was
+    /// cleared and a newer payload queued before an older result arrived; such a result must not
     /// confirm the newer payload or drop its prepared record. `sentSaveHashes` lists the hashes
     /// each record's batches carried, oldest first; results arrive in the same order.
     static func takeSupersededSaveResults(
@@ -2500,7 +2503,8 @@ extension CloudSyncEngine {
                 switch CloudSyncSnapshotMigration.saveQueueState(
                     recordName: payload.recordName,
                     pendingSaveHashes: self.pendingSaveHashes,
-                    engineHasPendingSave: engine.state.pendingRecordZoneChanges.contains(.saveRecord(recordID)))
+                    engineHasPendingSave: engine.state.pendingRecordZoneChanges.contains(.saveRecord(recordID)),
+                    hasUnprocessedSend: self.sentSaveHashes[payload.recordName] != nil)
                 {
                 case .inFlight:
                     self.persistenceEnvelope.fleetSnapshots[payload.recordName] = payload
