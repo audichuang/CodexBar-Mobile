@@ -28,6 +28,7 @@ enum WidgetKinds {
     static let statusAppIntent = "CodexBarStatusWidgetAppIntent"
     static let quotaPaceAppIntent = "CodexBarQuotaPaceWidgetAppIntent"
     static let accountsAppIntent = "CodexBarAccountsWidgetAppIntent"
+    static let providerQuotaAppIntent = "CodexBarProviderQuotaWidgetAppIntent"
 }
 
 // MARK: - Enums
@@ -432,6 +433,27 @@ struct AccountsWidgetAppIntent: WidgetConfigurationIntent {
         table: "WidgetConfiguration"))
 
     /// Empty follows the provider with the most accounts.
+    @Parameter(title: LocalizedStringResource("Provider", table: "WidgetConfiguration"))
+    var provider: StatusWidgetProviderAppEntity?
+
+    init() {}
+
+    init(provider: StatusWidgetProviderAppEntity?) {
+        self.provider = provider
+    }
+}
+
+/// Configuration of the provider quota widget (`WidgetKinds.providerQuotaAppIntent`):
+/// one provider's weekly and session usage in a small widget. It has no
+/// SiriKit counterpart.
+@available(iOS 27.0, *)
+struct ProviderQuotaWidgetAppIntent: WidgetConfigurationIntent {
+    static let title = LocalizedStringResource("Provider Quota", table: "WidgetConfiguration")
+    static let description = IntentDescription(LocalizedStringResource(
+        "Show one provider's weekly and session usage.",
+        table: "WidgetConfiguration"))
+
+    /// Empty follows the provider whose weekly window is fullest.
     @Parameter(title: LocalizedStringResource("Provider", table: "WidgetConfiguration"))
     var provider: StatusWidgetProviderAppEntity?
 
