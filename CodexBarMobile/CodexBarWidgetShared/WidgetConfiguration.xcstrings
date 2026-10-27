@@ -91,6 +91,36 @@
         }
       }
     },
+    "Account" : {
+      "comment" : "Provider quota widget account choice (App Intents, iOS 27+).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Account"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "帳號"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "账号"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アカウント"
+          }
+        }
+      }
+    },
     "Account Quotas" : {
       "comment" : "Accounts widget (App Intents, iOS 27+).",
       "extractionState" : "manual",
@@ -507,6 +537,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "モノクロ"
+          }
+        }
+      }
+    },
+    "Most Used" : {
+      "comment" : "Provider quota widget account choice (App Intents, iOS 27+).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Most Used"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自動（用量最多）"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自动（用量最多）"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自動（使用量が最多）"
           }
         }
       }
