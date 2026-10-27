@@ -190,6 +190,23 @@ final class WidgetProviderSelectionTests: XCTestCase {
         XCTAssertEqual(catalogue.map(\.id), rendered.topProviders.map(\.providerID))
     }
 
+    func testCatalogueAccountKeysMatchRenderedSummaryIDs() {
+        func account(_ email: String?, label: String?) -> ProviderUsageSnapshot {
+            ProviderUsageSnapshot(
+                providerID: "claude", providerName: "Claude",
+                primary: nil, secondary: nil, accountEmail: email, loginMethod: nil,
+                statusMessage: nil, isError: false, lastUpdated: self.now, accountLabel: label)
+        }
+        let providers = [account("work@example.com", label: "Work"), account("home@example.com", label: nil)]
+        let snapshot = SyncedUsageSnapshot(
+            providers: providers, syncTimestamp: self.now, deviceName: "Fixture Mac", deviceID: "fixture")
+        let catalogue = WidgetProviderCatalogue.merged(WidgetActivityPublisher.catalogueEntities(from: providers))
+        let rendered = CodexBarWidgetSnapshotBuilder.makeSnapshot(from: [snapshot], now: self.now)
+        let choices = catalogue.flatMap { record in (record.accounts ?? []).map { "\(record.id)|\($0.key)" } }
+        XCTAssertEqual(Set(choices), Set(rendered.topProviders.map(\.id)))
+        XCTAssertEqual(catalogue.first?.accounts?.map(\.label), ["Work", "home"])
+    }
+
     func testCatalogueClearsAuthoritativeEmptySyncAndPreservesTransientFailures() throws {
         for status in [SyncStatus.noData, .synced(ago: 0)] {
             XCTAssertEqual(WidgetActivityPublisher.catalogueUpdate(snapshot: nil, syncStatus: status), [])
