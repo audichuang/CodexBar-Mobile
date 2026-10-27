@@ -325,4 +325,48 @@ final class WidgetProviderSelectionTests: XCTestCase {
             }
         }
     }
+
+    func testProviderQuotaWidgetRendersBothLayouts() throws {
+        let accounts = CodexBarWidgetSnapshot.sampleClaudeAccounts(now: self.now)
+        // "Personal" has a session window; "Side" has only the weekly one.
+        let cases: [(name: String, provider: CodexBarWidgetProviderSummary)] = [
+            ("two-windows", accounts[1]),
+            ("weekly-only", accounts[2]),
+        ]
+        for (name, provider) in cases {
+            for scheme in [ColorScheme.light, .dark] {
+                var snapshot = CodexBarWidgetSnapshot.accountsPreview(now: self.now)
+                snapshot = CodexBarWidgetSnapshot(
+                    state: .loaded,
+                    generatedAt: snapshot.generatedAt,
+                    latestSyncAt: self.now.addingTimeInterval(-480),
+                    deviceCount: 1,
+                    providerCount: 1,
+                    errorCount: 0,
+                    todayCostUSD: nil,
+                    thirtyDayCostUSD: nil,
+                    todayTokens: nil,
+                    maxUsagePercent: provider.usagePercent,
+                    topProviders: [provider],
+                    message: nil,
+                    isStale: false)
+                let view = ProviderQuotaWidgetView(
+                    entry: .init(date: self.now, configuration: .init(mode: .overview), snapshot: snapshot))
+                    .environment(\.colorScheme, scheme)
+                    .frame(width: 170, height: 170)
+                    .background(scheme == .dark ? Color.black : Color.white)
+                let renderer = ImageRenderer(content: view)
+                renderer.scale = 3
+                let image = try XCTUnwrap(renderer.uiImage)
+                XCTAssertEqual(image.size.width, 170)
+                let attachment = XCTAttachment(image: image)
+                attachment.name = "ProviderQuota-\(name)-\(scheme)"
+                attachment.lifetime = .keepAlways
+                add(attachment)
+                if let directory = ProcessInfo.processInfo.environment["CODEXBAR_RENDER_DIR"] {
+                    try image.pngData()?.write(to: URL(fileURLWithPath: "\(directory)/ProviderQuota-\(name)-\(scheme).png"))
+                }
+            }
+        }
+    }
 }
