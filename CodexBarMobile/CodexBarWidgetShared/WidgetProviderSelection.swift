@@ -107,6 +107,34 @@ enum WidgetProviderSelection {
     /// its column between refreshes. Without a configured provider the one
     /// with the most accounts is used, ties going to the snapshot order. A
     /// configured provider without data shows one unavailable tile.
+    /// The provider quota widget's account: the chosen one, else the
+    /// overview's pick for the provider. An account that is no longer synced
+    /// falls back to that pick.
+    static func quotaAccount(for entry: CodexBarWidgetEntry) -> CodexBarWidgetProviderSummary? {
+        if let choice = entry.accountChoice,
+           let account = entry.snapshot.topProviders.first(where: { $0.id == choice })
+        {
+            return account
+        }
+        return self.resolve(
+            from: entry.snapshot.topProviders,
+            selected: entry.configuration.providers,
+            family: .systemSmall,
+            now: entry.date).first
+    }
+
+    /// The account name the provider quota widget shows, only when the
+    /// provider has several accounts.
+    static func quotaAccountName(
+        of provider: CodexBarWidgetProviderSummary,
+        in providers: [CodexBarWidgetProviderSummary]) -> String?
+    {
+        guard let label = provider.accountLabel,
+              providers.count(where: { $0.providerID == provider.providerID }) > 1
+        else { return nil }
+        return label
+    }
+
     static func accounts(
         from providers: [CodexBarWidgetProviderSummary],
         selected: WidgetProviderEntity?,

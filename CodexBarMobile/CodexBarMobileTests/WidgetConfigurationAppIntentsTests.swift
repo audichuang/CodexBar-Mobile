@@ -504,4 +504,38 @@ struct WidgetConfigurationAppIntentsTests {
         ])
         #expect(await query.defaultResult()?.id == QuotaPaceWindowChoice.defaultIdentifier)
     }
+
+    @available(iOS 27.0, *)
+    @Test func `Account choices follow the provider being edited`() async throws {
+        let url = FileManager.default.temporaryDirectory
+            .appendingPathComponent("quota-accounts-\(UUID().uuidString).json")
+        defer { try? FileManager.default.removeItem(at: url) }
+        try WidgetProviderCatalogue.write([
+            WidgetProviderRecord(id: "claude", name: "Claude", accounts: [.init(key: "work@example.com", label: "work")]),
+            WidgetProviderRecord(id: "claude", name: "Claude", accounts: [.init(key: "home@example.com", label: "home")]),
+            WidgetProviderRecord(id: "codex", name: "Codex", accounts: [.init(key: "_", label: nil)]),
+        ], to: url)
+
+        let claude = try await ProviderQuotaAccountAppEntityQuery(providerID: "claude", catalogueURL: url)
+            .suggestedEntities()
+        #expect(claude.map(\.id) == [
+            ProviderQuotaAccountAppEntity.automaticIdentifier,
+            "claude|home@example.com",
+            "claude|work@example.com",
+        ])
+        #expect(claude.dropFirst().map(\.displayString) == ["home", "work"])
+        let none = try await ProviderQuotaAccountAppEntityQuery(providerID: nil, catalogueURL: url).suggestedEntities()
+        #expect(none.map(\.id) == [ProviderQuotaAccountAppEntity.automaticIdentifier])
+
+        // A choice survives only while it belongs to the chosen provider.
+        let provider = StatusWidgetProviderAppEntity(id: "claude", displayString: "Claude")
+        let work = ProviderQuotaAccountAppEntity(id: "claude|work@example.com", displayString: "work")
+        #expect(
+            StatusWidgetConfigurationAdapter.accountChoice(from: .init(provider: provider, account: work))
+                == "claude|work@example.com")
+        #expect(StatusWidgetConfigurationAdapter.accountChoice(from: .init(provider: provider, account: .automatic)) == nil)
+        let codex = StatusWidgetProviderAppEntity(id: "codex", displayString: "Codex")
+        #expect(StatusWidgetConfigurationAdapter.accountChoice(from: .init(provider: codex, account: work)) == nil)
+    }
+
 }
