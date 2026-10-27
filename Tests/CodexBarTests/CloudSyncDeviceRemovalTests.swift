@@ -155,6 +155,30 @@ struct CloudSyncDeviceRemovalTests {
     }
 
     @Test
+    func `a batch build from an engine that is not running gets no records`() async throws {
+        let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
+        defer { try? FileManager.default.removeItem(at: directory) }
+        let persistence = CloudSyncPersistence(fileURL: directory.appendingPathComponent("sync.json"))
+        let id = CKRecord.ID(recordName: "snap-retired-build", zoneID: CloudSyncEngine.zoneID)
+        let stale = CKRecord(recordType: SyncRecordType.accountSnapshot.rawValue, recordID: id)
+        stale["deviceID"] = "current" as CKRecordValue
+        stale["schemaVersion"] = 1 as CKRecordValue
+        stale.encryptedValues["usagePayload"] = "synthetic usage" as CKRecordValue
+        var envelope = CloudSyncPersistence.Envelope(stateSerialization: nil, encodedSystemFields: [:])
+        CloudSyncPersistence.cacheSystemFields(of: stale, in: &envelope)
+        try persistence.save(envelope)
+        let engine = CloudSyncEngine(
+            settings: Self.makeSettings(directory: directory), state: Self.makeState(), persistence: persistence)
+        let error = CKError(_nsError: NSError(domain: CKErrorDomain, code: CKError.unknownItem.rawValue))
+        // Prepares a record for the pending save, as the push path would.
+        await engine.handleSaveFailure(stale, error: error)
+        #expect(await engine.recordForPendingSave(id) != nil)
+
+        // A late batch callback from a retired engine must not read the record or record a send.
+        #expect(await engine.recordForPendingSave(id, batch: UUID()) == nil)
+    }
+
+    @Test
     func `disabled engine does not remove records or access CloudKit`() async {
         let state = Self.makeState()
         let directory = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
