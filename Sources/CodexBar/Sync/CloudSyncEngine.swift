@@ -890,6 +890,19 @@ enum CloudSyncSnapshotMigration {
         return engineHasPendingSave || hasUnprocessedSend ? .inFlight : .orphaned
     }
 
+    /// Records the payload hash of each record a built batch sends, oldest first per record.
+    /// `providedHashes` holds the hashes captured when the batch asked for each record.
+    static func recordSentSaveHashes(
+        batchRecordNames: [String],
+        providedHashes: [String: String],
+        sentSaveHashes: inout [String: [String]])
+    {
+        for name in batchRecordNames {
+            guard let hash = providedHashes[name] else { continue }
+            sentSaveHashes[name, default: []].append(hash)
+        }
+    }
+
     /// Returns the save results that finished an older payload than the one now pending for their
     /// record, keyed by record name with the hash that was actually sent. A save with an
     /// unprocessed send stays in flight, so this only happens if a record's remembered hash was
@@ -1023,6 +1036,7 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
     /// set at the final destructive boundary.
     private var latestLiveSnapshotRecordNamesByProvider: [ProviderInstanceID: Set<String>] = [:]
     private var sentSaveHashes: [String: [String]] = [:]
+    private var providedSaveHashes: [UUID: [String: String]] = [:]
     private var lastKnownProviderConfigs: [ProviderInstanceID: ProviderConfig] = [:]
     private var lastAppliedConfigurationRevision: Int
     private var lastKnownPreferences: SyncedPreferences?
@@ -1480,28 +1494,6 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
         await self.makeChangeBatch(context, syncEngine: syncEngine)
     }
 
-    private func makeChangeBatch(
-        _ context: CKSyncEngine.SendChangesContext,
-        syncEngine: CKSyncEngine) async -> CKSyncEngine.RecordZoneChangeBatch?
-    {
-        let changes = syncEngine.state.pendingRecordZoneChanges.filter(context.options.scope.contains)
-        return await CKSyncEngine.RecordZoneChangeBatch(pendingChanges: changes) { [weak self] recordID in
-            guard let self else { return nil }
-            return await self.recordForPendingSave(recordID, syncEngine: syncEngine)
-        }
-    }
-
-    func recordForPendingSave(_ recordID: CKRecord.ID, syncEngine: CKSyncEngine? = nil) -> CKRecord? {
-        let record = CloudSyncBatchRecordProvider.record(for: recordID, desiredRecords: self.desiredRecords) { change in
-            syncEngine?.state.remove(pendingRecordZoneChanges: [change])
-        }
-        if record != nil, let hash = self.pendingSaveHashes[recordID.recordName] {
-            // Remember which payload this batch sends so its result cannot confirm a newer one.
-            self.sentSaveHashes[recordID.recordName, default: []].append(hash)
-        }
-        return record
-    }
-
     func applyFetchedRecords(_ records: [CKRecord], errorScope: CloudSyncErrorScope = .fetch) async {
         guard !Task.isCancelled else { return }
         self.applyGeneration &+= 1
@@ -1746,6 +1738,7 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
         self.quotaRetryState.reset()
         self.pendingSaveHashes = [:]
         self.sentSaveHashes = [:]
+        self.providedSaveHashes = [:]
         self.pendingSnapshots = []
         self.pendingSnapshotAuthoritativeProviders = []
         self.pendingSnapshotTokenAccountIDs = [:]
@@ -1863,6 +1856,39 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
 }
 
 extension CloudSyncEngine {
+    private func makeChangeBatch(
+        _ context: CKSyncEngine.SendChangesContext,
+        syncEngine: CKSyncEngine) async -> CKSyncEngine.RecordZoneChangeBatch?
+    {
+        let changes = syncEngine.state.pendingRecordZoneChanges.filter(context.options.scope.contains)
+        let build = UUID()
+        self.providedSaveHashes[build] = [:]
+        let batch = await CKSyncEngine.RecordZoneChangeBatch(pendingChanges: changes) { [weak self] recordID in
+            guard let self else { return nil }
+            return await self.recordForPendingSave(recordID, syncEngine: syncEngine, batch: build)
+        }
+        // A full batch can ask for a record and then leave it out; only the records it kept are sent.
+        CloudSyncSnapshotMigration.recordSentSaveHashes(
+            batchRecordNames: batch?.recordsToSave.map(\.recordID.recordName) ?? [],
+            providedHashes: self.providedSaveHashes.removeValue(forKey: build) ?? [:],
+            sentSaveHashes: &self.sentSaveHashes)
+        return batch
+    }
+
+    func recordForPendingSave(
+        _ recordID: CKRecord.ID,
+        syncEngine: CKSyncEngine? = nil,
+        batch: UUID? = nil) -> CKRecord?
+    {
+        let record = CloudSyncBatchRecordProvider.record(for: recordID, desiredRecords: self.desiredRecords) { change in
+            syncEngine?.state.remove(pendingRecordZoneChanges: [change])
+        }
+        if record != nil, let batch, let hash = self.pendingSaveHashes[recordID.recordName] {
+            self.providedSaveHashes[batch]?[recordID.recordName] = hash
+        }
+        return record
+    }
+
     private func applySavedRecords(_ records: [CKRecord], supersededSaves: [String: String]) {
         for record in records {
             self.cacheSystemFields(record)
