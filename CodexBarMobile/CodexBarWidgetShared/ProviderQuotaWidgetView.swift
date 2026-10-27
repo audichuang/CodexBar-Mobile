@@ -41,11 +41,11 @@ struct ProviderQuotaWidgetView: View {
     }
 
     private var provider: CodexBarWidgetProviderSummary? {
-        WidgetProviderSelection.resolve(
-            from: self.entry.snapshot.topProviders,
-            selected: self.entry.configuration.providers,
-            family: .systemSmall,
-            now: self.entry.date).first
+        WidgetProviderSelection.quotaAccount(for: self.entry)
+    }
+
+    private func accountName(_ provider: CodexBarWidgetProviderSummary) -> String? {
+        WidgetProviderSelection.quotaAccountName(of: provider, in: self.entry.snapshot.topProviders)
     }
 
     @ViewBuilder
@@ -85,11 +85,21 @@ struct ProviderQuotaWidgetView: View {
                     .foregroundStyle(self.primary)
                     .accessibilityHidden(true)
             }
-            Text(provider.providerName)
-                .font(.system(size: 15, weight: .semibold))
-                .foregroundStyle(self.primary)
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
+            VStack(alignment: .leading, spacing: 0) {
+                Text(provider.providerName)
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(self.primary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                if let account = self.accountName(provider) {
+                    Text(account)
+                        .font(.system(size: 10, weight: .medium))
+                        .foregroundStyle(self.secondary)
+                        .lineLimit(1)
+                        .truncationMode(.middle)
+                }
+            }
+            .layoutPriority(1)
             Spacer(minLength: 4)
             if self.entry.snapshot.isStale {
                 Image(systemName: "exclamationmark.triangle.fill")

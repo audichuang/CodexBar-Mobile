@@ -97,7 +97,13 @@ enum WidgetActivityPublisher {
                 id: $0.providerID,
                 name: $0.providerName,
                 windows: QuotaPaceWindowSelection.catalogueWindows(for: $0),
-                defaultWindowID: QuotaPaceWindowSelection.defaultWindowID(for: $0, now: now))
+                defaultWindowID: QuotaPaceWindowSelection.defaultWindowID(for: $0, now: now),
+                accounts: [WidgetProviderAccountRecord(
+                    key: CodexBarWidgetSnapshotBuilder.accountKey(for: $0),
+                    label: CodexBarWidgetSnapshotBuilder.accountLabel(
+                        label: $0.accountLabel,
+                        email: $0.accountEmail,
+                        organization: $0.accountOrganization))])
         }
     }
 

@@ -37,7 +37,8 @@ struct CodexBarWidgetProvider: AppIntentTimelineProvider {
         configuration: CodexBarWidgetConfigurationIntent,
         paceWindowChoice: String? = nil,
         overviewSelection: WidgetOverviewSelection = .manual,
-        overviewQuota: WidgetOverviewQuotaOptions = .init()) async -> Timeline<CodexBarWidgetEntry>
+        overviewQuota: WidgetOverviewQuotaOptions = .init(),
+        accountChoice: String? = nil) async -> Timeline<CodexBarWidgetEntry>
     {
         let now = Date()
         #if DEBUG
@@ -52,7 +53,8 @@ struct CodexBarWidgetProvider: AppIntentTimelineProvider {
                 snapshot: .simulatorMock(now: now),
                 paceWindowChoice: paceWindowChoice,
                 overviewSelection: overviewSelection,
-                overviewQuota: overviewQuota)
+                overviewQuota: overviewQuota,
+                accountChoice: accountChoice)
             return Timeline(
                 entries: [entry],
                 policy: .after(now.addingTimeInterval(15 * 60)))
@@ -79,7 +81,8 @@ struct CodexBarWidgetProvider: AppIntentTimelineProvider {
             snapshot: snapshot,
             paceWindowChoice: paceWindowChoice,
             overviewSelection: overviewSelection,
-            overviewQuota: overviewQuota)
+            overviewQuota: overviewQuota,
+            accountChoice: accountChoice)
         let refreshInterval: TimeInterval = switch snapshot.state {
         case .loaded: 15 * 60
         case .placeholder, .syncing: 5 * 60
