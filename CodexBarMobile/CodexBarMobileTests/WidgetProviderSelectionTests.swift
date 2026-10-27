@@ -326,6 +326,24 @@ final class WidgetProviderSelectionTests: XCTestCase {
         }
     }
 
+    func testProviderQuotaWidgetShowsChosenAccountAndNamesIt() {
+        let accounts = CodexBarWidgetSnapshot.sampleClaudeAccounts(now: self.now)
+        let snapshot = CodexBarWidgetSnapshot.accountsPreview(now: self.now)
+        func entry(_ choice: String?) -> CodexBarWidgetEntry {
+            .init(date: self.now, configuration: .init(mode: .overview), snapshot: snapshot, accountChoice: choice)
+        }
+        XCTAssertEqual(WidgetProviderSelection.quotaAccount(for: entry(accounts[2].id))?.id, accounts[2].id)
+        // No choice, or an account that is gone, follows the overview pick.
+        let automatic = WidgetProviderSelection.quotaAccount(for: entry(nil))?.id
+        XCTAssertNotNil(automatic)
+        XCTAssertEqual(WidgetProviderSelection.quotaAccount(for: entry("claude|gone@example.com"))?.id, automatic)
+        // Several accounts are named; a lone account is not.
+        XCTAssertEqual(
+            WidgetProviderSelection.quotaAccountName(of: accounts[2], in: accounts),
+            accounts[2].accountLabel)
+        XCTAssertNil(WidgetProviderSelection.quotaAccountName(of: accounts[2], in: [accounts[2]]))
+    }
+
     func testProviderQuotaWidgetRendersBothLayouts() throws {
         let accounts = CodexBarWidgetSnapshot.sampleClaudeAccounts(now: self.now)
         // "Personal" has a session window; "Side" has only the weekly one.
@@ -341,17 +359,21 @@ final class WidgetProviderSelectionTests: XCTestCase {
                     generatedAt: snapshot.generatedAt,
                     latestSyncAt: self.now.addingTimeInterval(-480),
                     deviceCount: 1,
-                    providerCount: 1,
+                    providerCount: accounts.count,
                     errorCount: 0,
                     todayCostUSD: nil,
                     thirtyDayCostUSD: nil,
                     todayTokens: nil,
                     maxUsagePercent: provider.usagePercent,
-                    topProviders: [provider],
+                    topProviders: accounts,
                     message: nil,
                     isStale: false)
                 let view = ProviderQuotaWidgetView(
-                    entry: .init(date: self.now, configuration: .init(mode: .overview), snapshot: snapshot))
+                    entry: .init(
+                        date: self.now,
+                        configuration: .init(mode: .overview),
+                        snapshot: snapshot,
+                        accountChoice: provider.id))
                     .environment(\.colorScheme, scheme)
                     .frame(width: 170, height: 170)
                     .background(scheme == .dark ? Color.black : Color.white)

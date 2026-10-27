@@ -14,4 +14,7 @@ struct CodexBarWidgetEntry: TimelineEntry {
     /// Overview window and display choices (issue #223), kept outside the
     /// legacy App Intent for the same reason.
     var overviewQuota = WidgetOverviewQuotaOptions()
+    /// Provider quota widget account, as a widget summary id; nil follows
+    /// the provider's busiest account.
+    var accountChoice: String?
 }
