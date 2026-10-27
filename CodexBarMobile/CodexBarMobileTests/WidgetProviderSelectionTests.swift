@@ -190,6 +190,23 @@ final class WidgetProviderSelectionTests: XCTestCase {
         XCTAssertEqual(catalogue.map(\.id), rendered.topProviders.map(\.providerID))
     }
 
+    func testCatalogueAccountKeysMatchRenderedSummaryIDs() {
+        func account(_ email: String?, label: String?) -> ProviderUsageSnapshot {
+            ProviderUsageSnapshot(
+                providerID: "claude", providerName: "Claude",
+                primary: nil, secondary: nil, accountEmail: email, loginMethod: nil,
+                statusMessage: nil, isError: false, lastUpdated: self.now, accountLabel: label)
+        }
+        let providers = [account("work@example.com", label: "Work"), account("home@example.com", label: nil)]
+        let snapshot = SyncedUsageSnapshot(
+            providers: providers, syncTimestamp: self.now, deviceName: "Fixture Mac", deviceID: "fixture")
+        let catalogue = WidgetProviderCatalogue.merged(WidgetActivityPublisher.catalogueEntities(from: providers))
+        let rendered = CodexBarWidgetSnapshotBuilder.makeSnapshot(from: [snapshot], now: self.now)
+        let choices = catalogue.flatMap { record in (record.accounts ?? []).map { "\(record.id)|\($0.key)" } }
+        XCTAssertEqual(Set(choices), Set(rendered.topProviders.map(\.id)))
+        XCTAssertEqual(catalogue.first?.accounts?.map(\.label), ["Work", "home"])
+    }
+
     func testCatalogueClearsAuthoritativeEmptySyncAndPreservesTransientFailures() throws {
         for status in [SyncStatus.noData, .synced(ago: 0)] {
             XCTAssertEqual(WidgetActivityPublisher.catalogueUpdate(snapshot: nil, syncStatus: status), [])
@@ -326,6 +343,24 @@ final class WidgetProviderSelectionTests: XCTestCase {
         }
     }
 
+    func testProviderQuotaWidgetShowsChosenAccountAndNamesIt() {
+        let accounts = CodexBarWidgetSnapshot.sampleClaudeAccounts(now: self.now)
+        let snapshot = CodexBarWidgetSnapshot.accountsPreview(now: self.now)
+        func entry(_ choice: String?) -> CodexBarWidgetEntry {
+            .init(date: self.now, configuration: .init(mode: .overview), snapshot: snapshot, accountChoice: choice)
+        }
+        XCTAssertEqual(WidgetProviderSelection.quotaAccount(for: entry(accounts[2].id))?.id, accounts[2].id)
+        // No choice, or an account that is gone, follows the overview pick.
+        let automatic = WidgetProviderSelection.quotaAccount(for: entry(nil))?.id
+        XCTAssertNotNil(automatic)
+        XCTAssertEqual(WidgetProviderSelection.quotaAccount(for: entry("claude|gone@example.com"))?.id, automatic)
+        // Several accounts are named; a lone account is not.
+        XCTAssertEqual(
+            WidgetProviderSelection.quotaAccountName(of: accounts[2], in: accounts),
+            accounts[2].accountLabel)
+        XCTAssertNil(WidgetProviderSelection.quotaAccountName(of: accounts[2], in: [accounts[2]]))
+    }
+
     func testProviderQuotaWidgetRendersBothLayouts() throws {
         let accounts = CodexBarWidgetSnapshot.sampleClaudeAccounts(now: self.now)
         // "Personal" has a session window; "Side" has only the weekly one.
@@ -341,17 +376,21 @@ final class WidgetProviderSelectionTests: XCTestCase {
                     generatedAt: snapshot.generatedAt,
                     latestSyncAt: self.now.addingTimeInterval(-480),
                     deviceCount: 1,
-                    providerCount: 1,
+                    providerCount: accounts.count,
                     errorCount: 0,
                     todayCostUSD: nil,
                     thirtyDayCostUSD: nil,
                     todayTokens: nil,
                     maxUsagePercent: provider.usagePercent,
-                    topProviders: [provider],
+                    topProviders: accounts,
                     message: nil,
                     isStale: false)
                 let view = ProviderQuotaWidgetView(
-                    entry: .init(date: self.now, configuration: .init(mode: .overview), snapshot: snapshot))
+                    entry: .init(
+                        date: self.now,
+                        configuration: .init(mode: .overview),
+                        snapshot: snapshot,
+                        accountChoice: provider.id))
                     .environment(\.colorScheme, scheme)
                     .frame(width: 170, height: 170)
                     .background(scheme == .dark ? Color.black : Color.white)

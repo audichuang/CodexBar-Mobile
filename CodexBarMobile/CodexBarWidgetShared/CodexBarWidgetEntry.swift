@@ -11,4 +11,7 @@ struct CodexBarWidgetEntry: TimelineEntry {
     /// CodexBar widget overview provider selection (Research/073), kept
     /// outside the legacy App Intent for the same reason.
     var overviewSelection: WidgetOverviewSelection = .manual
+    /// Provider quota widget account, as a widget summary id; nil follows
+    /// the provider's busiest account.
+    var accountChoice: String?
 }

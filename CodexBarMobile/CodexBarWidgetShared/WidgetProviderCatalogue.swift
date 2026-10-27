@@ -30,6 +30,15 @@ struct WidgetProviderWindowRecord: Codable, Hashable, Sendable {
     }
 }
 
+/// One account of a provider in its latest synced snapshot, for the provider
+/// quota widget's account picker.
+struct WidgetProviderAccountRecord: Codable, Hashable, Sendable {
+    /// The account part of the widget summary id (`<providerID>|<key>`).
+    let key: String
+    /// Short name shown in the picker, as the widget labels accounts.
+    let label: String?
+}
+
 struct WidgetProviderRecord: Codable, Hashable, Sendable {
     let id: String
     let name: String
@@ -38,17 +47,22 @@ struct WidgetProviderRecord: Codable, Hashable, Sendable {
     let windows: [WidgetProviderWindowRecord]?
     /// The window the default choice follows, when there is one.
     let defaultWindowID: String?
+    /// The provider's accounts. Nil in catalogues written before the provider
+    /// quota widget offered an account choice.
+    let accounts: [WidgetProviderAccountRecord]?
 
     init(
         id: String,
         name: String,
         windows: [WidgetProviderWindowRecord]? = nil,
-        defaultWindowID: String? = nil)
+        defaultWindowID: String? = nil,
+        accounts: [WidgetProviderAccountRecord]? = nil)
     {
         self.id = id
         self.name = name
         self.windows = windows
         self.defaultWindowID = defaultWindowID
+        self.accounts = accounts
     }
 }
 
@@ -184,7 +198,8 @@ enum WidgetProviderCatalogue {
     }
 
     /// One record per provider id, sorted by name. Several accounts of one
-    /// provider contribute the union of their windows in first-seen order.
+    /// provider contribute the union of their windows and accounts in
+    /// first-seen order.
     static func merged(_ providers: [WidgetProviderRecord]) -> [WidgetProviderRecord] {
         var order: [String] = []
         var byID: [String: WidgetProviderRecord] = [:]
@@ -194,15 +209,24 @@ enum WidgetProviderCatalogue {
                 byID[provider.id] = provider
                 continue
             }
-            guard let extra = provider.windows else { continue }
-            var windows = existing.windows ?? []
-            var seen = Set(windows.map(\.id))
-            windows += extra.filter { seen.insert($0.id).inserted }
+            var windows = existing.windows
+            var defaultWindowID = existing.defaultWindowID
+            if let extra = provider.windows {
+                var seen = Set(windows?.map(\.id) ?? [])
+                windows = (windows ?? []) + extra.filter { seen.insert($0.id).inserted }
+                defaultWindowID = defaultWindowID ?? provider.defaultWindowID
+            }
+            var accounts = existing.accounts
+            if let extra = provider.accounts {
+                var seen = Set(accounts?.map(\.key) ?? [])
+                accounts = (accounts ?? []) + extra.filter { seen.insert($0.key).inserted }
+            }
             byID[provider.id] = WidgetProviderRecord(
                 id: existing.id,
                 name: existing.name,
                 windows: windows,
-                defaultWindowID: existing.defaultWindowID ?? provider.defaultWindowID)
+                defaultWindowID: defaultWindowID,
+                accounts: accounts)
         }
         return order.compactMap { byID[$0] }
             .sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }

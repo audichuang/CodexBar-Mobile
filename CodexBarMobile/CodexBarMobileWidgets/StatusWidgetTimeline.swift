@@ -154,12 +154,14 @@ struct ProviderQuotaAppIntentTimelineProvider: AppIntentTimelineProvider {
         CodexBarWidgetEntry(
             date: .now,
             configuration: StatusWidgetConfigurationAdapter.configuration(from: intent),
-            snapshot: context.isPreview ? .accountsPreview() : .syncing())
+            snapshot: context.isPreview ? .accountsPreview() : .syncing(),
+            accountChoice: StatusWidgetConfigurationAdapter.accountChoice(from: intent))
     }
 
     func timeline(for intent: ProviderQuotaWidgetAppIntent, in _: Context) async -> Timeline<CodexBarWidgetEntry> {
         await CodexBarWidgetProvider.makeTimeline(
-            configuration: StatusWidgetConfigurationAdapter.configuration(from: intent))
+            configuration: StatusWidgetConfigurationAdapter.configuration(from: intent),
+            accountChoice: StatusWidgetConfigurationAdapter.accountChoice(from: intent))
     }
 }
 
