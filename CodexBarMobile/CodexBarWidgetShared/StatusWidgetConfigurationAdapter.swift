@@ -88,6 +88,16 @@ enum StatusWidgetConfigurationAdapter {
             providers: self.providers([(id: intent.provider?.id, name: intent.provider?.displayString)]))
     }
 
+    /// The provider quota widget shows one provider; no provider follows
+    /// the overview's automatic pick.
+    @available(iOS 27.0, *)
+    static func configuration(from intent: ProviderQuotaWidgetAppIntent) -> CodexBarWidgetConfigurationIntent {
+        CodexBarWidgetConfigurationIntent(
+            mode: .overview,
+            colorStyle: .colorful,
+            providers: self.providers([(id: intent.provider?.id, name: intent.provider?.displayString)]))
+    }
+
     /// The Quota pace widget's window choice (Research/071); nil for the
     /// default (weekly) window and for widgets added before the parameter
     /// existed.

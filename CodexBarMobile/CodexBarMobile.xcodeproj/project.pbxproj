@@ -40,6 +40,7 @@
 		19C6DB1C4B2EE4AB9A9D206B /* CostHistoryWorkerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 05C1218407426AA0AB7E2D32 /* CostHistoryWorkerTests.swift */; };
 		19EEC45174C2EE6DBE354E5E /* ProviderDetailRowPresentation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864C94CF768D9385C90DD314 /* ProviderDetailRowPresentation.swift */; };
 		1ADE5C48A5759C351666A57F /* ReportPanePlanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DC3CE82556AD6551ADD35B /* ReportPanePlanTests.swift */; };
+		1CE8C008924987D2375920E9 /* ProviderQuotaWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6FC85017C6C87D584AF8F1C /* ProviderQuotaWidgetView.swift */; };
 		1CE94C4274A941A28BAB8BB6 /* CodexBarWidgetSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DBC184E006E219F42F8B58F /* CodexBarWidgetSnapshot.swift */; };
 		1D2AE3752C11CCEED90D386F /* WidgetConfiguration.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 198A369D4D16AD6BDDB7038B /* WidgetConfiguration.xcstrings */; };
 		1D71AA32CE0BCA8576493CCF /* UsageQuotaOverviewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337A25A7DE28D4EF46B329D9 /* UsageQuotaOverviewStore.swift */; };
@@ -74,6 +75,7 @@
 		3628F0CAA653A1928C34CAF2 /* TokenActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85BCB81FDAB42986B27BFA60 /* TokenActivityView.swift */; };
 		36890D62A476E10C3211107E /* ProviderAccountGroupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621D68074A776C6DDAE3E81D /* ProviderAccountGroupTests.swift */; };
 		36E36EE311B054390CE848F2 /* LLMProxyStatsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B22B4D560AC765604858E821 /* LLMProxyStatsCard.swift */; };
+		3772C81E2F6715A0EF1A02B5 /* ProviderQuotaWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6FC85017C6C87D584AF8F1C /* ProviderQuotaWidgetView.swift */; };
 		3780FB0FC279E8D7FAA2F248 /* CloudOperationDeadline.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFA0C60270F7D18A289343E8 /* CloudOperationDeadline.swift */; };
 		37D05E7A04ABF89129C7D284 /* DualZoneReaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F06B5BB1489F508FCD20228A /* DualZoneReaderTests.swift */; };
 		383E1D735F75F0B574447EDF /* ShareCardRenderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A260F62AFF50B05ED7E6401 /* ShareCardRenderTests.swift */; };
@@ -125,6 +127,7 @@
 		57C973F513DAC5CC5E587DDE /* ProviderSnapshotMerger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7BC466DA9C12357656F59CB /* ProviderSnapshotMerger.swift */; };
 		5991ABA431F498C1D4846FC3 /* WidgetStatus.intentdefinition in Sources */ = {isa = PBXBuildFile; fileRef = 75010593141F9A40251328A7 /* WidgetStatus.intentdefinition */; };
 		59EE9A6CBF65D6788166FC48 /* WidgetConfigurationAppIntentsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E99CE7398A3BA54F4202DB5 /* WidgetConfigurationAppIntentsTests.swift */; };
+		5AADED1F9172E61646412C71 /* WidgetAssets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF01CE1DF2AA2F9D50D8AD62 /* WidgetAssets.xcassets */; };
 		5B784FEEABE8100EF75A55D3 /* V039Snapshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3FFC97C9D977AF715126622 /* V039Snapshots.swift */; };
 		5BDC62538006F2EF448F53ED /* MockProviderBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13047F3A04FEB413C5E079B0 /* MockProviderBanner.swift */; };
 		5D19353A8FE75E11EF739739 /* StatusWidgetConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A182CE5CF24C94F04E19832D /* StatusWidgetConfigurationTests.swift */; };
@@ -619,6 +622,7 @@
 		A4CAFB868825B9A3F09FE0AA /* DeviceLifecycleEventTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceLifecycleEventTests.swift; sourceTree = "<group>"; };
 		A5404A3DBB0C65C3C3C8D8ED /* ProviderAccountGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderAccountGroup.swift; sourceTree = "<group>"; };
 		A613090824875E92612A1DC1 /* V070ConsumerDataTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = V070ConsumerDataTests.swift; sourceTree = "<group>"; };
+		A6FC85017C6C87D584AF8F1C /* ProviderQuotaWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderQuotaWidgetView.swift; sourceTree = "<group>"; };
 		A6FE2A42D78794922FD09FCE /* CostDashboardPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostDashboardPreferences.swift; sourceTree = "<group>"; };
 		A720D2B9B124834977F7A418 /* WidgetProviderSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetProviderSelection.swift; sourceTree = "<group>"; };
 		A7D93C3084621BE903FDADAB /* WidgetConfigurationAppIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetConfigurationAppIntents.swift; sourceTree = "<group>"; };
@@ -654,6 +658,7 @@
 		BCE6CB7DCBC0976E4414C63D /* V029Snapshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = V029Snapshots.swift; sourceTree = "<group>"; };
 		BE097409AB03C48BF5C1524C /* CostDiagnosticsReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostDiagnosticsReport.swift; sourceTree = "<group>"; };
 		BEBDCDCC18AD0CEFBB53CA8D /* LiveQuotaPerformanceUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveQuotaPerformanceUITests.swift; sourceTree = "<group>"; };
+		BF01CE1DF2AA2F9D50D8AD62 /* WidgetAssets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = WidgetAssets.xcassets; sourceTree = "<group>"; };
 		BF09032F88FD63EA4A593B9F /* ResetCreditCalendarPlanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResetCreditCalendarPlanner.swift; sourceTree = "<group>"; };
 		C0369FFFEB823BDDD0EF77D4 /* ProviderSourceNoticePlacementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderSourceNoticePlacementTests.swift; sourceTree = "<group>"; };
 		C18A6DA611774BDB96E4AB70 /* V045ProviderCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = V045ProviderCards.swift; sourceTree = "<group>"; };
@@ -909,6 +914,7 @@
 				0A6E3C65B089104604DB100F /* MobileLocalizedString.swift */,
 				D317FDA7B59C971619973C86 /* MobileQuotaBurndown.swift */,
 				7EBCCACB7D410FD3499739C1 /* ProviderDetailLocalization.swift */,
+				A6FC85017C6C87D584AF8F1C /* ProviderQuotaWidgetView.swift */,
 				B7BC466DA9C12357656F59CB /* ProviderSnapshotMerger.swift */,
 				731ECB211729DE961CC82954 /* ProviderSourceStatus.swift */,
 				4F08974FE5ADF851E663690F /* ProviderWindowLabel.swift */,
@@ -1071,6 +1077,7 @@
 				F73457F32FC7DD4C6DE7F847 /* Info.plist */,
 				0B38802B33E177667A2B8224 /* StatusWidgetTimeline.swift */,
 				E143BBA8CCF436071E8DFE5F /* WidgetActivityTimeline.swift */,
+				BF01CE1DF2AA2F9D50D8AD62 /* WidgetAssets.xcassets */,
 				F74DC452F05CFF7BC6196E10 /* WidgetExtension.entitlements */,
 				9493E5B0739B4A4F3FE4C82F /* WidgetActivity.intentdefinition */,
 			);
@@ -1463,6 +1470,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4DB89DB1AD9D92776B164DD2 /* Localizable.xcstrings in Resources */,
+				5AADED1F9172E61646412C71 /* WidgetAssets.xcassets in Resources */,
 				A1CCB3B5D8C2701432EC8660 /* WidgetConfiguration.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1663,6 +1671,7 @@
 				19EEC45174C2EE6DBE354E5E /* ProviderDetailRowPresentation.swift in Sources */,
 				B050FB5BF5817C3844A27F32 /* ProviderDetailView.swift in Sources */,
 				E18D8313EEDFF2093F589700 /* ProviderDetailsView.swift in Sources */,
+				3772C81E2F6715A0EF1A02B5 /* ProviderQuotaWidgetView.swift in Sources */,
 				44E3492D9285BDA200F789FB /* ProviderSnapshotMerger.swift in Sources */,
 				2833D4395CEA530337659E0F /* ProviderSourceNoticePlacement.swift in Sources */,
 				6BA35AD07BBAE80220C68836 /* ProviderSourceNoticeView.swift in Sources */,
@@ -1813,6 +1822,7 @@
 				BF223BECF86FCB0D3C4785CD /* MobileQuotaBurndown.swift in Sources */,
 				905ADC7606341C62FC1D9032 /* ProviderColorPalette.swift in Sources */,
 				D2647B185A2C748136B3D5CF /* ProviderDetailLocalization.swift in Sources */,
+				1CE8C008924987D2375920E9 /* ProviderQuotaWidgetView.swift in Sources */,
 				57C973F513DAC5CC5E587DDE /* ProviderSnapshotMerger.swift in Sources */,
 				A925E0A6BF1C1AD4179ADB52 /* ProviderSourceStatus.swift in Sources */,
 				D58F50198D26F48F42A9D064 /* ProviderWindowLabel.swift in Sources */,

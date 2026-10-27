@@ -145,6 +145,25 @@ struct AccountsAppIntentTimelineProvider: AppIntentTimelineProvider {
 }
 
 @available(iOS 27.0, *)
+struct ProviderQuotaAppIntentTimelineProvider: AppIntentTimelineProvider {
+    func placeholder(in _: Context) -> CodexBarWidgetEntry {
+        CodexBarWidgetEntry(date: .now, configuration: .init(mode: .overview), snapshot: .accountsPreview())
+    }
+
+    func snapshot(for intent: ProviderQuotaWidgetAppIntent, in context: Context) async -> CodexBarWidgetEntry {
+        CodexBarWidgetEntry(
+            date: .now,
+            configuration: StatusWidgetConfigurationAdapter.configuration(from: intent),
+            snapshot: context.isPreview ? .accountsPreview() : .syncing())
+    }
+
+    func timeline(for intent: ProviderQuotaWidgetAppIntent, in _: Context) async -> Timeline<CodexBarWidgetEntry> {
+        await CodexBarWidgetProvider.makeTimeline(
+            configuration: StatusWidgetConfigurationAdapter.configuration(from: intent))
+    }
+}
+
+@available(iOS 27.0, *)
 struct QuotaPaceAppIntentTimelineProvider: AppIntentTimelineProvider {
     func placeholder(in _: Context) -> CodexBarWidgetEntry {
         CodexBarWidgetEntry(date: .now, configuration: .init(mode: .quotaPace), snapshot: .placeholder())
