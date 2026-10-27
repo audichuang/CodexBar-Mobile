@@ -210,9 +210,11 @@ enum WidgetProviderCatalogue {
                 continue
             }
             var windows = existing.windows
+            var defaultWindowID = existing.defaultWindowID
             if let extra = provider.windows {
                 var seen = Set(windows?.map(\.id) ?? [])
                 windows = (windows ?? []) + extra.filter { seen.insert($0.id).inserted }
+                defaultWindowID = defaultWindowID ?? provider.defaultWindowID
             }
             var accounts = existing.accounts
             if let extra = provider.accounts {
@@ -223,7 +225,7 @@ enum WidgetProviderCatalogue {
                 id: existing.id,
                 name: existing.name,
                 windows: windows,
-                defaultWindowID: existing.defaultWindowID ?? provider.defaultWindowID,
+                defaultWindowID: defaultWindowID,
                 accounts: accounts)
         }
         return order.compactMap { byID[$0] }
