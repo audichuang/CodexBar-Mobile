@@ -985,7 +985,7 @@ enum CodexBarWidgetSnapshotBuilder {
         let budgetLeads = budgetPercent.map { $0 > (windowPercent ?? -1) } ?? false
         let usagePercent = budgetLeads ? budgetPercent : windowPercent
         let resetsAt = budgetLeads ? provider.budget?.resetsAt : leadingWindow?.resetsAt
-        let accountKey = provider.accountEmail ?? "_"
+        let accountKey = self.accountKey(for: provider)
         let weekly = WeeklyResetWindow.soonest(for: provider, now: now)
         let session = self.sessionWindow(for: provider)
         let sessionExpired = session?.resetsAt.map { $0 <= now } ?? false
@@ -1033,6 +1033,11 @@ enum CodexBarWidgetSnapshotBuilder {
                 return minutes > 0 && minutes < 24 * 60
             }
             .min { ($0.windowMinutes ?? 0) < ($1.windowMinutes ?? 0) }
+    }
+
+    /// The account part of a summary id; also keys the widget account choice.
+    static func accountKey(for provider: ProviderUsageSnapshot) -> String {
+        provider.accountEmail ?? "_"
     }
 
     static func accountLabel(label: String?, email: String?, organization: String?) -> String? {

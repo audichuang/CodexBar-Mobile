@@ -98,6 +98,16 @@ enum StatusWidgetConfigurationAdapter {
             providers: self.providers([(id: intent.provider?.id, name: intent.provider?.displayString)]))
     }
 
+    /// The provider quota widget's account, as a widget summary id; nil
+    /// follows the provider's busiest account.
+    @available(iOS 27.0, *)
+    static func accountChoice(from intent: ProviderQuotaWidgetAppIntent) -> String? {
+        guard let id = intent.account?.id, id != ProviderQuotaAccountAppEntity.automaticIdentifier,
+              let providerID = intent.provider?.id, id.hasPrefix("\(providerID)|")
+        else { return nil }
+        return id
+    }
+
     /// The Quota pace widget's window choice (Research/071); nil for the
     /// default (weekly) window and for widgets added before the parameter
     /// existed.
