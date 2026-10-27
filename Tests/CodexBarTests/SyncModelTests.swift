@@ -719,31 +719,52 @@ struct CloudSyncSnapshotMigrationSaveThenDeleteTests {
     }
 
     @Test
-    func `a remembered save the engine no longer holds is orphaned, not in flight`() {
+    func `a remembered save is orphaned only when neither the engine nor an unprocessed send holds it`() {
         let hashes = ["snap-claude-a": "hash"]
-        #expect(CloudSyncSnapshotMigration.saveQueueState(
-            recordName: "snap-claude-a", pendingSaveHashes: hashes, engineHasPendingSave: true) == .inFlight)
-        #expect(CloudSyncSnapshotMigration.saveQueueState(
-            recordName: "snap-claude-a", pendingSaveHashes: hashes, engineHasPendingSave: false) == .orphaned)
-        #expect(CloudSyncSnapshotMigration.saveQueueState(
-            recordName: "snap-claude-b", pendingSaveHashes: hashes, engineHasPendingSave: true) == .notQueued)
+        func state(_ name: String, engine: Bool, sent: Bool) -> CloudSyncSnapshotMigration.SaveQueueState {
+            CloudSyncSnapshotMigration.saveQueueState(
+                recordName: name, pendingSaveHashes: hashes, engineHasPendingSave: engine, hasUnprocessedSend: sent)
+        }
+        #expect(state("snap-claude-a", engine: true, sent: false) == .inFlight)
+        #expect(state("snap-claude-a", engine: true, sent: true) == .inFlight)
+        // Dropped before any batch sent it: queue it again.
+        #expect(state("snap-claude-a", engine: false, sent: false) == .orphaned)
+        #expect(state("snap-claude-b", engine: false, sent: false) == .notQueued)
     }
 
     @Test
-    func `a delayed result of an older save does not confirm the snapshot queued after it`() {
+    func `a sent save whose result is still queued stays in flight instead of being sent again`() {
         let name = "snap-claude-a"
-        var pending = [name: "hash-old"]
-        var sent: [String: [String]] = [:]
+        var pending = [name: "hash"]
+        var sent: [String: [String]] = [name: ["hash"]]
         var last: [String: String] = [:]
 
-        // The batch sends the old payload; the engine no longer holds the save, but its result
-        // is still waiting in the delegate queue when a newer payload is pushed.
-        sent[name] = ["hash-old"]
+        // The engine removed the sent save; its result is still waiting in the delegate queue.
         #expect(CloudSyncSnapshotMigration.saveQueueState(
-            recordName: name, pendingSaveHashes: pending, engineHasPendingSave: false) == .orphaned)
-        pending[name] = "hash-new"
+            recordName: name,
+            pendingSaveHashes: pending,
+            engineHasPendingSave: false,
+            hasUnprocessedSend: sent[name] != nil) == .inFlight)
 
-        // The old save's result arrives: it confirms only what it sent.
+        // The result then confirms the save and clears the unprocessed send.
+        let superseded = CloudSyncSnapshotMigration.takeSupersededSaveResults(
+            recordNames: [name], sentSaveHashes: &sent, pendingSaveHashes: pending)
+        #expect(superseded.isEmpty)
+        CloudSyncSnapshotMigration.applyConfirmedSaveHashes(
+            savedRecordNames: [name], pendingSaveHashes: &pending, lastSnapshotHashes: &last)
+        #expect(sent[name] == nil)
+        #expect(pending[name] == nil)
+        #expect(last[name] == "hash")
+    }
+
+    @Test
+    func `a delayed result of an older save does not confirm a newer payload queued after it`() {
+        let name = "snap-claude-a"
+        // The remembered hash was cleared and a newer payload queued while the old result was outstanding.
+        var pending = [name: "hash-new"]
+        var sent = [name: ["hash-old"]]
+        var last: [String: String] = [:]
+
         let superseded = CloudSyncSnapshotMigration.takeSupersededSaveResults(
             recordNames: [name], sentSaveHashes: &sent, pendingSaveHashes: pending)
         #expect(superseded == [name: "hash-old"])
@@ -754,16 +775,6 @@ struct CloudSyncSnapshotMigrationSaveThenDeleteTests {
         #expect(pending[name] == "hash-new")
         #expect(last[name] == nil)
         #expect(sent.isEmpty)
-
-        // The newer save's own result confirms it.
-        sent[name] = ["hash-new"]
-        let current = CloudSyncSnapshotMigration.takeSupersededSaveResults(
-            recordNames: [name], sentSaveHashes: &sent, pendingSaveHashes: pending)
-        #expect(current.isEmpty)
-        CloudSyncSnapshotMigration.applyConfirmedSaveHashes(
-            savedRecordNames: [name], pendingSaveHashes: &pending, lastSnapshotHashes: &last)
-        #expect(pending[name] == nil)
-        #expect(last[name] == "hash-new")
     }
 
     @Test
@@ -786,16 +797,6 @@ struct CloudSyncSnapshotMigrationSaveThenDeleteTests {
         CloudSyncSnapshotMigration.applyConfirmedSaveHashes(
             savedRecordNames: [name], pendingSaveHashes: &pending, lastSnapshotHashes: &last)
         #expect(last[name] == "hash-new")
-    }
-
-    @Test
-    func `save results without a recorded sent payload keep the existing confirmation`() {
-        var sent: [String: [String]] = [:]
-        let superseded = CloudSyncSnapshotMigration.takeSupersededSaveResults(
-            recordNames: ["snap-claude-a", "prefs"],
-            sentSaveHashes: &sent,
-            pendingSaveHashes: ["snap-claude-a": "hash"])
-        #expect(superseded.isEmpty)
     }
 
     @Test
