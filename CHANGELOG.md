@@ -4,8 +4,8 @@
 
 ### Highlights — Mobile 3.2.0
 - Sync upstream v0.80.0–v0.82.0 in one update: Soniox, Trae CN, abliteration.ai and Chatbox AI; clearer monthly allowances and Kimi details; safer passive probes, Cursor sign-in recovery, improved cost accounting and separate automatic update preferences.
-- Carry monthly allowance units, custom quota titles and plugin pace details to compatible iPhones while keeping older iOS payload readers compatible.
-- Preserve fork multi-account and multi-Mac sync, existing cost history and Production CloudKit settings. Mobile 3.2.0 is the currently delivered companion; iOS 3.3.0 is prepared separately and has not been uploaded by this candidate workflow.
+- Carry monthly allowance units, custom quota titles, Cursor shared-weekly and uncapped spend, Kimi gift expiry, and plugin pace details to compatible iPhones while keeping older iOS payload readers compatible.
+- Preserve multi-account and multi-Mac sync and existing cost history, with compatible quota details for current and newer iPhone versions.
 
 ## 0.82.0 — 2026-10-26
 

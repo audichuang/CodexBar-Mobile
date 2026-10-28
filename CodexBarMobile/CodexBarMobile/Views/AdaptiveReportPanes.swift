@@ -47,6 +47,7 @@ struct AdaptiveReportPanes<Primary: View, Secondary: View>: View {
                 }
             }
             .scrollDisabled(plan.isSplit)
+            .accessibilityIdentifier("workspace-stack")
         }
     }
 

@@ -78,7 +78,31 @@ struct ProviderDetailsView: View {
                             if let fraction = presentation.progressFraction {
                                 ProgressView(value: fraction)
                                     .tint(self.tintColor)
+                                    .overlay(alignment: .leading) {
+                                        if let progress = row.progress, let expected = progress.expectedUsed {
+                                            GeometryReader { geometry in
+                                                Rectangle()
+                                                    .fill(Color.primary)
+                                                    .frame(width: 2, height: 8)
+                                                    .offset(
+                                                        x: max(0, geometry.size.width - 2) *
+                                                            CGFloat(expected / progress.total), y: -2)
+                                            }
+                                        }
+                                    }
                                     .accessibilityHidden(true)
+                                if let progress = row.progress, let expected = progress.expectedUsed {
+                                    Text(String(
+                                        format: MobileLocalizedString.value(
+                                            "Expected usage: %@", defaultValue: "Expected usage: %@",
+                                            locale: self.locale),
+                                        locale: self.locale,
+                                        arguments: [(expected / progress.total).formatted(
+                                            .percent.precision(.fractionLength(0...1)).locale(self.locale))]))
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                        .accessibilityIdentifier("provider-detail-expected-usage")
+                                }
                             }
                         }
                     }

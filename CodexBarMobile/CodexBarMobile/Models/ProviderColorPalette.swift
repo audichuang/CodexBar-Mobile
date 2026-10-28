@@ -107,7 +107,15 @@ enum ProviderColorPalette {
     /// so we don't accidentally collapse two distinct providers back into the
     /// same color.
     static func color(for providerIdentifier: String) -> Color {
-        self.readable(
+        switch providerIdentifier.lowercased().replacingOccurrences(of: " ", with: "") {
+        case "soniox": return self.readable(Color(red: 37 / 255, green: 55 / 255, blue: 114 / 255))
+        case "traecn": return self.readable(Color(red: 77 / 255, green: 124 / 255, blue: 254 / 255))
+        case "abliteration": return self.readable(Color(red: 27 / 255, green: 27 / 255, blue: 27 / 255))
+        case "chatbox": return self.readable(Color(red: 34 / 255, green: 139 / 255, blue: 230 / 255))
+        default: break
+        }
+
+        return self.readable(
             self.brandColor(for: providerIdentifier),
             adjustsLightMode: self.updatedBrandHex(for: providerIdentifier) != nil
                 || self.v072BrandHex(for: providerIdentifier) != nil)

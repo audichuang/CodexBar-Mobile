@@ -19,7 +19,7 @@ import Testing
 @Suite("Quota provider list")
 struct QuotaProviderListTests {
 
-    @Test("Total count is 90 after the v0.79 catch-up")
+    @Test("Total count is 94 after the v0.82 catch-up")
     func totalCount() {
         // Outcome: 25 → 27 in iOS 1.5.0 (Abacus + Mistral) →
         // 38 in iOS 1.6.0 (11 new from Mac v0.24+v0.25 catch-up) →
@@ -44,11 +44,11 @@ struct QuotaProviderListTests {
         // If this number shifts without matching upstream updates,
         // the push-subscription set drifts out of sync with Mac's
         // actual emitting providers.
-        #expect(QuotaProviderList.providers.count == 90)
-        #expect(QuotaProviderList.providers.suffix(2).map { $0.id } == ["futureagi", "munito"])
+        #expect(QuotaProviderList.providers.count == 94)
+        #expect(QuotaProviderList.providers.suffix(4).map { $0.id } == ["soniox", "traecn", "abliteration", "chatbox"])
     }
 
-    @Test("Subscription zone count is 270 (90 providers × 3 states)")
+    @Test("Subscription zone count is 282 (94 providers × 3 states)")
     func subscriptionZoneCount() {
         // iOS 1.5.0: 27 × 2 = 54 zones.
         // iOS 1.6.0 / Mac 0.25.2: 38 × 3 (depleted/restored/warning) = 114.
@@ -77,7 +77,7 @@ struct QuotaProviderListTests {
         // `QuotaTransitionSubscriptions.makeConfigs()` builds one
         // `SubConfig` per (provider, state) — pinning here so a
         // future state addition/removal can't drift silently.
-        #expect(QuotaProviderList.providers.count * 3 == 270)
+        #expect(QuotaProviderList.providers.count * 3 == 282)
     }
 
     @Test("Warning-zone name format matches Mac/iOS contract")
@@ -326,10 +326,10 @@ struct QuotaProviderListTests {
     /// list, the user-facing release notes lie. Doc the cross-coupling.
     /// (Zone count is providers × 3 states since iOS 1.6.0 added the
     /// `warning` state alongside `depleted`/`restored`.)
-    @Test("Cause: catalog 90/270 numbers match the actual list")
+    @Test("Cause: catalog 94/282 numbers match the actual list")
     func catalogNumbersAlignWithList() {
-        #expect(QuotaProviderList.providers.count == 90)
-        #expect(QuotaProviderList.providers.count * 3 == 270)
+        #expect(QuotaProviderList.providers.count == 94)
+        #expect(QuotaProviderList.providers.count * 3 == 282)
     }
 
     @Test("IBM Bob is appended for v0.49 monthly quota pushes")
