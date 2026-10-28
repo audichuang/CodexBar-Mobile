@@ -186,7 +186,7 @@ complete when the available scan window covers fewer days.
 | [Claude Platform](claudeplatform.md) | Browser or manual platform.claude.com session cookies for Console API credit balance, expiring credit grants, and month-to-date spend. |
 | [Munito](munito.md) | Admin API key with Read account data permission for today's and this month's spend against the organization's spend limits. |
 | [Trae CN](traecn.md) | Browser session for account credit usage. |
-| [Chatbox AI](chatbox.md) | API token |
+| [Chatbox AI](chatbox.md) | License key for plan points, reward credits, top-up credits, and image quotas. |
 | [abliteration.ai](abliteration.md) | API key for prepaid USD credits and cumulative usage. |
 
 <!-- End generated provider additions -->

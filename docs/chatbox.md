@@ -5,7 +5,7 @@ read_when:
   - Checking its public-client API contract and quota mapping
 provider_id: chatbox
 provider_name: Chatbox AI
-provider_source: API token
+provider_source: License key for plan points, reward credits, top-up credits, and image quotas.
 plugin_scope: Manual License Key; public-client realtime license details
 ---
 
