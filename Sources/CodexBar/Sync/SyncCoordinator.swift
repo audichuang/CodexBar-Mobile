@@ -1205,8 +1205,10 @@ final class SyncCoordinator {
             metadata?.sessionLabel
         }
         return Self.syncRateWindow(
-            id: primary.id ?? "primary", label: primary.label ?? primary.title ?? label,
-            window: primary, provider: provider)
+            id: primary.id ?? "primary",
+            label: primary.label ?? primary.title ?? label,
+            window: primary,
+            provider: provider)
     }
 
     // swiftlint:disable:next function_body_length

@@ -278,7 +278,10 @@ struct CursorSandUsageTests {
             #expect(mobile?.label == (isUnified ? "Weekly" : "Total"))
             #expect(mobile?.usedPercent == usage.primary?.usedPercent)
             #expect(mobile?.resetsAt == usage.primary?.resetsAt)
-            let spend = SyncCoordinator.mapProviderAmount(provider: .cursor, snapshot: usage, providerCost: usage.providerCost)
+            let spend = SyncCoordinator.mapProviderAmount(
+                provider: .cursor,
+                snapshot: usage,
+                providerCost: usage.providerCost)
             #expect(spend?.kind == "spend")
             #expect(spend?.amount == 4.47)
             #expect(spend?.period == "Monthly")
