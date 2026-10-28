@@ -1448,6 +1448,7 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
             }
             if !changes.savedRecords.isEmpty || !changes.deletedRecordIDs.isEmpty {
                 self.quotaRetryState.reset()
+                self.snapshotSendKick.clearBackoff()
             }
             let savedRecords = changes.savedRecords.filter { record in
                 guard CloudSyncBatchRecordProvider.shouldApplySaveResult(

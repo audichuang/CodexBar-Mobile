@@ -42,13 +42,13 @@ struct CloudSyncSnapshotSendKickPolicyTests {
         lastKickAge: TimeInterval? = nil,
         retryAfter: TimeInterval? = nil) -> TimeInterval?
     {
-        CloudSyncSnapshotSendKickPolicy.delay(
+        CloudSyncSnapshotSendKickPolicy.delay(for: .init(
             pendingCount: count,
             oldestPendingAt: self.now.addingTimeInterval(-age),
             now: self.now,
             kickInFlight: inFlight,
             lastKickAt: lastKickAge.map { self.now.addingTimeInterval(-$0) },
-            retryNotBefore: retryAfter.map { self.now.addingTimeInterval($0) })
+            retryNotBefore: retryAfter.map { self.now.addingTimeInterval($0) }))
     }
 }
 
@@ -72,12 +72,14 @@ struct CloudSyncSnapshotSendKickTests {
         var kick: CloudSyncSnapshotSendKick!
 
         init() {
-            self.kick = CloudSyncSnapshotSendKick(now: { [unowned self] in self.now }) { [unowned self] delay in
-                guard self.waits.count < self.allowedWaits else { throw CancellationError() }
-                self.waits.append(delay)
-                self.now.addTimeInterval(delay)
-                self.onWait?()
-            }
+            self.kick = CloudSyncSnapshotSendKick(
+                now: { [unowned self] in self.now },
+                sleep: { [unowned self] delay in
+                    guard self.waits.count < self.allowedWaits else { throw CancellationError() }
+                    self.waits.append(delay)
+                    self.now.addTimeInterval(delay)
+                    self.onWait?()
+                })
         }
 
         func schedule() {
@@ -104,7 +106,8 @@ struct CloudSyncSnapshotSendKickTests {
 
     private static func error(_ code: CKError.Code, retryAfter: TimeInterval) -> CKError {
         CKError(_nsError: NSError(
-            domain: CKErrorDomain, code: code.rawValue,
+            domain: CKErrorDomain,
+            code: code.rawValue,
             userInfo: [CKErrorRetryAfterKey: NSNumber(value: retryAfter)]))
     }
 
@@ -239,6 +242,27 @@ struct CloudSyncSnapshotSendKickTests {
 
         #expect(publisher.waits == [1800])
         #expect(publisher.sent.count == 1)
+    }
+
+    @Test
+    func `a successful push clears quota backoff while preserving pending age and kick cadence`() async {
+        let publisher = Publisher()
+        defer { publisher.kick.stop() }
+        let snapshot = self.id("snap-codex-fixture-local")
+        publisher.pending = [.saveRecord(snapshot)]
+        publisher.allowedWaits = 2
+        publisher.schedule()
+        await publisher.kick.waitUntilIdle()
+
+        publisher.pending = [.saveRecord(snapshot)]
+        publisher.schedule()
+        publisher.now.addTimeInterval(60)
+        publisher.kick.postpone(for: Self.error(.quotaExceeded, retryAfter: 60), minimumDelay: 3600)
+        publisher.kick.clearBackoff()
+        await publisher.kick.waitUntilIdle()
+
+        #expect(publisher.waits == [120, 60])
+        #expect(publisher.sent == [[snapshot], [snapshot]])
     }
 
     @Test
