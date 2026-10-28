@@ -6,6 +6,24 @@ import Testing
 
 @MainActor
 struct V082MobileBridgeTests {
+    @Test func `Cursor unbounded on demand spend keeps zero and capped spend stays in the budget lane`() {
+        let observed = Date(timeIntervalSince1970: 1_793_174_400)
+        for used in [0.0, 4.47] {
+            for limit in [0.0, 10.0] {
+                let cost = ProviderCostSnapshot(
+                    used: used, limit: limit, currencyCode: "USD", period: "Monthly", updatedAt: observed)
+                let amount = SyncCoordinator.mapProviderAmount(provider: .cursor, snapshot: nil, providerCost: cost)
+                if limit == 0 {
+                    #expect(amount?.kind == "spend")
+                    #expect(amount?.amount == used)
+                    #expect(amount?.observedAt == observed)
+                } else {
+                    #expect(amount == nil)
+                }
+            }
+        }
+    }
+
     @Test func `Copilot calendar month without duration keeps monthly semantics on mobile`() {
         let reset = Date(timeIntervalSince1970: 1_793_500_000)
         let window = RateWindow(usedPercent: 25, windowMinutes: nil, resetsAt: reset, resetDescription: nil)

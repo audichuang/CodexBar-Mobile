@@ -1182,6 +1182,33 @@ final class SyncCoordinator {
             reportingPeriodSummary: reportingPeriodSummary)
     }
 
+    static func syncPrimaryRateWindow(
+        provider: UsageProvider,
+        snapshot: UsageSnapshot?,
+        metadata: ProviderMetadata?) -> SyncRateWindow?
+    {
+        guard let snapshot, let primary = snapshot.primary else { return nil }
+        let label: String? = if provider == .alibabatokenplan {
+            AlibabaTokenPlanProviderDescriptor.rateWindowLabel(
+                window: primary, fallback: metadata?.sessionLabel ?? "Credits")
+        } else if provider == .grok {
+            GrokProviderDescriptor.displayLabel(window: primary) ?? metadata?.sessionLabel
+        } else if provider == .ollama {
+            OllamaProviderDescriptor.primaryLabel(window: primary) ?? metadata?.sessionLabel
+        } else if provider == .cursor {
+            CursorProviderDescriptor.primaryLabel(snapshot: snapshot) ?? metadata?.sessionLabel
+        } else if provider == .qwencloud, let metadata {
+            // Team Token Plan and 30-day windows retain their Mac menu labels.
+            ProviderDescriptorRegistry.descriptor(for: .qwencloud).presentation
+                .rateWindowLabels(metadata: metadata, snapshot: snapshot).primary
+        } else {
+            metadata?.sessionLabel
+        }
+        return Self.syncRateWindow(
+            id: primary.id ?? "primary", label: primary.label ?? primary.title ?? label,
+            window: primary, provider: provider)
+    }
+
     // swiftlint:disable:next function_body_length
     private func buildProviderUsageSnapshot(
         for provider: UsageProvider,
@@ -1198,25 +1225,7 @@ final class SyncCoordinator {
         // Build dynamic rate windows array with labels from metadata.
         var rateWindows: [SyncRateWindow] = []
         var semanticWindows: (primary: SyncRateWindow?, secondary: SyncRateWindow?) = (nil, nil)
-        if let p = snapshot?.primary {
-            let label: String? = if provider == .alibabatokenplan {
-                AlibabaTokenPlanProviderDescriptor.rateWindowLabel(
-                    window: p,
-                    fallback: metadata?.sessionLabel ?? "Credits")
-            } else if provider == .grok {
-                GrokProviderDescriptor.displayLabel(window: p) ?? metadata?.sessionLabel
-            } else if provider == .ollama {
-                OllamaProviderDescriptor.primaryLabel(window: p) ?? metadata?.sessionLabel
-            } else if provider == .qwencloud, let metadata, let snapshot {
-                // Provider-specific by design: Qwen Cloud's Team Token Plan and 30-day windows carry
-                // their Mac menu labels ("Team" / "Monthly") instead of the 5-hour session label.
-                ProviderDescriptorRegistry.descriptor(for: .qwencloud).presentation
-                    .rateWindowLabels(metadata: metadata, snapshot: snapshot).primary
-            } else {
-                metadata?.sessionLabel
-            }
-            let window = Self.syncRateWindow(
-                id: p.id ?? "primary", label: p.label ?? p.title ?? label, window: p, provider: provider)
+        if let window = Self.syncPrimaryRateWindow(provider: provider, snapshot: snapshot, metadata: metadata) {
             rateWindows.append(window)
             semanticWindows.primary = window
         }
@@ -1605,7 +1614,7 @@ final class SyncCoordinator {
             guard providerCost.limit <= 0 else { return nil }
             kind = "balance"
             amount = providerCost.used
-        case .aiand, .fireworks:
+        case .aiand, .fireworks, .cursor:
             guard providerCost.limit <= 0 else { return nil }
             kind = "spend"
             amount = providerCost.used
