@@ -1,0 +1,697 @@
+M	.github/actions/build-linux-desktop/action.yml
+M	.github/scripts/release.py
+M	.github/scripts/test_release.py
+M	.github/workflows/ci.yml
+M	CHANGELOG.md
+A	Integrations/Linux/ProviderIconProvider.h
+M	Integrations/Linux/README.md
+M	Integrations/Linux/install.py
+M	Integrations/Linux/main.cpp
+A	Integrations/Linux/tests/icons.pro
+A	Integrations/Linux/tests/tst_icons.cpp
+M	Integrations/Omarchy/test_install.py
+M	Makefile
+M	Package.swift
+M	README.md
+A	Scripts/check-linux-cli-codex-cost-smoke.sh
+M	Scripts/check-site-locales.mjs
+M	Scripts/ci_linux_musl_build_gate.sh
+M	Scripts/lint.sh
+M	Scripts/package_app.sh
+M	Scripts/test_ci_path_gate.sh
+A	Scripts/test_linux_cli_codex_cost_smoke.py
+A	Scripts/test_make_lint.sh
+M	Scripts/test_package_info_plist.sh
+M	Scripts/widget-localization-keys.json
+M	Sources/CodexBar/CodexbarApp.swift
+M	Sources/CodexBar/HomebrewUpdater.swift
+R096	Sources/CodexBar/CostHistoryChartMenuView.swift	Sources/CodexBar/Menu/CostHistoryChartMenuView.swift
+R100	Sources/CodexBar/CostHistoryMenuScrollView.swift	Sources/CodexBar/Menu/CostHistoryMenuScrollView.swift
+R100	Sources/CodexBar/CreditsHistoryChartMenuView.swift	Sources/CodexBar/Menu/CreditsHistoryChartMenuView.swift
+R077	Sources/CodexBar/FleetAccountMenuProjection.swift	Sources/CodexBar/Menu/FleetAccountMenuProjection.swift
+R097	Sources/CodexBar/InlineUsageDashboardContent.swift	Sources/CodexBar/Menu/InlineUsageDashboardContent.swift
+R100	Sources/CodexBar/MenuBarDisplayMode.swift	Sources/CodexBar/Menu/MenuBarDisplayMode.swift
+R100	Sources/CodexBar/MenuBarDisplayText.swift	Sources/CodexBar/Menu/MenuBarDisplayText.swift
+R099	Sources/CodexBar/MenuBarLayout.swift	Sources/CodexBar/Menu/MenuBarLayout.swift
+R100	Sources/CodexBar/MenuBarLayoutAutomaticWindowDisplayNormalizer.swift	Sources/CodexBar/Menu/MenuBarLayoutAutomaticWindowDisplayNormalizer.swift
+R100	Sources/CodexBar/MenuBarLayoutConditionalEditor.swift	Sources/CodexBar/Menu/MenuBarLayoutConditionalEditor.swift
+R100	Sources/CodexBar/MenuBarLayoutEditor.swift	Sources/CodexBar/Menu/MenuBarLayoutEditor.swift
+R100	Sources/CodexBar/MenuBarLayoutEditorChip.swift	Sources/CodexBar/Menu/MenuBarLayoutEditorChip.swift
+R100	Sources/CodexBar/MenuBarLayoutNativeProof.swift	Sources/CodexBar/Menu/MenuBarLayoutNativeProof.swift
+R084	Sources/CodexBar/MenuBarLayoutRenderer.swift	Sources/CodexBar/Menu/MenuBarLayoutRenderer.swift
+R100	Sources/CodexBar/MenuBarMetricWindowResolver.swift	Sources/CodexBar/Menu/MenuBarMetricWindowResolver.swift
+R089	Sources/CodexBar/MenuBarPercentWindowPreference.swift	Sources/CodexBar/Menu/MenuBarPercentWindowPreference.swift
+R100	Sources/CodexBar/MenuBarStatusItemDefaultsRepair.swift	Sources/CodexBar/Menu/MenuBarStatusItemDefaultsRepair.swift
+R100	Sources/CodexBar/MenuBarStatusItemPlacementPreflight.swift	Sources/CodexBar/Menu/MenuBarStatusItemPlacementPreflight.swift
+R100	Sources/CodexBar/MenuBarStatusItemPlacementPreservation.swift	Sources/CodexBar/Menu/MenuBarStatusItemPlacementPreservation.swift
+R100	Sources/CodexBar/MenuBarStatusItemWindowProbe.swift	Sources/CodexBar/Menu/MenuBarStatusItemWindowProbe.swift
+R100	Sources/CodexBar/MenuBarTokensSparkline.swift	Sources/CodexBar/Menu/MenuBarTokensSparkline.swift
+R100	Sources/CodexBar/MenuBarVisibilityWatcher.swift	Sources/CodexBar/Menu/MenuBarVisibilityWatcher.swift
+R100	Sources/CodexBar/MenuCardCompactAccountRow.swift	Sources/CodexBar/Menu/MenuCardCompactAccountRow.swift
+R098	Sources/CodexBar/MenuCardHeightFingerprint.swift	Sources/CodexBar/Menu/MenuCardHeightFingerprint.swift
+R094	Sources/CodexBar/MenuCardMetricRow.swift	Sources/CodexBar/Menu/MenuCardMetricRow.swift
+R100	Sources/CodexBar/MenuCardPlanPresentation.swift	Sources/CodexBar/Menu/MenuCardPlanPresentation.swift
+R100	Sources/CodexBar/MenuCardQuotaWarningMarkers.swift	Sources/CodexBar/Menu/MenuCardQuotaWarningMarkers.swift
+R100	Sources/CodexBar/MenuCardRefreshMonitor.swift	Sources/CodexBar/Menu/MenuCardRefreshMonitor.swift
+R094	Sources/CodexBar/MenuCardView+CodexResetCredits.swift	Sources/CodexBar/Menu/MenuCardView+CodexResetCredits.swift
+R098	Sources/CodexBar/MenuCardView+Costs.swift	Sources/CodexBar/Menu/MenuCardView+Costs.swift
+R100	Sources/CodexBar/MenuCardView+ModelHelpers.swift	Sources/CodexBar/Menu/MenuCardView+ModelHelpers.swift
+R100	Sources/CodexBar/MenuCardView+ModelInput.swift	Sources/CodexBar/Menu/MenuCardView+ModelInput.swift
+A	Sources/CodexBar/Menu/MenuCardView+MonthlyTarget.swift
+R093	Sources/CodexBar/MenuCardView+ProviderDetailLocalization.swift	Sources/CodexBar/Menu/MenuCardView+ProviderDetailLocalization.swift
+R100	Sources/CodexBar/MenuCardView+ProviderDetailVisibility.swift	Sources/CodexBar/Menu/MenuCardView+ProviderDetailVisibility.swift
+R100	Sources/CodexBar/MenuCardView+SessionEquivalent.swift	Sources/CodexBar/Menu/MenuCardView+SessionEquivalent.swift
+R098	Sources/CodexBar/MenuCardView.swift	Sources/CodexBar/Menu/MenuCardView.swift
+R100	Sources/CodexBar/MenuDescriptor+ProviderUsage.swift	Sources/CodexBar/Menu/MenuDescriptor+ProviderUsage.swift
+R100	Sources/CodexBar/MenuDescriptor.swift	Sources/CodexBar/Menu/MenuDescriptor.swift
+R100	Sources/CodexBar/MenuHighlightStyle.swift	Sources/CodexBar/Menu/MenuHighlightStyle.swift
+R100	Sources/CodexBar/MenuInlineCodeText.swift	Sources/CodexBar/Menu/MenuInlineCodeText.swift
+R100	Sources/CodexBar/MenuOpenRefreshPlan.swift	Sources/CodexBar/Menu/MenuOpenRefreshPlan.swift
+R100	Sources/CodexBar/MenuSessionCoordinator.swift	Sources/CodexBar/Menu/MenuSessionCoordinator.swift
+R100	Sources/CodexBar/MenuSwitchFlickerProbe.swift	Sources/CodexBar/Menu/MenuSwitchFlickerProbe.swift
+R100	Sources/CodexBar/MenuUsageBarStrip.swift	Sources/CodexBar/Menu/MenuUsageBarStrip.swift
+R100	Sources/CodexBar/PersistentRefreshRowMetrics.swift	Sources/CodexBar/Menu/PersistentRefreshRowMetrics.swift
+R100	Sources/CodexBar/PlanUtilizationHistoryChartMenuView.swift	Sources/CodexBar/Menu/PlanUtilizationHistoryChartMenuView.swift
+R100	Sources/CodexBar/ProviderAccountUsageOverview.swift	Sources/CodexBar/Menu/ProviderAccountUsageOverview.swift
+R096	Sources/CodexBar/ProviderDetailSectionsContent.swift	Sources/CodexBar/Menu/ProviderDetailSectionsContent.swift
+R100	Sources/CodexBar/ProviderMenuChartContent.swift	Sources/CodexBar/Menu/ProviderMenuChartContent.swift
+R100	Sources/CodexBar/ProviderSwitcherButtons.swift	Sources/CodexBar/Menu/ProviderSwitcherButtons.swift
+R100	Sources/CodexBar/ProviderThroughputSection.swift	Sources/CodexBar/Menu/ProviderThroughputSection.swift
+R100	Sources/CodexBar/QuotaBurndownChartMenuView.swift	Sources/CodexBar/Menu/QuotaBurndownChartMenuView.swift
+A	Sources/CodexBar/Menu/SessionUsageMenuAction.swift
+R100	Sources/CodexBar/StatusComponentsMenuView.swift	Sources/CodexBar/Menu/StatusComponentsMenuView.swift
+R100	Sources/CodexBar/StorageBreakdownMenuView.swift	Sources/CodexBar/Menu/StorageBreakdownMenuView.swift
+R100	Sources/CodexBar/UsageBreakdownChartMenuView.swift	Sources/CodexBar/Menu/UsageBreakdownChartMenuView.swift
+R100	Sources/CodexBar/UsageMenuCardHeaderAndUsageSectionView.swift	Sources/CodexBar/Menu/UsageMenuCardHeaderAndUsageSectionView.swift
+R100	Sources/CodexBar/UsageMenuCardLayout.swift	Sources/CodexBar/Menu/UsageMenuCardLayout.swift
+R100	Sources/CodexBar/UsageProgressBar.swift	Sources/CodexBar/Menu/UsageProgressBar.swift
+M	Sources/CodexBar/PredictivePaceWarnings.swift
+D	Sources/CodexBar/ProviderMenuBarPercentWindowSettingsView.swift
+M	Sources/CodexBar/ProviderUsageItemVisibility.swift
+R100	Sources/CodexBar/ClaudeLoginRunner.swift	Sources/CodexBar/Providers/Claude/ClaudeLoginRunner.swift
+M	Sources/CodexBar/Providers/Claude/ClaudeUIErrorMapper.swift
+R100	Sources/CodexBar/UsageStore+ClaudeActiveAccountIdentity.swift	Sources/CodexBar/Providers/Claude/UsageStore+ClaudeActiveAccountIdentity.swift
+R100	Sources/CodexBar/UsageStore+ClaudeDebug.swift	Sources/CodexBar/Providers/Claude/UsageStore+ClaudeDebug.swift
+R100	Sources/CodexBar/UsageStore+ClaudeOAuthHistoryTypes.swift	Sources/CodexBar/Providers/Claude/UsageStore+ClaudeOAuthHistoryTypes.swift
+R100	Sources/CodexBar/UsageStore+ClaudeVersionRecovery.swift	Sources/CodexBar/Providers/Claude/UsageStore+ClaudeVersionRecovery.swift
+R100	Sources/CodexBar/CodexAccountMenuPresentation.swift	Sources/CodexBar/Providers/Codex/CodexAccountMenuPresentation.swift
+R100	Sources/CodexBar/CodexAccountPromotionCoordinator.swift	Sources/CodexBar/Providers/Codex/CodexAccountPromotionCoordinator.swift
+R100	Sources/CodexBar/CodexAccountPromotionService.swift	Sources/CodexBar/Providers/Codex/CodexAccountPromotionService.swift
+R100	Sources/CodexBar/CodexAccountReconciliation.swift	Sources/CodexBar/Providers/Codex/CodexAccountReconciliation.swift
+R100	Sources/CodexBar/CodexAccountSwitcherLabeling.swift	Sources/CodexBar/Providers/Codex/CodexAccountSwitcherLabeling.swift
+R100	Sources/CodexBar/CodexAccountSwitcherView.swift	Sources/CodexBar/Providers/Codex/CodexAccountSwitcherView.swift
+R100	Sources/CodexBar/CodexAccountUsageSnapshotStore.swift	Sources/CodexBar/Providers/Codex/CodexAccountUsageSnapshotStore.swift
+R100	Sources/CodexBar/CodexAppServerDaemon.swift	Sources/CodexBar/Providers/Codex/CodexAppServerDaemon.swift
+R100	Sources/CodexBar/CodexCostCatchUpPolicy.swift	Sources/CodexBar/Providers/Codex/CodexCostCatchUpPolicy.swift
+R100	Sources/CodexBar/CodexHistoryOwnership.swift	Sources/CodexBar/Providers/Codex/CodexHistoryOwnership.swift
+R100	Sources/CodexBar/CodexLoginAlertPresentation.swift	Sources/CodexBar/Providers/Codex/CodexLoginAlertPresentation.swift
+R100	Sources/CodexBar/CodexLoginRunner.swift	Sources/CodexBar/Providers/Codex/CodexLoginRunner.swift
+R100	Sources/CodexBar/CodexOwnershipContext.swift	Sources/CodexBar/Providers/Codex/CodexOwnershipContext.swift
+R100	Sources/CodexBar/CodexResetCreditExpiryNotifier.swift	Sources/CodexBar/Providers/Codex/CodexResetCreditExpiryNotifier.swift
+R100	Sources/CodexBar/CodexWorkspacesInspectorModel.swift	Sources/CodexBar/Providers/Codex/CodexWorkspacesInspectorModel.swift
+R100	Sources/CodexBar/CodexWorkspacesInspectorPresentation.swift	Sources/CodexBar/Providers/Codex/CodexWorkspacesInspectorPresentation.swift
+R100	Sources/CodexBar/CodexWorkspacesInspectorView.swift	Sources/CodexBar/Providers/Codex/CodexWorkspacesInspectorView.swift
+R100	Sources/CodexBar/CodexWorkspacesMenuAvailability.swift	Sources/CodexBar/Providers/Codex/CodexWorkspacesMenuAvailability.swift
+R100	Sources/CodexBar/CodexWorkspacesNavigation.swift	Sources/CodexBar/Providers/Codex/CodexWorkspacesNavigation.swift
+R100	Sources/CodexBar/ManagedCodexAccountCoordinator.swift	Sources/CodexBar/Providers/Codex/ManagedCodexAccountCoordinator.swift
+R096	Sources/CodexBar/ManagedCodexAccountService.swift	Sources/CodexBar/Providers/Codex/ManagedCodexAccountService.swift
+R100	Sources/CodexBar/OpenAICreditsPurchaseWindowController.swift	Sources/CodexBar/Providers/Codex/OpenAICreditsPurchaseWindowController.swift
+R100	Sources/CodexBar/PreferencesCodexAccountsSection.swift	Sources/CodexBar/Providers/Codex/PreferencesCodexAccountsSection.swift
+R097	Sources/CodexBar/UsageStore+CodexCostCatchUp.swift	Sources/CodexBar/Providers/Codex/UsageStore+CodexCostCatchUp.swift
+R100	Sources/CodexBar/UsageStore+CodexResetCredits.swift	Sources/CodexBar/Providers/Codex/UsageStore+CodexResetCredits.swift
+R100	Sources/CodexBar/UsageStore+OpenAISubscriptionMetadata.swift	Sources/CodexBar/Providers/Codex/UsageStore+OpenAISubscriptionMetadata.swift
+R100	Sources/CodexBar/UsageStore+OpenAIWeb.swift	Sources/CodexBar/Providers/Codex/UsageStore+OpenAIWeb.swift
+R100	Sources/CodexBar/UsageStore+SpendDashboardCodexCostCatchUp.swift	Sources/CodexBar/Providers/Codex/UsageStore+SpendDashboardCodexCostCatchUp.swift
+M	Sources/CodexBar/Providers/CommandCode/CommandCodeProviderImplementation.swift
+M	Sources/CodexBar/Providers/Copilot/CopilotLoginFlow.swift
+R100	Sources/CodexBar/CopilotTokenStore.swift	Sources/CodexBar/Providers/Copilot/CopilotTokenStore.swift
+R100	Sources/CodexBar/CursorLoginAccountSelector.swift	Sources/CodexBar/Providers/Cursor/CursorLoginAccountSelector.swift
+R100	Sources/CodexBar/CursorLoginBrowserRouter.swift	Sources/CodexBar/Providers/Cursor/CursorLoginBrowserRouter.swift
+R100	Sources/CodexBar/CursorLoginRunner.swift	Sources/CodexBar/Providers/Cursor/CursorLoginRunner.swift
+M	Sources/CodexBar/Providers/Cursor/CursorProviderImplementation.swift
+R100	Sources/CodexBar/GeminiLoginRunner.swift	Sources/CodexBar/Providers/Gemini/GeminiLoginRunner.swift
+R100	Sources/CodexBar/UsageStore+GeminiMigration.swift	Sources/CodexBar/Providers/Gemini/UsageStore+GeminiMigration.swift
+R100	Sources/CodexBar/KimiTokenStore.swift	Sources/CodexBar/Providers/Kimi/KimiTokenStore.swift
+R100	Sources/CodexBar/MenuCardView+Kiro.swift	Sources/CodexBar/Providers/Kiro/MenuCardView+Kiro.swift
+R100	Sources/CodexBar/MiniMaxAPITokenStore.swift	Sources/CodexBar/Providers/MiniMax/MiniMaxAPITokenStore.swift
+R100	Sources/CodexBar/MiniMaxCookieStore.swift	Sources/CodexBar/Providers/MiniMax/MiniMaxCookieStore.swift
+R100	Sources/CodexBar/UsageStore+NotionDebug.swift	Sources/CodexBar/Providers/Notion/UsageStore+NotionDebug.swift
+M	Sources/CodexBar/Providers/Shared/ProviderImplementationManifest.swift
+R100	Sources/CodexBar/SyntheticTokenStore.swift	Sources/CodexBar/Providers/Synthetic/SyntheticTokenStore.swift
+R100	Sources/CodexBar/ZaiTokenStore.swift	Sources/CodexBar/Providers/Zai/ZaiTokenStore.swift
+A	Sources/CodexBar/Resources/ProviderIcon-abliteration.svg
+A	Sources/CodexBar/Resources/ProviderIcon-chatbox.svg
+A	Sources/CodexBar/Resources/ProviderIcon-soniox.svg
+A	Sources/CodexBar/Resources/ProviderIcon-traecn.svg
+M	Sources/CodexBar/Resources/ProviderIcon-workbuddy.svg
+M	Sources/CodexBar/Resources/ar.lproj/Localizable.strings
+M	Sources/CodexBar/Resources/ca.lproj/Localizable.strings
+M	Sources/CodexBar/Resources/de.lproj/Localizable.strings
+M	Sources/CodexBar/Resources/en.lproj/Localizable.strings
+M	Sources/CodexBar/Resources/es.lproj/Localizable.strings
+M	Sources/CodexBar/Resources/fa.lproj/Localizable.strings
+M	Sources/CodexBar/Resources/fr.lproj/Localizable.strings
+M	Sources/CodexBar/Resources/gl.lproj/Localizable.strings
+M	Sources/CodexBar/Resources/id.lproj/Localizable.strings
+M	Sources/CodexBar/Resources/it.lproj/Localizable.strings
+M	Sources/CodexBar/Resources/ja.lproj/Localizable.strings
+M	Sources/CodexBar/Resources/ko.lproj/Localizable.strings
+M	Sources/CodexBar/Resources/nl.lproj/Localizable.strings
+M	Sources/CodexBar/Resources/pl.lproj/Localizable.strings
+M	Sources/CodexBar/Resources/pt-BR.lproj/Localizable.strings
+M	Sources/CodexBar/Resources/ru.lproj/Localizable.strings
+M	Sources/CodexBar/Resources/sv.lproj/Localizable.strings
+M	Sources/CodexBar/Resources/th.lproj/Localizable.strings
+M	Sources/CodexBar/Resources/tr.lproj/Localizable.strings
+M	Sources/CodexBar/Resources/uk.lproj/Localizable.strings
+M	Sources/CodexBar/Resources/vi.lproj/Localizable.strings
+M	Sources/CodexBar/Resources/zh-Hans.lproj/Localizable.strings
+M	Sources/CodexBar/Resources/zh-Hant.lproj/Localizable.strings
+M	Sources/CodexBar/SessionQuotaNotifications.swift
+A	Sources/CodexBar/SessionUsageBrowser.swift
+A	Sources/CodexBar/SessionUsagePresentation.swift
+R100	Sources/CodexBar/PlaceholderSettingsWindowGuard.swift	Sources/CodexBar/Settings/PlaceholderSettingsWindowGuard.swift
+R087	Sources/CodexBar/PreferencesAboutPane.swift	Sources/CodexBar/Settings/PreferencesAboutPane.swift
+R081	Sources/CodexBar/PreferencesAcknowledgements.swift	Sources/CodexBar/Settings/PreferencesAcknowledgements.swift
+R100	Sources/CodexBar/PreferencesAdvancedPane.swift	Sources/CodexBar/Settings/PreferencesAdvancedPane.swift
+R100	Sources/CodexBar/PreferencesComponents.swift	Sources/CodexBar/Settings/PreferencesComponents.swift
+R100	Sources/CodexBar/PreferencesDebugPane.swift	Sources/CodexBar/Settings/PreferencesDebugPane.swift
+R100	Sources/CodexBar/PreferencesGeneralPane.swift	Sources/CodexBar/Settings/PreferencesGeneralPane.swift
+R100	Sources/CodexBar/PreferencesHTTPServerSection.swift	Sources/CodexBar/Settings/PreferencesHTTPServerSection.swift
+R097	Sources/CodexBar/PreferencesHooksPane.swift	Sources/CodexBar/Settings/PreferencesHooksPane.swift
+R100	Sources/CodexBar/PreferencesICloudSyncPane.swift	Sources/CodexBar/Settings/PreferencesICloudSyncPane.swift
+R093	Sources/CodexBar/PreferencesMenuBarPane.swift	Sources/CodexBar/Settings/PreferencesMenuBarPane.swift
+R100	Sources/CodexBar/PreferencesMenuPane.swift	Sources/CodexBar/Settings/PreferencesMenuPane.swift
+R100	Sources/CodexBar/PreferencesMenuPicker.swift	Sources/CodexBar/Settings/PreferencesMenuPicker.swift
+R100	Sources/CodexBar/PreferencesNotificationsPane.swift	Sources/CodexBar/Settings/PreferencesNotificationsPane.swift
+R098	Sources/CodexBar/PreferencesPluginsPane.swift	Sources/CodexBar/Settings/PreferencesPluginsPane.swift
+R096	Sources/CodexBar/PreferencesProviderDetailView.swift	Sources/CodexBar/Settings/PreferencesProviderDetailView.swift
+R100	Sources/CodexBar/PreferencesProviderDirectoryList.swift	Sources/CodexBar/Settings/PreferencesProviderDirectoryList.swift
+R100	Sources/CodexBar/PreferencesProviderErrorView.swift	Sources/CodexBar/Settings/PreferencesProviderErrorView.swift
+R100	Sources/CodexBar/PreferencesProviderModelLimits.swift	Sources/CodexBar/Settings/PreferencesProviderModelLimits.swift
+R100	Sources/CodexBar/PreferencesProviderSettingsMetrics.swift	Sources/CodexBar/Settings/PreferencesProviderSettingsMetrics.swift
+R100	Sources/CodexBar/PreferencesProviderSettingsRows.swift	Sources/CodexBar/Settings/PreferencesProviderSettingsRows.swift
+R100	Sources/CodexBar/PreferencesProvidersPane+Testing.swift	Sources/CodexBar/Settings/PreferencesProvidersPane+Testing.swift
+R096	Sources/CodexBar/PreferencesProvidersPane.swift	Sources/CodexBar/Settings/PreferencesProvidersPane.swift
+R068	Sources/CodexBar/PreferencesSelection.swift	Sources/CodexBar/Settings/PreferencesSelection.swift
+R074	Sources/CodexBar/PreferencesSidebar.swift	Sources/CodexBar/Settings/PreferencesSidebar.swift
+R092	Sources/CodexBar/PreferencesSpendDashboardPane.swift	Sources/CodexBar/Settings/PreferencesSpendDashboardPane.swift
+R100	Sources/CodexBar/PreferencesTransferSection.swift	Sources/CodexBar/Settings/PreferencesTransferSection.swift
+R090	Sources/CodexBar/PreferencesView.swift	Sources/CodexBar/Settings/PreferencesView.swift
+R100	Sources/CodexBar/ProviderAccentColorSettingsView.swift	Sources/CodexBar/Settings/ProviderAccentColorSettingsView.swift
+A	Sources/CodexBar/Settings/ProviderMenuBarPercentWindowSettingsView.swift
+R099	Sources/CodexBar/QuotaWarningSettingsViews.swift	Sources/CodexBar/Settings/QuotaWarningSettingsViews.swift
+R100	Sources/CodexBar/SettingsApplicationMenu.swift	Sources/CodexBar/Settings/SettingsApplicationMenu.swift
+A	Sources/CodexBar/Settings/SettingsSidebarSizing.swift
+R100	Sources/CodexBar/SettingsStore+CompactAccountMenu.swift	Sources/CodexBar/Settings/SettingsStore+CompactAccountMenu.swift
+R095	Sources/CodexBar/SettingsStore+Config.swift	Sources/CodexBar/Settings/SettingsStore+Config.swift
+R100	Sources/CodexBar/SettingsStore+ConfigPersistence.swift	Sources/CodexBar/Settings/SettingsStore+ConfigPersistence.swift
+R097	Sources/CodexBar/SettingsStore+Defaults.swift	Sources/CodexBar/Settings/SettingsStore+Defaults.swift
+R100	Sources/CodexBar/SettingsStore+MenuObservation.swift	Sources/CodexBar/Settings/SettingsStore+MenuObservation.swift
+R100	Sources/CodexBar/SettingsStore+MenuPreferences.swift	Sources/CodexBar/Settings/SettingsStore+MenuPreferences.swift
+R100	Sources/CodexBar/SettingsStore+PreferencesDocument.swift	Sources/CodexBar/Settings/SettingsStore+PreferencesDocument.swift
+R100	Sources/CodexBar/SettingsStore+ProviderBrowsing.swift	Sources/CodexBar/Settings/SettingsStore+ProviderBrowsing.swift
+R100	Sources/CodexBar/SettingsStore+ProviderDetection.swift	Sources/CodexBar/Settings/SettingsStore+ProviderDetection.swift
+R100	Sources/CodexBar/SettingsStore+Sync.swift	Sources/CodexBar/Settings/SettingsStore+Sync.swift
+R100	Sources/CodexBar/SettingsStore+TokenAccounts.swift	Sources/CodexBar/Settings/SettingsStore+TokenAccounts.swift
+R100	Sources/CodexBar/SettingsStore+TokenCost.swift	Sources/CodexBar/Settings/SettingsStore+TokenCost.swift
+R099	Sources/CodexBar/SettingsStore.swift	Sources/CodexBar/Settings/SettingsStore.swift
+R099	Sources/CodexBar/SettingsStoreState.swift	Sources/CodexBar/Settings/SettingsStoreState.swift
+R097	Sources/CodexBar/SettingsWindowController.swift	Sources/CodexBar/Settings/SettingsWindowController.swift
+R100	Sources/CodexBar/SidebarResizeHandle.swift	Sources/CodexBar/Settings/SidebarResizeHandle.swift
+R100	Sources/CodexBar/SpendActivityHeatmap.swift	Sources/CodexBar/SpendDashboard/SpendActivityHeatmap.swift
+R100	Sources/CodexBar/SpendActivityMonthLabelsLayout.swift	Sources/CodexBar/SpendDashboard/SpendActivityMonthLabelsLayout.swift
+R100	Sources/CodexBar/SpendActivityPalette.swift	Sources/CodexBar/SpendDashboard/SpendActivityPalette.swift
+R100	Sources/CodexBar/SpendActivityScrollableGrid.swift	Sources/CodexBar/SpendDashboard/SpendActivityScrollableGrid.swift
+R100	Sources/CodexBar/SpendDashboardController.swift	Sources/CodexBar/SpendDashboard/SpendDashboardController.swift
+R100	Sources/CodexBar/SpendDashboardLoadedInputScope.swift	Sources/CodexBar/SpendDashboard/SpendDashboardLoadedInputScope.swift
+R100	Sources/CodexBar/SpendDashboardModel+ModelBreakdown.swift	Sources/CodexBar/SpendDashboard/SpendDashboardModel+ModelBreakdown.swift
+R097	Sources/CodexBar/SpendDashboardModel.swift	Sources/CodexBar/SpendDashboard/SpendDashboardModel.swift
+R100	Sources/CodexBar/SpendDashboardProviderBreakdown.swift	Sources/CodexBar/SpendDashboard/SpendDashboardProviderBreakdown.swift
+R100	Sources/CodexBar/SpendDashboardPublication.swift	Sources/CodexBar/SpendDashboard/SpendDashboardPublication.swift
+R100	Sources/CodexBar/SpendDashboardSource+OpenCodex.swift	Sources/CodexBar/SpendDashboard/SpendDashboardSource+OpenCodex.swift
+R100	Sources/CodexBar/SpendDashboardSummary.swift	Sources/CodexBar/SpendDashboard/SpendDashboardSummary.swift
+R100	Sources/CodexBar/SpendDashboardTrendPanel.swift	Sources/CodexBar/SpendDashboard/SpendDashboardTrendPanel.swift
+R100	Sources/CodexBar/SpendSessionPerformanceView.swift	Sources/CodexBar/SpendDashboard/SpendSessionPerformanceView.swift
+R097	Sources/CodexBar/SpendSessionToolActivityView.swift	Sources/CodexBar/SpendDashboard/SpendSessionToolActivityView.swift
+R100	Sources/CodexBar/SpendTimeZoneControls.swift	Sources/CodexBar/SpendDashboard/SpendTimeZoneControls.swift
+R100	Sources/CodexBar/SpendToolDetailsModel.swift	Sources/CodexBar/SpendDashboard/SpendToolDetailsModel.swift
+R100	Sources/CodexBar/SpendTrendChartModel.swift	Sources/CodexBar/SpendDashboard/SpendTrendChartModel.swift
+R100	Sources/CodexBar/StatusItemController+AccountMenuDisplay.swift	Sources/CodexBar/StatusItem/StatusItemController+AccountMenuDisplay.swift
+R098	Sources/CodexBar/StatusItemController+Actions.swift	Sources/CodexBar/StatusItem/StatusItemController+Actions.swift
+R100	Sources/CodexBar/StatusItemController+AgentSessions.swift	Sources/CodexBar/StatusItem/StatusItemController+AgentSessions.swift
+R095	Sources/CodexBar/StatusItemController+Animation.swift	Sources/CodexBar/StatusItem/StatusItemController+Animation.swift
+R100	Sources/CodexBar/StatusItemController+CodexStackedMenu.swift	Sources/CodexBar/StatusItem/StatusItemController+CodexStackedMenu.swift
+R100	Sources/CodexBar/StatusItemController+CompactAccountMenu.swift	Sources/CodexBar/StatusItem/StatusItemController+CompactAccountMenu.swift
+R100	Sources/CodexBar/StatusItemController+CostMenuCard.swift	Sources/CodexBar/StatusItem/StatusItemController+CostMenuCard.swift
+R095	Sources/CodexBar/StatusItemController+CountdownRefresh.swift	Sources/CodexBar/StatusItem/StatusItemController+CountdownRefresh.swift
+R054	Sources/CodexBar/StatusItemController+FleetAccounts.swift	Sources/CodexBar/StatusItem/StatusItemController+FleetAccounts.swift
+R100	Sources/CodexBar/StatusItemController+FrontmostApp.swift	Sources/CodexBar/StatusItem/StatusItemController+FrontmostApp.swift
+R095	Sources/CodexBar/StatusItemController+HostedSubmenus.swift	Sources/CodexBar/StatusItem/StatusItemController+HostedSubmenus.swift
+R095	Sources/CodexBar/StatusItemController+IconObservation.swift	Sources/CodexBar/StatusItem/StatusItemController+IconObservation.swift
+R100	Sources/CodexBar/StatusItemController+IconPerf.swift	Sources/CodexBar/StatusItem/StatusItemController+IconPerf.swift
+R100	Sources/CodexBar/StatusItemController+MemoryPressure.swift	Sources/CodexBar/StatusItem/StatusItemController+MemoryPressure.swift
+R099	Sources/CodexBar/StatusItemController+Menu.swift	Sources/CodexBar/StatusItem/StatusItemController+Menu.swift
+R100	Sources/CodexBar/StatusItemController+MenuActionMapping.swift	Sources/CodexBar/StatusItem/StatusItemController+MenuActionMapping.swift
+R100	Sources/CodexBar/StatusItemController+MenuAppearance.swift	Sources/CodexBar/StatusItem/StatusItemController+MenuAppearance.swift
+R089	Sources/CodexBar/StatusItemController+MenuBarLayout.swift	Sources/CodexBar/StatusItem/StatusItemController+MenuBarLayout.swift
+R100	Sources/CodexBar/StatusItemController+MenuCardHeightCache.swift	Sources/CodexBar/StatusItem/StatusItemController+MenuCardHeightCache.swift
+R100	Sources/CodexBar/StatusItemController+MenuCardItems.swift	Sources/CodexBar/StatusItem/StatusItemController+MenuCardItems.swift
+R100	Sources/CodexBar/StatusItemController+MenuCardModel.swift	Sources/CodexBar/StatusItem/StatusItemController+MenuCardModel.swift
+R100	Sources/CodexBar/StatusItemController+MenuCardRecycling.swift	Sources/CodexBar/StatusItem/StatusItemController+MenuCardRecycling.swift
+R100	Sources/CodexBar/StatusItemController+MenuContexts.swift	Sources/CodexBar/StatusItem/StatusItemController+MenuContexts.swift
+R100	Sources/CodexBar/StatusItemController+MenuInteractionRefresh.swift	Sources/CodexBar/StatusItem/StatusItemController+MenuInteractionRefresh.swift
+R100	Sources/CodexBar/StatusItemController+MenuLocalization.swift	Sources/CodexBar/StatusItem/StatusItemController+MenuLocalization.swift
+R098	Sources/CodexBar/StatusItemController+MenuPresentation.swift	Sources/CodexBar/StatusItem/StatusItemController+MenuPresentation.swift
+R100	Sources/CodexBar/StatusItemController+MenuReconcile.swift	Sources/CodexBar/StatusItem/StatusItemController+MenuReconcile.swift
+R100	Sources/CodexBar/StatusItemController+MenuRefreshScheduling.swift	Sources/CodexBar/StatusItem/StatusItemController+MenuRefreshScheduling.swift
+R100	Sources/CodexBar/StatusItemController+MenuRowReordering.swift	Sources/CodexBar/StatusItem/StatusItemController+MenuRowReordering.swift
+R100	Sources/CodexBar/StatusItemController+MenuSmartUpdate.swift	Sources/CodexBar/StatusItem/StatusItemController+MenuSmartUpdate.swift
+R100	Sources/CodexBar/StatusItemController+MenuSwitcherWarmup.swift	Sources/CodexBar/StatusItem/StatusItemController+MenuSwitcherWarmup.swift
+R100	Sources/CodexBar/StatusItemController+MenuTextRows.swift	Sources/CodexBar/StatusItem/StatusItemController+MenuTextRows.swift
+R100	Sources/CodexBar/StatusItemController+MenuTracking.swift	Sources/CodexBar/StatusItem/StatusItemController+MenuTracking.swift
+R096	Sources/CodexBar/StatusItemController+MenuTypes.swift	Sources/CodexBar/StatusItem/StatusItemController+MenuTypes.swift
+R100	Sources/CodexBar/StatusItemController+MenuViewportRestore.swift	Sources/CodexBar/StatusItem/StatusItemController+MenuViewportRestore.swift
+R100	Sources/CodexBar/StatusItemController+MenuWidthCache.swift	Sources/CodexBar/StatusItem/StatusItemController+MenuWidthCache.swift
+R100	Sources/CodexBar/StatusItemController+MergedSwitcherContentCache.swift	Sources/CodexBar/StatusItem/StatusItemController+MergedSwitcherContentCache.swift
+R100	Sources/CodexBar/StatusItemController+OverviewScroll.swift	Sources/CodexBar/StatusItem/StatusItemController+OverviewScroll.swift
+R100	Sources/CodexBar/StatusItemController+OverviewSpend.swift	Sources/CodexBar/StatusItem/StatusItemController+OverviewSpend.swift
+R100	Sources/CodexBar/StatusItemController+OverviewSubmenus.swift	Sources/CodexBar/StatusItem/StatusItemController+OverviewSubmenus.swift
+R100	Sources/CodexBar/StatusItemController+PersistentMenuActions.swift	Sources/CodexBar/StatusItem/StatusItemController+PersistentMenuActions.swift
+R100	Sources/CodexBar/StatusItemController+PersistentRefreshMenuItem.swift	Sources/CodexBar/StatusItem/StatusItemController+PersistentRefreshMenuItem.swift
+R100	Sources/CodexBar/StatusItemController+ProviderNavigation.swift	Sources/CodexBar/StatusItem/StatusItemController+ProviderNavigation.swift
+R100	Sources/CodexBar/StatusItemController+ProviderSwitcher.swift	Sources/CodexBar/StatusItem/StatusItemController+ProviderSwitcher.swift
+R100	Sources/CodexBar/StatusItemController+Shutdown.swift	Sources/CodexBar/StatusItem/StatusItemController+Shutdown.swift
+R100	Sources/CodexBar/StatusItemController+StatusItemVending.swift	Sources/CodexBar/StatusItem/StatusItemController+StatusItemVending.swift
+R100	Sources/CodexBar/StatusItemController+StorageMenuCard.swift	Sources/CodexBar/StatusItem/StatusItemController+StorageMenuCard.swift
+R060	Sources/CodexBar/StatusItemController+SwitcherMetrics.swift	Sources/CodexBar/StatusItem/StatusItemController+SwitcherMetrics.swift
+R100	Sources/CodexBar/StatusItemController+SwitcherViews.swift	Sources/CodexBar/StatusItem/StatusItemController+SwitcherViews.swift
+R100	Sources/CodexBar/StatusItemController+UsageHistoryMenu.swift	Sources/CodexBar/StatusItem/StatusItemController+UsageHistoryMenu.swift
+R085	Sources/CodexBar/StatusItemController+UserPlugins.swift	Sources/CodexBar/StatusItem/StatusItemController+UserPlugins.swift
+R100	Sources/CodexBar/StatusItemController+WidgetSnapshot.swift	Sources/CodexBar/StatusItem/StatusItemController+WidgetSnapshot.swift
+R098	Sources/CodexBar/StatusItemController.swift	Sources/CodexBar/StatusItem/StatusItemController.swift
+R100	Sources/CodexBar/StatusItemMenu.swift	Sources/CodexBar/StatusItem/StatusItemMenu.swift
+M	Sources/CodexBar/UsagePaceText.swift
+D	Sources/CodexBar/UsageStore+UserPlugins.swift
+R100	Sources/CodexBar/UsageStore+APIKeyDebug.swift	Sources/CodexBar/UsageStore/UsageStore+APIKeyDebug.swift
+R099	Sources/CodexBar/UsageStore+Accessors.swift	Sources/CodexBar/UsageStore/UsageStore+Accessors.swift
+R100	Sources/CodexBar/UsageStore+AccountRefreshPolicy.swift	Sources/CodexBar/UsageStore/UsageStore+AccountRefreshPolicy.swift
+R100	Sources/CodexBar/UsageStore+AdaptiveRefresh.swift	Sources/CodexBar/UsageStore/UsageStore+AdaptiveRefresh.swift
+R099	Sources/CodexBar/UsageStore+BackgroundRefresh.swift	Sources/CodexBar/UsageStore/UsageStore+BackgroundRefresh.swift
+R100	Sources/CodexBar/UsageStore+CLIUsageCache.swift	Sources/CodexBar/UsageStore/UsageStore+CLIUsageCache.swift
+R100	Sources/CodexBar/UsageStore+ClaudeHistoryFallback.swift	Sources/CodexBar/UsageStore/UsageStore+ClaudeHistoryFallback.swift
+R100	Sources/CodexBar/UsageStore+CredentialNotifications.swift	Sources/CodexBar/UsageStore/UsageStore+CredentialNotifications.swift
+R089	Sources/CodexBar/UsageStore+HighestUsage.swift	Sources/CodexBar/UsageStore/UsageStore+HighestUsage.swift
+R100	Sources/CodexBar/UsageStore+HistoricalPace.swift	Sources/CodexBar/UsageStore/UsageStore+HistoricalPace.swift
+R094	Sources/CodexBar/UsageStore+Hooks.swift	Sources/CodexBar/UsageStore/UsageStore+Hooks.swift
+R100	Sources/CodexBar/UsageStore+LimitResetBoundary.swift	Sources/CodexBar/UsageStore/UsageStore+LimitResetBoundary.swift
+R098	Sources/CodexBar/UsageStore+LimitResetCelebration.swift	Sources/CodexBar/UsageStore/UsageStore+LimitResetCelebration.swift
+R100	Sources/CodexBar/UsageStore+LimitResetIdentity.swift	Sources/CodexBar/UsageStore/UsageStore+LimitResetIdentity.swift
+R100	Sources/CodexBar/UsageStore+Logging.swift	Sources/CodexBar/UsageStore/UsageStore+Logging.swift
+R100	Sources/CodexBar/UsageStore+MemoryPressure.swift	Sources/CodexBar/UsageStore/UsageStore+MemoryPressure.swift
+R099	Sources/CodexBar/UsageStore+MenuCardModel.swift	Sources/CodexBar/UsageStore/UsageStore+MenuCardModel.swift
+R100	Sources/CodexBar/UsageStore+OverviewAccounts.swift	Sources/CodexBar/UsageStore/UsageStore+OverviewAccounts.swift
+R100	Sources/CodexBar/UsageStore+PermissionPrompts.swift	Sources/CodexBar/UsageStore/UsageStore+PermissionPrompts.swift
+R099	Sources/CodexBar/UsageStore+PlanUtilization.swift	Sources/CodexBar/UsageStore/UsageStore+PlanUtilization.swift
+R100	Sources/CodexBar/UsageStore+PlanUtilizationLoading.swift	Sources/CodexBar/UsageStore/UsageStore+PlanUtilizationLoading.swift
+R100	Sources/CodexBar/UsageStore+PluginSettings.swift	Sources/CodexBar/UsageStore/UsageStore+PluginSettings.swift
+R100	Sources/CodexBar/UsageStore+ProviderRuntime.swift	Sources/CodexBar/UsageStore/UsageStore+ProviderRuntime.swift
+R100	Sources/CodexBar/UsageStore+ProviderStatus.swift	Sources/CodexBar/UsageStore/UsageStore+ProviderStatus.swift
+R100	Sources/CodexBar/UsageStore+ProviderStorage.swift	Sources/CodexBar/UsageStore/UsageStore+ProviderStorage.swift
+R092	Sources/CodexBar/UsageStore+QuotaWarnings.swift	Sources/CodexBar/UsageStore/UsageStore+QuotaWarnings.swift
+R100	Sources/CodexBar/UsageStore+QuotaWindowResets.swift	Sources/CodexBar/UsageStore/UsageStore+QuotaWindowResets.swift
+R099	Sources/CodexBar/UsageStore+Refresh.swift	Sources/CodexBar/UsageStore/UsageStore+Refresh.swift
+R100	Sources/CodexBar/UsageStore+RefreshEnrichment.swift	Sources/CodexBar/UsageStore/UsageStore+RefreshEnrichment.swift
+R100	Sources/CodexBar/UsageStore+RefreshNotifications.swift	Sources/CodexBar/UsageStore/UsageStore+RefreshNotifications.swift
+R100	Sources/CodexBar/UsageStore+ResetBoundaryRefresh.swift	Sources/CodexBar/UsageStore/UsageStore+ResetBoundaryRefresh.swift
+R100	Sources/CodexBar/UsageStore+SessionEquivalents.swift	Sources/CodexBar/UsageStore/UsageStore+SessionEquivalents.swift
+R096	Sources/CodexBar/UsageStore+SessionQuotaTransition.swift	Sources/CodexBar/UsageStore/UsageStore+SessionQuotaTransition.swift
+R100	Sources/CodexBar/UsageStore+SpendDashboardPublication.swift	Sources/CodexBar/UsageStore/UsageStore+SpendDashboardPublication.swift
+R100	Sources/CodexBar/UsageStore+SpendDashboardTokenCost.swift	Sources/CodexBar/UsageStore/UsageStore+SpendDashboardTokenCost.swift
+R100	Sources/CodexBar/UsageStore+SpendLimit.swift	Sources/CodexBar/UsageStore/UsageStore+SpendLimit.swift
+R100	Sources/CodexBar/UsageStore+StartupConnectivityRetry.swift	Sources/CodexBar/UsageStore/UsageStore+StartupConnectivityRetry.swift
+R100	Sources/CodexBar/UsageStore+SupplementalUsage.swift	Sources/CodexBar/UsageStore/UsageStore+SupplementalUsage.swift
+R100	Sources/CodexBar/UsageStore+Timeout.swift	Sources/CodexBar/UsageStore/UsageStore+Timeout.swift
+R100	Sources/CodexBar/UsageStore+TokenAccountCacheKey.swift	Sources/CodexBar/UsageStore/UsageStore+TokenAccountCacheKey.swift
+R099	Sources/CodexBar/UsageStore+TokenAccounts.swift	Sources/CodexBar/UsageStore/UsageStore+TokenAccounts.swift
+R097	Sources/CodexBar/UsageStore+TokenCost.swift	Sources/CodexBar/UsageStore/UsageStore+TokenCost.swift
+R100	Sources/CodexBar/UsageStore+TokenRefreshSequence.swift	Sources/CodexBar/UsageStore/UsageStore+TokenRefreshSequence.swift
+A	Sources/CodexBar/UsageStore/UsageStore+UserPlugins.swift
+R100	Sources/CodexBar/UsageStore+WidgetAccounts.swift	Sources/CodexBar/UsageStore/UsageStore+WidgetAccounts.swift
+R099	Sources/CodexBar/UsageStore+WidgetSnapshot.swift	Sources/CodexBar/UsageStore/UsageStore+WidgetSnapshot.swift
+R099	Sources/CodexBar/UsageStore.swift	Sources/CodexBar/UsageStore/UsageStore.swift
+R100	Sources/CodexBar/UsageStoreSupport.swift	Sources/CodexBar/UsageStore/UsageStoreSupport.swift
+A	Sources/CodexBarCLI/CLIConfigClearCredentialCommand.swift
+M	Sources/CodexBarCLI/CLIConfigCommand.swift
+A	Sources/CodexBarCLI/CLIConfigCookieCommand.swift
+A	Sources/CodexBarCLI/CLIConfigLoginCommand.swift
+M	Sources/CodexBarCLI/CLIEntry.swift
+M	Sources/CodexBarCLI/CLIHelp.swift
+M	Sources/CodexBarCLI/CLIPluginsCommand.swift
+M	Sources/CodexBarCLI/CLIServeCommand.swift
+M	Sources/CodexBarCLI/CLIServeProviderIcons.swift
+M	Sources/CodexBarCLI/CLIUsageCommand.swift
+M	Sources/CodexBarCore/AccountMenuLayoutPlanner.swift
+A	Sources/CodexBarCore/ChromiumSafeStorage.swift
+M	Sources/CodexBarCore/CostUsageFetcher.swift
+M	Sources/CodexBarCore/CostUsageModels.swift
+M	Sources/CodexBarCore/CostUsageSessionBreakdown.swift
+A	Sources/CodexBarCore/CostUsageSessionDetails.swift
+A	Sources/CodexBarCore/CostUsageSessionTurn.swift
+A	Sources/CodexBarCore/CostUsageSessionTurns.swift
+M	Sources/CodexBarCore/Generated/CodexParserHash.generated.swift
+M	Sources/CodexBarCore/Hooks/HookRule.swift
+M	Sources/CodexBarCore/Host/Process/ProcessPipeCapture.swift
+M	Sources/CodexBarCore/Logging/LogCategories.swift
+M	Sources/CodexBarCore/ManagedCodexAccountStore.swift
+M	Sources/CodexBarCore/Plugins/ProviderPluginManifest.swift
+M	Sources/CodexBarCore/Plugins/ProviderPluginRuntime.swift
+M	Sources/CodexBarCore/Plugins/ProviderPluginSnapshotMapper.swift
+M	Sources/CodexBarCore/Plugins/UserProviderPlugins.swift
+M	Sources/CodexBarCore/ProviderDetailSection.swift
+A	Sources/CodexBarCore/Providers/Abliteration/AbliterationProviderDescriptor.swift
+M	Sources/CodexBarCore/Providers/Antigravity/AntigravityCLISession.swift
+M	Sources/CodexBarCore/Providers/Antigravity/AntigravityLocalSQLite.swift
+M	Sources/CodexBarCore/Providers/Antigravity/AntigravityProviderDescriptor.swift
+M	Sources/CodexBarCore/Providers/Antigravity/AntigravityScopedPrintFetch.swift
+M	Sources/CodexBarCore/Providers/Antigravity/AntigravityStatusProbe.swift
+A	Sources/CodexBarCore/Providers/Chatbox/ChatboxProviderDescriptor.swift
+M	Sources/CodexBarCore/Providers/Claude/ClaudeOAuth/ClaudeOAuthCredentials.swift
+M	Sources/CodexBarCore/Providers/Claude/ClaudeProviderDescriptor.swift
+M	Sources/CodexBarCore/Providers/Claude/ClaudeUsageFetcher.swift
+M	Sources/CodexBarCore/Providers/CodeRabbit/CodeRabbitCLIProbe.swift
+M	Sources/CodexBarCore/Providers/Codex/CodexAccountPromotionExecution.swift
+M	Sources/CodexBarCore/Providers/Codex/CodexProviderDescriptor.swift
+M	Sources/CodexBarCore/Providers/CommandCode/CommandCodeProviderDescriptor.swift
+A	Sources/CodexBarCore/Providers/Copilot/CopilotAccountIdentity.swift
+M	Sources/CodexBarCore/Providers/Copilot/CopilotDeviceFlow.swift
+M	Sources/CodexBarCore/Providers/Cursor/CursorAppAuth.swift
+M	Sources/CodexBarCore/Providers/Cursor/CursorProviderDescriptor.swift
+M	Sources/CodexBarCore/Providers/Cursor/CursorSandUsage.swift
+M	Sources/CodexBarCore/Providers/Cursor/CursorStatusProbe.swift
+M	Sources/CodexBarCore/Providers/Devin/DevinProviderDescriptor.swift
+M	Sources/CodexBarCore/Providers/Grok/GrokProviderDescriptor.swift
+M	Sources/CodexBarCore/Providers/Grok/GrokStatusProbe.swift
+M	Sources/CodexBarCore/Providers/Kimi/KimiModels.swift
+M	Sources/CodexBarCore/Providers/Kimi/KimiUsageFetcher.swift
+M	Sources/CodexBarCore/Providers/Kimi/KimiUsageSnapshot.swift
+M	Sources/CodexBarCore/Providers/Kiro/KiroProviderDescriptor.swift
+M	Sources/CodexBarCore/Providers/Kiro/KiroUsageLimitsAPI.swift
+M	Sources/CodexBarCore/Providers/Mistral/MistralProviderDescriptor.swift
+M	Sources/CodexBarCore/Providers/OpenAI/OpenAIAPIProviderDescriptor.swift
+A	Sources/CodexBarCore/Providers/OpenCode/OpenCodeLocalHistoryAdapter.swift
+A	Sources/CodexBarCore/Providers/OpenCode/OpenCodeLocalHistoryPublication.swift
+A	Sources/CodexBarCore/Providers/OpenCode/OpenCodeSourceCheckpoint.swift
+M	Sources/CodexBarCore/Providers/OpenCodeGo/OpenCodeGoLocalUsageReader.swift
+M	Sources/CodexBarCore/Providers/OpenCodeGo/OpenCodeGoProviderDescriptor.swift
+M	Sources/CodexBarCore/Providers/OpenCodeGo/OpenCodeGoSettingsReader.swift
+M	Sources/CodexBarCore/Providers/Pi/PiProviderDescriptor.swift
+M	Sources/CodexBarCore/Providers/ProviderCredentialAdapter.swift
+M	Sources/CodexBarCore/Providers/ProviderDescriptor.swift
+M	Sources/CodexBarCore/Providers/ProviderInstanceIDAliases.generated.swift
+M	Sources/CodexBarCore/Providers/ProviderManifest.swift
+M	Sources/CodexBarCore/Providers/ProviderSettingsSnapshot.swift
+M	Sources/CodexBarCore/Providers/ProviderUsagePresentation.swift
+M	Sources/CodexBarCore/Providers/Providers.swift
+M	Sources/CodexBarCore/Providers/Raycast/RaycastProviderDescriptor.swift
+M	Sources/CodexBarCore/Providers/Shared/AliyunOneConsole/AliyunOneConsoleChromiumCookieFallbackImporter.swift
+A	Sources/CodexBarCore/Providers/Soniox/SonioxProviderDescriptor.swift
+A	Sources/CodexBarCore/Providers/TraeCN/TraeCNProviderDescriptor.swift
+M	Sources/CodexBarCore/Providers/Windsurf/WindsurfProviderDescriptor.swift
+A	Sources/CodexBarCore/Resources/Plugins/abliteration.js
+A	Sources/CodexBarCore/Resources/Plugins/abliteration.ts
+A	Sources/CodexBarCore/Resources/Plugins/chatbox.js
+A	Sources/CodexBarCore/Resources/Plugins/chatbox.ts
+M	Sources/CodexBarCore/Resources/Plugins/codexbar-plugin.d.ts
+M	Sources/CodexBarCore/Resources/Plugins/futureagi.js
+M	Sources/CodexBarCore/Resources/Plugins/futureagi.ts
+M	Sources/CodexBarCore/Resources/Plugins/notion.js
+M	Sources/CodexBarCore/Resources/Plugins/notion.ts
+A	Sources/CodexBarCore/Resources/Plugins/soniox.js
+A	Sources/CodexBarCore/Resources/Plugins/soniox.ts
+M	Sources/CodexBarCore/Resources/Plugins/tavily.js
+A	Sources/CodexBarCore/Resources/Plugins/traecn.js
+M	Sources/CodexBarCore/Resources/Plugins/workbuddy.js
+M	Sources/CodexBarCore/Resources/Plugins/workbuddy.ts
+M	Sources/CodexBarCore/SessionToolActivity.swift
+M	Sources/CodexBarCore/UsageFetcher.swift
+M	Sources/CodexBarCore/UsageFormatter.swift
+M	Sources/CodexBarCore/UsagePace.swift
+M	Sources/CodexBarCore/Vendored/CostUsage/CostUsageClaudeCache.swift
+M	Sources/CodexBarCore/Vendored/CostUsage/CostUsagePricing.swift
+M	Sources/CodexBarCore/Vendored/CostUsage/CostUsageScanner+CacheHelpers.swift
+M	Sources/CodexBarCore/Vendored/CostUsage/CostUsageScanner+Claude.swift
+M	Sources/CodexBarCore/Vendored/CostUsage/CostUsageScanner+CodexPriority.swift
+M	Sources/CodexBarCore/Vendored/CostUsage/CostUsageScanner+Projects.swift
+M	Sources/CodexBarCore/Vendored/CostUsage/CostUsageScanner+TemporalBuckets.swift
+M	Sources/CodexBarCore/Vendored/CostUsage/CostUsageScanner.swift
+M	Sources/CodexBarCore/Vendored/CostUsage/CostUsageStore+CodexBaseline.swift
+M	Sources/CodexBarCore/Vendored/CostUsage/CostUsageStore+CodexCache.swift
+M	Sources/CodexBarCore/Vendored/CostUsage/CostUsageStore+ReadView.swift
+M	Sources/CodexBarCore/Vendored/CostUsage/CostUsageStore+Reads.swift
+M	Sources/CodexBarCore/Vendored/CostUsage/CostUsageStore+Retention.swift
+M	Sources/CodexBarCore/Vendored/CostUsage/CostUsageStore+Writes.swift
+M	Sources/CodexBarCore/Vendored/CostUsage/CostUsageStore.swift
+M	Sources/CodexBarCore/Vendored/CostUsage/CostUsageStoreModels.swift
+A	Sources/CodexBarCore/Vendored/CostUsage/SQLiteIdleDatabaseState.swift
+M	Sources/CodexBarWidget/BurnDownWidgetProvider.swift
+M	Sources/CodexBarWidget/BurnDownWidgetViews.swift
+M	Sources/CodexBarWidget/CodexBarWidgetViews.swift
+M	Sources/CodexBarWidget/Resources/ar.lproj/Localizable.strings
+M	Sources/CodexBarWidget/Resources/ca.lproj/Localizable.strings
+M	Sources/CodexBarWidget/Resources/de.lproj/Localizable.strings
+M	Sources/CodexBarWidget/Resources/en.lproj/Localizable.strings
+M	Sources/CodexBarWidget/Resources/es.lproj/Localizable.strings
+M	Sources/CodexBarWidget/Resources/fa.lproj/Localizable.strings
+M	Sources/CodexBarWidget/Resources/fr.lproj/Localizable.strings
+M	Sources/CodexBarWidget/Resources/gl.lproj/Localizable.strings
+M	Sources/CodexBarWidget/Resources/id.lproj/Localizable.strings
+M	Sources/CodexBarWidget/Resources/it.lproj/Localizable.strings
+M	Sources/CodexBarWidget/Resources/ja.lproj/Localizable.strings
+M	Sources/CodexBarWidget/Resources/ko.lproj/Localizable.strings
+M	Sources/CodexBarWidget/Resources/nl.lproj/Localizable.strings
+M	Sources/CodexBarWidget/Resources/pl.lproj/Localizable.strings
+M	Sources/CodexBarWidget/Resources/pt-BR.lproj/Localizable.strings
+M	Sources/CodexBarWidget/Resources/ru.lproj/Localizable.strings
+M	Sources/CodexBarWidget/Resources/sv.lproj/Localizable.strings
+M	Sources/CodexBarWidget/Resources/th.lproj/Localizable.strings
+M	Sources/CodexBarWidget/Resources/tr.lproj/Localizable.strings
+M	Sources/CodexBarWidget/Resources/uk.lproj/Localizable.strings
+M	Sources/CodexBarWidget/Resources/vi.lproj/Localizable.strings
+M	Sources/CodexBarWidget/Resources/zh-Hans.lproj/Localizable.strings
+M	Sources/CodexBarWidget/Resources/zh-Hant.lproj/Localizable.strings
+A	Tests/CodexBarTests/AbliterationProviderTests.swift
+A	Tests/CodexBarTests/AboutUpdatePreferenceStateTests.swift
+A	Tests/CodexBarTests/AboutUpdatePreferenceTests.swift
+M	Tests/CodexBarTests/AboutWebsiteTests.swift
+M	Tests/CodexBarTests/AlibabaCodingPlanCookieImporterTests.swift
+M	Tests/CodexBarTests/AntigravityCLILaneParityTests.swift
+M	Tests/CodexBarTests/AntigravityCLISessionTests.swift
+M	Tests/CodexBarTests/AntigravityCLIUsageReportTests.swift
+M	Tests/CodexBarTests/AntigravityScopedPrintFetchTests.swift
+M	Tests/CodexBarTests/BurnDownCapabilityTests.swift
+M	Tests/CodexBarTests/CLICommonOptionsTests.swift
+A	Tests/CodexBarTests/CLIConfigClearCredentialCommandTests.swift
+A	Tests/CodexBarTests/CLIConfigCookieCommandTests.swift
+A	Tests/CodexBarTests/CLIConfigLoginTests.swift
+M	Tests/CodexBarTests/CLIEntryTests.swift
+M	Tests/CodexBarTests/CLIPluginConfigPreservationTests.swift
+M	Tests/CodexBarTests/CLIProviderSelectionTests.swift
+M	Tests/CodexBarTests/CLIServeDashboardIdentityTests.swift
+M	Tests/CodexBarTests/CLIServeRouterTests.swift
+A	Tests/CodexBarTests/ChatboxPluginTests.swift
+A	Tests/CodexBarTests/ClaudeEmptyQuotaAvailabilityTests.swift
+A	Tests/CodexBarTests/ClaudeEmptyQuotaSubtitleTests.swift
+M	Tests/CodexBarTests/ClaudeOAuthDefaultsFixtures.swift
+M	Tests/CodexBarTests/ClaudeOAuthUpgradeCompatibilityTests.swift
+M	Tests/CodexBarTests/ClaudeUIErrorMapperTests.swift
+M	Tests/CodexBarTests/CodexAccountPromotionExecutionTests.swift
+M	Tests/CodexBarTests/CodexCredentialFileAccessTests.swift
+M	Tests/CodexBarTests/CodexLocalSessionCostSettingsTests.swift
+M	Tests/CodexBarTests/CodexOAuthCreditLimitTests.swift
+M	Tests/CodexBarTests/CodexOAuthTests.swift
+M	Tests/CodexBarTests/CommandCodeProviderTests.swift
+M	Tests/CodexBarTests/ConfigValidationTests.swift
+M	Tests/CodexBarTests/CopilotDeviceFlowTests.swift
+M	Tests/CodexBarTests/CopilotMultiAccountTests.swift
+M	Tests/CodexBarTests/CostHistoryChartMenuViewTests.swift
+M	Tests/CodexBarTests/CostUsageClaudeRowStorageTests.swift
+A	Tests/CodexBarTests/CostUsageClaudeUnpricedCoverageTests.swift
+M	Tests/CodexBarTests/CostUsageClaudeWriteAmplificationTests.swift
+M	Tests/CodexBarTests/CostUsageCodexReportPricingWorkTests.swift
+A	Tests/CodexBarTests/CostUsagePricingClaudeMythosTests.swift
+M	Tests/CodexBarTests/CostUsageScannerClaudeCacheUpgradeTests.swift
+M	Tests/CodexBarTests/CostUsageScannerClaudeDesktopTests.swift
+M	Tests/CodexBarTests/CostUsageScannerClaudeMemoTests.swift
+M	Tests/CodexBarTests/CostUsageScannerCodexPriorityCursorTests.swift
+A	Tests/CodexBarTests/CostUsageScannerCodexPriorityImmutableFallbackTests.swift
+M	Tests/CodexBarTests/CostUsageScannerCodexPriorityTests.swift
+A	Tests/CodexBarTests/CostUsageSessionDetailsTests.swift
+A	Tests/CodexBarTests/CostUsageSessionTurnsTests.swift
+M	Tests/CodexBarTests/CostUsageStoreTests.swift
+A	Tests/CodexBarTests/CursorAppAuthEncryptionTests.swift
+M	Tests/CodexBarTests/CursorProviderImplementationTests.swift
+M	Tests/CodexBarTests/CursorSandUsageTests.swift
+A	Tests/CodexBarTests/CursorUnifiedWeeklyPresentationTests.swift
+M	Tests/CodexBarTests/FleetAccountMenuProjectionTests.swift
+M	Tests/CodexBarTests/FutureAGIPluginTests.swift
+A	Tests/CodexBarTests/GrokACPUnknownUsageTests.swift
+M	Tests/CodexBarTests/HomebrewUpgradeCommandTests.swift
+M	Tests/CodexBarTests/InlineCostHistoryCalendarTests.swift
+M	Tests/CodexBarTests/InlineCostHistoryDashboardLabelTests.swift
+A	Tests/CodexBarTests/KimiGiftBalanceCLITests.swift
+A	Tests/CodexBarTests/KimiGiftBalanceTests.swift
+A	Tests/CodexBarTests/KimiLapsedSubscriptionTests.swift
+A	Tests/CodexBarTests/KimiMonthlyBreakdownCLITests.swift
+A	Tests/CodexBarTests/KimiMonthlyBreakdownTests.swift
+M	Tests/CodexBarTests/KimiProviderTests.swift
+M	Tests/CodexBarTests/KimiTokenAccountTests.swift
+A	Tests/CodexBarTests/KiroBackgroundConnectivityTests.swift
+M	Tests/CodexBarTests/KiroRegionalEnrichmentTests.swift
+M	Tests/CodexBarTests/LocalizationFormattingTests.swift
+M	Tests/CodexBarTests/LocalizationLanguageCatalogTests.swift
+M	Tests/CodexBarTests/ManagedCodexAccountServiceTests.swift
+M	Tests/CodexBarTests/ManagedCodexAccountStoreTests.swift
+A	Tests/CodexBarTests/MenuBarAutomaticWindowLabelsTests.swift
+M	Tests/CodexBarTests/MenuBarLayoutRendererTests.swift
+M	Tests/CodexBarTests/MenuBarLayoutThroughputTests.swift
+M	Tests/CodexBarTests/MenuBarPaceSignTests.swift
+A	Tests/CodexBarTests/MenuBarWindowAlignmentTests.swift
+M	Tests/CodexBarTests/MenuCardModelCodexBusinessCreditsTests.swift
+M	Tests/CodexBarTests/MenuCardModelCodexProjectionTests.swift
+M	Tests/CodexBarTests/MenuCardModelTests.swift
+M	Tests/CodexBarTests/MistralMenuBarMetricTests.swift
+A	Tests/CodexBarTests/MonthlyPacingTargetTests.swift
+M	Tests/CodexBarTests/MuseTokenHistoryPresentationTests.swift
+A	Tests/CodexBarTests/NotionAllowanceTests.swift
+M	Tests/CodexBarTests/OpenAIAPIMenuCardModelTests.swift
+A	Tests/CodexBarTests/OpenCodeGoCLICredentialsReaderTests.swift
+M	Tests/CodexBarTests/OpenCodeGoEstimatedPaceTests.swift
+M	Tests/CodexBarTests/OpenCodeGoProviderStrategyTests.swift
+A	Tests/CodexBarTests/OpenCodeGoV2LocalUsageReaderTests.swift
+M	Tests/CodexBarTests/OpenCodeGoWebOverlayTests.swift
+A	Tests/CodexBarTests/OpenCodeLocalHistoryAdapterTests.swift
+A	Tests/CodexBarTests/OpenCodeLocalHistoryPublicationTests.swift
+A	Tests/CodexBarTests/OpenCodeLocalHistoryRegressionTests.swift
+A	Tests/CodexBarTests/OpenCodeSourceCheckpointTests.swift
+M	Tests/CodexBarTests/PerplexityCreditPercentTests.swift
+M	Tests/CodexBarTests/PreferencesPaneSmokeTests.swift
+M	Tests/CodexBarTests/PreferencesSelectionHistoryTests.swift
+A	Tests/CodexBarTests/ProcessPipeCaptureTests.swift
+M	Tests/CodexBarTests/ProviderArchitectureGatekeeperTests.swift
+M	Tests/CodexBarTests/ProviderCredentialCharacterizationTests.swift
+A	Tests/CodexBarTests/ProviderDetailPaceTests.swift
+M	Tests/CodexBarTests/ProviderDetailSectionTests.swift
+M	Tests/CodexBarTests/ProviderDetailSectionsContentTests.swift
+M	Tests/CodexBarTests/ProviderIconResourcesTests.swift
+M	Tests/CodexBarTests/ProviderPaceCapabilityTests.swift
+M	Tests/CodexBarTests/ProviderPaletteRegressionTests.swift
+M	Tests/CodexBarTests/ProviderPluginRuntimeTests.swift
+A	Tests/CodexBarTests/ProviderSettingsDescriptorTests+VersionRow.swift
+M	Tests/CodexBarTests/ProviderSettingsDescriptorTests.swift
+M	Tests/CodexBarTests/ProviderUsageItemVisibilityTests.swift
+M	Tests/CodexBarTests/SessionToolActivityTests.swift
+A	Tests/CodexBarTests/SessionUsageMenuActionTests.swift
+A	Tests/CodexBarTests/SessionUsagePresentationTests.swift
+A	Tests/CodexBarTests/SettingsSidebarSizingTests.swift
+M	Tests/CodexBarTests/SettingsStoreAdditionalTests.swift
+M	Tests/CodexBarTests/SettingsWindowAppearanceTests.swift
+M	Tests/CodexBarTests/SettingsWindowControllerTests.swift
+A	Tests/CodexBarTests/SonioxProviderTests.swift
+M	Tests/CodexBarTests/SparkleUpdaterControllerTests.swift
+M	Tests/CodexBarTests/SpendDashboardSessionRowTests.swift
+M	Tests/CodexBarTests/SpendToolActivityTests.swift
+M	Tests/CodexBarTests/TavilyPluginTests.swift
+M	Tests/CodexBarTests/TokenAccountCLISelectionTests.swift
+A	Tests/CodexBarTests/TraeCNPluginTests.swift
+A	Tests/CodexBarTests/UpdaterPreferenceSyncTests.swift
+M	Tests/CodexBarTests/UsageFormatterTests.swift
+M	Tests/CodexBarTests/UsageUpdatedHookTests.swift
+M	Tests/CodexBarTests/UserFacingLocalizationCoverageTests.swift
+A	Tests/CodexBarTests/UserPluginPercentWindowTests.swift
+M	Tests/CodexBarTests/UserPluginQuotaPresentationTests.swift
+M	Tests/CodexBarTests/UserPluginRefreshTests.swift
+A	Tests/CodexBarTests/UserProviderPluginHTTPClientTests.swift
+M	Tests/CodexBarTests/UserProviderPluginTests.swift
+M	Tests/CodexBarTests/WarpAutomaticCreditsTests.swift
+A	Tests/CodexBarTests/WidgetEmptyStateCopyTests.swift
+M	Tests/CodexBarTests/WidgetLocalizationTests.swift
+M	TestsLinux/AlibabaTokenPlanLinuxTests.swift
+M	TestsLinux/ClaudeWebManualCookieLinuxTests.swift
+M	TestsLinux/CodeRabbitUsageTests.swift
+M	TestsLinux/CursorLinuxTests.swift
+A	TestsLinux/DeepSeekSourceModeTests.swift
+M	TestsLinux/DevinCLISettingsTests.swift
+M	TestsLinux/MiniMaxLinuxTests.swift
+M	TestsLinux/MistralLinuxTests.swift
+M	TestsLinux/MuseAIProviderTests.swift
+M	TestsLinux/OpenCodeGoLinuxTests.swift
+M	TestsLinux/PlatformGatingTests.swift
+A	TestsPlugin/AbliterationPluginTests.swift
+A	TestsPlugin/ProviderPluginDetailPaceTests.swift
+M	TestsPlugin/ProviderPluginSnapshotContractTests.swift
+A	TestsPlugin/SonioxPluginTests.swift
+M	TestsPlugin/WorkBuddyPluginTests.swift
+M	appcast.xml
+M	docs/DEVELOPMENT.md
+M	docs/FORK_ROADMAP.md
+M	docs/UPSTREAM_STRATEGY.md
+A	docs/abliteration.md
+M	docs/antigravity.md
+A	docs/chatbox.md
+M	docs/claude.md
+M	docs/cli-configuration.md
+M	docs/cli.md
+M	docs/coderabbit.md
+M	docs/codex.md
+M	docs/command-code.md
+M	docs/configuration.md
+M	docs/copilot.md
+M	docs/cost-reporting-periods.md
+M	docs/cursor.md
+M	docs/dashboard-api.md
+M	docs/deepseek.md
+M	docs/futureagi.md
+M	docs/grok.md
+M	docs/images/token-activity-readability/runtime/runtime-receipt.json
+M	docs/index.html
+M	docs/kimi.md
+M	docs/kiro.md
+M	docs/linux.md
+M	docs/llms.txt
+A	docs/logos/abliteration.svg
+A	docs/logos/chatbox.svg
+A	docs/logos/soniox.svg
+A	docs/logos/traecn.svg
+M	docs/logos/workbuddy.svg
+M	docs/notion.md
+M	docs/opencode.md
+M	docs/opencodego.md
+M	docs/overview-scroll-stutter-investigation.md
+M	docs/pi.md
+M	docs/plugin-conversion-matrix.md
+M	docs/plugins.md
+M	docs/predictive-refresh-policy.md
+M	docs/provider-brand-icons.md
+M	docs/provider-ids.md
+M	docs/provider-palette.md
+M	docs/provider.md
+M	docs/providers.md
+M	docs/raycast.md
+M	docs/sakana.md
+M	docs/site-locales.mjs
+M	docs/social-card.json
+M	docs/social.html
+M	docs/social.png
+A	docs/soniox.md
+M	docs/sparkle.md
+M	docs/superpowers/plans/2026-05-11-kilo-organization-selection.md
+M	docs/superpowers/plans/2026-07-30-global-low-power-mode.md
+M	docs/tavily.md
+A	docs/traecn.md
+M	docs/ui.md
+M	docs/widgets.md
+M	docs/windsurf.md
+M	docs/workbuddy.md
+M	docs/zai.md
+M	version.env
