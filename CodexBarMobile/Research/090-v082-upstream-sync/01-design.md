@@ -35,3 +35,7 @@ README 在 merge 中 byte-for-byte 保留 mobile-dev；之后独立审计上游 
 - Mac打包：最终源commit、签名/公证/Production entitlement、ZIP/dSYM匹配、appcast候选版本单调与签名；仅--draft-no-tag-push，实际source与placeholder target分记。
 - 先自查和独立本地review清零，再push/PR与exact-head GitHub Codex review，逐线程修复/回复/resolve，最终gate和Fast Checks成功。影响binary的修复重建候选产物。不得merge/发布。
 
+
+## iOS局部review补充
+
+Kimi gift新增Core/Shared Row.expiresAt optional（旧/坏optional容错），保留Mac原secondary文字，手机根据机器时间本地化expiry并在缓存到期后禁用进度、显示Expired；monthly稳定row ID用numeric progress重建读端百分比。旧payload无machine expiry不猜Mac本地化日期，保留原文与既有陈旧提示。动态gift名称保留原样，仅默认Bonus credits翻译。Daily target已知units走四语语义keys，未知自定义unit原样。Copilot无duration的calendar月在桥接端依据既有descriptor.pace标period.monthly，保留显式period、原windowMinutes和真实reset。16组合需重跑新expiry，CloudKit仍仅opaque optional JSON；最终代码审计与测试结果待刷新。
