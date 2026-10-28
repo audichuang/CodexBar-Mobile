@@ -93,6 +93,10 @@ final class CloudSyncSnapshotSendKick {
         self.retryNotBefore = max(self.retryNotBefore ?? deadline, deadline)
     }
 
+    func clearBackoff() {
+        self.retryNotBefore = nil
+    }
+
     func waitUntilIdle() async {
         await self.task?.value
     }

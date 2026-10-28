@@ -242,6 +242,27 @@ struct CloudSyncSnapshotSendKickTests {
     }
 
     @Test
+    func `a successful push clears quota backoff while preserving pending age and kick cadence`() async {
+        let publisher = Publisher()
+        defer { publisher.kick.stop() }
+        let snapshot = self.id("snap-codex-fixture-local")
+        publisher.pending = [.saveRecord(snapshot)]
+        publisher.allowedWaits = 2
+        publisher.schedule()
+        await publisher.kick.waitUntilIdle()
+
+        publisher.pending = [.saveRecord(snapshot)]
+        publisher.schedule()
+        publisher.now.addTimeInterval(60)
+        publisher.kick.postpone(for: Self.error(.quotaExceeded, retryAfter: 60), minimumDelay: 3600)
+        publisher.kick.clearBackoff()
+        await publisher.kick.waitUntilIdle()
+
+        #expect(publisher.waits == [120, 60])
+        #expect(publisher.sent == [[snapshot], [snapshot]])
+    }
+
+    @Test
     func `CloudKit operation cancellation ends the worker without retrying`() async {
         let publisher = Publisher()
         defer { publisher.kick.stop() }
