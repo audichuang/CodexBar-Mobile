@@ -955,10 +955,15 @@ extension CostUsageStoreTests {
 
 extension CostUsageStoreTests {
     private static let testedPredecessorParserHashes = [
+        "bf8c2cb80c247dd9", // Published fork 0.79.0.1.
         "a5aa8ea108856b6d",
         "3f88178bf03ad704",
         "0d41437dcd95c17e", // Published 0.73.0.1 with the ledger pricing fix.
         "68cbd75ed0e591d9", // Published 0.74.1.1 with the ledger pricing fix on upstream 0.74.1.
+        "4e1358d00a4a47b5", // Current main before the optional local-history source.
+        "54a95e8fe7bd6ee9", // Selected-session inspection before checkpoint validation.
+        "455876ace937d42a", // Current main before selected-session detail reads.
+        "4feea9e203d85529", // Previous inspector build; request details were never persisted.
         "fc698834d6329beb", // Before opt-in request observation; saved rows and cursors are unchanged.
         "f406dae284de4a55", // Current main before the Auto-review creator-account reparse.
         "379b799bb4b91683", // Current main before on-demand tool inspection.
@@ -1005,6 +1010,8 @@ extension CostUsageStoreTests {
         "494eee446bb2e5f9",
         "6366caa15c925349",
         "3f88178bf03ad704",
+        "a47b70abaf8ad86c",
+        "d9542d1ef3ce1875",
         "4a593b5d59c7bcf3",
         "b77d4ec72e14ea63",
         "cfd84d13ad7d4cfa",

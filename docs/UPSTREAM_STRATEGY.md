@@ -409,7 +409,7 @@ git cherry-pick <commit-1-hash>  # Only the core improvement
 
 Keep these files fork-specific (never upstream):
 - `Sources/CodexBar/About.swift` (your attribution)
-- `Sources/CodexBar/PreferencesAboutPane.swift` (fork sections)
+- `Sources/CodexBar/Settings/PreferencesAboutPane.swift` (fork sections)
 - `README.md` (the complete fork-owned iOS/Mac download entrypoint; resolve
   every upstream merge byte-for-byte to the fork side, then separately audit
   upstream's README diff and deliberately adapt only applicable factual

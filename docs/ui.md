@@ -8,7 +8,10 @@ read_when:
 # UI & icon
 
 ## Settings
-- Back and Forward revisit the panes you opened, using Command-[ and Command-] as in System Settings. Selecting a new pane after going back clears forward history; reselecting the current pane preserves it. The last pane still restores at launch, while navigation history lasts only for the current app session. Hidden Debug panes are removed from history. On macOS 26 and later, the controls share the detail header; macOS 14/15 retain the native window title and show the controls above the pane content. The native window title stays set on every version for accessibility and the Window menu.
+
+On macOS 26 and later, Settings uses the system split-view sidebar, toolbar, search, and scroll-edge effects. The native sidebar toggle and divider can hide or restore the sidebar; its saved width is preserved. The detail scroll view and frosted toolbar backing fill the available column even in wide windows. Earlier macOS versions keep the existing sidebar, titlebar layout, and detail reading-width cap.
+
+- Back and Forward revisit the panes you opened, using Command-[ and Command-] as in System Settings. Selecting a new pane after going back clears forward history; reselecting the current pane preserves it. The last pane still restores at launch, while navigation history lasts only for the current app session. Hidden Debug panes are removed from history. On macOS 26 and later, the controls use the native toolbar; macOS 14/15 retain the native window title and show the controls above the pane content. The native window title stays set on every version for accessibility and the Window menu. About and Acknowledgements share this history. Opening About explicitly returns to its root; reopening Settings preserves the current destination during the session. Only the pane, not a subpage or history, restores after relaunch.
 - Dock presence follows startup and actual window transitions instead of rescanning windows on every app update. Scheduled Sparkle alerts still request temporary Dock presence, including alerts shown behind another app.
 - Menu → Highlight menu cards on hover is on by default. Turn it off to keep normal text and usage-bar colors on provider cards, Overview cards, and Refresh while hovering. Keyboard selection stays visible; clicks and submenus are unchanged. The choice persists locally across restarts.
 - The provider sidebar keeps saved order and the one-click alphabetical toggle (enabled first). The adjacent
@@ -39,10 +42,13 @@ read_when:
 - Calendar columns keep their chronological left-to-right order in right-to-left interfaces, so paging and keyboard date reveal follow the same coordinates as the drawn activity cells; surrounding controls retain the interface's layout direction.
 - Both the application menu and status menu open About in the Settings window. An existing Settings window is reused
   and switches to the About pane.
-- Homebrew-managed installs show an Updates section in About with the automatic-check toggle, Check for Updates, and the owning cask's status: checking, up to date, or "CodexBar x is available" with a prominent "Update to x" button. The menu shows the same "Update to x" action, then "Updating with Homebrew…" while `brew upgrade` runs; the app relaunches after verifying the installed version reached the offered update.
+- Homebrew-managed installs show an Updates section in About with the automatic-check toggle, Check for Updates, and the owning cask's status: checking, up to date, or "CodexBar x is available" with a prominent "Update to x" button. The menu shows the same "Update to x" action, then "Updating with Homebrew…" while Homebrew runs; the app relaunches after verifying the installed version reached the offered update.
+- The explicit Update action verifies the owning cask, then uses `brew reinstall --cask` if its receipt already matches the latest cask version, or `brew upgrade --cask` otherwise. This repairs an older app bundle behind a current receipt. Automatic and manual update checks never run `brew`; non-Homebrew installs retain Sparkle updates.
 - If a Homebrew check or update fails, About shows the error and, when the active receipt identifies the cask, a selectable monospaced upgrade command for that cask with a trailing copy control. The control confirms successful copies briefly; copying does not run an update.
 
 ## Menu bar
+
+Stacked rows with leading window labels align their values and meters after the widest label. Rows that begin with names, explicit spaces, or inline icons retain their natural spacing; hiding percentage window labels is unchanged.
 - Provider cards with both live throughput and daily history use a fixed-height Live · Spend chart switch; Live is the default, and the choice is remembered locally per provider instance.
 - About CodexBar includes the running version. When the updater is available, the menu offers Check for Updates… or the existing staged-update action.
 - Overview offers Share Usage Snapshot when its Usage & Spend summary has shareable data. The local preview uses the same spend sources, hidden-source choices, calendar, and currency as that summary; Copy Image exports PNG and TIFF without uploading anything.
@@ -51,6 +57,7 @@ read_when:
 - Cached status menus and previously opened submenus follow macOS appearance changes before reopening, preserving the effective Light/Dark and accessibility appearance.
 - Merge Icons toggle combines providers into one status item with a switcher.
 - Menu Bar → Combined icon source offers Current selection (default), Highest usage, and Frontmost provider app. The last option follows enabled Codex, Claude, Cursor, and Antigravity desktop apps only while the merged icon is collapsed. Unknown or disabled apps fall back to the saved selection or Overview. Opening the menu preserves its provider, account, and Overview selection; focus never saves a new selection. Stacked and separate icons do not monitor focus. Monitoring uses macOS application notifications, without polling, permission prompts, or terminal-tab inspection. Existing highest-usage preferences are preserved, and the choice supports sync and portable preference transfer.
+- **Highest usage** compares quota windows, not cost or token activity. Providers without quota windows, such as Pi, are not candidates; choose **Current selection** and select the provider in the menu to keep it visible in the combined icon.
 - With separate icons, explicitly reordering providers in Settings reassigns CodexBar's saved menu bar slots in that order, from right to left. Recreated items retain their stable autosave and accessibility identities. Orders changed while icons are merged also update these saved slots before returning to separate icons. Ordinary refreshes and visibility recovery continue to preserve manual Command-drag placement.
 - With the automatic metric selected, switcher progress honors a provider's exhausted-quota selection before
   showing normal weekly progress. OpenCode Go's automatic percentage and switcher use the least remaining
@@ -70,9 +77,12 @@ read_when:
 - Display → Menu Bar → Layout provides presets plus a token editor. Tokens can be clicked to append, dragged from the
   palette, reordered between one or two lines, dragged out, or removed with Delete. Layouts can be global or overridden
   per provider. Manual edits select the Custom preset.
-- To hide Session, Weekly, and Scoped weekly percentage prefixes (such as `5h` and `W`), turn off **Show window labels**
-  next to **Monospaced digits**. It defaults on and applies to all layouts. Percentages keep their full VoiceOver
-  descriptions; named provider lanes, named allowances, Spend currency symbols, and progress-bar labels remain visible.
+- To hide Session, Weekly, Scoped weekly, and automatic window prefixes (such as `5h` and `W`), turn off **Show window labels**
+  next to **Monospaced digits**. It defaults on and applies to all layouts. Auto percentage, pace, and reset tokens identify
+  their selected window when multiple quotas are available and the selection is unambiguous. Each token keeps its own
+  label, including separate rows and the reset branch of **Auto % / Resets in**. Monthly and named allowances reuse their
+  existing labels; single-window and balance output stays bare. Full window names remain in VoiceOver descriptions.
+  Explicit named provider lanes, named allowances, Spend currency symbols, and progress-bar labels remain visible.
   The preference is stored separately as `menuBarLayoutShowWindowLabels`; saved layouts and V5/V6 projections are unchanged.
 - For a provider-specific bare Session percentage, select Codex or Claude in Layout, remove the existing percentage,
   and add the **second Session %** chip from Usage (the provider's primary lane). This works with window labels enabled.
@@ -99,7 +109,8 @@ read_when:
   text and 10-point stacked text. Monospaced digits is independently optional and defaults off; labels remain
   proportional. These display preferences persist separately from layout tokens, preserving older-build decoding
   of saved layouts and their V4 projections. Tight/Regular controls status-item padding. Compact stacked uses two
-  tightly spaced lines sized to fit the menu bar.
+  tightly spaced lines sized to fit the menu bar. Stacked text, including combined-provider rows, uses medium
+  weight for legibility at every size and digit style; single-line text keeps regular weight.
 - Size, gap, and vertical adjustment share a compact options row. The Layout section footer keeps the token-editing
   instructions, including selecting a placed token and pressing Delete to remove it.
 
@@ -182,6 +193,7 @@ model-generic token label while the rendered menu-bar prefix and accessibility l
 - Ordinary, fresh monochrome token layouts use template images so AppKit supplies native highlighting and
   inactive-display dimming. Combined stacked rows support inline monochrome icons, percentages, and reset text.
   Individual layout content and appearance remain in the bounded renderer cache; memory-pressure cleanup clears it.
+  The cache tracks reset styles referenced by the layout, so absolute-only titles stay cached as countdowns advance.
   Stale data, high-contrast mode, colored glyphs or colored attachments, and layouts with a separate leading icon keep
   attributed text rendering. Critter and bar styles keep their existing renderers.
 
@@ -221,6 +233,12 @@ model-generic token label while the rendered menu-bar prefix and accessibility l
 ## Pace tracking
 
 Pace compares your actual usage against the expected consumption rate for the current window. Most providers use an even-consumption budget; Codex can use historical pace data when historical tracking is available.
+
+Monthly allowance cards also show a daily target: remaining allowance divided by the local calendar days
+until reset, counting today and any partial reset day (at least one day). A reset exactly at midnight does
+not add another day. The target keeps the reported credits, requests, currency, or percentage units and
+follows the existing pace visibility setting. Unknown usage, missing resets, and expired windows show no
+target. This is a budget for the remaining period, not a measurement of today's usage or an alert threshold.
 
 The **Work days** setting selects the weekly pace model. **Automatic** uses Codex historical pace when enough data is available. Historical daily credits follow local calendar-day boundaries, including midnight daylight-saving transitions. Selecting 4, 5, 6, or 7 days uses that explicit schedule for pace and ETA instead; CodexBar continues collecting history in the background, but does not use historical predictions until the setting returns to Automatic. Six days counts Monday through Saturday and excludes Sunday, including in the session forecast's remaining capacity.
 

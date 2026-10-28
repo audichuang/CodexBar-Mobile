@@ -171,7 +171,7 @@
 "Local token history is unavailable or incomplete." = "本機 Token 歷史無法使用或不完整。";
 "Could not add Codex account" = "無法新增 Codex 帳號";
 "Could not open Terminal for Gemini" = "無法為 Gemini 開啟終端";
-"Could not start claude /login" = "無法啟動 claude /login";
+"Claude OAuth credentials read failed: CodexBar's Claude OAuth cache is temporarily unavailable in macOS Keychain. Check that the login keychain is unlocked in Keychain Access, then retry Refresh." = "無法讀取 Claude OAuth 憑證：CodexBar 的 Claude OAuth 快取在 macOS 鑰匙圈中暫時無法使用。請在「鑰匙圈存取」中確認登入鑰匙圈已解鎖，然後重新整理。";
 "Could not start codex login" = "無法啟動 codex login";
 "Could not switch system account" = "無法切換系統帳號";
 "Credits" = "額度";
@@ -620,7 +620,6 @@
 "automatic" = "自動";
 "primary_api_key_limit" = "主要（API 金鑰限制）";
 "menu_bar_style_title" = "選單列樣式";
-"menu_bar_style_subtitle" = "選單列項目的繪製方式。";
 "menu_bar_inactive_display_contrast_title" = "改善非使用中顯示器上的可見度";
 "menu_bar_inactive_display_contrast_subtitle" = "使用高對比顯示，讓其他顯示器上的圖示與指標保持清晰可讀。";
 "menu_bar_style_critters" = "小動物";
@@ -731,6 +730,8 @@
 "acknowledgements_authors" = "作者";
 "acknowledgements_license" = "授權條款";
 "check_updates_auto" = "自動檢查更新";
+"install_updates_auto" = "自動下載並安裝更新";
+"install_updates_auto_subtitle" = "關閉時，安裝新版本前會先徵求你的確認。";
 "update_channel" = "更新頻道";
 "check_for_updates" = "檢查更新…";
 "updates_unavailable" = "此建置無法使用更新功能。";
@@ -1089,6 +1090,7 @@
 "Password" = "密碼";
 "%@ authentication is disabled." = "%@ 認證已停用。";
 "%@ cookies are disabled." = "%@ Cookie 已停用。";
+"%@ is unavailable. Edit the widget to choose a provider." = "%@ 無法使用。編輯小工具以選擇供應商。";
 "%@ web API access is disabled." = "%@ Web API 存取已停用。";
 "Disable %@ dashboard cookie usage." = "停用 %@ 儀表板 Cookie。";
 "Keychain access is disabled in Advanced, so browser cookie import is unavailable." = "進階設定中已停用鑰匙圈存取，因此無法匯入瀏覽器 Cookie。";
@@ -1154,7 +1156,6 @@
 "Windsurf session JSON bundle" = "Windsurf 工作階段 JSON 組合";
 "Workspace ID" = "工作區 ID";
 "Your StepFun platform password. Used to login and obtain a session token." = "你的 StepFun 平台密碼。用於登入並取得工作階段 token。";
-"claude /login exited with status %d." = "claude /login 以狀態 %d 結束。";
 "codex login exited with status %d." = "codex login 以狀態 %d 結束。";
 "Cookie: …\n\nor paste a cURL capture from the Abacus AI dashboard" = "Cookie: …\n\n或貼上 Abacus AI 儀表板的 cURL 擷取內容";
 "Cookie: …\n\nor paste the __Secure-next-auth.session-token value" = "Cookie: …\n\n或貼上 __Secure-next-auth.session-token 值";
@@ -1441,6 +1442,7 @@
 /* Menu bar layout editor */
 "menu_bar_layout_title" = "佈局";
 "menu_bar_layout_footer" = "拖曳項目以排列選單列。點按項目可附加；選取已放置的項目並按 Delete 鍵可將其移除。";
+"menu_bar_layout_footer_requires_icon_and_percent" = "佈局僅適用於「%@」選單列樣式。請在上方選擇該樣式以進行編輯。";
 "menu_bar_layout_group_identity" = "身分";
 "menu_bar_layout_group_usage" = "使用量";
 "menu_bar_layout_group_time" = "時間";
@@ -1613,7 +1615,7 @@
 "mobile_dev_restored" = "Restored";
 "mobile_sync_status_last_attempt_format" = "Last attempt: %@";
 "mobile_section_dev_test" = "DEV — iOS Push Test";
-"mobile_toggle_mock_subtitle" = "每次同步會推送 121 個穩定的模擬快照，涵蓋 111 個 provider ID，包括多帳號、sub2api、Wayfinder 和未知 provider 的備援情境。模擬信箱使用 `.test` TLD，因此 iPhone 會顯示 MOCK 徽章。關閉後，CloudKit 會在大約一個同步週期內移除模擬記錄。預設關閉。";
+"mobile_toggle_mock_subtitle" = "每次同步會推送 125 個穩定的模擬快照，涵蓋 115 個 provider ID，包括多帳號、sub2api、Wayfinder 和未知 provider 的備援情境。模擬信箱使用 `.test` TLD，因此 iPhone 會顯示 MOCK 徽章。關閉後，CloudKit 會在大約一個同步週期內移除模擬記錄。預設關閉。";
 "mobile_dev_depleted" = "Depleted";
 "mobile_toggle_sync_subtitle" = "Pushes usage data to iCloud so the iOS companion app can display it.";
 "mobile_toggle_push_subtitle" = "When a session quota is depleted or restored, send a visible alert push to the iOS companion app via iCloud. This is independent of Mac local notifications — you can keep Mac quiet but still get alerts on your iPhone.";
@@ -1904,6 +1906,7 @@
 "Details for %@" = "%@ 的詳細信息";
 "EST. %@" = "預計 %@";
 "Enable Antigravity provider" = "啟用 Antigravity 提供程序";
+"Enable a provider in CodexBar → Settings → Providers." = "在 CodexBar → 設定 → 供應商中啟用一個供應商。";
 "Enable account widgets in CodexBar → Settings → Menu → Widgets. Then edit this widget to choose an account." = "在 CodexBar → 設定 → 選單 → 小工具中啟用帳號小工具。然後編輯此小部件以選擇帳戶。";
 "Error: %@" = "錯誤：%@";
 "Examples: alt+cmd+2, shift+right. Refresh (cmd+r), Settings (cmd+,) and Quit (cmd+q) are reserved." = "例：alt+cmd+2、shift+right。刷新（cmd+r）、設定（cmd+,）和退出（cmd+q）被保留。";
@@ -2086,10 +2089,7 @@
 "Top models:" = "最常用模型：";
 "Two quota burn-down charts in one tile." = "一張圖塊中包含兩個 配額 燃盡圖。";
 "Usage & spend come from your console.groq.com browser session automatically. An API key is optional and only adds Enterprise Prometheus metrics." = "使用情況和支出自動來自您的 console.groq.com 瀏覽器會話。 API 金鑰是可選的，僅添加 Enterprise Prometheus 指標。";
-"Usage data appears after a refresh." = "刷新後會顯示使用情況資料。";
-"Usage data will appear once the app refreshes." = "應用程式刷新後，將顯示使用資料。";
 "Usage history chart with recent totals." = "使用歷史記錄圖表以及最近的總計。";
-"Usage history will appear after a refresh." = "刷新後會出現使用歷史記錄。";
 "Usage limit" = "使用限制";
 "Usage limits and reset countdowns for one saved account." = "一個已儲存帳戶的使用限制和重設倒數。";
 "Usage widget with a provider switcher." = "可切換提供商的用量小工具。";
@@ -2183,6 +2183,8 @@
 "Poe usage history is unavailable." = "Poe 使用歷史記錄不可用。";
 "Stored in ~/.codexbar/config.json. Get your key from poe.com/api/keys." = "儲存在~/.codexbar/config.json中。從 poe.com/api/keys 取得金鑰。";
 "Billing" = "計費";
+"Invoice billing" = "帳單付款";
+"Prepaid" = "預付";
 "Rate limit" = "速率限制";
 "Billing and rate-limit data from the v0 Platform API" = "來自 v0 平台 API 的計費和速率限制數據";
 "v0 cost history is not available via the Platform API." = "v0 成本歷史記錄無法透過平台 API 取得。";
@@ -2429,6 +2431,7 @@
 "Core Monthly" = "核心額度 · 每月";
 "Bobcoin usage" = "Bobcoin 用量";
 "Code 7-day" = "編程額度 · 7 天";
+"Other features" = "其他功能";
 "Quota services" = "額度服務";
 "Billing history" = "帳單歷史";
 "Renews" = "續期時間";
@@ -2530,7 +2533,7 @@
 "spend_performance_cache_help" = "將符合條件的輪次中已快取的輸入除以總輸入量。依輸入 token 數加權，並顯示樣本涵蓋範圍。";
 "spend_performance_metric_help" = "關於這些觀測值";
 "merged_icon_source_title" = "合併圖示來源";
-"merged_icon_source_subtitle" = "選擇摺疊後的合併圖示顯示哪個服務提供者。";
+"merged_icon_source_subtitle" = "「最高用量」僅比較配額。對於沒有配額的服務提供者，請使用「目前選取」。";
 "merged_icon_source_current_selection" = "目前選取";
 "merged_icon_source_highest_usage" = "最高用量";
 "merged_icon_source_frontmost_app" = "最前景的服務提供者 App";
@@ -2634,7 +2637,6 @@
 "Also restores the provider order in the menu bar. Can be undone." = "同時恢復選單列中的供應商順序。可以復原。";
 "Local Codex details; excluded from combined totals." = "本機 Codex 詳細資料；不計入合併總計。";
 
-"Auto uses an API key when configured, otherwise browser cookies." = "Auto uses an API key when configured, otherwise browser cookies.";
 "Stored in the CodexBar config file. You can also set COMMAND_CODE_API_KEY." = "Stored in the CodexBar config file. You can also set COMMAND_CODE_API_KEY.";
 /* OpenAI organization rate limits and live usage */
 "%@ tokens · %@ requests" = "%@ token · %@ 請求";
@@ -2766,3 +2768,61 @@
 "Leave blank to keep the saved credential." = "留空以保留已儲存的憑證。";
 
 "No personal budget configured" = "尚未設定個人預算";
+
+"monthly_daily_target_format" = "每天約 %@，可用至重置";
+
+"Trae CN" = "Trae CN";
+"Show Trae CN usage" = "顯示 Trae CN 用量";
+"Sign in to Trae CN at trae.cn, then refresh CodexBar." = "請在 trae.cn 登入 Trae CN，然後重新整理 CodexBar。";
+"Trae CN usage response format changed." = "Trae CN 用量回應格式已變更。";
+"Trae CN request failed. Try refreshing later." = "Trae CN 請求失敗。請稍後嘗試重新整理。";
+"Use --provider copilot." = "請使用 --provider copilot。";
+"Config changed during login. Please try again." = "登入期間設定已變更。請重試。";
+
+// Session usage browser
+"Search sessions" = "搜尋對話";
+"No matching sessions" = "沒有符合的對話";
+"Select a session" = "選擇一個對話";
+"Cached input is included in input; reasoning is included in output." = "快取輸入已包含在輸入中；推理 Token 已包含在輸出中。";
+"Recent activity" = "最近活動";
+"Sort by" = "排序依據";
+"Ascending" = "升冪";
+"Descending" = "降冪";
+"Each turn includes its recorded model calls within this period. Messages sharing a turn cannot be priced separately." = "每輪包含該時間範圍內記錄的模型請求；同一輪中的多則訊息無法分別計費。";
+"No turn-level usage records are available." = "沒有可用的輪次用量記錄。";
+"Unattributed usage" = "未歸屬的用量";
+"Turn %d" = "第 %d 輪";
+"Model requests" = "模型請求";
+"Tool activity has no separate recorded token or monetary cost." = "日誌未單獨記錄工具呼叫的 Token 或費用。";
+"Request %d" = "第 %d 次請求";
+
+"Request details exceed the limit." = "請求明細超過載入上限。";
+
+"Request details are unavailable. Refresh usage and try again." = "請求明細暫不可用，請重新整理用量後再試。";
+"Primary" = "主要";
+"Secondary" = "次要";
+"Tertiary" = "第三";
+
+/* Chatbox AI */
+"Chatbox AI" = "Chatbox AI";
+"Show Chatbox AI usage" = "顯示 Chatbox AI 用量";
+"Chatbox AI license key is invalid. Update it in Settings." = "Chatbox AI 授權金鑰無效。請在設定中更新。";
+"Chatbox AI denied access. Check your license." = "Chatbox AI 拒絕了存取。請檢查授權。";
+"Chatbox AI is rate limiting requests. Try again later." = "Chatbox AI 正在限制請求頻率。請稍後再試。";
+"Chatbox AI request failed. Try refreshing later." = "Chatbox AI 請求失敗。請稍後嘗試重新整理。";
+"Chatbox AI returned an unrecognized response. Update CodexBar and try again." = "Chatbox AI 傳回了無法辨識的回應。請更新 CodexBar 後再試。";
+
+/* abliteration.ai */
+"abliteration.ai" = "abliteration.ai";
+"Show abliteration.ai usage" = "顯示 abliteration.ai 用量";
+"abliteration.ai is rate limiting requests. Try again later." = "abliteration.ai 正在限制請求頻率。請稍後再試。";
+"abliteration.ai request failed. Try refreshing later." = "abliteration.ai 請求失敗。請稍後嘗試重新整理。";
+"abliteration.ai returned an unrecognized response. Update CodexBar and try again." = "abliteration.ai 傳回了無法辨識的回應。請更新 CodexBar 後再試。";
+"Check your API key in Settings." = "請在設定中檢查你的 API 金鑰。";
+"Kimi Code" = "Kimi Code";
+
+"OpenCode local history" = "OpenCode 本機歷史記錄";
+
+"Show this Mac's recorded OpenCode usage in Codex history. Off by default; scoped or alternate CODEX_HOME locations always stay excluded." = "在 Codex 歷史記錄中顯示此 Mac 上記錄的 OpenCode 用量。預設關閉；一律排除限定範圍或其他 CODEX_HOME 位置。";
+"Auto uses the active saved session, otherwise an API key or browser cookies." = "自動使用目前啟用的已儲存工作階段，否則使用 API 金鑰或瀏覽器 Cookie。";
+"Store multiple Command Code subscription sessions." = "儲存多個 Command Code 訂閱工作階段。";

@@ -167,3 +167,41 @@ done
 assert_verify_fails success success true success true success success
 assert_verify_fails success success false skipped false skipped skipped success
 printf 'CI final path gate tests passed.\n'
+
+assert_linux_musl_gate() {
+  local expected="$1"
+  local name="$2"
+  local paths_file="${tmp_dir}/linux-musl-${name}.paths"
+  local output_file="${tmp_dir}/linux-musl-${name}.output"
+  shift 2
+
+  printf '%s\n' "$@" > "$paths_file"
+  GITHUB_OUTPUT="$output_file" "${ROOT_DIR}/Scripts/ci_linux_musl_build_gate.sh" "$paths_file" >/dev/null
+  local actual
+  actual="$(sed -n 's/^linux-musl-build=//p' "$output_file")"
+  if [[ "$actual" != "$expected" ]]; then
+    printf '%s: expected linux-musl-build=%s, got %s\n' "$name" "$expected" "${actual:-<empty>}" >&2
+    exit 1
+  fi
+
+  local reason
+  reason="$(sed -n 's/^linux-musl-build-reason=//p' "$output_file")"
+  if [[ -z "$reason" ]]; then
+    printf '%s: expected linux-musl-build-reason output\n' "$name" >&2
+    exit 1
+  fi
+}
+
+assert_linux_musl_gate true package-manifest $'M\tPackage.swift'
+assert_linux_musl_gate true swift-source $'M\tSources/CodexBarCore/Process.swift'
+assert_linux_musl_gate true nested-swift-source $'M\tSources/CodexBarCore/Host/Process/Process.swift'
+assert_linux_musl_gate true rename-from-swift $'R100\tSources/CodexBarCore/Old.swift\tdocs/Old.md'
+assert_linux_musl_gate true rename-to-swift $'R100\tdocs/New.md\tSources/CodexBarCore/New.swift'
+assert_linux_musl_gate true sdk-installer $'M\tScripts/install_swift_static_sdk.sh'
+assert_linux_musl_gate true removed-sdk-installer $'D\tScripts/install_swift_static_sdk.sh'
+assert_linux_musl_gate true codex-cost-smoke $'M\tScripts/check-linux-cli-codex-cost-smoke.sh'
+assert_linux_musl_gate false tests-only $'M\tTests/CodexBarTests/ProcessTests.swift'
+assert_linux_musl_gate false workflow-only $'M\t.github/workflows/ci.yml'
+assert_linux_musl_gate false script-only $'M\tScripts/ci_verify_test_jobs.sh'
+assert_linux_musl_gate false package-resolved $'M\tPackage.resolved'
+assert_linux_musl_gate true empty-diff

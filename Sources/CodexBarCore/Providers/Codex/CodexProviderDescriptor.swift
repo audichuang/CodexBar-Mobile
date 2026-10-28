@@ -26,7 +26,7 @@ public enum CodexProviderDescriptor {
             id: .codex,
             menuBarMetrics: ProviderMenuBarMetricCapabilities(
                 supported: [.automatic, .primary, .secondary, .primaryAndSecondary, .extraUsage]),
-            settingsSection: .init(CodexProviderSettingsKey.self),
+            settingsSection: .init(CodexProviderSettingsKey.self, supportsConfigCookieHeader: true),
             // PAT lives in Codex CLI `auth.json`, not ProviderConfig.apiKey.
             credentials: ProviderCredentialAdapter(requiresAPIKeyForAPISource: false),
             metadata: ProviderMetadata(
@@ -81,9 +81,10 @@ public enum CodexProviderDescriptor {
                 showsHintInProviderDetails: true,
                 historyTitleStyle: .compact,
                 hintPlacement: .beforeRequestHistory,
-                chartEstimateDisclaimer: .localized("codex_api_estimate_hint"),
-                preservesCalendarDaysInCharts: true),
+                chartEstimateDisclaimer: .localized("codex_api_estimate_hint")),
             pace: ProviderPaceCapability(
+                // Use the reported fixed duration; calendar-month inference would change the pace.
+                resetWindowPace: .windowDuration(minutes: ProviderPaceCapability.monthlyWindowSentinelMinutes),
                 primary: .session(maximumMinutes: 300),
                 secondary: .weekly,
                 showsHeadroomHint: true,
@@ -931,12 +932,10 @@ extension CodexOAuthFetchStrategy {
         _ data: Data,
         credentials: CodexOAuthCredentials,
         resetCredits: CodexRateLimitResetCreditsSnapshot? = nil,
-        sourceMode: ProviderSourceMode = .oauth,
         allowEmptyUsageForResetCreditEnrichment: Bool = false,
         includeCredits: Bool = true) throws -> ProviderFetchResult
     {
         let usageResponse = try JSONDecoder().decode(CodexUsageResponse.self, from: data)
-        _ = sourceMode
         return try Self.makeResult(
             usageResponse: usageResponse,
             resetCredits: resetCredits,

@@ -799,7 +799,7 @@ final class SyncCoordinator {
     {
         SyncRateWindow(
             id: id,
-            label: label,
+            label: label ?? window.title,
             usedPercent: window.usedPercent,
             usageKnown: usageKnown,
             windowMinutes: window.windowMinutes,
@@ -807,7 +807,9 @@ final class SyncCoordinator {
             resetsAt: window.resetsAt,
             resetDescription: window.resetDescription,
             nextRegenPercent: window.nextRegenPercent,
-            isSyntheticPlaceholder: window.isSyntheticPlaceholder)
+            isSyntheticPlaceholder: window.isSyntheticPlaceholder,
+            quotaLimit: window.quotaLimit,
+            quotaUnit: window.quotaUnit)
     }
 
     /// Mac cards show some reset descriptions as balances beside the reset time
@@ -826,7 +828,9 @@ final class SyncCoordinator {
             nextRegenPercent: window.nextRegenPercent,
             isSyntheticPlaceholder: window.isSyntheticPlaceholder,
             blockingQuota: window.blockingQuota,
-            balanceDescription: shows && balance?.isEmpty == false ? balance : nil)
+            balanceDescription: shows && balance?.isEmpty == false ? balance : nil,
+            quotaLimit: window.quotaLimit,
+            quotaUnit: window.quotaUnit)
     }
 
     /// Publish effective availability in the legacy fields so old phones cannot
@@ -899,7 +903,8 @@ final class SyncCoordinator {
                         value: $0.value,
                         secondaryValue: $0.secondaryValue,
                         progress: $0.progress.flatMap {
-                            SyncProviderDetailSection.Row.Progress(used: $0.used, total: $0.total)
+                            SyncProviderDetailSection.Row.Progress(
+                                used: $0.used, total: $0.total, expectedUsed: $0.expectedUsed)
                         },
                         severity: $0.severity.flatMap { .init(rawValue: $0.rawValue) },
                         usageValue: $0.usageValue)
@@ -1470,7 +1475,7 @@ final class SyncCoordinator {
                 return "organization-\(digest)"
             }
             return "device-\(deviceID.lowercased())"
-        case .futureagi:
+        case .futureagi, .soniox, .traecn, .abliteration, .chatbox:
             return requested ?? "device-\(deviceID.lowercased())"
         case .gemini:
             // The explicit Web source exposes no verified Google account identity. Keep its quotas
@@ -2455,11 +2460,11 @@ final class SyncCoordinator {
         }
         return SyncQuotaWarningConfig(
             sessionThresholds: self.settings.resolvedQuotaWarningThresholds(
-                provider: usageProvider, window: .session),
+                provider: usageProvider.instanceID, window: .session),
             sessionEnabled: self.settings.quotaWarningEnabled(
                 provider: usageProvider, window: .session),
             weeklyThresholds: self.settings.resolvedQuotaWarningThresholds(
-                provider: usageProvider, window: .weekly),
+                provider: usageProvider.instanceID, window: .weekly),
             weeklyEnabled: self.settings.quotaWarningEnabled(
                 provider: usageProvider, window: .weekly))
     }

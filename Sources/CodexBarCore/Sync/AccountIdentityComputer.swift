@@ -52,7 +52,8 @@ public enum AccountIdentityComputer {
             self.vertexAI(identity: identity)
         case .aixy:
             self.aixy(identity: identity)
-        case .zai, .gemini, .antigravity, .cursor, .opencode, .opencodego, .alibaba, .factory, .copilot, .devin,
+        case .soniox, .traecn, .abliteration, .chatbox,
+             .zai, .gemini, .antigravity, .cursor, .opencode, .opencodego, .alibaba, .factory, .copilot, .devin,
              .minimax, .kilo, .kiro, .kimi, .augment, .jetbrains, .amp, .ollama, .synthetic,
              .openrouter, .warp, .perplexity, .abacus, .mistral,
              // Upstream 0.24–0.25.1 providers. Kept non-Tier-A for now —

@@ -351,6 +351,7 @@ cat > "$APP/Contents/Info.plist" <<PLIST
     <key>SUPublicEDKey</key><string>eBPpE8Yx+2Dbl/viiieSBqdfSC8t20g657Dgas+Xw3o=</string>
     <key>SUEnableAutomaticChecks</key><${AUTO_CHECKS}/>
     <key>CodexMobileVersion</key><string>${MOBILE_VERSION}</string>
+    <key>SUAutomaticallyUpdate</key><true/>
     <key>CodexBuildTimestamp</key><string>${BUILD_TIMESTAMP}</string>
     <key>CodexGitCommit</key><string>${GIT_COMMIT}</string>
     <key>CodexBarTeamID</key><string>${APP_TEAM_ID}</string>
