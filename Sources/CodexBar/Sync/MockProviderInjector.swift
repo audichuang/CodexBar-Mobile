@@ -2014,13 +2014,13 @@ enum MockProviderInjector {
             providerID: "soniox", providerName: "Soniox",
             accountLocal: "fixture", loginMethod: "Organization API key",
             primaryUsage: 25, primaryLabel: "Usage",
-            primaryWindowMinutes: 43200, primaryResetsInSeconds: 604800,
+            primaryWindowMinutes: 43200, primaryResetsInSeconds: 604_800,
             primaryResetDescription: "", secondary: nil, thirtyDayCostUSD: nil, sessionCostUSD: nil),
         .init(
             providerID: "traecn", providerName: "Trae CN",
             accountLocal: "fixture", loginMethod: "Browser session",
             primaryUsage: 25, primaryLabel: "Usage",
-            primaryWindowMinutes: 43200, primaryResetsInSeconds: 604800,
+            primaryWindowMinutes: 43200, primaryResetsInSeconds: 604_800,
             primaryResetDescription: "", secondary: nil, thirtyDayCostUSD: nil, sessionCostUSD: nil),
         .init(
             providerID: "abliteration", providerName: "abliteration.ai",
@@ -2032,7 +2032,7 @@ enum MockProviderInjector {
             providerID: "chatbox", providerName: "Chatbox AI",
             accountLocal: "fixture", loginMethod: "License key",
             primaryUsage: 25, primaryLabel: "Usage",
-            primaryWindowMinutes: 43200, primaryResetsInSeconds: 604800,
+            primaryWindowMinutes: 43200, primaryResetsInSeconds: 604_800,
             primaryResetDescription: "", secondary: nil, thirtyDayCostUSD: nil, sessionCostUSD: nil),
         // Phase G — multi-account second-tab mocks. Each entry below
         // produces a SECOND ProviderUsageSnapshot for an already-

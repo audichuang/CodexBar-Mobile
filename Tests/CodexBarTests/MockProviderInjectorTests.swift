@@ -61,7 +61,7 @@ struct MockProviderInjectorTests {
         // iOS 1.21.0 adds Fireworks and IBM Bob. 81 → 83.
         #expect(
             MockProviderInjector.allMocks().count == 125,
-            "125 snapshots include the v0.80-v0.82 providers, Future AGI and Munito alongside the previous provider fixtures.")
+            "125 snapshots include v0.80-v0.82 providers, Future AGI, Munito and previous provider fixtures.")
     }
 
     @Test

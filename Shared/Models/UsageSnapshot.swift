@@ -968,6 +968,7 @@ public struct SyncProviderDetailSection: Codable, Sendable, Equatable {
         public let progress: Progress?
         /// Numeric usage behind the row when known (Mac 0.72+), independent of `progress`.
         public let usageValue: Double?
+        public let expiresAt: Date?
 
         public init(
             id: String? = nil,
@@ -976,7 +977,8 @@ public struct SyncProviderDetailSection: Codable, Sendable, Equatable {
             secondaryValue: String? = nil,
             progress: Progress? = nil,
             severity: Severity? = nil,
-            usageValue: Double? = nil)
+            usageValue: Double? = nil,
+            expiresAt: Date? = nil)
         {
             self.id = id
             self.label = label
@@ -985,6 +987,7 @@ public struct SyncProviderDetailSection: Codable, Sendable, Equatable {
             self.severity = severity
             self.progress = progress
             self.usageValue = usageValue.flatMap { $0.isFinite ? $0 : nil }
+            self.expiresAt = expiresAt.flatMap { $0.timeIntervalSince1970.isFinite ? $0 : nil }
         }
 
         private enum CodingKeys: String, CodingKey {
@@ -995,6 +998,7 @@ public struct SyncProviderDetailSection: Codable, Sendable, Equatable {
             case severity
             case progress
             case usageValue
+            case expiresAt
         }
 
         public init(from decoder: Decoder) throws {
@@ -1017,6 +1021,8 @@ public struct SyncProviderDetailSection: Codable, Sendable, Equatable {
             self.progress = try? container.decodeIfPresent(Progress.self, forKey: .progress)
             self.usageValue = (try? container.decodeIfPresent(Double.self, forKey: .usageValue))
                 .flatMap { $0.isFinite ? $0 : nil }
+            self.expiresAt = (try? container.decodeIfPresent(Date.self, forKey: .expiresAt))
+                .flatMap { $0.timeIntervalSince1970.isFinite ? $0 : nil }
         }
     }
 

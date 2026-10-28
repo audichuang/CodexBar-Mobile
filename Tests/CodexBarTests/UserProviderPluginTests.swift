@@ -877,7 +877,9 @@ struct UserProviderPluginTests {
                 approvalStore: fixture.approvals)
         }
     }
+}
 
+extension UserProviderPluginTests {
     private static func javaScriptPlugin(
         id: String = "acme-meter",
         origin: String = "https://api.acme.test") -> String

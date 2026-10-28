@@ -206,7 +206,8 @@ extension KimiUsageSnapshot {
                 value: UsageFormatter.usageLine(remaining: (1 - ratio) * 100, used: ratio * 100, showUsed: false),
                 secondaryValue: expiresAt
                     .map { "Expires \($0.formatted(date: .abbreviated, time: .shortened))" },
-                progress: try? .init(used: ratio, total: 1))
+                progress: try? .init(used: ratio, total: 1),
+                expiresAt: expiresAt)
         }
         return rows.isEmpty ? [] : [.makeSection(title: "Bonus credits", rows: rows)]
     }

@@ -28,7 +28,12 @@ final class AntigravityLocalFixture: Sendable {
     }
 
     init() throws {
-        self.root = FileManager.default.temporaryDirectory.appendingPathComponent("antigravity-proof-\(UUID())")
+        // Foundation may ignore TMPDIR on macOS; honor the caller's isolated scratch
+        // explicitly so the large SQLite fixtures stay on the selected build volume.
+        let temporaryRoot = ProcessInfo.processInfo.environment["TMPDIR"]
+            .flatMap { $0.isEmpty ? nil : URL(fileURLWithPath: $0, isDirectory: true) }
+            ?? FileManager.default.temporaryDirectory
+        self.root = temporaryRoot.appendingPathComponent("antigravity-proof-\(UUID())")
         try FileManager.default.createDirectory(at: self.root, withIntermediateDirectories: true)
     }
 

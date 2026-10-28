@@ -12,6 +12,7 @@ struct KimiGiftBalanceTests {
         #expect(gift.value == "75% left")
         #expect(gift.progress?.used == 0.2524)
         #expect(gift.secondaryValue?.hasPrefix("Expires ") == true)
+        #expect(gift.expiresAt == ISO8601DateParser.parse("2026-12-31T15:59:59Z"))
         #expect(!rows.contains { $0.label == "Expired grant" })
         #expect(usage.extraRateWindows?.map(\.id) == ["kimi-monthly"])
         let model = try KimiMonthlyBlockingTests.model(usage)

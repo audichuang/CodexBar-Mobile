@@ -81,6 +81,8 @@ public struct ProviderDetailSection: Codable, Equatable, Sendable {
         /// (or stripped back to plain text) without parsing the display string. Independent of
         /// `progress`, which only exists when both sides of a ratio are known.
         public let usageValue: Double?
+        /// Absolute expiry for cached provider balances; display strings remain unchanged on Mac.
+        public let expiresAt: Date?
 
         public init(
             id: String? = nil,
@@ -89,7 +91,8 @@ public struct ProviderDetailSection: Codable, Equatable, Sendable {
             secondaryValue: String? = nil,
             progress: Progress? = nil,
             severity: Severity? = nil,
-            usageValue: Double? = nil) throws
+            usageValue: Double? = nil,
+            expiresAt: Date? = nil) throws
         {
             self.id = try ProviderDetailSection.optionalString(id, path: "row.id")
             self.label = try ProviderDetailSection.requiredString(label, path: "row.label")
@@ -103,6 +106,7 @@ public struct ProviderDetailSection: Codable, Equatable, Sendable {
                 }
             }
             self.usageValue = usageValue
+            self.expiresAt = expiresAt.flatMap { $0.timeIntervalSince1970.isFinite ? $0 : nil }
         }
 
         private enum CodingKeys: String, CodingKey {
@@ -113,6 +117,7 @@ public struct ProviderDetailSection: Codable, Equatable, Sendable {
             case progress
             case severity
             case usageValue
+            case expiresAt
         }
 
         public init(from decoder: Decoder) throws {
@@ -124,7 +129,8 @@ public struct ProviderDetailSection: Codable, Equatable, Sendable {
                 secondaryValue: container.decodeIfPresent(String.self, forKey: .secondaryValue),
                 progress: container.decodeIfPresent(Progress.self, forKey: .progress),
                 severity: container.decodeIfPresent(Severity.self, forKey: .severity),
-                usageValue: container.decodeIfPresent(Double.self, forKey: .usageValue))
+                usageValue: container.decodeIfPresent(Double.self, forKey: .usageValue),
+                expiresAt: container.decodeIfPresent(Date.self, forKey: .expiresAt))
         }
     }
 
@@ -265,7 +271,8 @@ extension ProviderDetailSection {
         value: String,
         secondaryValue: String? = nil,
         progress: Row.Progress? = nil,
-        usageValue: Double? = nil) -> Row
+        usageValue: Double? = nil,
+        expiresAt: Date? = nil) -> Row
     {
         do {
             return try Row(
@@ -274,7 +281,8 @@ extension ProviderDetailSection {
                 value: self.boundedRequired(value),
                 secondaryValue: self.boundedOptional(secondaryValue),
                 progress: progress,
-                usageValue: usageValue)
+                usageValue: usageValue,
+                expiresAt: expiresAt)
         } catch {
             preconditionFailure("Bounded provider detail row failed validation: \(error)")
         }
@@ -330,7 +338,8 @@ extension ProviderDetailSection.Row {
         value: String,
         secondaryValue: String? = nil,
         progress: Progress? = nil,
-        usageValue: Double? = nil) -> Self
+        usageValue: Double? = nil,
+        expiresAt: Date? = nil) -> Self
     {
         ProviderDetailSection.makeRow(
             id: id,
@@ -338,7 +347,8 @@ extension ProviderDetailSection.Row {
             value: value,
             secondaryValue: secondaryValue,
             progress: progress,
-            usageValue: usageValue)
+            usageValue: usageValue,
+            expiresAt: expiresAt)
     }
 }
 

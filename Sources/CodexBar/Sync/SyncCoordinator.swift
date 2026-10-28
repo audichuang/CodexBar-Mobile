@@ -795,15 +795,20 @@ final class SyncCoordinator {
         id: String?,
         label: String?,
         window: RateWindow,
-        usageKnown: Bool = true) -> SyncRateWindow
+        usageKnown: Bool = true,
+        provider: UsageProvider? = nil) -> SyncRateWindow
     {
-        SyncRateWindow(
+        let inferredMonthly = provider.map {
+            ProviderDescriptorRegistry.descriptor(for: $0).pace.usesInferredMonthlyDuration(window: window)
+        } ?? false
+        let period = window.period.flatMap { SyncRateWindowPeriod(rawValue: $0.rawValue) }
+        return SyncRateWindow(
             id: id,
             label: label ?? window.title,
             usedPercent: window.usedPercent,
             usageKnown: usageKnown,
             windowMinutes: window.windowMinutes,
-            period: window.period.flatMap { SyncRateWindowPeriod(rawValue: $0.rawValue) },
+            period: period ?? (inferredMonthly ? .monthly : nil),
             resetsAt: window.resetsAt,
             resetDescription: window.resetDescription,
             nextRegenPercent: window.nextRegenPercent,
@@ -907,7 +912,8 @@ final class SyncCoordinator {
                                 used: $0.used, total: $0.total, expectedUsed: $0.expectedUsed)
                         },
                         severity: $0.severity.flatMap { .init(rawValue: $0.rawValue) },
-                        usageValue: $0.usageValue)
+                        usageValue: $0.usageValue,
+                        expiresAt: $0.expiresAt)
                 },
                 chart: chart)
         }
@@ -917,11 +923,22 @@ final class SyncCoordinator {
     /// native UsageSnapshot cache filter, so exclude these rows before persistence.
     static func mapSyncedDetails(
         _ sections: [ProviderDetailSection],
-        provider: UsageProvider) -> [SyncProviderDetailSection]
+        provider: UsageProvider,
+        providerCost: ProviderCostSnapshot? = nil) -> [SyncProviderDetailSection]
     {
+        var mapped = self.mapDetails(sections)
+        // Soniox prepaid balance and unbounded monthly spend are independent values.
+        // The balance occupies providerAmount; retain spend in the existing details lane.
+        if provider == .soniox, let cost = providerCost, cost.limit <= 0, cost.balance != nil,
+           cost.used.isFinite, cost.used >= 0
+        {
+            mapped.append(SyncProviderDetailSection(rows: [.init(
+                label: "Spent this month",
+                value: cost.used.formatted(.currency(code: cost.currencyCode).locale(Locale(identifier: "en_US"))))]))
+        }
         // Provider-specific by design: native Claude reset-credit inventory is live-only and must not persist on iOS.
-        guard provider == .claude else { return self.mapDetails(sections) }
-        return self.mapDetails(sections).compactMap { section -> SyncProviderDetailSection? in
+        guard provider == .claude else { return mapped }
+        return mapped.compactMap { section -> SyncProviderDetailSection? in
             let rows = section.rows.filter { $0.label != "Limit Reset Credits" }
             guard !rows.isEmpty || section.chart != nil else { return nil }
             return SyncProviderDetailSection(title: section.title, rows: rows, chart: section.chart)
@@ -952,19 +969,19 @@ final class SyncCoordinator {
         if let window = snapshot?.primary {
             rateWindows.append(Self.syncRateWindow(
                 id: "primary",
-                label: Self.additionalWindowLabel(windowMinutes: window.windowMinutes),
+                label: window.label ?? window.title ?? Self.additionalWindowLabel(windowMinutes: window.windowMinutes),
                 window: window))
         }
         if let window = snapshot?.secondary {
             rateWindows.append(Self.syncRateWindow(
                 id: "secondary",
-                label: Self.additionalWindowLabel(windowMinutes: window.windowMinutes),
+                label: window.label ?? window.title ?? Self.additionalWindowLabel(windowMinutes: window.windowMinutes),
                 window: window))
         }
         if let window = snapshot?.tertiary {
             rateWindows.append(Self.syncRateWindow(
                 id: "tertiary",
-                label: Self.additionalWindowLabel(windowMinutes: window.windowMinutes),
+                label: window.label ?? window.title ?? Self.additionalWindowLabel(windowMinutes: window.windowMinutes),
                 window: window))
         }
         for extra in snapshot?.extraRateWindows ?? [] {
@@ -1198,7 +1215,8 @@ final class SyncCoordinator {
             } else {
                 metadata?.sessionLabel
             }
-            let window = Self.syncRateWindow(id: p.id ?? "primary", label: p.label ?? label, window: p)
+            let window = Self.syncRateWindow(
+                id: p.id ?? "primary", label: p.label ?? p.title ?? label, window: p, provider: provider)
             rateWindows.append(window)
             semanticWindows.primary = window
         }
@@ -1208,7 +1226,8 @@ final class SyncCoordinator {
                     window: s,
                     fallback: metadata?.weeklyLabel ?? "Usage")
                 : metadata?.weeklyLabel
-            let window = Self.syncRateWindow(id: s.id ?? "secondary", label: s.label ?? label, window: s)
+            let window = Self.syncRateWindow(
+                id: s.id ?? "secondary", label: s.label ?? s.title ?? label, window: s, provider: provider)
             rateWindows.append(window)
             semanticWindows.secondary = window
         }
@@ -1222,7 +1241,11 @@ final class SyncCoordinator {
             } else {
                 Self.additionalWindowLabel(windowMinutes: t.windowMinutes)
             }
-            rateWindows.append(Self.syncRateWindow(id: "tertiary", label: label, window: t))
+            rateWindows.append(Self.syncRateWindow(
+                id: t.id ?? "tertiary",
+                label: t.label ?? t.title ?? label,
+                window: t,
+                provider: provider))
         }
         // Extra (named) rate windows from upstream — Claude Designs / Daily
         // Routines / Web Sonnet, Cursor Extra usage, etc.
@@ -1231,7 +1254,8 @@ final class SyncCoordinator {
                 id: extra.id,
                 label: extra.title,
                 window: extra.window,
-                usageKnown: extra.usageKnown))
+                usageKnown: extra.usageKnown,
+                provider: provider))
         }
 
         let balancePolicy = ProviderDescriptorRegistry.descriptor(for: provider).presentation.menuCard
@@ -1371,7 +1395,7 @@ final class SyncCoordinator {
         let resolvedCostSummary = sharedCostSummary
             ?? Self.mapMistralCostSummary(provider: provider, snapshot: snapshot)
             ?? Self.mapXAICostSummary(provider: provider, snapshot: snapshot)
-        var details = Self.mapSyncedDetails(snapshot?.details ?? [], provider: provider)
+        var details = Self.mapSyncedDetails(snapshot?.details ?? [], provider: provider, providerCost: providerCost)
         // Provider-specific by design: Mobile cannot store Claude directory-scoped history in its machine-wide ledger.
         if provider == .claude, self.hasScopedClaudeCostPublication {
             details = Array(details.prefix(SyncProviderDetailSection.maximumSectionsPerSnapshot - 1))
@@ -1585,6 +1609,16 @@ final class SyncCoordinator {
             guard providerCost.limit <= 0 else { return nil }
             kind = "spend"
             amount = providerCost.used
+        case .soniox:
+            if let balance = providerCost.balance {
+                kind = "balance"
+                amount = balance
+                period = "Prepaid balance"
+            } else {
+                guard providerCost.limit <= 0 else { return nil }
+                kind = "spend"
+                amount = providerCost.used
+            }
         case .codex:
             guard providerCost.currencyCode == CodexExtraUsageCost.currencyCode,
                   providerCost.balance != nil || providerCost.balanceUpdatedAt != nil
