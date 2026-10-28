@@ -42,13 +42,13 @@ struct CloudSyncSnapshotSendKickPolicyTests {
         lastKickAge: TimeInterval? = nil,
         retryAfter: TimeInterval? = nil) -> TimeInterval?
     {
-        CloudSyncSnapshotSendKickPolicy.delay(
+        CloudSyncSnapshotSendKickPolicy.delay(for: .init(
             pendingCount: count,
             oldestPendingAt: self.now.addingTimeInterval(-age),
             now: self.now,
             kickInFlight: inFlight,
             lastKickAt: lastKickAge.map { self.now.addingTimeInterval(-$0) },
-            retryNotBefore: retryAfter.map { self.now.addingTimeInterval($0) })
+            retryNotBefore: retryAfter.map { self.now.addingTimeInterval($0) }))
     }
 }
 
@@ -72,12 +72,14 @@ struct CloudSyncSnapshotSendKickTests {
         var kick: CloudSyncSnapshotSendKick!
 
         init() {
-            self.kick = CloudSyncSnapshotSendKick(now: { [unowned self] in self.now }) { [unowned self] delay in
-                guard self.waits.count < self.allowedWaits else { throw CancellationError() }
-                self.waits.append(delay)
-                self.now.addTimeInterval(delay)
-                self.onWait?()
-            }
+            self.kick = CloudSyncSnapshotSendKick(
+                now: { [unowned self] in self.now },
+                sleep: { [unowned self] delay in
+                    guard self.waits.count < self.allowedWaits else { throw CancellationError() }
+                    self.waits.append(delay)
+                    self.now.addTimeInterval(delay)
+                    self.onWait?()
+                })
         }
 
         func schedule() {
@@ -104,7 +106,8 @@ struct CloudSyncSnapshotSendKickTests {
 
     private static func error(_ code: CKError.Code, retryAfter: TimeInterval) -> CKError {
         CKError(_nsError: NSError(
-            domain: CKErrorDomain, code: code.rawValue,
+            domain: CKErrorDomain,
+            code: code.rawValue,
             userInfo: [CKErrorRetryAfterKey: NSNumber(value: retryAfter)]))
     }
 

@@ -5,21 +5,24 @@ import Foundation
 enum CloudSyncSnapshotSendKickPolicy {
     static let cadence: TimeInterval = 120
 
+    struct Input {
+        let pendingCount: Int
+        let oldestPendingAt: Date?
+        let now: Date
+        let kickInFlight: Bool
+        let lastKickAt: Date?
+        let retryNotBefore: Date?
+    }
+
     /// Nil means there is no work to schedule; zero means send now.
-    static func delay(
-        pendingCount: Int,
-        oldestPendingAt: Date?,
-        now: Date,
-        kickInFlight: Bool,
-        lastKickAt: Date?,
-        retryNotBefore: Date?) -> TimeInterval?
-    {
-        guard pendingCount > 0, let oldestPendingAt, !kickInFlight else { return nil }
+    static func delay(for input: Input) -> TimeInterval? {
+        guard input.pendingCount > 0, let oldestPendingAt = input.oldestPendingAt,
+              !input.kickInFlight else { return nil }
         return max(
             0,
-            oldestPendingAt.addingTimeInterval(self.cadence).timeIntervalSince(now),
-            lastKickAt.map { $0.addingTimeInterval(self.cadence).timeIntervalSince(now) } ?? 0,
-            retryNotBefore?.timeIntervalSince(now) ?? 0)
+            oldestPendingAt.addingTimeInterval(self.cadence).timeIntervalSince(input.now),
+            input.lastKickAt.map { $0.addingTimeInterval(self.cadence).timeIntervalSince(input.now) } ?? 0,
+            input.retryNotBefore?.timeIntervalSince(input.now) ?? 0)
     }
 
     static func snapshotRecordIDs(
@@ -72,8 +75,10 @@ final class CloudSyncSnapshotSendKick {
             // In particular, leave sentRecordZoneChanges processing before calling sendChanges.
             await Task.yield()
             await self?.run(
-                generation: generation, pendingRecordIDs: pendingRecordIDs,
-                isCurrentEngine: isCurrentEngine, send: send)
+                generation: generation,
+                pendingRecordIDs: pendingRecordIDs,
+                isCurrentEngine: isCurrentEngine,
+                send: send)
         }
     }
 
@@ -124,9 +129,13 @@ final class CloudSyncSnapshotSendKick {
             self.reconcile(ids)
             let now = self.now()
             guard let oldestPendingAt = self.pendingSince.values.min(),
-                  let delay = CloudSyncSnapshotSendKickPolicy.delay(
-                      pendingCount: ids.count, oldestPendingAt: oldestPendingAt, now: now,
-                      kickInFlight: false, lastKickAt: self.lastKickAt, retryNotBefore: self.retryNotBefore)
+                  let delay = CloudSyncSnapshotSendKickPolicy.delay(for: .init(
+                      pendingCount: ids.count,
+                      oldestPendingAt: oldestPendingAt,
+                      now: now,
+                      kickInFlight: false,
+                      lastKickAt: self.lastKickAt,
+                      retryNotBefore: self.retryNotBefore))
             else { return }
             if delay > 0 {
                 do {
