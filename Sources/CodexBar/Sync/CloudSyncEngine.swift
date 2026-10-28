@@ -1015,6 +1015,7 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
     private var enabled = false
     private var configPushTask: Task<Void, Never>?
     private var snapshotPushTask: Task<Void, Never>?
+    private let snapshotSendKick = CloudSyncSnapshotSendKick()
     private var periodicFetchTask: Task<Void, Never>?
     private var fetchRecoveryCheckpoint: UInt64?
     private var pushRecoveryCheckpoint: UInt64?
@@ -1443,6 +1444,7 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
             }
             if !changes.savedRecords.isEmpty || !changes.deletedRecordIDs.isEmpty {
                 self.quotaRetryState.reset()
+                self.snapshotSendKick.clearBackoff()
             }
             let supersededSaves = CloudSyncSnapshotMigration.takeSupersededSaveResults(
                 recordNames: changes.savedRecords.map(\.recordID.recordName)
@@ -1468,13 +1470,19 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
             self.handleSentRecordDeletes(
                 deletedIDs: changes.deletedRecordIDs,
                 failures: changes.failedRecordDeletes)
+            self.scheduleSnapshotSendKick(engine: syncEngine)
             self.persistEnvelope()
             if !changes.savedRecords.isEmpty || !changes.deletedRecordIDs.isEmpty {
                 self.state.status.lastSuccessfulPushAt = Date()
             }
             if !self.pendingSnapshots.isEmpty {
                 Task { [weak self] in
-                    self?.pushPendingSnapshots()
+                    guard let self, self.enabled,
+                          CloudSyncLifecycle.isCurrentEngine(
+                              originatingEngine: ObjectIdentifier(syncEngine),
+                              currentEngine: self.engine.map(ObjectIdentifier.init))
+                    else { return }
+                    self.pushPendingSnapshots()
                 }
             }
         case let .fetchedDatabaseChanges(changes):
@@ -1616,9 +1624,11 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
         syncEngine: CKSyncEngine? = nil) async
     {
         guard syncEngine == nil || (self.enabled && self.engine === syncEngine) else { return }
+        self.snapshotSendKick.postpone(for: error)
         switch error.code {
         case .quotaExceeded:
             let retry = self.quotaRetryState.nextDelay(serverRetryAfter: error.retryAfterSeconds)
+            self.snapshotSendKick.postpone(for: error, minimumDelay: retry)
             self.scheduleRetry(recordID: record.recordID, after: retry)
         case .accountTemporarilyUnavailable:
             let retry = CloudSyncSnapshotMigration.retryDelay(for: error) ?? 1
@@ -1733,6 +1743,7 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
         self.engine = nil
         self.configPushTask?.cancel()
         self.snapshotPushTask?.cancel()
+        self.snapshotSendKick.stop()
         self.periodicFetchTask?.cancel()
         self.desiredRecords = [:]
         self.quotaRetryState.reset()
@@ -2191,14 +2202,14 @@ extension CloudSyncEngine {
         self.pendingSnapshotProviderConfigRevisions = pendingPlan.providerConfigRevisions
         self.persistEnvelope()
         let elapsed = self.lastSnapshotPushAt.map { Date().timeIntervalSince($0) } ?? .infinity
-        if elapsed >= 120 {
+        if elapsed >= CloudSyncSnapshotSendKickPolicy.cadence {
             self.pushPendingSnapshots()
             return
         }
         self.snapshotPushTask?.cancel()
         self.snapshotPushTask = Task { [weak self] in
             do {
-                try await Task.sleep(for: .seconds(120 - elapsed))
+                try await Task.sleep(for: .seconds(CloudSyncSnapshotSendKickPolicy.cadence - elapsed))
                 guard !Task.isCancelled else { return }
                 self?.pushPendingSnapshots()
             } catch {
@@ -2416,8 +2427,28 @@ extension CloudSyncEngine {
         }
     }
 
+    private func scheduleSnapshotSendKick(engine: CKSyncEngine) {
+        let originatingEngine = ObjectIdentifier(engine)
+        self.snapshotSendKick.schedule { [weak self] in
+            guard let self, !self.state.status.needsAppUpdate else { return [] }
+            return CloudSyncSnapshotSendKickPolicy.snapshotRecordIDs(
+                in: engine.state.pendingRecordZoneChanges,
+                deviceID: self.settings.macFleetSyncDeviceID,
+                zoneID: Self.zoneID).filter { self.skippedTerminalReplacementHashes[$0.recordName] == nil }
+        } isCurrentEngine: { [weak self] in
+            guard let self, self.enabled else { return false }
+            return CloudSyncLifecycle.isCurrentEngine(
+                originatingEngine: originatingEngine,
+                currentEngine: self.engine.map(ObjectIdentifier.init))
+        } send: { ids in
+            try await engine.sendChanges(.init(scope: .recordIDs(ids)))
+        }
+    }
+
     private func pushPendingSnapshots() {
         guard let engine = self.engine else { return }
+        // Even an empty publication or an all-inFlight cycle must inspect CKSyncEngine's queue.
+        defer { self.scheduleSnapshotSendKick(engine: engine) }
         guard !self.pendingSnapshots.isEmpty
             || !self.persistenceEnvelope.pendingSnapshotDeletes.isEmpty
             || !self.pendingSnapshotProviderConfigRevisions.isEmpty
