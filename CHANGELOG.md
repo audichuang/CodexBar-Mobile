@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.81.0.1 — audi.5 (audichuang fork)
+
+### Fixed
+
+- iCloud fleet: explicitly send stalled Mac snapshot saves with rate-limited retries and persistent diagnostics.
+
 ## 0.81.0.1 — 2026-10-25 (audichuang fork)
 
 ### Highlights — Mobile 3.1.0
