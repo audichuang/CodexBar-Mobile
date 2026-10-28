@@ -1444,6 +1444,7 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
             }
             if !changes.savedRecords.isEmpty || !changes.deletedRecordIDs.isEmpty {
                 self.quotaRetryState.reset()
+                self.snapshotSendKick.clearBackoff()
             }
             let supersededSaves = CloudSyncSnapshotMigration.takeSupersededSaveResults(
                 recordNames: changes.savedRecords.map(\.recordID.recordName)
