@@ -38,7 +38,9 @@ public enum AppGroupSupport {
     }
 
     public static func currentGroupID(for bundleID: String? = Bundle.main.bundleIdentifier) -> String {
-        self.currentGroupID(teamID: self.resolvedTeamID(), bundleID: bundleID)
+        self.currentGroupID(
+            teamID: self.resolvedTeamID(),
+            bundleID: bundleID ?? self.containingAppBundleIdentifier(executableURL: Bundle.main.executableURL))
     }
 
     static func currentGroupID(teamID: String, bundleID: String?) -> String {
@@ -49,14 +51,19 @@ public enum AppGroupSupport {
     public static func resolvedTeamID(bundle: Bundle = .main) -> String {
         self.resolvedTeamID(
             infoDictionaryOverride: bundle.infoDictionary,
-            bundleURLOverride: bundle.bundleURL)
+            bundleURLOverride: bundle.bundleURL,
+            executableURLOverride: bundle.executableURL)
     }
 
     static func resolvedTeamID(
         infoDictionaryOverride: [String: Any]?,
-        bundleURLOverride: URL?) -> String
+        bundleURLOverride: URL?,
+        executableURLOverride: URL? = nil,
+        signatureTeamIDResolver: (URL?) -> String? = { AppGroupSupport.codeSignatureTeamID(bundleURL: $0) }) -> String
     {
-        if let teamID = self.codeSignatureTeamID(bundleURL: bundleURLOverride) {
+        if let teamID = signatureTeamIDResolver(bundleURLOverride)
+            ?? signatureTeamIDResolver(executableURLOverride)
+        {
             return teamID
         }
         if let teamID = infoDictionaryOverride?[self.teamIDInfoKey] as? String,
@@ -65,6 +72,16 @@ public enum AppGroupSupport {
             return teamID
         }
         return self.defaultTeamID
+    }
+
+    static func containingAppBundleIdentifier(executableURL: URL?) -> String? {
+        guard let executableURL else { return nil }
+        var directory = executableURL.resolvingSymlinksInPath().deletingLastPathComponent()
+        while directory.path != "/" {
+            if directory.pathExtension == "app" { return Bundle(url: directory)?.bundleIdentifier }
+            directory.deleteLastPathComponent()
+        }
+        return nil
     }
 
     public static func legacyGroupID(for bundleID: String? = Bundle.main.bundleIdentifier) -> String {
@@ -204,7 +221,8 @@ public enum AppGroupSupport {
         let fallbackURL = fallbackSnapshotURLOverride ?? self.localFallbackDirectory(
             fileManager: fileManager, homeDirectory: homeDirectory)
             .appendingPathComponent(self.widgetSnapshotFilename)
-        let snapshotResult = self.copySnapshotIfNeeded(from: fallbackURL, to: currentURL, fileManager: fileManager)
+        let snapshotResult = self.copyFallbackSnapshotIfNeeded(
+            from: fallbackURL, to: currentURL, fileManager: fileManager)
         let copiedDefaults = self.copyLegacySharedDefaults(from: standardDefaults, to: currentDefaults)
         if snapshotResult == .failed {
             return MigrationResult(status: .retryNeeded, copiedDefaults: copiedDefaults)
@@ -217,6 +235,27 @@ public enum AppGroupSupport {
     }
 
     private enum SnapshotCopyResult { case unchanged, copied, failed }
+
+    private static func copyFallbackSnapshotIfNeeded(
+        from source: URL, to target: URL, fileManager: FileManager) -> SnapshotCopyResult
+    {
+        guard !fileManager.fileExists(atPath: target.path), fileManager.fileExists(atPath: source.path) else {
+            return .unchanged
+        }
+        let staging = target.deletingLastPathComponent()
+            .appendingPathComponent(".widget-migration-\(UUID().uuidString)", isDirectory: true)
+        defer { try? fileManager.removeItem(at: staging) }
+        do {
+            try fileManager.createDirectory(at: staging, withIntermediateDirectories: true)
+            let copy = staging.appendingPathComponent(self.widgetSnapshotFilename)
+            try fileManager.copyItem(at: source, to: copy)
+            // FileManager.moveItem refuses an existing destination: a fresh publisher wins the race.
+            try fileManager.moveItem(at: copy, to: target)
+            return .copied
+        } catch {
+            return fileManager.fileExists(atPath: target.path) ? .unchanged : .failed
+        }
+    }
 
     private static func copySnapshotIfNeeded(
         from source: URL, to target: URL, fileManager: FileManager) -> SnapshotCopyResult

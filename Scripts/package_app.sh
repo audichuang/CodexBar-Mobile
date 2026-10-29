@@ -264,6 +264,7 @@ fi
 ENTITLEMENTS_DIR="$ROOT/.build/entitlements"
 APP_ENTITLEMENTS="${ENTITLEMENTS_DIR}/CodexBar.entitlements"
 WIDGET_ENTITLEMENTS="${ENTITLEMENTS_DIR}/CodexBarWidget.entitlements"
+CLI_ENTITLEMENTS="${ENTITLEMENTS_DIR}/CodexBarCLI.entitlements"
 mkdir -p "$ENTITLEMENTS_DIR"
 if [[ "$ALLOW_LLDB" == "1" && "$LOWER_CONF" != "debug" ]]; then
   echo "ERROR: CODEXBAR_ALLOW_LLDB requires debug configuration" >&2
@@ -311,6 +312,18 @@ fi)
     <true/>"; fi)
 </dict>
 </plist>
+PLIST
+cat > "$CLI_ENTITLEMENTS" <<PLIST
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+$(if [[ "$INCLUDE_SHARED_ENTITLEMENTS" == "1" ]]; then cat <<EOF
+<key>com.apple.security.application-groups</key>
+<array><string>${APP_GROUP_ID}</string></array>
+EOF
+fi)
+$(if [[ "$NEEDS_GET_TASK_ALLOW" == "1" ]]; then echo '<key>com.apple.security.get-task-allow</key><true/>'; fi)
+</dict></plist>
 PLIST
 cat > "$WIDGET_ENTITLEMENTS" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
@@ -574,11 +587,13 @@ else
 fi
 CODESIGN_ARGS_NO_TIMESTAMP=(--force --options runtime --sign "${CODESIGN_ID}")
 function resign() {
-  xattr -cr "$1" 2>/dev/null || true
-  if ! codesign "${CODESIGN_ARGS[@]}" "$1" 2>&1; then
+  local target="$1"
+  shift
+  xattr -cr "$target" 2>/dev/null || true
+  if ! codesign "${CODESIGN_ARGS[@]}" "$@" "$target" 2>&1; then
     if [[ " ${CODESIGN_ARGS[*]} " == *" --timestamp "* ]]; then
-      echo "  timestamp failed, retrying without timestamp: $1" >&2
-      codesign "${CODESIGN_ARGS_NO_TIMESTAMP[@]}" "$1"
+      echo "  timestamp failed, retrying without timestamp: $target" >&2
+      codesign "${CODESIGN_ARGS_NO_TIMESTAMP[@]}" "$@" "$target"
     else
       return 1
     fi
@@ -614,7 +629,7 @@ seal_app_bundle_copy() {
   fi
 
   if [[ -f "${bundle}/Contents/Helpers/CodexBarCLI" ]]; then
-    resign "${bundle}/Contents/Helpers/CodexBarCLI"
+    resign "${bundle}/Contents/Helpers/CodexBarCLI" --entitlements "$CLI_ENTITLEMENTS"
   fi
   if [[ -f "${bundle}/Contents/Helpers/CodexBarClaudeWatchdog" ]]; then
     resign "${bundle}/Contents/Helpers/CodexBarClaudeWatchdog"
@@ -689,7 +704,7 @@ find "$APP" -name '._*' -delete 2>/dev/null || true
 
 # Sign helper binaries if present
 if [[ -f "${APP}/Contents/Helpers/CodexBarCLI" ]]; then
-  resign "${APP}/Contents/Helpers/CodexBarCLI"
+  resign "${APP}/Contents/Helpers/CodexBarCLI" --entitlements "$CLI_ENTITLEMENTS"
 fi
 if [[ -d "${APP}/Contents/Helpers/CodexBar_CodexBarCore.bundle" ]]; then
   codesign "${CODESIGN_ARGS[@]}" "${APP}/Contents/Helpers/CodexBar_CodexBarCore.bundle"

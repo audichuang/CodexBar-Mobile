@@ -41,3 +41,14 @@
 - OpenCode本地来源成本曾被fork结构化summary标成list-price estimate。增加含义为“包含来源记录金额、可混合估算”的sourceRecorded provenance；不冒充vendor billing/receipt。central tokenSnapshot覆盖fresh/cached/native/Pi窗口，按实际日期entries收窄；Mac菜单、CLI text/JSON/live history、Shared和iOS、两Mac合并均跟进。0为真实金额，缺失/非有限值不发明来源；isEstimated/coverage保持独立，不因来源记录强行清除。
 - Core/window、Dashboard month/week、CLI zero/mixed解释、builtin publisher、plugin3currency×2、缓存/新扫描和双writer正反序均补断言。新增async参数fixture采用dictionary defaults、stub stores、synthetic HOME/contained widget URL、no-op reloader和显式deviceID，并串行，避免真实defaults/账号/文件探测。
 - 3.3同一in-app details条目合并来源成本说明，四语齐全；未加可见版本。执行结果在03分开记录，不把源码审查当测试通过。
+
+
+## 实包审查后的App Group修复（待最终执行验证）
+
+根因是fork打包group.标识与上游既有Team前缀运行算法分别维护，普通签名/公证/短启动未验证能力。Mac App、CLI、Widget改签实际Team组；Mac Widget/CLI不虚加CloudKit/profile，主App保Production与既有profile。只读Source审计未发现Mac Sync/Shared对旧group.o1x的运行访问，iOS组及353个Archive输入保持一致。
+
+旧ApplicationSupport快照和standard选择采用独立marker迁移，目标现有值优先；快照先copy到同目录UUID staging，成功move no-overwrite，partial失败保持源数据与重试资格，新publisher抢先写的target优先。Widget初次无snapshot或无stored时不保存默认Codex，旧Widget标准域选择仍可读，真实provider消失仍支持明确fallback；不自动写入同值旧选择，以免覆盖同时发生的新显式选择。
+
+小签名probe实际发现Helper Bundle.main是Contents/Helpers目录，原Team解析回退Y5PE65HELJ；改为验证实际executable签名并从外层App识别debug（含symlink），after probe为3TUERHN53E。CLI在初签、copy seal、最终sign三阶段均携带AppGroup-only权限。sourceRole/resource smoke新增只读实际Group JSON供最终实包对齐，不调用containerURL/NSUserDefaults/Keychain。所有新增迁移tests为dictionary defaults/双snapshotURL/contained RecordingFileManager/synthetic HOME。
+
+两位独立agent发现并闭环首次Widget写默认的竞态与resign shift后$1时间戳fallback错误；补真实caller顺序、partial/publisher、helper/debug及timestamp带/不带entitlement重试回归。128项受影响复测（127原审计+resource smoke suite）、full lint/build和重签包尚待通过。首次新gate在源码仍审查变更时编到旧Widget module、新test调用seam导致compile失败，400.9秒/0执行，不计成功；后续从稳定commit fresh重跑。

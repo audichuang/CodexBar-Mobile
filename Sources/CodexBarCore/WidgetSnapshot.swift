@@ -369,7 +369,14 @@ public enum WidgetSelectionStore {
         bundleID: String? = Bundle.main.bundleIdentifier)
     {
         let defaults = self.sharedDefaults(bundleID: bundleID)
+        self.persist(instanceID, to: defaults)
+    }
+
+    @discardableResult
+    static func persist(_ instanceID: ProviderInstanceID, to defaults: UserDefaults) -> Bool {
+        guard defaults.string(forKey: self.selectedProviderKey) != instanceID.rawValue else { return false }
         defaults.set(instanceID.rawValue, forKey: self.selectedProviderKey)
+        return true
     }
 
     public static func saveSelectedProvider(

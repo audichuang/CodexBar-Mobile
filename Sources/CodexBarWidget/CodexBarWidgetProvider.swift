@@ -199,12 +199,24 @@ struct CodexBarSwitcherTimelineProvider: TimelineProvider {
     }
 
     private func makeEntry() -> CodexBarSwitcherEntry {
-        let snapshot = WidgetSnapshotStore.load() ?? WidgetPreviewData.emptySnapshot()
-        let providers = Self.supportedProviders(from: snapshot)
-        let stored = WidgetSelectionStore.loadSelectedProvider()
+        Self.makeEntry(
+            snapshot: WidgetSnapshotStore.load(),
+            stored: WidgetSelectionStore.loadSelectedProvider(),
+            saveSelection: { WidgetSelectionStore.saveSelectedProvider($0) })
+    }
+
+    static func makeEntry(
+        snapshot: WidgetSnapshot?,
+        stored: ProviderInstanceID?,
+        saveSelection: (UsageProvider) -> Void) -> CodexBarSwitcherEntry
+    {
+        let available = snapshot.map { Self.supportedProviders(from: $0, includePlaceholder: false) } ?? []
+        let snapshot = snapshot ?? WidgetPreviewData.emptySnapshot()
+        let providers = available.isEmpty ? [.codex] : available
         let selected = providers.first { $0.instanceID == stored } ?? providers.first ?? .codex
-        if selected.instanceID != stored {
-            WidgetSelectionStore.saveSelectedProvider(selected)
+        // A placeholder or inferred first choice must not beat the app's pending preference migration.
+        if let stored, !available.isEmpty, selected.instanceID != stored {
+            saveSelection(selected)
         }
         return CodexBarSwitcherEntry(
             date: Date(),
@@ -213,7 +225,9 @@ struct CodexBarSwitcherTimelineProvider: TimelineProvider {
             snapshot: snapshot)
     }
 
-    static func supportedProviders(from snapshot: WidgetSnapshot) -> [UsageProvider] {
+    static func supportedProviders(
+        from snapshot: WidgetSnapshot, includePlaceholder: Bool = true) -> [UsageProvider]
+    {
         let enabled = snapshot.enabledProviders
         let instanceIDs = enabled.isEmpty ? snapshot.entries.map(\.provider) : enabled
         let supported = instanceIDs.compactMap { instanceID -> UsageProvider? in
@@ -222,7 +236,7 @@ struct CodexBarSwitcherTimelineProvider: TimelineProvider {
             }
             return provider
         }
-        return supported.isEmpty ? [.codex] : supported
+        return supported.isEmpty && includePlaceholder ? [.codex] : supported
     }
 }
 
