@@ -35,3 +35,7 @@ Archive独立补审核对353项输入、101个逐文件产物、五bundle版本/
 独立复核1826项Mac inputs与18ebb源码、两ZIP内部4exec签名/双架构/minOS、Group/Production角色、公证/UUID/远端附件hash；使用OpenSSL独立按真实App公钥验证Sparkle签名。iOS353 inputs与a36 Archive、Archive101文件重新核对一致；用户原有error.log/work与before/after记录一致，未纳入提交。见round2-final-mac-independent-verification.json和round2-final-artifact-public-checks.json。
 
 PR：[225](https://github.com/o1xhack/CodexBar-Mobile/pull/225)，base mobile-dev，关联#221/#222，不自动关闭。当前文档增量只补报告与链接，无shipping input改动；补审后push，请求GitHub Codex review最终head，最终结果及线程/CI/gate以本PR记录交叉核对。达到clean reviewed PR后才询问用户合并、Mac live与iOS具体阶段。
+
+## PR Fast Checks证据文件大小修复
+
+55fad94b2的run40813721269执行到仓库size guard失败：mac-appgroup-selection-coverage.json为2270244字节，超过2097152限制。紧凑排版后仍超限，故仅将fullMethodInventory拆为独立JSON，用文件名+SHA256引用；重新组合后的所有键/值与SSD原始清单完全相等，不删库存/结果/二进制hash。evidence/mac-appgroup-coverage-split-proof.json记录可复核关系；原完整日志与原JSON保留SSD。产品输入未改，无需重打包。修复后本地size guard与文档增量审查通过再push；GitHub仍须对最终head完成检查和review。

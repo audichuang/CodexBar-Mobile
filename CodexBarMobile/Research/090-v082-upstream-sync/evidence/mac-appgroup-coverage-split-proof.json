@@ -1,0 +1,10 @@
+{
+  "originalFile": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/mac-appgroup-selection-coverage.json",
+  "originalSHA256": "d7b50484951e3ec7cad63230d11073d6213f9d715f4e6c4f4069ea154b797684",
+  "metadataFile": "mac-appgroup-selection-coverage.json",
+  "inventoryFile": "mac-appgroup-full-method-inventory.json",
+  "inventorySHA256": "91115d7fe55f79e117ff3dc46bd47695908cc2d85c01cd216813e244d61f7e28",
+  "inventoryCount": 16194,
+  "reconstructionEqualsOriginal": true,
+  "filesBelowRepositoryLimit": true
+}
