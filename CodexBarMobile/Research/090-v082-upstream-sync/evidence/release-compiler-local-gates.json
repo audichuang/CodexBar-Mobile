@@ -1,0 +1,42 @@
+{
+  "base": "03f4e96f1493b61b067fbe4e2c2c8eb692222ab4",
+  "branch": "fix/v082-release-compiler",
+  "swift": "Apple Swift6.4 (local); old Swift6.2.4 requires new remote CI",
+  "tests": {
+    "count": 22,
+    "suites": 2,
+    "passed": true,
+    "seconds": 5.235
+  },
+  "build": "passed",
+  "fullLint": "passed",
+  "signingFixture": "16cases plus timestamp retry each; both TMPDIR spellings passed",
+  "sourceHashes": {
+    "Sources/CodexBar/StatusItem/StatusItemController+UserPlugins.swift": "fa4897b8b2f33a6779dfa0fd8e9bf55172416bdaa1548c7961b7316006f45221",
+    "Scripts/test_package_signing.sh": "cc41472b3cc05f67b00bd218dfa64ed04ff11fdadf42bc6820df9269b63ff11a"
+  },
+  "logs": {
+    "compiler-fix-tests-3.log": {
+      "path": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Release082-20261029/compiler-fix-tests-3.log",
+      "sha256": "79db100bf2a105f16831e002e6bb27435a00a83fcc11a89201ca57e110e16b01"
+    },
+    "compiler-fix-build-3.log": {
+      "path": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Release082-20261029/compiler-fix-build-3.log",
+      "sha256": "e352addd5c0bda7c1fee220a20ece90ae7d7777f781703f643cb6e43450c878c"
+    },
+    "compiler-fix-lint-4.log": {
+      "path": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Release082-20261029/compiler-fix-lint-4.log",
+      "sha256": "e500428bfc23f3b744fd6998a64e35fcae17a9923ae05012a356a41d58c0a6cc"
+    },
+    "compiler-fix-signing-path-normal.log": {
+      "path": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Release082-20261029/compiler-fix-signing-path-normal.log",
+      "sha256": "4a9fed03a5e1a7f3caabc04f3452fd6735ed18937e41b01a4822f5837eaf2e8c"
+    },
+    "compiler-fix-signing-path-slash.log": {
+      "path": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Release082-20261029/compiler-fix-signing-path-slash.log",
+      "sha256": "c243f05dbed72da90131f39d1a658a25b07a86f00a500495d79e0fb69333a1d8"
+    }
+  },
+  "noTagOrLive": true,
+  "iosInputsUnchanged": true
+}
