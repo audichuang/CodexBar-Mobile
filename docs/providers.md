@@ -8,7 +8,7 @@ read_when:
 
 # Providers
 
-CodexBar currently registers 106 provider IDs. Some companies expose multiple surfaces, such as Codex vs OpenAI API or
+CodexBar currently registers 110 provider IDs. Some companies expose multiple surfaces, such as Codex vs OpenAI API or
 OpenCode vs OpenCode Go, because the auth source and quota shape differ.
 
 ## Fetch strategies (current)
@@ -81,7 +81,7 @@ complete when the available scan window covers fewer days.
 | Antigravity | Local LSP/HTTP probe (`local`). |
 | Cursor | Web API via cookies → legacy stored session → Cursor.app local auth (`web`). |
 | OpenCode | Web dashboard via cookies (`web`). |
-| OpenCode Go | Unscoped Auto: local SQLite cost history with API overlay (`local+api`) → usage API (`api`) → web dashboard (`web`). Scoped Auto (selected account/manual cookie/workspace): web → local → API. Explicit API/Web: selected source only. |
+| OpenCode Go | Unscoped Auto: local SQLite history with configured API, browser, then CLI quotas (`local+api`/`local+web`/`local+cli`). Without history: configured API key first; otherwise web → CLI. Scoped Auto (selected account/manual cookie/workspace): web → local → API. Explicit API/Web: selected source only. |
 | Alibaba Coding Plan | Console RPC via web cookies (auto/manual) with API key fallback (`web`, `api`). |
 | Alibaba Token Plan | Signed-in Bailian CLI (`cli`) → subscription summary API via browser or manual cookies (`web`). |
 | Qwen Cloud | Qwen Cloud 5-hour/weekly Token Plan APIs via browser or manual cookies (`web`). |
@@ -167,6 +167,7 @@ complete when the available scan window covers fewer days.
 | Provider | Source |
 |---|---|
 | [Langdock](langdock.md) | Selected Edge, Chrome, or Safari profile → personal included session and weekly limits (`web`, macOS). |
+| [Soniox](soniox.md) | Organization API key for prepaid USD balance and monthly spend against the organization budget. |
 | [X API](xapi.md) | Browser or manual console.x.com cookies for prepaid and free credits, including negative balances. |
 | [Future AGI](futureagi.md) | API key and secret key (billing-period usage, allowances, and estimated cost). |
 | [LithosAI](lithosai.md) | Browser or manual console cookies for prepaid USD balance and optional UTC spend. |
@@ -184,6 +185,9 @@ complete when the available scan window covers fewer days.
 | [Parallel](parallel.md) | Browser session on platform.parallel.ai for the prepaid credit balance and pending debit. |
 | [Claude Platform](claudeplatform.md) | Browser or manual platform.claude.com session cookies for Console API credit balance, expiring credit grants, and month-to-date spend. |
 | [Munito](munito.md) | Admin API key with Read account data permission for today's and this month's spend against the organization's spend limits. |
+| [Trae CN](traecn.md) | Browser session for account credit usage. |
+| [Chatbox AI](chatbox.md) | License key for plan points, reward credits, top-up credits, and image quotas. |
+| [abliteration.ai](abliteration.md) | API key for prepaid USD credits and cumulative usage. |
 
 <!-- End generated provider additions -->
 
@@ -310,10 +314,11 @@ complete when the available scan window covers fewer days.
 
 ## OpenCode Go
 - Preferred usage source: `GET https://opencode.ai/zen/go/v1/usage` with an API key from Settings,
-  `providers[].apiKey`, or `OPENCODE_API_KEY`.
+  `providers[].apiKey`, `OPENCODE_API_KEY`, or an existing active OpenCode CLI login.
 - Web dashboard via browser or manual cookies (`opencode.ai`).
 - Unscoped Auto mode prefers local cost history from `~/.local/share/opencode/opencode.db` on macOS and Linux,
-  enriches it with API quota windows when configured, then falls back to standalone API and legacy web sources.
+  enriches it with quota windows from a configured key, browser session, then active CLI login. Without local history,
+  the configured key stays first; otherwise web precedes the CLI login.
 - Auto mode stays web-first for selected token accounts, manual cookies, and workspace overrides; explicit Web mode does
   not include local fallback.
 - Uses the public usage API for rolling 5-hour, weekly, and monthly usage windows, with the workspace Go page/server

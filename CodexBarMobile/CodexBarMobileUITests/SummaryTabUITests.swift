@@ -55,6 +55,16 @@ final class SummaryTabUITests: XCTestCase {
         XCTAssertEqual(app.buttons["summary-edit"].label, "Edit", "Summary must open outside editing mode")
         XCTAssertEqual(self.summaryDetails(app).count, 0, "Opening or rotating Summary must not select an account")
 
+        self.capture("Summary actual viewport before pose assertion")
+        print("Summary actual grid: \(grid.frame), app: \(app.frame)")
+        if ProcessInfo.processInfo.environment["DUO_WAIT_FOR_NATIVE_LANDSCAPE"] == "1" {
+            print("WAIT NATIVE LANDSCAPE - Summary grid \(grid.frame)")
+            XCTAssertEqual(
+                XCTWaiter.wait(for: [XCTNSPredicateExpectation(
+                    predicate: NSPredicate { _, _ in grid.frame.width > grid.frame.height },
+                    object: nil)], timeout: 180),
+                .completed)
+        }
         // The root app frame may stay in fixed display coordinates on Duo; validate
         // the actual card viewport rather than the requested device orientation.
         XCTAssertEqual(
@@ -78,7 +88,12 @@ final class SummaryTabUITests: XCTestCase {
             .sorted { $0.frame.minX < $1.frame.minX }
         guard let first = firstRow.first, let last = firstRow.last else { return }
         let contentWidth = last.frame.maxX - first.frame.minX
-        let expectedColumns = max(2, min(4, Int((contentWidth + 32) / 175)))
+        let activeWindow = app.windows.containing(NSPredicate(format: "identifier == %@", "summary-grid")).firstMatch
+            .frame
+        // The established compact-landscape contract keeps the full-width 2-column chart.
+        let shortLandscape = activeWindow.height > 0 && activeWindow.height < 500 && activeWindow.width > activeWindow
+            .height
+        let expectedColumns = shortLandscape ? 2 : max(2, min(4, Int((contentWidth + 32) / 175)))
         XCTAssertEqual(
             columns.identifier, "summary-grid-columns-\(expectedColumns)",
             "Columns must follow the actual safe-area card width")
@@ -101,6 +116,12 @@ final class SummaryTabUITests: XCTestCase {
         }
         // Capture the whole screen, including the system-owned Duo tab/navigation chrome.
         self.capture("Summary Duo \(landscape ? "landscape" : "portrait") full-width grid with native chrome")
+        let codex = app.buttons["summary-filter-codex"]
+        codex.tap()
+        XCTAssertTrue(codex.isSelected)
+        XCTAssertTrue(self.cards(app).allElementsBoundByIndex.allSatisfy { $0.identifier.contains("-codex-") })
+        XCTAssertEqual(self.summaryDetails(app).count, 0)
+        self.capture("Summary provider filter remains actionable after native pose")
     }
 
     @MainActor func testSummaryCardPushAndBackPreserveProviderFilter() {

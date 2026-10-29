@@ -43,8 +43,8 @@ Upstream v0.26.1 的 BUILD_NUMBER 是 `63`。Fork 在上面打 patch 用 `63.1` 
 | 情况 | BUILD_NUMBER |
 |------|--------------|
 | 刚 merge 上游 v0.26.1，没动 | 63 |
-| Fork 第 1 次在 v0.26.1 上 commit（fix/bridge/test 都算） | 63.1 |
-| Fork 第 2 次再改 | 63.2 |
+| Fork 第 1 次发布 v0.26.1 候选（fix/bridge 都算） | 63.1 |
+| Fork 第 2 次对外发版 | 63.2 |
 | Upstream 出了 v0.27.0（BUILD_NUMBER 例如 65），fork 再次 sync | 65（然后下次 fork 改成 65.1） |
 
 **关键**：fork 的 BUILD_NUMBER 永远是 `<upstream 整数>.<fork 计数器>`。`Mac BUILD_NUMBER scheme — fork patches use subdecimal (61.2), never advance upstream's integer`（来源：项目 memory）。
@@ -59,7 +59,11 @@ Upstream v0.26.1 的 BUILD_NUMBER 是 `63`。Fork 在上面打 patch 用 `63.1` 
 | iOS 也 ship 了新版本 1.7.0 | `1.7.0` |
 | iOS bump 到 1.7.1（小修） | `1.7.1` |
 
-**关键**：发 Mac release 前问一下：用户 iPhone 上现在装的是哪个版本？写那个版本。如果发 Mac 之后才要发 iOS 新版本，写 iOS 当前已发版本，等 iOS 新版本上 TestFlight/App Store 后，再发一次 Mac release（把 MOBILE_VERSION 改成新的）。
+**关键**：Mac 正式发布前，通过 ASC/已交付产物或用户确认核实当前配套 iOS
+版本，不因项目里的待发布版本已 bump 就把它写成已交付。若候选阶段计划先发
+新 iOS，可在 Research 记录该计划；真正上传/交付后、Mac 公开前重新核实并重建
+受版本输入影响的候选产物。已有可靠证据时不重复询问；只做一次最终 Mac 发布，
+不要为了候选中的 companion 字段调整制造多个用户版本。
 
 ### `UPSTREAM_VERSION` —— 只是个 bookmark
 
@@ -117,25 +121,19 @@ sparkle:version = BUILD_NUMBER + "." + MOBILE_VERSION
                        (= BUILD_NUMBER+MOBILE_VERSION)
 ```
 
-## 决策树 —— 我要发新 release，每个版本怎么填？
+## 决策树 —— 本轮只确定一个候选版本
 
-```
-1. 上游有新 tag？(check `git fetch upstream --tags && git log v{current}..upstream/main`)
-   ├─ 是 → merge 上游, 把 UPSTREAM_VERSION 改成新 tag
-   │      把 MARKETING_VERSION 改成 upstream 的 (例如 v0.27.0 → MARKETING_VERSION=0.27.0)
-   │      把 BUILD_NUMBER 改成 upstream 的 BUILD_NUMBER (整数, 不带 .X)
-   └─ 否 → MARKETING_VERSION 不动, UPSTREAM_VERSION 不动
+1. 从 GitHub Releases 确认目标稳定 tag；完整合并后更新 `UPSTREAM_VERSION`
+   与实际 `UPSTREAM_SYNC_DATE`，不能用未发布的 upstream/main 当 release。
+2. 新上游版本：`MARKETING_VERSION=<上游三段>.1`，
+   `BUILD_NUMBER=<该 tag 的上游整数>.1`。同上游再次对外发版时，两个 fork
+   计数器一起递增；内部阶段 commit、review 修复和重打同一候选不逐次加版本。
+3. iOS 项目的营销版本/build 独立确定；`MOBILE_VERSION` 使用已核实的配套
+   交付版本，计划中的 iOS 版本单独记录，按上节在正式发布前复核。
+4. 验证 `sparkle:version={BUILD_NUMBER}.{MOBILE_VERSION}` 严格大于已发布 feed，
+   tag/ZIP/About 与最终 binary 一致。draft 不创建/推送 tag 时使用专门模式。
 
-2. Fork 这次有改 Mac UI 用户能看到的东西吗？
-   ├─ 是 → MARKETING_VERSION + .1  (0.26.1 → 0.26.2)
-   │      BUILD_NUMBER 在 upstream 整数上 +.1  (63 → 63.1, 或 63.1 → 63.2)
-   └─ 否（只改了 iOS bridge / 测试 / 文档） → MARKETING_VERSION 不动
-          BUILD_NUMBER 在 upstream 整数上 +.1
-
-3. iOS 这次也 ship 了新版本？
-   ├─ 是 → MOBILE_VERSION 改成新 iOS 版本号
-   └─ 否 → MOBILE_VERSION 保持上一个发的 Mac release 用的值
-```
+以下为旧规则时期的历史产物，不能作为当前四段 Mac 版本方案：
 
 ## 例子 —— 最近几次 release 怎么命名的
 
@@ -148,7 +146,7 @@ sparkle:version = BUILD_NUMBER + "." + MOBILE_VERSION
 
 ## 一句话总结
 
-- `MARKETING_VERSION` = 上游版本 + 可选 .N（fork 自己改 Mac UI 的次数）
-- `BUILD_NUMBER` = 上游 BUILD_NUMBER 整数 + `.N`（fork patch 计数器，包括只有 iOS bridge 的 patch）
-- `MOBILE_VERSION` = 这次 Mac release 对应的 iOS 当前版本
-- `sparkle:version` = `{BUILD_NUMBER}.{MOBILE_VERSION}`（5 段单调递增）
+- `MARKETING_VERSION` = 上游三段 + 必选 `.N` fork 发布计数器。
+- `BUILD_NUMBER` = 上游整数 + `.N`，不提升上游整数，不按内部 commit 次数递增。
+- `MOBILE_VERSION` = 已核实的配套 iOS 交付版本，独立于 iOS 待发布项目版本。
+- `sparkle:version` = `{BUILD_NUMBER}.{MOBILE_VERSION}`，五段并保持发布序列单调递增。

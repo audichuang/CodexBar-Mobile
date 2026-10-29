@@ -23,12 +23,15 @@ enum ProviderDetailLocalization {
         "sofya", "tavily", "tinyapi", "xapi",
         // Upstream v0.75.0–v0.76.0 bundled plugins.
         "claudeplatform", "fal", "flora", "parallel", "futureagi", "munito",
+        "soniox", "traecn", "abliteration", "chatbox", "kimi",
     ]
 
     /// Stable semantic labels currently emitted by bundled provider detail
     /// payloads. Dynamic account, team, model and plugin-provided labels are
     /// intentionally absent and therefore remain verbatim.
     private static let semanticLabels: Set<String> = [
+        "Kimi Code", "Other features", "Bonus credits", "Invoice billing", "Prepaid", "Monthly budget",
+        "Image Generation",
         "30d cash", "30d credits", "30d spend", "30d tokens", "7d spend",
         "API credits", "API key", "API key budget", "API key limit", "API key remaining", "API key used",
         "Aixy key", "Applicable budgets", "Daily allowance", "Daily reset", "Free tokens",
@@ -110,6 +113,11 @@ enum ProviderDetailLocalization {
         context: Context = .semantic,
         locale: Locale = .current) -> String
     {
+        if providerID == "kimi", case .rowLabel(sectionTitle: "Bonus credits") = context,
+           label != "Bonus credits"
+        {
+            return label // Provider-supplied gift names are not semantic UI labels.
+        }
         if providerID == "aixy",
            let budgetLabel = self.localizedAixyBudgetLabel(label, locale: locale)
         {

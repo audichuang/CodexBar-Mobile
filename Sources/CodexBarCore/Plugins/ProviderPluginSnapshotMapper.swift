@@ -167,11 +167,17 @@ enum ProviderPluginSnapshotMapper {
         _ row: any ProviderPluginValue,
         path: String) throws -> ProviderDetailSection.Row.Progress?
     {
+        // Pace is validated even without progress so a malformed field never passes silently;
+        // without progress there is no bar to mark, so it is then dropped.
+        let pace = try self.optionalFiniteNumber(row, property: "pace", path: path)
+        if let pace, !(0...1).contains(pace) {
+            throw ProviderPluginError.invalidSnapshot("\(path).pace must be between 0 and 1")
+        }
         guard let fraction = try self.optionalFiniteNumber(row, property: "progress", path: path) else { return nil }
         guard (0...1).contains(fraction) else {
             throw ProviderPluginError.invalidSnapshot("\(path).progress must be between 0 and 1")
         }
-        return try ProviderDetailSection.Row.Progress(used: fraction, total: 1)
+        return try ProviderDetailSection.Row.Progress(used: fraction, total: 1, expectedUsed: pace)
     }
 
     private static func detailChart(
@@ -269,15 +275,22 @@ enum ProviderPluginSnapshotMapper {
         }
         let id = try self.optionalString(value, property: "id", path: path)
         let label = try self.optionalString(value, property: "label", path: path)
-        return RateWindow(
+        let quotaLimit = try self.optionalFiniteNumber(value, property: "quotaLimit", path: path)
+        if let quotaLimit, quotaLimit <= 0 {
+            throw ProviderPluginError.invalidSnapshot("\(path).quotaLimit must be positive")
+        }
+        return try RateWindow(
             usedPercent: usedPercent,
             windowMinutes: windowMinutes,
             resetsAt: resetsAt,
             resetDescription: resetDescription,
+            quotaLimit: quotaLimit,
+            quotaUnit: self.optionalString(value, property: "quotaUnit", path: path),
             nextRegenPercent: nextRegenPercent.map { min(100, max(0, $0)) },
             period: period,
             id: id,
-            label: label)
+            label: label,
+            title: self.optionalString(value, property: "title", path: path))
     }
 
     private static func extraWindows(

@@ -5,6 +5,34 @@ import Testing
 
 struct SpendDashboardPartialCostTests {
     @Test
+    func `source recorded month and priced only week keep their own spend explanation`() throws {
+        let recorded = CostUsageDailyReport.Entry(
+            date: "2026-07-01",
+            inputTokens: nil,
+            outputTokens: nil,
+            totalTokens: nil,
+            costUSD: 0,
+            modelsUsed: nil,
+            modelBreakdowns: [.init(modelName: "Synthetic recorded zero", costUSD: 0, sourceRecorded: true)])
+        let priced = Self.entry(day: "2026-07-16", cost: 1.25, tokens: 10, model: "Synthetic priced model")
+        let snapshot = Self.snapshot(
+            entries: [recorded, priced],
+            last30DaysTokens: 10,
+            last30DaysCostUSD: 1.25,
+            costProvenance: .sourceRecorded,
+            historyDays: 30)
+        let inputs = [SpendDashboardModel.ProviderInput(provider: .codex, displayName: "Codex", snapshot: snapshot)]
+        let month = try #require(SpendDashboardModel.build(
+            inputs: inputs, requestedDays: 30, now: Self.now, calendar: Self.calendar).groups.first)
+        let week = try #require(SpendDashboardModel.build(
+            inputs: inputs, requestedDays: 7, now: Self.now, calendar: Self.calendar).groups.first)
+        #expect(month.provenance == .sourceRecorded)
+        #expect(week.provenance == .listPriceEstimate)
+        #expect(month.totalCost == 1.25)
+        #expect(week.totalCost == 1.25)
+    }
+
+    @Test
     func `established empty Codex history renders zero spend`() throws {
         let snapshot = Self.snapshot(
             entries: [],

@@ -1,0 +1,13 @@
+{
+  "sourceCommit": "a36c6b110da3d994c8bba6bbcfa777627efa42ff",
+  "mode": "production serial SwiftPM fallback, scoped runner preserved",
+  "selected": 102,
+  "allGroupsPass": 19,
+  "binarySHA256": {
+    "/Volumes/StudioSSD/Projects/working/apple/CodexBar/.build/out/Products/Debug/AdaptiveReplayCLITests.xctest/Contents/MacOS/AdaptiveReplayCLITests": "2af7f250277135bf43059484a29a161c7a1515ba194ab7e19a03d2a70e166673",
+    "/Volumes/StudioSSD/Projects/working/apple/CodexBar/.build/out/Products/Debug/AdaptiveReplayKitTests.xctest/Contents/MacOS/AdaptiveReplayKitTests": "d7dd3a4aa6bd84aaf5a723e601fe2a38cb54c7ca75b3f670047aef1c0dd3b952",
+    "/Volumes/StudioSSD/Projects/working/apple/CodexBar/.build/out/Products/Debug/CodexBarLinuxTests.xctest/Contents/MacOS/CodexBarLinuxTests": "9f3748aefe27ec4b2816c98668899d88f39c6674ec28364970c20e2763a2780d",
+    "/Volumes/StudioSSD/Projects/working/apple/CodexBar/.build/out/Products/Debug/CodexBarPluginTests.xctest/Contents/MacOS/CodexBarPluginTests": "44bbb59ae4e37d520b9dbf81ca31ce0fd7270732a859a02fa968181650d3986e",
+    "/Volumes/StudioSSD/Projects/working/apple/CodexBar/.build/out/Products/Debug/CodexBarTests.xctest/Contents/MacOS/CodexBarTests": "325a1a60c8b8184676c7e6ef96231d632d8078739d46967213445a03a728fd80"
+  }
+}

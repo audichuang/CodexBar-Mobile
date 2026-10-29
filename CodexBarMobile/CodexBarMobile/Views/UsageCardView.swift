@@ -3,6 +3,7 @@ import SwiftUI
 
 struct UsageCardView: View {
     @Environment(\.locale) private var locale
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     let label: String
     let window: SyncRateWindow
     var providerID: String?
@@ -29,24 +30,38 @@ struct UsageCardView: View {
     /// tick-mark on the usage bar is hidden when true.
     @AppStorage(MobileSettingsKeys.hideQuotaWarningMarkers) private var hideQuotaWarningMarkers = false
 
+    private var quotaTitle: some View {
+        HStack(alignment: .firstTextBaseline) {
+            Text(self.label).font(.subheadline.weight(.semibold))
+            if self.shouldShowWarningIcon {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(.caption)
+                    .foregroundStyle(self.usageColor)
+                    .accessibilityLabel(Text("Quota warning"))
+                    .accessibilityIdentifier("usage.warning.icon")
+            }
+        }
+    }
+
+    private var quotaPercentage: some View {
+        self.percentageLabel
+            .modifier(PercentageAccessibilityIdentifierModifier(identifier: self.percentageAccessibilityIdentifier))
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             // Header row
-            HStack(alignment: .firstTextBaseline) {
-                Text(self.label)
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                if self.shouldShowWarningIcon {
-                    Image(systemName: "exclamationmark.triangle.fill")
-                        .font(.subheadline)
-                        .foregroundStyle(self.usageColor)
-                        .accessibilityLabel(Text("Quota warning"))
-                        .accessibilityIdentifier("usage.warning.icon")
+            if self.dynamicTypeSize.isAccessibilitySize {
+                VStack(alignment: .leading, spacing: 6) {
+                    self.quotaTitle
+                    self.quotaPercentage
                 }
-                Spacer()
-                self.percentageLabel
-                    .modifier(PercentageAccessibilityIdentifierModifier(
-                        identifier: self.percentageAccessibilityIdentifier))
+            } else {
+                HStack(alignment: .firstTextBaseline) {
+                    self.quotaTitle
+                    Spacer()
+                    self.quotaPercentage
+                }
             }
 
             // Progress bar with threshold marker overlay
@@ -122,6 +137,15 @@ struct UsageCardView: View {
                 .foregroundStyle(.secondary)
                 .accessibilityElement(children: .combine)
                 .accessibilityIdentifier("usage.balance-description")
+            }
+
+            TimelineView(.periodic(from: .now, by: 60)) { context in
+                if let target = DailyAllowanceTarget(window: self.window, now: context.date) {
+                    Text(target.text(locale: self.locale))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .accessibilityIdentifier("usage.daily-target")
+                }
             }
 
             // A blocked lane's reset belongs to the monthly availability pool.

@@ -1,0 +1,46 @@
+{
+  "sourceCommit": "0c80fb5b1207e049f543d6634146b62c06b8e990",
+  "purpose": "read-only directory authorization in newly generated QA group; no existing user group/payload/defaults access",
+  "results": [
+    {
+      "bundleID": "com.o1xhack.codexbar.qa.group.allowed.7d8a56c836b3464b976774470969c807",
+      "containerURL": "/Users/yuxiao/Library/Group Containers/3TUERHN53E.com.steipete.codexbar.qa.7d8a56c836b3464b976774470969c807",
+      "directoryOpened": true,
+      "errno": 0,
+      "group": "3TUERHN53E.com.steipete.codexbar.qa.7d8a56c836b3464b976774470969c807",
+      "role": "allowed"
+    },
+    {
+      "bundleID": "com.o1xhack.codexbar.qa.group.denied.7d8a56c836b3464b976774470969c807",
+      "containerURL": "/Users/yuxiao/Library/Group Containers/3TUERHN53E.com.steipete.codexbar.qa.7d8a56c836b3464b976774470969c807",
+      "directoryOpened": false,
+      "errno": 1,
+      "group": "3TUERHN53E.com.steipete.codexbar.qa.7d8a56c836b3464b976774470969c807",
+      "role": "denied"
+    }
+  ],
+  "positiveControlPassed": true,
+  "negativeControlPassed": true,
+  "probeSourceSHA256": "957241e2fbb8c2cf4e01ea6eabc7d2650cbf39f490e837c87c31ebe45c772e03",
+  "probeBinarySHA256": "a747cf16f781bc0b717c99437e32771809fe41d14ae945c159f53bb70c881e23",
+  "payloadOrDefaultsAccess": false,
+  "containerURLAloneIsNotProof": true,
+  "cleanup": [
+    {
+      "path": "/Users/yuxiao/Library/Group Containers/3TUERHN53E.com.steipete.codexbar.qa.7d8a56c836b3464b976774470969c807",
+      "existed": true,
+      "removed": true
+    },
+    {
+      "path": "/Users/yuxiao/Library/Containers/com.o1xhack.codexbar.qa.group.allowed.7d8a56c836b3464b976774470969c807",
+      "existed": true,
+      "removed": true
+    },
+    {
+      "path": "/Users/yuxiao/Library/Containers/com.o1xhack.codexbar.qa.group.denied.7d8a56c836b3464b976774470969c807",
+      "existed": true,
+      "removed": true
+    }
+  ],
+  "scope": "Only a freshly generated nonce QA group; no existing user business container was accessed"
+}

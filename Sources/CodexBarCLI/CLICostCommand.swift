@@ -207,7 +207,9 @@ extension CodexBarCLI {
             return Self.renderLocalTokenHistoryText(name: name, snapshot: snapshot, useColor: useColor)
         }
         // Provider-specific by design: Codex cost is explicitly an API-equivalent local-session estimate.
-        let title = provider == .codex
+        let title = snapshot.costProvenance == .sourceRecorded
+            ? "\(name) source-recorded costs (not a billing receipt)"
+            : provider == .codex
             ? "\(name) API-equivalent estimate (not billed)"
             : "\(name) Cost (API-rate estimate)"
         let header = Self.costHeaderLine(title, useColor: useColor)
@@ -265,7 +267,9 @@ extension CodexBarCLI {
                 calendar: calendar,
                 useColor: useColor))
         }
-        lines.append(Self.costEstimateHint(provider: provider))
+        lines.append(snapshot.costProvenance == .sourceRecorded
+            ? "Includes source-recorded costs; estimates may also be included. Not a billing receipt."
+            : Self.costEstimateHint(provider: provider))
         return lines.compactMap(\.self).joined(separator: "\n")
     }
 

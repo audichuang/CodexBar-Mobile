@@ -1,0 +1,79 @@
+{
+  "timestamp_utc": "2026-10-29T00:33:21.372695+00:00",
+  "sourceCommit": "a36c6b110da3d994c8bba6bbcfa777627efa42ff",
+  "sourceTree": "5d7f4cfa7a6b9fac841d6b92113652bfa2c76921",
+  "sourceManifestTree": "5d7f4cfa7a6b9fac841d6b92113652bfa2c76921",
+  "sourceInputCount": 353,
+  "shippingFilesCovered": 205,
+  "archiveFileCount": 101,
+  "archivePath": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/CodexBarMobile-3.3.0-261.xcarchive",
+  "bundleChecks": [
+    {
+      "bundle": "CodexBarMobile.app",
+      "version": "3.3.0",
+      "build": "261",
+      "signatureVerified": true,
+      "signatureTeam3T": true,
+      "cloudKitEnvironment": "Production",
+      "getTaskAllow": true,
+      "binarySHA256": "5df57e470d2bcc3875e3f68991b0ecad983187e25d6703e7861154fc04eed456"
+    },
+    {
+      "bundle": "CodexBarMobilePushExtension.appex",
+      "version": "3.3.0",
+      "build": "261",
+      "signatureVerified": true,
+      "signatureTeam3T": true,
+      "cloudKitEnvironment": "Production",
+      "getTaskAllow": true,
+      "binarySHA256": "cf66da661657e8122e281c5888d363c8777c078669579b4ca65a56649a9a136d"
+    },
+    {
+      "bundle": "CodexBarMobileWidgetOptions.appex",
+      "version": "3.3.0",
+      "build": "261",
+      "signatureVerified": true,
+      "signatureTeam3T": true,
+      "cloudKitEnvironment": null,
+      "getTaskAllow": true,
+      "binarySHA256": "277438fc4c6f698ca72cb329e27a986f44cf984de1845e8e029f26c7b90f2175"
+    },
+    {
+      "bundle": "CodexBarMobileWidgets.appex",
+      "version": "3.3.0",
+      "build": "261",
+      "signatureVerified": true,
+      "signatureTeam3T": true,
+      "cloudKitEnvironment": "Production",
+      "getTaskAllow": true,
+      "binarySHA256": "7bc922e787aa560caa220542515d0ef6aacd6f06aec8136a686a68326835c835"
+    },
+    {
+      "bundle": "CodexBarSync.framework",
+      "version": "3.3.0",
+      "build": "261",
+      "signatureVerified": true,
+      "signatureTeam3T": true,
+      "cloudKitEnvironment": null,
+      "getTaskAllow": null,
+      "binarySHA256": "436bb066b3b3b0132ebd5879f0c02cf6260c32752bf87eb10463a8a98a46ca6b"
+    }
+  ],
+  "errors": [],
+  "limitation": "Independent artifact/source/hash/signature readback only. No build, test, UI, export or upload. Mac draft, final documentation, and source-freeze delta test execution still pending.",
+  "archiveFileManifestHashReadback": {
+    "recorded": "1d58f444ffbe377fb4591f9b01bf5c43f8bc975d2c5984ce2d051f46d9801e0e",
+    "recordedAlgorithm": "SHA256(Python json.dumps(parsed JSON).encode()), no indent/newline",
+    "canonicalHashMatched": true,
+    "actualFileSHA256": "21fd11e0bd8a300751ba60b8d217cc6d50680fcfc77c894b625a8a57af467109",
+    "note": "Content anchor matched; serializer algorithm should be explicit to distinguish it from actual file bytes."
+  },
+  "appDSYMUUIDMatched": "DF54F795-6609-3905-B631-FBBAD26A1839",
+  "deliveryClassification": "Apple Development signed local Archive, get-task-allow true, no export/upload; not App Store distribution binary",
+  "reviewedFollowups": [
+    "Source-freeze a36c6b1 shipping/code input diff empty",
+    "Native-after-ambient shared-cache fixture asserts no sourceRecorded daily rows or native summary provenance",
+    "Render fixture uses fixed intrinsic height plus larger host, no Budget product edits",
+    "release.sh only updates stale every-push CI claims; local full evidence requirement accurate"
+  ]
+}

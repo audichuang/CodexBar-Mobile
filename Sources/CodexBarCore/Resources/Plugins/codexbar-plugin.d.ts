@@ -34,12 +34,17 @@ interface CodexBarRateWindow {
   /** Stable identity and provider-authored label for a promoted named window. */
   id?: string | null;
   label?: string | null;
+  /** Optional label for generic cards and CLI text; trimmed, at most 256 UTF-8 bytes. */
+  title?: string | null;
   usedPercent: number;
   windowMinutes?: number | null;
   /** Calendar/quota period for budgets whose reset interval may be unknown. */
   period?: "session" | "daily" | "weekly" | "monthly" | "lifetime" | null;
   resetsAt?: Date | string | null;
   resetDescription?: string | null;
+  /** Absolute allowance; unit is credits, requests, or an ISO currency code. */
+  quotaLimit?: number | null;
+  quotaUnit?: string | null;
   nextRegenPercent?: number | null;
 }
 
@@ -97,6 +102,8 @@ interface CodexBarDetailRow {
   severity?: "normal" | "warning" | "critical" | null;
   /** Finite consumed fraction, from 0 through 1 inclusive. */
   progress?: number | null;
+  /** Finite expected consumed fraction from 0 through 1 inclusive; marks pace on the progress bar independently of severity. Ignored without progress. */
+  pace?: number | null;
   /** Finite raw usage, independent of the display string and progress. */
   usageValue?: number | null;
 }

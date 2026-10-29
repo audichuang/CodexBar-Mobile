@@ -1,0 +1,386 @@
+{
+  "ipad": {
+    "tests": [
+      {
+        "name": "testCostShareEditorUsesTwoColumnsOnWideIPad()",
+        "result": "Passed",
+        "durationInSeconds": 362.7274889945984
+      },
+      {
+        "name": "testTabletColumnsSearchAndSettingsSelectionSurviveResize()",
+        "result": "Passed",
+        "durationInSeconds": 144.3531219959259
+      },
+      {
+        "name": "testSummaryCardPushAndBackPreserveProviderFilter()",
+        "result": "Passed",
+        "durationInSeconds": 69.96842002868652
+      }
+    ],
+    "failed": 0,
+    "skipped": 0,
+    "visualReview": "Passed scoped navigation/layout"
+  },
+  "widgetCanonicalSystemMinimum": {
+    "result": "Pass by observed manual interaction + actual system screenshots",
+    "configuredOptions": [
+      "Widget Type",
+      "Color Style",
+      "Provider Selection",
+      "Provider 1",
+      "Provider 2"
+    ],
+    "modes": [
+      "Overview",
+      "Provider Focus",
+      "Today Cost",
+      "Sync Health"
+    ],
+    "observedTransition": "Overview Claude54/Codex39 -> Today Cost $19.42 / 822.0K tokens",
+    "notEquivalentTo": "all widget automated tests passed or final candidate artifact provenance"
+  },
+  "widgetOverviewFinalAutomation": {
+    "processResult": "Passed",
+    "durationSeconds": 141.711,
+    "intendedOutcome": "not_achieved",
+    "finding": "All picker/selected/widget/reopened attachments still show Today Cost system editor; no Overview switch or actual close/reopen proof"
+  },
+  "evidence": [
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-placed.png",
+      "sha256": "2eaf3312f18631d0b316a0d052d9e48a3d58bcba7f750f1ff8af1f151775b100"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-picker-current.png",
+      "sha256": "d0d710d29aeea496f7a0e4a3921a8fdb3c310b9f5bf17d44abbfb198f3f08f23"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-mode-selected.png",
+      "sha256": "a2009bee657b5496de9ef1d9ecec6e922cb158769f83f6a4daaead139a97ec37"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-today-cost-home.png",
+      "sha256": "e59891d018e6d917cc17f577152e2105ec9bf5cf860efa24ebba622d8d2df80d"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-reopen-menu.png",
+      "sha256": "5003799eba82aef109e8c63214ec3f7d968a4dcd6b20c24f826456b3b1561d1c"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-config-ui.json",
+      "sha256": "84fbc1d4677e9ede66356e96abf3c74a25a0fcbdb55f49be35698c2cd9b3e6b9"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-mode-picker-ui.json",
+      "sha256": "b0ee79ad2d8baa3658686a2375908bbc4c214ae3a46be38d078526f48a2808fb"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-mode-coordinate-action.log",
+      "sha256": "26b010443a5c1be7894c21c5750e5d0327da4ac33540464703d585e41e8792b3"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-editor-dismiss-action.log",
+      "sha256": "e58d253a146849cdc20780c11046297f358772d209c488c33310790e14526912"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-reopen-longpress-action.log",
+      "sha256": "3ce7abd4ee8b31cf2c3026d8685fa0d12fef01aa85d25a439ae4d845c4ac912d"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/ipad-final-review-attachments/D8F3D153-BB06-4178-9A5C-2C6D8C81248D.png",
+      "name": "Cost share editor - iPad landscape_0_C45BE81D-A2B0-49A2-B59E-D1214366C890.png",
+      "sha256": "c297dfa151f029e2a8807666cb00a7dc42f96cc6da05cf5310c6c3f49fd8c656"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/ipad-final-review-attachments/087875E3-7B7C-4B61-BF24-8437C2A0F6E6.png",
+      "name": "iPad landscape Cost_0_A43775EE-F46B-40C2-9331-173D02A2419E.png",
+      "sha256": "639a17c81facddcf453df5289b730cf3683c2e6a852bfae9f92c2c97546d06be"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/ipad-final-review-attachments/F2A33F18-D6AD-4D56-83EB-7C9D8D92E8C0.png",
+      "name": "iPad portrait Cost_0_4D9742EC-5084-44BD-B02D-EBC5E5E32B5F.png",
+      "sha256": "29c9501f729e293c35019fdf0814a9e5adc6f32c2271dc98886cb43acb5189b2"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/ipad-final-review-attachments/604AE9E4-7561-4C44-AF16-617D860F7D73.png",
+      "name": "iPad portrait retained Settings detail_0_7BAC3949-7B4D-422A-BC7C-1B0A79E2A0A9.png",
+      "sha256": "e9958af3d67526fe7a6ccf325e4740c911e8712dee67e9721f3bb690b4823375"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/ipad-final-review-attachments/75C18C85-5860-4519-AD81-C52DCF35257D.png",
+      "name": "iPad landscape Settings detail_0_75B3B171-2AB2-47CC-9540-51391E2FBCC6.png",
+      "sha256": "6657f5b82f27a6093fa72b9e2096c78969daf669b082e46aacf3f03628f5f727"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/ipad-final-review-attachments/278DE042-FA84-4BF6-9695-C9C361029779.png",
+      "name": "iPad landscape keyboard keeps navigation_0_18084721-1631-4AF6-AAC0-703AE1E0B417.png",
+      "sha256": "4dddcd977e49c5ad3ba34063747655349d9e706582ead0d3099841be4d3bcff4"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/ipad-final-review-attachments/ECDA849C-BE44-4A5D-B9BA-3BF81360D27E.png",
+      "name": "iPad landscape selected Codex_0_0E9BDE3A-FA9D-4551-BD41-B63E1DB3A900.png",
+      "sha256": "00367324e0f40a3394f7a1c52c502bb2d9f77e282bfb3bf784cb05c3adeedc56"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/ipad-final-review-attachments/8D606ED2-222E-4178-945D-B929A737BA19.png",
+      "name": "iPad portrait account list and detail_0_E7732FD3-4941-4BEE-9E7D-FA64383C79FB.png",
+      "sha256": "eb49a0399274fcb3aee07767edd8fab086a449c33661fc6776ebb144ebe16cef"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/ipad-final-review-attachments/647DB247-78F5-4BCC-8561-D0C8CB15EDE4.png",
+      "name": "Summary Duo returned to grid with Codex filter retained screen 0_0_6EBD1119-FB7F-4218-A009-E62A654C8B72.png",
+      "sha256": "194f4f1f712ce95d6a6467aa700a7cae8affe902e5c93a676f40207521960f2f"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/ipad-final-review-attachments/0070FD66-284A-451B-AAF1-C079E94FA105.png",
+      "name": "Summary Duo account details after explicit card tap screen 0_0_A969EB83-F634-4088-A454-A2268F4451BA.png",
+      "sha256": "1392187a030b173ad2d3f3ee163b0f70cc19ba35a41aab708a05931a40f25f92"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-overview-final-review-attachments/AF1EECF6-2046-4CB4-9FE6-B72CC8C1AC43.png",
+      "name": "SpringBoard Overview persisted configuration reopened_0_F26CEEA6-A061-470F-AF51-68978EC5A2B5.png",
+      "sha256": "abdccc11cbaafc6a6db62592c9937370d45a106a558d606ab162b068029951f6"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-overview-final-review-attachments/79843FCD-DF30-49F3-92B6-B75242F6E458.txt",
+      "name": "System widget editor hierarchy_0_FA8039A0-DDA9-4F02-BD80-0012F880EAFD.txt",
+      "sha256": "9072cb5ee8601cff431004d7a064e1fe1cf52b58394e25057f5f4a13c0b0f7db"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-overview-final-review-attachments/77C55F5A-9F53-4569-85AB-1CDBADBAF3EF.png",
+      "name": "System widget editor after Edit Widget action_0_A348C984-2F91-42D5-BD6A-9044447FDA45.png",
+      "sha256": "abdccc11cbaafc6a6db62592c9937370d45a106a558d606ab162b068029951f6"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-overview-final-review-attachments/23421C23-0B28-4245-A319-086905827BE1.png",
+      "name": "SpringBoard Overview Widget_0_D4C9F9D7-5085-4C21-B3DF-9B843D0FE91C.png",
+      "sha256": "30877b7524927e0dbcf8e7cdcf1d7b4b13b5991d57fd2314c6386436eccf0817"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-overview-final-review-attachments/50BC6EBA-8292-4C11-B822-E751874421AF.png",
+      "name": "SpringBoard Overview Configuration Selected_0_A74E4E96-0486-4EA1-BCE1-2AA7FC64B452.png",
+      "sha256": "c1753734a2c4bdf8bc09099ac79dfbeb1e15f03f78816b22b3f2afb51cef2ae6"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-overview-final-review-attachments/512FBE8D-EF1A-456E-AF87-392B6FF1186D.png",
+      "name": "SpringBoard Widget Type Picker_0_0E769DAB-FE75-4852-97E0-E7218E70A1A9.png",
+      "sha256": "c1753734a2c4bdf8bc09099ac79dfbeb1e15f03f78816b22b3f2afb51cef2ae6"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-overview-final-review-attachments/7C044368-87D2-4B2A-9742-4FA2917533D6.png",
+      "name": "SpringBoard Widget Configuration Panel_0_5D136670-A370-42D6-889B-682DF7707CD9.png",
+      "sha256": "c1753734a2c4bdf8bc09099ac79dfbeb1e15f03f78816b22b3f2afb51cef2ae6"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-overview-final-review-attachments/53331D72-54CB-4527-8A63-566B6C997608.txt",
+      "name": "System widget editor hierarchy_0_830826CF-8022-4C30-BECE-F8C52498E4DA.txt",
+      "sha256": "e82868ba92620fc8155607186abb3936b6bec3b3355f0f9d5abbf9d5d4e2d3ba"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-overview-final-review-attachments/17FE2B16-5622-41AF-AD88-DE381F62AC8C.png",
+      "name": "System widget editor after Edit Widget action_0_33824BCE-EE3D-4EA7-91A2-D798DBB6339D.png",
+      "sha256": "c1753734a2c4bdf8bc09099ac79dfbeb1e15f03f78816b22b3f2afb51cef2ae6"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-overview-final-review-attachments/438381D8-DEA0-45FB-A368-A743AC96305C.png",
+      "name": "Home Screen before editing placed CodexBar status widget_0_E96D9465-D54E-4304-9B0B-DF0A7794D2E1.png",
+      "sha256": "87115df81b74c57a7a89a30d127b374dc02c1832a00dd477376e4a3ba6cc2ab9"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-overview-strict-review-attachments/83A4AEAC-D7D6-4720-BEEF-8F3520437B3A.png",
+      "name": "SpringBoard Overview persisted configuration reopened_0_5CFC9484-E33C-4A33-8F3E-DA0D7A25AA18.png",
+      "sha256": "28606a7f0e6c1e78e732a5b037efe5e42afd2ec2537a7c0a6ebf3a7b6c5f70c6"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-overview-strict-review-attachments/0C73DBDF-F474-4699-BAF6-0B6A887B26E1.txt",
+      "name": "System widget editor hierarchy_0_B4321CBB-8026-4954-ACB8-1BE276FD1CC0.txt",
+      "sha256": "a743b4ee4cfc80d255a95e1f82dbf482699b546e68149ba50a1ee8655403c19d"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-overview-strict-review-attachments/3AEC89FF-2CDD-4168-839A-E15C86E041CF.png",
+      "name": "System widget editor after Edit Widget action_0_665FBA74-B451-44D2-863F-0518C2EC34D8.png",
+      "sha256": "90345ff8e28c2a8608f35e2f0cb1d15b1ef85711ca1d69ed58644d985d14c011"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-overview-strict-review-attachments/8F54B099-EDD1-4184-BE03-4AE5A3932CBA.png",
+      "name": "SpringBoard Overview Widget_0_9B09C333-A0C5-4B33-B09D-34F19A3539B4.png",
+      "sha256": "3e0caf7dc6630dc6a18acb3fef774c12b376b934175a28047274c0b882ac4523"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-overview-strict-review-attachments/9F8F04F5-C87A-4F63-9979-57B157585997.png",
+      "name": "SpringBoard Overview Configuration Selected_0_5A168258-F6A2-40AD-B317-425DCE74315B.png",
+      "sha256": "90345ff8e28c2a8608f35e2f0cb1d15b1ef85711ca1d69ed58644d985d14c011"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-overview-strict-review-attachments/DB8C9732-CFE1-4085-9E53-672C155E2327.png",
+      "name": "SpringBoard Widget Type Picker_0_F6BFD4C1-58AF-4C65-A0BF-BB50811BB411.png",
+      "sha256": "d66802d3eeacc14b7f2a6214f36116df4c5fa391f054d54c8f55b6da89b7166f"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-overview-strict-review-attachments/6BEF2DC7-2A65-4071-862B-53183FD04CE9.png",
+      "name": "SpringBoard Widget Configuration Panel_0_C0B12414-8421-4BF8-9188-68F589DA1D2D.png",
+      "sha256": "1abe2dc11da795773f164ffdf1832e3a44777e47bf89b21937a229d97c8898f6"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-overview-strict-review-attachments/04D0B5FE-F156-47DD-8765-45C29D4A8E3A.txt",
+      "name": "System widget editor hierarchy_0_3FDF088E-7D23-458F-B88C-4FDA6192B7BC.txt",
+      "sha256": "8c08b37923313f4082537ed1c569573a0b9c06bdeae89ab7801e9539d54ab1ff"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-overview-strict-review-attachments/E8C7EE13-66D9-40BE-96A7-421D31DA3D7D.png",
+      "name": "System widget editor after Edit Widget action_0_72201D44-546E-45FA-80FC-CB85A89E0949.png",
+      "sha256": "e68ef0b4e7c78ed344a7eca9cd9af6ffac372fbf9a90891ae9cbe622fac58eaa"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/widget-overview-strict-review-attachments/5E39F3A1-AAB8-4BB1-9DA2-C483858376E7.png",
+      "name": "Home Screen before editing placed CodexBar status widget_0_C3E17BF2-DB6A-41D8-9DB2-D9B89C3D425E.png",
+      "sha256": "5e51bc8e13bbff61e5aad748b8f4a96e4c6990b0cebef544e91cc54725250faf"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/provenance-native-render-attachments/1E02200B-4AD6-498D-AA8A-92679D175160.png",
+      "name": "v082-monthly-pace-ja-light-AX3_0_B6C5125C-071F-4261-B634-4C9DDBD2B1A9.png",
+      "sha256": "399239b02df84155414d646c460cd60f0f0cd143c96a5ec1bb1d9f9de259dd8e"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/provenance-native-render-attachments/549A223A-7662-437F-86DE-967106D20264.png",
+      "name": "v082-monthly-pace-ja-dark-regular_0_4E71EFAA-A162-4E78-80C8-FB90B9C8E1DD.png",
+      "sha256": "de5fff5391e6a35d91b9a8314e832229ab00e5ac435c747827a47741e72e2fb2"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/provenance-native-render-attachments/AD10398E-0471-4CCC-BB81-22FD9C0DD2E9.png",
+      "name": "v082-monthly-pace-ja-light-regular_0_2826A025-6735-476F-8D94-BE87A515D2FA.png",
+      "sha256": "aff4c7c865b8bac0086765d5fcf51f598b94debbfae7b5892ca538ca630215d9"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/provenance-native-render-attachments/E8B7151D-EB75-4352-B3C0-13EFEEE6AE7C.png",
+      "name": "v082-monthly-pace-zh-Hant-dark-regular_0_C4101958-57E7-4017-87B9-5FD0F7C4A903.png",
+      "sha256": "428287fa72645101c6f2e26bce4b956f29755cc95454a9568abcb0c0bd289c05"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/provenance-native-render-attachments/1CE25CC4-E2B5-45C0-8519-A1B44693C617.png",
+      "name": "v082-monthly-pace-zh-Hant-light-regular_0_94FEFC93-D74C-43D7-AAFF-85C42505A854.png",
+      "sha256": "99214facfb7e2e0b47ee1adeb2b3ecc9f2524fff0ff7e89dbce2bd3393ec2b38"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/provenance-native-render-attachments/4CB64C65-C042-416C-8D36-C09E8486103D.png",
+      "name": "v082-monthly-pace-zh-Hans-dark-regular_0_2CDF1D20-8557-4BAF-BAC5-0A7580EA2281.png",
+      "sha256": "67c70e54767e982afd4a17853441fd4f2318c5bde8a5b3991a5e73ce7127ae5a"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/provenance-native-render-attachments/CFE3DC1A-6868-4B46-AD89-E6CD04B6F97D.png",
+      "name": "v082-monthly-pace-zh-Hans-light-regular_0_4C39D8AD-A0E6-44BD-8F62-B96E278588A2.png",
+      "sha256": "41eddd466081e3778821af54246816a2681475cab0030a0581a2bad5eb39870a"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/provenance-native-render-attachments/66630195-5F94-46C7-B5AB-E928CF107052.png",
+      "name": "v082-monthly-pace-en-dark-regular_0_A6DF5D89-F0AE-483B-858C-0CB44B359E75.png",
+      "sha256": "1686bb012b3429a467a49a7299ec45f72e048d5997438eb2e79b9840d46da0c6"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/provenance-native-render-attachments/C4A090BD-059F-4D1F-B099-352EEF1FDE67.png",
+      "name": "v082-monthly-pace-en-light-regular_0_F309CDB4-A487-45DD-890B-E00277FCD53A.png",
+      "sha256": "adc7d0399dcb414a9d6c39dfb906e61d13761c8a9f3cae7af46199248abeb883"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/intrinsic-native-render-attachments/8E5EFCA7-5317-4375-8E72-48D01304A674.png",
+      "name": "v082-monthly-pace-ja-light-AX3_0_3DB6166A-13CC-4E6F-8733-83710A3FF162.png",
+      "sha256": "9b418c6a4070a9febc940d00454f36e7ee9154384f429ed3b3d0dc55d0d6c427"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/intrinsic-native-render-attachments/F2272CD6-F5F5-4463-9299-9424486A67C9.png",
+      "name": "v082-monthly-pace-ja-dark-regular_0_7F1CC2C9-D963-44D9-8EFD-F8A5B3081D9B.png",
+      "sha256": "1f3438b93202d1607746db091d1ea7c8d73b38f9cd22f263a8cae4ae3ae3a689"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/intrinsic-native-render-attachments/9C93978A-9F72-4816-9DD7-DD15520ABE75.png",
+      "name": "v082-monthly-pace-ja-light-regular_0_D3D5C819-378A-40AB-89E5-BD64D287299D.png",
+      "sha256": "e5ef2baf69d3f1b252c89d1e239bfa12ac26d8f240947fdd3e8697b01e5bb40a"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/intrinsic-native-render-attachments/FB68C808-B3A5-4543-99F1-1BB5F9065733.png",
+      "name": "v082-monthly-pace-zh-Hant-dark-regular_0_2E511869-B4DD-4B4C-BA34-8C097764A3F5.png",
+      "sha256": "447a6e54303cd1b1a0839d3a7e71b78eafa608b3a56bd2f2d6f976dae1ac2380"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/intrinsic-native-render-attachments/E3824176-C803-468D-A49E-01F0CD24036C.png",
+      "name": "v082-monthly-pace-zh-Hant-light-regular_0_47D4ADFF-908B-4504-AA02-1DA8FA26207C.png",
+      "sha256": "8ac3e30248e0495db552f49115014feae9b542de51592b525ebc2502e84a9f41"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/intrinsic-native-render-attachments/DE12A985-7329-4A0E-84A6-20D5F2F435C4.png",
+      "name": "v082-monthly-pace-zh-Hans-dark-regular_0_A6D84913-6E9D-46D0-9FAB-EEC9F48589FC.png",
+      "sha256": "5e6ecfae8747da99f6572ca44e307847784e3810767d051168a45304ebeed179"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/intrinsic-native-render-attachments/CD3E93C6-79A5-420A-A8EE-B1646B994B23.png",
+      "name": "v082-monthly-pace-zh-Hans-light-regular_0_B631ED6F-D91A-428F-845F-50DD7C3A5BB4.png",
+      "sha256": "87a0742830e9ad6bd89e8f46485b41d6c6882b7d34686f4107065740f829fca3"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/intrinsic-native-render-attachments/EBD15155-D2EA-49E5-A524-9E6AB57919DE.png",
+      "name": "v082-monthly-pace-en-dark-regular_0_CA97551B-6204-4722-A838-AF53F1D56311.png",
+      "sha256": "f291fea10c18aab2b931b90ac1ae61bdf1a2b689c8e661a5576f0ddea5a4c089"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/intrinsic-native-render-attachments/F8B6F2C1-98D2-4D55-AD24-975CF4BC0481.png",
+      "name": "v082-monthly-pace-en-light-regular_0_56CF347C-4F40-46B6-A9B7-FE57B21E5F81.png",
+      "sha256": "ab01e3f7d6c9e3815f03280d6159710162e5c9864514f78cd913ca4f8ed56c7d"
+    }
+  ],
+  "widgetOverviewStrictRetest": {
+    "bundle": "widget-system-overview-strict.xcresult",
+    "passed": 1,
+    "failed": 0,
+    "skipped": 0,
+    "durationSeconds": 98.35380399227142,
+    "intendedOutcome": "achieved",
+    "observedSequence": [
+      "Initial Home Today Cost $19.42 / 822.0K tokens",
+      "Actual four-mode picker with Today Cost checked",
+      "System Type Overview",
+      "Actual Home Overview Claude54% Codex39%",
+      "Reopened Type Overview"
+    ],
+    "priorFalsePositivePreserved": true,
+    "finalDismissEvidence": "automatic assertion; no additional final Home image"
+  },
+  "provenanceNativeRenderReview": {
+    "imagesReviewed": 9,
+    "captionFourLanguagesLightDarkJAAX3": "readable no clipping no overlap no yellow placeholder",
+    "newFinding": {
+      "severity": "needs_retest",
+      "image": "1E02200B-4AD6-498D-AA8A-92679D175160.png",
+      "observation": "JA AX3 Budget daily target truncates at $1… while old image wraps full $17.50",
+      "inference": "fixed-height render fixture vertical compression possible; production not proved defective",
+      "recommendation": "intrinsic/scroll fixture or target Text vertical fixedSize; recapture"
+    },
+    "scopeLimitations": [
+      "host default Chinese affects old Used/reset labels",
+      "caption is fixture Text rather than private production caption branch",
+      "AX3 brand labels are fixture only"
+    ]
+  },
+  "intrinsicNativeRenderRetest": {
+    "sourceBundle": "ios26-render-intrinsic.xcresult",
+    "durationSecondsReported": 38.169,
+    "imagesReviewed": 9,
+    "result": "passed scoped visual review",
+    "previousAX3Truncation": "resolved by fixture intrinsic sizing without Budget product change",
+    "jaAX3BudgetTarget": "1日あたりの目安: $17.50 complete over two lines",
+    "caption": "four languages light/dark + JA AX3 complete",
+    "otherChecks": [
+      "usage daily target retained",
+      "budget money complete",
+      "Kimi expected40% retained",
+      "expired gift date retained",
+      "no yellow placeholder",
+      "no overlap or clipping"
+    ],
+    "priorCompressionEvidencePreserved": true,
+    "limits": [
+      "host default Chinese affects old Used/reset",
+      "fixture caption not private production caption branch",
+      "not artifact provenance proof"
+    ]
+  }
+}

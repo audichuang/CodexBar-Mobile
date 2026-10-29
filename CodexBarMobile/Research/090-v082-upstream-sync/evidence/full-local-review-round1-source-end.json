@@ -1,0 +1,5292 @@
+{
+  "head": "9ea3595e4c6adf13adb3fff2d1d509ae76bae5b2",
+  "base": "bdfb510853270c1ebf6b9d6f5ccbb289a2634db1",
+  "files": [
+    {
+      "path": ".github/actions/build-linux-desktop/action.yml",
+      "state": "present",
+      "sha256": "5044102f412d86ae543afef535b60045abdb80b68898bdfa60d3a55a3b5c8f43",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "state": "present",
+      "sha256": "59b8a86630e9a5c0df796aa730f033fe2d6986f248375505d0d3a65d6dfcedac",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CHANGELOG.md",
+      "state": "present",
+      "sha256": "28ed4f2d8f9c05d5f1696d8ffaf25c056b28da252c7ac4906c0d5ae611318e0f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/CHANGELOG.md",
+      "state": "present",
+      "sha256": "4c0b14865add8174a4b18f1c1b22144d3a3607e096bb501b1ba0779f5b668eba",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/CodexBarMobile.xcodeproj/project.pbxproj",
+      "state": "present",
+      "sha256": "93933beb88f55f5d62531278d99f4d6d4a267b7f936ba9f010444ce5e8af6219",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/CodexBarMobile/ContentView.swift",
+      "state": "present",
+      "sha256": "953422148f6275acad4244a467e0a106d773fcb02f0eb66f83ef114deaef75a8",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/CodexBarMobile/Localizable.xcstrings",
+      "state": "present",
+      "sha256": "cfa01a8b3f3d7c53bba109ceb483f4fdf3e5191b1650fb43eca65e6e85452c6a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/CodexBarMobile/Models/DailyAllowanceTarget.swift",
+      "state": "present",
+      "sha256": "7313dcfdb6c3b806ecadee0cd3ca3b57f448c6d859e22ab0d9dcfa7687fbb7f3",
+      "mode": "0o644",
+      "untrackedNew": true
+    },
+    {
+      "path": "CodexBarMobile/CodexBarMobile/Models/ProviderColorPalette.swift",
+      "state": "present",
+      "sha256": "f284d4b024a633a6e51086c320f314a09714935e79346b3801d3e122cf65af2b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/CodexBarMobile/Models/ProviderDetailRowPresentation.swift",
+      "state": "present",
+      "sha256": "22fb4305b98086ccd055f43f0069fc3b4cd9a8db75c87c282b18db0236612bba",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/CodexBarMobile/Views/AdaptiveReportPanes.swift",
+      "state": "present",
+      "sha256": "d3e40497e849c4c21370e8b0c7df376ee52a48312bf7047d37334459cf0a8824",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/CodexBarMobile/Views/BudgetProgressView.swift",
+      "state": "present",
+      "sha256": "5aacbccb9d4e334eedce2fe1879cf54e067460e93887f26e26d6f9af937c44ce",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/CodexBarMobile/Views/ProviderDetailsView.swift",
+      "state": "present",
+      "sha256": "1b88282f4a536ce409d240484d94abdc6adfaf3a67a0e8c8e661cf221fb01d29",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/CodexBarMobile/Views/UsageCardView.swift",
+      "state": "present",
+      "sha256": "478f27c44f14a62f4a8e5e5de2df8b3c7f1aca2128657e32d09a0c7951c4d117",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/CodexBarMobile/Views/V045ProviderCards.swift",
+      "state": "present",
+      "sha256": "89b84caf95671f7c79d3243b75d082472a9493cf1cd07958317141ff2289cf0c",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/CodexBarMobileTests/QuotaProviderListTests.swift",
+      "state": "present",
+      "sha256": "87c95296ccddbe68a4558165c59c0e58356e31227f2e2056caaa46edf4075caa",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/CodexBarMobileTests/V082DailyAllowanceTargetTests.swift",
+      "state": "present",
+      "sha256": "3b01d6a6d3fb7ec9a224e45cc62f675507895025ed972a7a61cb0b155de6de61",
+      "mode": "0o644",
+      "untrackedNew": true
+    },
+    {
+      "path": "CodexBarMobile/CodexBarMobileTests/V082KimiReaderTests.swift",
+      "state": "present",
+      "sha256": "9a1da840c079b9ed959cc1d199967d45ca3285a6cd8056d7a05db536c4bc26e9",
+      "mode": "0o644",
+      "untrackedNew": true
+    },
+    {
+      "path": "CodexBarMobile/CodexBarMobileTests/V082RenderTests.swift",
+      "state": "present",
+      "sha256": "c960a532a25c8897138e5187b1bd4e49411df21539e74ea7650a03a728fda5d2",
+      "mode": "0o644",
+      "untrackedNew": true
+    },
+    {
+      "path": "CodexBarMobile/CodexBarMobileTests/V082SyncMetadataTests.swift",
+      "state": "present",
+      "sha256": "3ab43831a676fc923f7d98161455769c2ea7d82e9370bfdbad02bdae6125e227",
+      "mode": "0o644",
+      "untrackedNew": true
+    },
+    {
+      "path": "CodexBarMobile/CodexBarMobileUITests/DuoWorkspaceUITests.swift",
+      "state": "present",
+      "sha256": "3bf3e14c250bd800178201c6db1dcb46c781e1c796e9a7230c8e7fa7c9c43925",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/CodexBarWidgetShared/ProviderDetailLocalization.swift",
+      "state": "present",
+      "sha256": "b45c0181ce84ce05a58b8626504c40f17bc9eb6b73f1698877ba95b84e827b4d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/00-overview.md",
+      "state": "present",
+      "sha256": "bcecccbaa9acbf50f17d1afe4bbfe4b3e4ae9312317786593e71e89aefea0d9b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/01-design.md",
+      "state": "present",
+      "sha256": "d4beceb7c13664f247be0f48f32bb8d4460eea8b5c50a2a694b88dc6794180f2",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/02-implementation.md",
+      "state": "present",
+      "sha256": "dec9d8932f00e73790729e8a4b7726383a81e108433b7e8bd3e7af2455921dc4",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/03-testing.md",
+      "state": "present",
+      "sha256": "9f5eecb68e8da88ab41b6ec65e1b98168fc51c1d06dcf29a32f4131806506b15",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/04-mac-release.md",
+      "state": "present",
+      "sha256": "9f6af196aea0cc0207cd92b9108f9bbfe3ef1797c8773bcc2914673076d7a94b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/05-review.md",
+      "state": "present",
+      "sha256": "c3859297768131520cee5f8085e5f6f0530209d42fe483a84258f10dc9dcbd06",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/06-ios-impact-audit.md",
+      "state": "present",
+      "sha256": "1e7094ef1c7c001c8e2bb81d550e3bec6825763d8f7013827b0ef8cecddd602f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/evidence/cloudkit-code-audit.md",
+      "state": "present",
+      "sha256": "a565d47fb66801811f9f8ddc093ad3fd1fbd7a9727ba2a922fb117a9241165b9",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/evidence/compatibility-matrix-wire.json",
+      "state": "present",
+      "sha256": "24293e2b57cef9ef120091ebb4d98ef826273376a884004a71965e925a7087d6",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/evidence/compatibility-source-manifest.json",
+      "state": "present",
+      "sha256": "3f789dae3d5d1efa8d4d7c64979dcf3145c3d3cde78f4b1038ceb361d564b943",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/evidence/duo-cost-failure-review.md",
+      "state": "present",
+      "sha256": "71bea2748b45fd203f44b813e3d46094d3f6631eb2dd55078afd9a08ea94d553",
+      "mode": "0o644",
+      "untrackedNew": true
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/evidence/duo-input-routing.json",
+      "state": "present",
+      "sha256": "6fd68ca400ecbbcc0f92f0b0d5d1621af46945dce4091506c0229840b869d46b",
+      "mode": "0o644",
+      "untrackedNew": true
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/evidence/duo-routing-retest-events.json",
+      "state": "present",
+      "sha256": "4e566cd0038ccb05f874247818b6aeb236a9d0419d81796f96cbcf2b8f57b0d0",
+      "mode": "0o644",
+      "untrackedNew": true
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/evidence/duo-routing-retest-review.md",
+      "state": "present",
+      "sha256": "9beabd3e16756c0e1ee373f1f8fd2b284f9338aaf0f87e7ff36a642aa331a023",
+      "mode": "0o644",
+      "untrackedNew": true
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/evidence/ios-candidate-review.md",
+      "state": "present",
+      "sha256": "71ad29f3593aaf2481a8013592ff1045fbd2af3761887880eac27cc391049adf",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/evidence/mac-merge-review.md",
+      "state": "present",
+      "sha256": "2ca75edb0d99d8dd88fba11960a265573a114e746512d3c17afbc43ed63cd336",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/evidence/mac-spend-readiness-review.md",
+      "state": "present",
+      "sha256": "55b780c379904cd6057e48da4adb3ae0d8adb96fb54ab834b6b0f3e36e3fb87e",
+      "mode": "0o644",
+      "untrackedNew": true
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/evidence/mac-test-failure-review.md",
+      "state": "present",
+      "sha256": "6b1a45dbffa37831fbd4c759405996536572db1b8a7aa4e6acd3602201185bb6",
+      "mode": "0o644",
+      "untrackedNew": true
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/evidence/readme-audit.md",
+      "state": "present",
+      "sha256": "48af73b9257cbda410ba38ebd86454615c0fd2eb295cf59849a28dae432da097",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/evidence/release-v080.json",
+      "state": "present",
+      "sha256": "201eb0c8466cadbe7d9f2e15f6bdfdda6a4fdedf5778d6908c1a80d88f892814",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/evidence/release-v081.json",
+      "state": "present",
+      "sha256": "838b0334a7bfddc5cc2a07155b8578617f6c569c05aba32298158ec76de136c5",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/evidence/release-v082.json",
+      "state": "present",
+      "sha256": "8cdf0031bced412e591739f653ac89656b5cc918f8149e771cf664d5d7593307",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/evidence/upstream-commits.txt",
+      "state": "present",
+      "sha256": "0f1152ddcd2ac45989bb1fb4c7955e1ab9dce1a590c3f236ffd9d7c26caf2f13",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/evidence/upstream-files.txt",
+      "state": "present",
+      "sha256": "f2bcfddf31af41d910a7d4279bae0a320b2a9dbd32f7f016e1057944001a5f18",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/evidence/v082-render-visual-review.md",
+      "state": "present",
+      "sha256": "785f3c3b514b99e8aab1867d1207dc838b52809160d995ba5e2ebf1dce2b5676",
+      "mode": "0o644",
+      "untrackedNew": true
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/tools/FrozenWireHarness.swift",
+      "state": "present",
+      "sha256": "dea303774da0cacaacb0a1e8aa7f0c4f1dfe1bee323f6c208d916a587ba65767",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/Research/090-v082-upstream-sync/tools/check_frozen_wire.py",
+      "state": "present",
+      "sha256": "8ab7f9bce7c5421676cafe38a0d720e25dd082bb99a56d5477bbaa4ecd86f2a0",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/Research/README.md",
+      "state": "present",
+      "sha256": "835eb9b57c58b98d8936daad390610402226771aec19de6f46f0222d1968ce87",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "CodexBarMobile/project.yml",
+      "state": "present",
+      "sha256": "a3fed9e2823f1ad385d3545ed99333d77108ea95be4c45239cbf0afc2127e220",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Integrations/Linux/ProviderIconProvider.h",
+      "state": "present",
+      "sha256": "9c53d1c116390efc4d7732ad9e48c1b89b32fef2571ef1eaa5b349aae2931715",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Integrations/Linux/README.md",
+      "state": "present",
+      "sha256": "d5db2f0ac7ca66c9837109ec5740cfcc118c9686e772a61dc62a7a017e598c06",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Integrations/Linux/install.py",
+      "state": "present",
+      "sha256": "a2bf0566842025572f36f26898f9c49cbf9aaa1cddbbed852e1e3b44f00286f1",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Integrations/Linux/main.cpp",
+      "state": "present",
+      "sha256": "0ba983f81435370c0f47270efda35831b7263b956d54ecbebaf1685a49e2324f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Integrations/Linux/tests/icons.pro",
+      "state": "present",
+      "sha256": "77b6c11b1f7b57e5b7806fc014982466164bf234bbed916f1930dd19181618a2",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Integrations/Linux/tests/tst_icons.cpp",
+      "state": "present",
+      "sha256": "de3a2a32e9f95e3d4e2bf33bed6fcd0427d787008ec06fd86e1bbcd7a5285b62",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Integrations/Omarchy/test_install.py",
+      "state": "present",
+      "sha256": "7707239c73112b4b29e75caa0a2887f17a699c59813476234de864391373493c",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Makefile",
+      "state": "present",
+      "sha256": "0a5301c675b55ef752c3d7a29a610b95fd09b84bb03146a2851eb83ce7473144",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Package.swift",
+      "state": "present",
+      "sha256": "43613bf2b842da39ee9c8f6dc59fac671a9dcca8c9db737c43049312d58faa7b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "README.md",
+      "state": "present",
+      "sha256": "c53e809df169d190be70de5c27141375a71bc892a7156e96a460a8b8d7b83ff2",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Scripts/check-linux-cli-codex-cost-smoke.sh",
+      "state": "present",
+      "sha256": "8173194c1947a914a57e1f1d206bc9759e40c8aa92e15581adc7829d2f6ecbc0",
+      "mode": "0o755",
+      "untrackedNew": false
+    },
+    {
+      "path": "Scripts/check-site-locales.mjs",
+      "state": "present",
+      "sha256": "a22b52628b1a16e0c41ede91ded3d85e99e46beac37f943d6e4869c124b75f63",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Scripts/check_fork_readme.sh",
+      "state": "present",
+      "sha256": "93266b66720aec4c23285628b7bea017487946e2139b98fb6e463daf6f7847e3",
+      "mode": "0o755",
+      "untrackedNew": false
+    },
+    {
+      "path": "Scripts/ci_linux_musl_build_gate.sh",
+      "state": "present",
+      "sha256": "6f8a52986c2c9b9da30f4a183338b2a6fbaa7a495b91ebffdb073e420f305c97",
+      "mode": "0o755",
+      "untrackedNew": false
+    },
+    {
+      "path": "Scripts/lint.sh",
+      "state": "present",
+      "sha256": "ea0b55eb8bd6f08c7205d0d6f2a28b9ef257486ff61fce5aec93d5fb9c4a4f5b",
+      "mode": "0o755",
+      "untrackedNew": false
+    },
+    {
+      "path": "Scripts/package_app.sh",
+      "state": "present",
+      "sha256": "c044a4a5a52ca0aa3efbeb7ec51d956f38fc56ce5c32f96b6d0424858ed9a1b7",
+      "mode": "0o755",
+      "untrackedNew": false
+    },
+    {
+      "path": "Scripts/test_ci_path_gate.sh",
+      "state": "present",
+      "sha256": "e913c693fae1d5cfe04485ab7bace69e318d14d0fe00d3c0b89c51cfaab1293e",
+      "mode": "0o755",
+      "untrackedNew": false
+    },
+    {
+      "path": "Scripts/test_linux_cli_codex_cost_smoke.py",
+      "state": "present",
+      "sha256": "310cda6472771cc9822581a196837cc0aa611a56c928c8870c9374a2512d2668",
+      "mode": "0o755",
+      "untrackedNew": false
+    },
+    {
+      "path": "Scripts/test_make_lint.sh",
+      "state": "present",
+      "sha256": "0b9f731860885374b6b022fcbc61b13dc90c3891a3eed6143cb9695c7d1c1815",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Scripts/test_package_info_plist.sh",
+      "state": "present",
+      "sha256": "c89fb5c2d49ca651560b3bbd72a03bfcbd1c0e93533eda991509fa3650c9d6fc",
+      "mode": "0o755",
+      "untrackedNew": false
+    },
+    {
+      "path": "Scripts/widget-localization-keys.json",
+      "state": "present",
+      "sha256": "af70be9bbe594eab6b2db48cacfeab8bc5c3abc0507d7c6cbbdd96bfbc00224d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Shared/Models/UsageSnapshot.swift",
+      "state": "present",
+      "sha256": "691e50bf0267e95374d81e7927a2ed50ca76b3f75f8737d4718ab7ee22ef4b3f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Shared/Notifications/QuotaProviderList.swift",
+      "state": "present",
+      "sha256": "1eed0e67a76acce9c7e62ef510d5bed7ed91fbba7083ba27a390cf15589aa6f7",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/CodexbarApp.swift",
+      "state": "present",
+      "sha256": "1e995d5fe6efa7840b768578224a6299975475733212f92a30ad78adeefd1c88",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/HomebrewUpdater.swift",
+      "state": "present",
+      "sha256": "7dd40948cfb828cabcdc810b597f4b41b61e54155dc27657f03952d097123acb",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/CostHistoryChartMenuView.swift",
+      "state": "present",
+      "sha256": "e516cde475e3b1e397724ab43986eaa63aae1494b152a0ff64f49cc4df2e341a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/CostHistoryMenuScrollView.swift",
+      "state": "present",
+      "sha256": "78e018f7e121221d5e562246a0191b4fd4b907e566a33dc96da73ff1fa173887",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/CreditsHistoryChartMenuView.swift",
+      "state": "present",
+      "sha256": "12a7516e53ac28aacfd572beef2165c0dfc8e044350c129ba757a44dbe673d56",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/FleetAccountMenuProjection.swift",
+      "state": "present",
+      "sha256": "be88d30dee1e279e1a330e6a0d0d0d9a49aa2bd89f37063d21731468b1ff6db2",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/InlineUsageDashboardContent.swift",
+      "state": "present",
+      "sha256": "c2bf12327ff558f8b64c539c98c51c40289be46c0ea909872b5235745fd86556",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuBarDisplayMode.swift",
+      "state": "present",
+      "sha256": "0535426b47aecbff10338eeab08bdb88ce1fc2e035cfd8c1d75d1ab5ca57347b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuBarDisplayText.swift",
+      "state": "present",
+      "sha256": "0809d09d41851d4c5041154a51684c22a891fe9421dc14ea1dab110ea26b029e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuBarLayout.swift",
+      "state": "present",
+      "sha256": "fb37723e4cefe02797d9322c06760341859d0d7e235d0e90435043eed75a9598",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuBarLayoutAutomaticWindowDisplayNormalizer.swift",
+      "state": "present",
+      "sha256": "b8dde887ed4dcef0ae5051f6caa7a45655577a516836c8db2407121748190701",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuBarLayoutConditionalEditor.swift",
+      "state": "present",
+      "sha256": "ae913e04a3a0ad9b6d9b531425ed888abd6e33c648ee31cc5a048b97435fa58e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuBarLayoutEditor.swift",
+      "state": "present",
+      "sha256": "d81254852f37f419315d7828f75caa831f271d3af52c37e891df700a455f8acc",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuBarLayoutEditorChip.swift",
+      "state": "present",
+      "sha256": "25d7f2f18a687946790d0895ad10b2fd8c16f3176a33efb94b8ac220b3620195",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuBarLayoutNativeProof.swift",
+      "state": "present",
+      "sha256": "87bfce674fafb9e5cbad8688a20ecb7a1fd88fda8f2ce91fc6cfb3ef217b6d19",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuBarLayoutRenderer.swift",
+      "state": "present",
+      "sha256": "cefe1cfd57c244020d12afafb8efcd9d9978aa2c2769d660fc36b4db303e12a7",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuBarMetricWindowResolver.swift",
+      "state": "present",
+      "sha256": "edbb270d2706687b927ee3b02133e37c243db8dcb6b0577ba13f7a93c395712f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuBarPercentWindowPreference.swift",
+      "state": "present",
+      "sha256": "8e789f0f9d19fb56d22a5283c94696aa892adca72cd1bdd1a47cc5d48c9e8161",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuBarStatusItemDefaultsRepair.swift",
+      "state": "present",
+      "sha256": "8fc3109448ffeb98dde491413310bd7328dda1a0dab7bd8bade4b0bd31ac4eb5",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuBarStatusItemPlacementPreflight.swift",
+      "state": "present",
+      "sha256": "f489f8be5e4801caf9cd82a14f5351e90e8cbeabed8df097b89bf441607b87ec",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuBarStatusItemPlacementPreservation.swift",
+      "state": "present",
+      "sha256": "46f8e3a3f8c323c1871943b34e5c6351cb93ee7bbe85aba9b2c8c45dda5fe5ee",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuBarStatusItemWindowProbe.swift",
+      "state": "present",
+      "sha256": "d7e00e9e8a3eaf0e8b30505cded43f4c167c0017c8408a3715def80f746fd966",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuBarTokensSparkline.swift",
+      "state": "present",
+      "sha256": "72ea07f3a6f6c933005175da503be108a2c7760ba83d724156f9fd58bb857758",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuBarVisibilityWatcher.swift",
+      "state": "present",
+      "sha256": "a730c3cc7c2610bd22ad7b514956f2bbcfef3e83e2bc20e6480c1aa350b1cf05",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuCardCompactAccountRow.swift",
+      "state": "present",
+      "sha256": "92fca0575ccb462f81db8c27853718f685c8d318f453d560eed065dcab62e02e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuCardHeightFingerprint.swift",
+      "state": "present",
+      "sha256": "ffd61080df82e5b8b6e26b067c3bf157af724ccd6cec375ed1e56a2336f469ea",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuCardMetricRow.swift",
+      "state": "present",
+      "sha256": "108c3a5e0826641ccf0f8458100419d7af015153910446d7d842dd91670c27ce",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuCardPlanPresentation.swift",
+      "state": "present",
+      "sha256": "58b44826b7c46befedcfe8071c97b697bb14e4f0517ab6a386c2ae10a8a1861e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuCardQuotaWarningMarkers.swift",
+      "state": "present",
+      "sha256": "99690adb14015906968927f63f87b65c32e74ec21f95224beb7aa9eff7871ec2",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuCardRefreshMonitor.swift",
+      "state": "present",
+      "sha256": "c378d8e07d6b10d2a3f3a75dd217acb03b25c8d4642de5e58e54d7ce26c0ead4",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuCardView+CodexResetCredits.swift",
+      "state": "present",
+      "sha256": "728a780a3f2d50f5c4c034d6d717409ae40c51e39973de1dfcc0cde1d639bfff",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuCardView+Costs.swift",
+      "state": "present",
+      "sha256": "571d9cffb49d3ad531b231c2895efb29a811d5718f2495ba8a605e33c127e9f6",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuCardView+ModelHelpers.swift",
+      "state": "present",
+      "sha256": "b804779671fcb490d74466b3d37f9c9a23d2f8dbd08782566bf355b0a79009bf",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuCardView+ModelInput.swift",
+      "state": "present",
+      "sha256": "35ebe19215776422c07c2ff1ebd518bd86126cbd955d804046e3a717f81d5038",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuCardView+MonthlyTarget.swift",
+      "state": "present",
+      "sha256": "04d5fcd36f37b5e651c92e060ae0bf025e6df7d698f1c466516938363dd41899",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuCardView+ProviderDetailLocalization.swift",
+      "state": "present",
+      "sha256": "43dbf296c06d637f35cc1067f4f20a128b87b50280beaf98254352e2b414c3dd",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuCardView+ProviderDetailVisibility.swift",
+      "state": "present",
+      "sha256": "8f0e1ef95ea3ae41c0db55bcab8a850a7cadf54fc42da68bcde3a370f0522d17",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuCardView+SessionEquivalent.swift",
+      "state": "present",
+      "sha256": "07e9fe605088e5eb7680412b472fdad4c15fbc61b5a79016f9e371e81fe0d346",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuCardView.swift",
+      "state": "present",
+      "sha256": "8abc784308af4141c1c9ab84f184f13fdbffaefb4198a57f2fed2367c075b9cb",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuDescriptor+ProviderUsage.swift",
+      "state": "present",
+      "sha256": "90aaa8c3f635a05401e36934d4b7940484129478c13104e3833cecab01e4541f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuDescriptor.swift",
+      "state": "present",
+      "sha256": "7c4ac994ba18aa747bacb7ca7415abe45f378db59540a79d167270756b086627",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuHighlightStyle.swift",
+      "state": "present",
+      "sha256": "3d599b6ed166d2f359d063d65760ebcd408f691555ae177c12658f25bff63ca5",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuInlineCodeText.swift",
+      "state": "present",
+      "sha256": "0b2ab881cd631bc260c49f2ba4b56d452d0b8db3ef321e1bda810cda9360d61b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuOpenRefreshPlan.swift",
+      "state": "present",
+      "sha256": "5e2107f1387a342adf4e0c2b8afe589e7656706885bf43d02ecffbde1ce7a9e3",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuSessionCoordinator.swift",
+      "state": "present",
+      "sha256": "62a08d0be55be8a46f157b005d3ce365f1d292ba28ee3b766dd0fbc3f52051e2",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuSwitchFlickerProbe.swift",
+      "state": "present",
+      "sha256": "8e05fb45c9d6f05c347c5a62dd25ec8ddf81bb6cd45693fe0eaaa868724027b8",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/MenuUsageBarStrip.swift",
+      "state": "present",
+      "sha256": "e70697c688e100ab5065217c71a9b07b6f9226620c91d1f4ea48831f102cf6e7",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/PersistentRefreshRowMetrics.swift",
+      "state": "present",
+      "sha256": "90b36692baad73ab7adbc899e35113ae6c46bf1930006dc56a2a54483e6fe892",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/PlanUtilizationHistoryChartMenuView.swift",
+      "state": "present",
+      "sha256": "6014327eade25f0dfd63adb6cca8864ffa16f6450a93f4c58dfeb60705ae53a9",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/ProviderAccountUsageOverview.swift",
+      "state": "present",
+      "sha256": "913eee579d5e16b2e75adbbb246554657dc58bf820fc66c0e6c200503050776f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/ProviderDetailSectionsContent.swift",
+      "state": "present",
+      "sha256": "f4d083b5c977af13f637e6e441621d11eb30ef993a47fde37cb1a28694086bae",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/ProviderMenuChartContent.swift",
+      "state": "present",
+      "sha256": "05b2cbfb7d633f0be8b17647e692858e3c7919ad273505efe1db08bcabebacff",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/ProviderSwitcherButtons.swift",
+      "state": "present",
+      "sha256": "099da582549efa336fa1504e6ddd04885d85a1221892c5ff2e3b7418dc37f0d0",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/ProviderThroughputSection.swift",
+      "state": "present",
+      "sha256": "c56bf121f920df77427ecdfc4d30956f04e898e04b3e54695aa68700e4f8f772",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/QuotaBurndownChartMenuView.swift",
+      "state": "present",
+      "sha256": "a6484405de83ea8cfa6ecc4dbe4f1158dcebe329264ae0129334283cc19e4faf",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/SessionUsageMenuAction.swift",
+      "state": "present",
+      "sha256": "31fb0bdadef065ae1f5e1feb18c42410b7736fb8e8e8dddb54a9c2274c0ae10d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/StatusComponentsMenuView.swift",
+      "state": "present",
+      "sha256": "eef5f147780ddec5aa7f5c2e84d6b0d46bf09c4c31d287a82935eab240e5aac2",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/StorageBreakdownMenuView.swift",
+      "state": "present",
+      "sha256": "222f7d819fd05e8defedf7bb124696a2dcfd08dd33ad284384a018252d7f88dd",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/UsageBreakdownChartMenuView.swift",
+      "state": "present",
+      "sha256": "f3dc5061b883909a85674e73886d65789c1c81a0c97f517b4e07fd63d965c354",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/UsageMenuCardHeaderAndUsageSectionView.swift",
+      "state": "present",
+      "sha256": "d4278b58ad4109e09431e3341a3fd625107a0152036d8672e7890fa0bc5f3a6a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/UsageMenuCardLayout.swift",
+      "state": "present",
+      "sha256": "159df1ef224b07cfa5f146ab2d63045fdaa04baff3735c75a4646a34bd903773",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Menu/UsageProgressBar.swift",
+      "state": "present",
+      "sha256": "9eab6b813e1d75f52b587a7d8a4bd9aa6e4de5463e977938e67948fa810bb7f5",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/PredictivePaceWarnings.swift",
+      "state": "present",
+      "sha256": "f86a0fcbe5c523555bdc02ed4d46dbf5716f4591904a3eb09094bb066ca307ba",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/ProviderMenuBarPercentWindowSettingsView.swift",
+      "state": "deleted",
+      "sha256": null,
+      "mode": null,
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/ProviderUsageItemVisibility.swift",
+      "state": "present",
+      "sha256": "acfc9c84dae1a11f22af5548b5a4c7aac4047948520800055b5fc6630adf7314",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Claude/ClaudeLoginRunner.swift",
+      "state": "present",
+      "sha256": "a059491309b4db6c4026b8127a08337bf1f496354e6feefcac8c6f19a5ff0b2a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Claude/ClaudeUIErrorMapper.swift",
+      "state": "present",
+      "sha256": "72aa9378ca13a7769c40b17c6556e958a23a5a6da98f2c5bfdb60ee80daed792",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Claude/UsageStore+ClaudeActiveAccountIdentity.swift",
+      "state": "present",
+      "sha256": "abba5e7e46ec8f45c051a752c996992d1c132c3894027517e9e5ccf3bf13b7a1",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Claude/UsageStore+ClaudeDebug.swift",
+      "state": "present",
+      "sha256": "5c4d0454167cd1efd3f4452f24a1736176300eb5c1b8594d0eefde7d180692ea",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Claude/UsageStore+ClaudeOAuthHistoryTypes.swift",
+      "state": "present",
+      "sha256": "e30ad70391fa5ae7f3eb0ddc33da22543a12266dcd4b43082b5d004a54311407",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Claude/UsageStore+ClaudeVersionRecovery.swift",
+      "state": "present",
+      "sha256": "5e0b0c19014237ac7ca333ebe3a3e44bef313842d8c7a17fe0dc28f3d9804d7f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/CodexAccountMenuPresentation.swift",
+      "state": "present",
+      "sha256": "cfc991da3731aeba1a17492d70130440f6a2815a6e9a30d077926aa8f5cceab5",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/CodexAccountPromotionCoordinator.swift",
+      "state": "present",
+      "sha256": "3ce907df522551efc807d24fbb78e086ddbe941a33c92ade7d69636457042168",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/CodexAccountPromotionService.swift",
+      "state": "present",
+      "sha256": "dc2104316a760e8ab6858c1ed0e4962ed1e6031a0efe0ee07bf47b5142517050",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/CodexAccountReconciliation.swift",
+      "state": "present",
+      "sha256": "5d780506c42b923ae82adea0d354ec81a8c9930e94ed974075bd94a433682457",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/CodexAccountSwitcherLabeling.swift",
+      "state": "present",
+      "sha256": "510a3e08e815ddbe6bf04aeb252988c5e965bc52c4d42dad012f5814ab760a0d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/CodexAccountSwitcherView.swift",
+      "state": "present",
+      "sha256": "939e5396b86302d6689d1fc7dc0cbd9e8c92a29cff93e2ee144461fd9f9704cc",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/CodexAccountUsageSnapshotStore.swift",
+      "state": "present",
+      "sha256": "3be29a1f6ae9e41cd2503c0eb9ebbe8323768ed4699bdd57c8061b8555c1fc98",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/CodexAppServerDaemon.swift",
+      "state": "present",
+      "sha256": "5db523ae209dde614868d5c23e626639bcc2b58354d74ddc1b4d2128f302f766",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/CodexCostCatchUpPolicy.swift",
+      "state": "present",
+      "sha256": "5239747a0cc26d08eb1a273b1ce8b7318828b9a196fb194a4cc8804de589ae24",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/CodexHistoryOwnership.swift",
+      "state": "present",
+      "sha256": "d45df9884a0cd6727f09d81790a24d345a53aa76cc1f38d31082dd20029f5b30",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/CodexLoginAlertPresentation.swift",
+      "state": "present",
+      "sha256": "d22f1bc2d8332f635dafa85026f093850f335e28238b6b62e8dbee7b8c4f3271",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/CodexLoginRunner.swift",
+      "state": "present",
+      "sha256": "670c0d504b2ca9d785090774758a0f2ceef5eab11818eb3a243382fdd62924b5",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/CodexOwnershipContext.swift",
+      "state": "present",
+      "sha256": "2c4466bff1462af13264c7b45069c8211ca60130645e54ceab863204daba769d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/CodexResetCreditExpiryNotifier.swift",
+      "state": "present",
+      "sha256": "74c85718148bea573e92d8a2b9a03f3eeb1bc6db404d07128c5acdf36569cc36",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/CodexWorkspacesInspectorModel.swift",
+      "state": "present",
+      "sha256": "610cd4f3b64b8a84e0da235628f42c205c94fe74485b46916012c0712ada98d9",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/CodexWorkspacesInspectorPresentation.swift",
+      "state": "present",
+      "sha256": "c2ecfa1bcffafad9e7fe4aabc251aa7a131b6df7b41a8d13118de80a4b1c88d4",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/CodexWorkspacesInspectorView.swift",
+      "state": "present",
+      "sha256": "3b21cdddf14466e0ca5c5869ad90e012c532f8205eecfe12532914c93ad0bc1d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/CodexWorkspacesMenuAvailability.swift",
+      "state": "present",
+      "sha256": "cc7bd1ca91ec6867064a226b8549c6123f95e856f234732a34073efa4f5476cc",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/CodexWorkspacesNavigation.swift",
+      "state": "present",
+      "sha256": "e5cd24d3d7b12d7a7776a59627b94dec998c17ebf601698865a675e79ced7214",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/ManagedCodexAccountCoordinator.swift",
+      "state": "present",
+      "sha256": "404761cb784a6e1cf30f5492cc6a463311fc5bef3d14d6ac900751671e3a96bd",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/ManagedCodexAccountService.swift",
+      "state": "present",
+      "sha256": "ba71109e0f4f21004f5bc98dc13f11b72e195509400931214f16501e9697ad2f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/OpenAICreditsPurchaseWindowController.swift",
+      "state": "present",
+      "sha256": "fd70e1693ff92f858bad6440250dd7ae9cb2a611813bf9402224d9b7c639ef70",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/PreferencesCodexAccountsSection.swift",
+      "state": "present",
+      "sha256": "abf89fc9624c6d16b0533c93f4de729592870ce002d71ec282e9dc3448889a99",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/UsageStore+CodexCostCatchUp.swift",
+      "state": "present",
+      "sha256": "53f897c3faf8da63a48663ab3536d6b3e5e259adb0f8d727e644bb993a9b0028",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/UsageStore+CodexResetCredits.swift",
+      "state": "present",
+      "sha256": "23338cedd5d0c22bfcbb5652e6fee7798aa5472ff154f87be41a9fa40b587500",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/UsageStore+OpenAISubscriptionMetadata.swift",
+      "state": "present",
+      "sha256": "d9927acb246ca11f31c76f0566bfa7b37f5e39741eafe6a27d78fc1c94d80f82",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/UsageStore+OpenAIWeb.swift",
+      "state": "present",
+      "sha256": "35b15e308315836f5c4c581e9440f32de88a11b4536575572cc8711d2f66463c",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Codex/UsageStore+SpendDashboardCodexCostCatchUp.swift",
+      "state": "present",
+      "sha256": "6e894a1790b97146970a7017dac771cbb4b8afc2566247ef416024ddffa8df0f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/CommandCode/CommandCodeProviderImplementation.swift",
+      "state": "present",
+      "sha256": "cba80ce1ba49201adc6fbcd41e779cf6239a585b543b7e0a5fd854f1469f6d80",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Copilot/CopilotLoginFlow.swift",
+      "state": "present",
+      "sha256": "d3d15131ca5e591cb2cd03c976b483d94acf2f679bd257bc07abaaa956c34b81",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Copilot/CopilotTokenStore.swift",
+      "state": "present",
+      "sha256": "9a77515df041a0479f448ed871dc6757218abbc225b2e5361d3e258a844b70d2",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Cursor/CursorLoginAccountSelector.swift",
+      "state": "present",
+      "sha256": "8ac365a73657369e7eefe66f70911cc12487a54f49291a02f773e9a5ccce332b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Cursor/CursorLoginBrowserRouter.swift",
+      "state": "present",
+      "sha256": "5e517c52abdba44991c8d73bd1ec715aba1978b1139ce664ad2248b945a8575e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Cursor/CursorLoginRunner.swift",
+      "state": "present",
+      "sha256": "96b860702543f98a31476f77a7496800141c72db455efc4907679ca11112f277",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Cursor/CursorProviderImplementation.swift",
+      "state": "present",
+      "sha256": "d0fff60d1a66b4a2967e396afaa74d33bb0439e07ff890e50496e2191e1e0c10",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Gemini/GeminiLoginRunner.swift",
+      "state": "present",
+      "sha256": "0545103f9551bf3f3ad0d9efbceabedf6f25746cfa2841d2b926a4b3b3a47038",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Gemini/UsageStore+GeminiMigration.swift",
+      "state": "present",
+      "sha256": "24deeef41f55963cb36baccac5567722fb2e925c50957c6dc5272a7bd1429f5b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Kimi/KimiTokenStore.swift",
+      "state": "present",
+      "sha256": "36c678366afe80b913a8c3dc643bdfeed645b53b2d1306281f2fe769df58ef3f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Kiro/MenuCardView+Kiro.swift",
+      "state": "present",
+      "sha256": "7b9f199a8c8e1c1d803b62852265fbd6dbd43060af90081c7765d7c672fb2339",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/MiniMax/MiniMaxAPITokenStore.swift",
+      "state": "present",
+      "sha256": "1f7815ca42cb0247af3a5019d0f67b99d777b2511c46d1f37b4a6fcb491a725c",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/MiniMax/MiniMaxCookieStore.swift",
+      "state": "present",
+      "sha256": "ac1e5b4f6c90000b572dbe993e7c17311ecaee35cf7772ef85b7b60441ba2159",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Notion/UsageStore+NotionDebug.swift",
+      "state": "present",
+      "sha256": "0bc84f1b36d8ad735f66936286baaa9b43e81175b7d2a6f0e043882725f99455",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Shared/ProviderImplementationManifest.swift",
+      "state": "present",
+      "sha256": "b78ff450019e657b1bd16d65250caedd99a2f7cf2ed7b30982b1e9335ad5dddd",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Synthetic/SyntheticTokenStore.swift",
+      "state": "present",
+      "sha256": "7b4cf6f682f234982c19061135fb42c7396ce00604e5d44798abfbbb1e741dd9",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Providers/Zai/ZaiTokenStore.swift",
+      "state": "present",
+      "sha256": "fa3df8e8a4c56a3cc98b22f7084f13ac59df18f37968d3f0e4348c82ea9f79b8",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/ProviderIcon-abliteration.svg",
+      "state": "present",
+      "sha256": "91aed6bc9a06c7b0f4605684c2c38b6bcd96211c727f01afa830bc664382a774",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/ProviderIcon-chatbox.svg",
+      "state": "present",
+      "sha256": "63962481c3e046bce4e09691794987deeba5198181ab612631362a5ac4dd8d8a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/ProviderIcon-soniox.svg",
+      "state": "present",
+      "sha256": "3811c11ff1f9794cddbe76ffdf83b69bb8f3245fa45332a983436b62d2bd6e0f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/ProviderIcon-traecn.svg",
+      "state": "present",
+      "sha256": "567a5551a5204acbbfd4d89b5954c57128d605b64878169b1730b3a202067b97",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/ProviderIcon-workbuddy.svg",
+      "state": "present",
+      "sha256": "e08e9986bbe700e2a931d4a0fd7225f176b1a3940e856177b85331e6cad0a05f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/ar.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "354928bfcea25e0bc09e771c8ff9673f9b507b7a575c9bf358d8e92cd0916811",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/ca.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "f395392cb43f54c9c78aa405d1a0293fda2d334ebb7103b71a934ceb800eeb37",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/de.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "b461728a2d11188353c92275949618e67fa2f480b79348f97849c16d17f058c1",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/en.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "367b37545f71433eac3f8c9fc22d6d5df9cc61f11e1ca1f192710fcf0f8d669c",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/es.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "1cc1226d2577c295f365d9db7484664bcb94fa08844ebcfc983406523f239590",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/fa.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "08e48b1119d6e40f07f80c3a3f39a4db8d205f2a1913d9b7fb53515603d3ffb2",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/fr.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "fee47edb9b047c0fe1e3bd0c6a6d6610a13614787d66325cb2752be531b3f05d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/gl.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "621cc4d0f75e3e7fb97361a693ecaeeb8102b809aa3952bcc34497fea2a01904",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/id.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "a1ce70dfdaaaa549b76710c2b292708dab40d60ec7ec4339d76b67668f94768c",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/it.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "4b1a3dc20d71dea29c4e5b46973d4fdbd17808faba1e4cc5d4a413ba02ad70cf",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/ja.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "50b8e73b90a64e3704bc63133e9ea18b72a9498ace8291d4669be5c5f00aec1e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/ko.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "b01aad6ae7628a10807540b2e36f550a93465f5230180cece767c9223d9f39fd",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/nl.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "7b14ea7169cb17bccd50a370efc8ba71b5e39126d940229ea402c2510b87851e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/pl.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "db7918a07e7bed573e89a88dc378a8fc99c1c6458d087ec24a3eb8d3c361fc1c",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/pt-BR.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "30dc6170f46244d1436d38acec540efff14919f44277cd65a01208a961a2ee0e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/ru.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "687cb05a401dbde7c5f19773a57e355e8ea7ab2390eb147cf58b9d67af585af5",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/sv.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "b0ca819d7b59e0cb918cb2d7bcd6acf96c8cb0e3ef7dcdf04cd112c85dc9ece3",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/th.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "055aefb88265746f7a26da1b092a440f597e6b17e6b8bd41aaaa573537577444",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/tr.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "4424f6919b78549e60b33faa77f4f78b8e4287f2e23bdc0e30bd6a82008c134e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/uk.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "02e8a464a34e0c43bc64cb818065b87a3e3ceea057e16aaf6caba7783338d040",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/vi.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "277e1fdf18855533d87f8980f6e7e304d768c3f73ec208d97adecdf9301fa3bd",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/zh-Hans.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "37af4639dd1ac0d2e8ed8e6a083d38464d9eea7bc24ff7448a66e72beac7774f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Resources/zh-Hant.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "2797f831c48ccc5e91c1b6b4d7ee207a4f91cf1a03e31a36034e848384b3a9c1",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/SessionQuotaNotifications.swift",
+      "state": "present",
+      "sha256": "3a26b0fa8b57f5d624288116a2eeba6ee64117d51dc99c1597e369d945a1a479",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/SessionUsageBrowser.swift",
+      "state": "present",
+      "sha256": "212c3ffc1fea75f50a506ee19cf041eaeac031387adff3796cdead96897098c8",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/SessionUsagePresentation.swift",
+      "state": "present",
+      "sha256": "d2aaeafa4e7f62e9053b287a0f3fb55e5ffd31a928ffb35f2be3d8d082753f50",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PlaceholderSettingsWindowGuard.swift",
+      "state": "present",
+      "sha256": "215cdf6214bd029e6f814fbd7e0b4b7c01d7b34b0b932cd7df40e5836eac6927",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesAboutPane.swift",
+      "state": "present",
+      "sha256": "cec8a32e7e79e096787cd38b2647df648010ab331f45ba56a354a244b735fe70",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesAcknowledgements.swift",
+      "state": "present",
+      "sha256": "b0e71bd4e5de60be97380fbea6090489b13bdc01ff1258354500849e5e5ab66c",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesAdvancedPane.swift",
+      "state": "present",
+      "sha256": "e4d7de6b49a0ce1484f1187387c1ce92f41c8137067ae7db1f2db86452935f93",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesComponents.swift",
+      "state": "present",
+      "sha256": "81cabfad52d4489a534a2b488b856c14907126c2b6558528d105ce8b1f8f9042",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesDebugPane.swift",
+      "state": "present",
+      "sha256": "3f4710e5b41b6d6e032e70168fd821a5e1b786da033036c590ce338956bc8eb0",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesGeneralPane.swift",
+      "state": "present",
+      "sha256": "6cbe527700ca75751fde0f39baa780a08510c8fda94048aab2df37bdfbc1b1cf",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesHTTPServerSection.swift",
+      "state": "present",
+      "sha256": "f371ac7a8b89cd45ab646017ab1f1faa8d6d8ce0f72555f54e415025be9755ef",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesHooksPane.swift",
+      "state": "present",
+      "sha256": "196cc57b2c941064e4c16910da32aa19904fd4255742a7be8aa739850bdca8b3",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesICloudSyncPane.swift",
+      "state": "present",
+      "sha256": "3f3fd3e4340125411871c660e9f406d2308ef6ce126b664e1cbe40597fff5f9d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesMenuBarPane.swift",
+      "state": "present",
+      "sha256": "72470a42d54dd1c924998f9aff7b634b9c2d7db1a389b368da3e170650c833be",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesMenuPane.swift",
+      "state": "present",
+      "sha256": "b9c436eb6051378c650b6d220927133fe51fac519cec7486400c1b7d846448fd",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesMenuPicker.swift",
+      "state": "present",
+      "sha256": "c25eeba728b45c48fd521c50abf206a8dd35bf1982fc37d9261cf3e0aa3762d8",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesNotificationsPane.swift",
+      "state": "present",
+      "sha256": "b076c30da099ba4a45fed4e1c97ffb4ceaf6b9131a661d346ded8994d9f54b0a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesPluginsPane.swift",
+      "state": "present",
+      "sha256": "2ef9f920ef338819bb573961b4e56c5cf9a41d004eb523d08b0a9fb8a3f04f60",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesProviderDetailView.swift",
+      "state": "present",
+      "sha256": "48cedb8b43181c5b91ef00f703b033538aa274440707cf5aea4c9d190b13b7e9",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesProviderDirectoryList.swift",
+      "state": "present",
+      "sha256": "1346efcd3003ab65a35f84eb0f02d44865ed5d1ee9ca42f3074cf96483051552",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesProviderErrorView.swift",
+      "state": "present",
+      "sha256": "29c288c9fd6fc7264312975436f7c0596177ab57d2060444430848e8e9c0e44a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesProviderModelLimits.swift",
+      "state": "present",
+      "sha256": "08d6db54d607705ae1275e82be63922c3561efe93dad97a76441d0669cb1d3cc",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesProviderSettingsMetrics.swift",
+      "state": "present",
+      "sha256": "4d0da67ddb061268068276c2358db46610bd0482f17b4fc152aa426d3e4afef0",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesProviderSettingsRows.swift",
+      "state": "present",
+      "sha256": "4e316d4c04bc869e2588db93f58e540fbed61acdda44cb95465ee9484c218546",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesProvidersPane+Testing.swift",
+      "state": "present",
+      "sha256": "43436a4f8d07e95ae02a8efd1d3685b9ccb9a9c7ae13969faf9c009e075a8064",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesProvidersPane.swift",
+      "state": "present",
+      "sha256": "60697d1cad9b40662fcaef904afc0fbcfe797ff00b8ac00687a4460bc0a29c14",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesSelection.swift",
+      "state": "present",
+      "sha256": "f05d362fed188f7be9136022726fa74d972c90900055ac3fd94d9776df00e794",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesSidebar.swift",
+      "state": "present",
+      "sha256": "a9d7597683ad8c730a5ec8b45a8378cad281e9bf134b0cd0e1d0c83d1cac73f1",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesSpendDashboardPane.swift",
+      "state": "present",
+      "sha256": "4be5658b50f138884f80d6779e1264832457b9c2804b77ae67d8abeff51c84e3",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesTransferSection.swift",
+      "state": "present",
+      "sha256": "83a9c766dbe3808e42ecdfe93debf8c70b4ec9d8301fda66c845432c5a9847b8",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/PreferencesView.swift",
+      "state": "present",
+      "sha256": "825514703e5147d43141aa0773ec5a313eab76780b60e3bdace80084634eb395",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/ProviderAccentColorSettingsView.swift",
+      "state": "present",
+      "sha256": "a45e3d74a2e94fa44bb5ebd462f73a4dbe9ba3eb89f42b46e44701de25be73cc",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/ProviderMenuBarPercentWindowSettingsView.swift",
+      "state": "present",
+      "sha256": "a507eb50afa10baeb4a3e510fe0e43510085787334f8919b370543a3af08c632",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/QuotaWarningSettingsViews.swift",
+      "state": "present",
+      "sha256": "700c6b30f4a72f55bbd990307fe20e7cb2987dc75a4ac80762fde4f4bc72a13c",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/SettingsApplicationMenu.swift",
+      "state": "present",
+      "sha256": "40126f112a63a1365618db9e429deb7f682cd96aa1cedd0b57b0ad2ab978c7a1",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/SettingsSidebarSizing.swift",
+      "state": "present",
+      "sha256": "7a8e2f4cbf369d509e579bcab261a9e39294fad728ace49eab20d69d8581292b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/SettingsStore+CompactAccountMenu.swift",
+      "state": "present",
+      "sha256": "73ae91f0439c42e88d8686cd9a7865bf8b396d3ce8b5ba30c46317c845c04e53",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/SettingsStore+Config.swift",
+      "state": "present",
+      "sha256": "df09f587fe0caa10974b5be7ddce3af5e9b7799d26292384a571b48702a1aa62",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/SettingsStore+ConfigPersistence.swift",
+      "state": "present",
+      "sha256": "0935a90d531df3ac4b012fa5c93bc801e2b17f85fab95fba883a016a9dfb4b8b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/SettingsStore+Defaults.swift",
+      "state": "present",
+      "sha256": "4990316b2c71ffaf6c073dfd39052fa5f6e089bf990087b05d5595def04eb04a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/SettingsStore+MenuObservation.swift",
+      "state": "present",
+      "sha256": "9cde1ec9b0b9d3f3afd5df32bed27c26f32ad68e2683053a8748c16cdb023464",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/SettingsStore+MenuPreferences.swift",
+      "state": "present",
+      "sha256": "92a279fe6218d7077d526a6d8c8287145220c64817dc213e8409bac1fb00cd13",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/SettingsStore+PreferencesDocument.swift",
+      "state": "present",
+      "sha256": "4d9a15e820cb5869220a839c0224d60315586404fac24e2528a26efed566e810",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/SettingsStore+ProviderBrowsing.swift",
+      "state": "present",
+      "sha256": "096ce8c558aacbb2e349cee00b84472573e82cd763f4280cb25de2172c8d75a1",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/SettingsStore+ProviderDetection.swift",
+      "state": "present",
+      "sha256": "7cea731d0ff6c60497bcaeb142e8c55602f0303d71acace2d640e1b86dca1b1f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/SettingsStore+Sync.swift",
+      "state": "present",
+      "sha256": "3825f474867b99f253be3e391f5621c6ed8ac2ed9c7a6ca5ceadaa93d39e9ac7",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/SettingsStore+TokenAccounts.swift",
+      "state": "present",
+      "sha256": "7bc10b981e6287d7061d4bc4161a22ccb252c4f799e91665ac881023ab7efbb7",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/SettingsStore+TokenCost.swift",
+      "state": "present",
+      "sha256": "fbfed14c1c59b161075c5d61706de640d86ad65c87343fab50365702096809ba",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/SettingsStore.swift",
+      "state": "present",
+      "sha256": "62f9bd2eb62ef3959b4a919dbe93e518b903dddd49cc4ed511b6ab98866d7d92",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/SettingsStoreState.swift",
+      "state": "present",
+      "sha256": "16f95fc2ed391db4699775ba210e3f2b553859c0856803e37b556b2e11e06783",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/SettingsWindowController.swift",
+      "state": "present",
+      "sha256": "b2e0f4085b94b9d0cd3f17952e3ff4f770e0c27306f454e59d5795a2c66f34c0",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Settings/SidebarResizeHandle.swift",
+      "state": "present",
+      "sha256": "9dfbd38e44a8b9cdee3cabd88f421475a87cb0aa6273b8b976a1cff80a4f1666",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/SpendDashboard/SpendActivityHeatmap.swift",
+      "state": "present",
+      "sha256": "344398f927054975b6870632c6a666d5aae78e4c9aa5bbb3bb3203a1eb4fc489",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/SpendDashboard/SpendActivityMonthLabelsLayout.swift",
+      "state": "present",
+      "sha256": "70d117e7312491a05f90e041abe7581fb72877d51517fc2f84756ab9067f542a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/SpendDashboard/SpendActivityPalette.swift",
+      "state": "present",
+      "sha256": "924ed15ac2ab758bdc75f558eb21577d8ee6d73f34f167266071cfdc54d2f760",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/SpendDashboard/SpendActivityScrollableGrid.swift",
+      "state": "present",
+      "sha256": "98e7655d3750741b84a27684d267f3579b7a83dac3908781c813a04293cb7c51",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/SpendDashboard/SpendDashboardController.swift",
+      "state": "present",
+      "sha256": "4aadee286db9626251476958f7e9d4801a9294eb12bd1a5d75b3e8bce80470f1",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/SpendDashboard/SpendDashboardLoadedInputScope.swift",
+      "state": "present",
+      "sha256": "3ed9e34d1b4f1185623701cab642bc52462b64c868bbd21d4f4efd77013371d4",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/SpendDashboard/SpendDashboardModel+CurrencyGroup.swift",
+      "state": "present",
+      "sha256": "077df6fad636f9df6dab4308dac07cf9223a33718576abebd02d43023c2ebbca",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/SpendDashboard/SpendDashboardModel+ModelBreakdown.swift",
+      "state": "present",
+      "sha256": "05743272a35c771e71339a0f9b8d593669eaffdf3c3e93c08eba8974b4d9aad7",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/SpendDashboard/SpendDashboardModel.swift",
+      "state": "present",
+      "sha256": "16b3133b04b30848896e40eeb6af50712923b17122b8a9c97949ff2c6d355f0b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/SpendDashboard/SpendDashboardProviderBreakdown.swift",
+      "state": "present",
+      "sha256": "b6828ea06a3efe339b12ace676e63ffadada207fe455542d6c98fe3f7941d4df",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/SpendDashboard/SpendDashboardPublication.swift",
+      "state": "present",
+      "sha256": "ac6e945847940720531148d7ff8948a984c7e1cf1ac5d60e9259d1e66ef216e1",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/SpendDashboard/SpendDashboardSource+OpenCodex.swift",
+      "state": "present",
+      "sha256": "bec1938c157b79f70a02136f7e2a2aed35c17ecf8057295f13094a9663511622",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/SpendDashboard/SpendDashboardSummary.swift",
+      "state": "present",
+      "sha256": "334baea8fd2dd49b15f2611292e518dbd345ac569878b9c032359483cc200cf6",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/SpendDashboard/SpendDashboardTrendPanel.swift",
+      "state": "present",
+      "sha256": "c080f2d784e283122e39327625c9048cf447201289f69d67250e7c2dc1346dee",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/SpendDashboard/SpendSessionPerformanceView.swift",
+      "state": "present",
+      "sha256": "85cabf429189e06753c4aa2b392725e4fb065f3fb4a6e0c85ddaee78f4c07734",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/SpendDashboard/SpendSessionToolActivityView.swift",
+      "state": "present",
+      "sha256": "ace82e8be1960eea7e24e83f5fe906e00844e46a9b9797d47778e672ebe3664e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/SpendDashboard/SpendTimeZoneControls.swift",
+      "state": "present",
+      "sha256": "b0d1fe5c1c5c9df8d5b0e8d897c95c6e4b44e7c683bde6e3f20d70e5bd9a7954",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/SpendDashboard/SpendToolDetailsModel.swift",
+      "state": "present",
+      "sha256": "979fe1eb29f3c40416984bad2a452d9fee8362de87f47277816e976e0172397b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/SpendDashboard/SpendTrendChartModel.swift",
+      "state": "present",
+      "sha256": "e05c2117ed7f3b4cf3b09df6f4ac034296c3260cebd979ce3c8e6b86d40f7567",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+AccountMenuDisplay.swift",
+      "state": "present",
+      "sha256": "4a7aacb501f379047cac4d23c2ef2f7c2dc9e4dfb3324807859b56e6d7fcbd4e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+Actions.swift",
+      "state": "present",
+      "sha256": "fba255a06f5c8d975e3838b00ad4e2bcd47881cd9527391fc6071243703ecae6",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+AgentSessions.swift",
+      "state": "present",
+      "sha256": "086b0968a56cb0247c03774f605801c36d661d0b4202feb8f22846c67e269eaf",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+Animation.swift",
+      "state": "present",
+      "sha256": "f56b60147b96c09be99f58131f6f32d471de3fb1522a6471e6a8c5430c548511",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+CodexStackedMenu.swift",
+      "state": "present",
+      "sha256": "0c4bba420776cf317b6313ca94daf43c9a5c67359840e5cb4d422978e1affa64",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+CompactAccountMenu.swift",
+      "state": "present",
+      "sha256": "f2c36dcb539f4196d48f6562dc93ea1166ac9802392698fcea5b27994f596b20",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+CostMenuCard.swift",
+      "state": "present",
+      "sha256": "eea2598dcb79e72ee70dcc55c82d99c75196dc4e2a839ff267bd1c4fab13739e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+CountdownRefresh.swift",
+      "state": "present",
+      "sha256": "d0aef5479262c2030aea8a9ecc182a817f22049517403b6e02fde2b64890d9da",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+FleetAccounts.swift",
+      "state": "present",
+      "sha256": "b18a65894e1e040b3d5132a5663316e7f2fcc1930aba479adbdd1c57be5d78ff",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+FrontmostApp.swift",
+      "state": "present",
+      "sha256": "b4d962d201fc1ecf9ccff2886e09783c96d62606d4d314872c05a1338128bf30",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+HostedSubmenus.swift",
+      "state": "present",
+      "sha256": "772bff685d89215a8c009de3c775e68407f28d50c193f10f9ebe9120ff9d3a1a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+IconObservation.swift",
+      "state": "present",
+      "sha256": "691df2afcf872716d7832bb9303ed5306b3106ba81d730cc7a9195fd5a476863",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+IconPerf.swift",
+      "state": "present",
+      "sha256": "e1192b484cb7df7b8d454620395c1366a5f73a9162203bf9cf514420bbd922b5",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+MemoryPressure.swift",
+      "state": "present",
+      "sha256": "fc33f948dd1d7e9291a5a55ef633020d29641f7fa8ee11805415663aab268b03",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+Menu.swift",
+      "state": "present",
+      "sha256": "125af089f820efccf5051a3abfa484a101b8d7703736a21b60a1480072c7ebd4",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+MenuActionMapping.swift",
+      "state": "present",
+      "sha256": "97a941df7e0f74e10c959e22b4d73187d00bbddcfa6b2968201e38b245f67460",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+MenuAppearance.swift",
+      "state": "present",
+      "sha256": "21d5faf22f70aa999572e59f4955ec75b8bfd0ae6e2883640afb8921639a62c9",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+MenuBarLayout.swift",
+      "state": "present",
+      "sha256": "1a4a764178959f4b965d69cc63e99b301a1f2dbde5dc6ce233c046199f2be96d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+MenuCardHeightCache.swift",
+      "state": "present",
+      "sha256": "f4fa9ecd6a33dc3fc1378825863064b2e9708957dea7ed72f75c1fe668ea14f5",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+MenuCardItems.swift",
+      "state": "present",
+      "sha256": "a4cbfcc09cc2bcd7c4b3050904537fd31465b61c8d3b7acfb671b4c70e00d8f3",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+MenuCardModel.swift",
+      "state": "present",
+      "sha256": "bf2baa400bb64f7c7e9c0cbfe7ae1dfa9d5523b58e26b5ea8b4b271c6340ef4e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+MenuCardRecycling.swift",
+      "state": "present",
+      "sha256": "63d5deae83a750fe7ee7ac88219ba98e9edd64945daea6f08048849af9de8d32",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+MenuContexts.swift",
+      "state": "present",
+      "sha256": "1db851812faf8bbfccbcd8a7b566590479dcd95b7dedb8db36305927f0da7f9b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+MenuInteractionRefresh.swift",
+      "state": "present",
+      "sha256": "adc52c9ee84d035b9a445b74f46fcd6c22367dd919d21a703ac742925675351b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+MenuLocalization.swift",
+      "state": "present",
+      "sha256": "edc8f64f46a250401f44dc8295fac79680654351d0bfb98bb73d83f3aa41b1ea",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+MenuPresentation.swift",
+      "state": "present",
+      "sha256": "c29df821fddbc6564b045c6a031c98f6043371bcea826a1a8c833eed2129618c",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+MenuReconcile.swift",
+      "state": "present",
+      "sha256": "cb6e2476a61b4366f9b81b3666768646a057793cc31ea11b58d3829f4a58645f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+MenuRefreshScheduling.swift",
+      "state": "present",
+      "sha256": "8d19d5674e32d476af4f4124e99192ff4cd5c32faecd98cb6a249e63ddc1c10b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+MenuRowReordering.swift",
+      "state": "present",
+      "sha256": "87b3e930187aacf6f297d5867de1c738df86ce83886f899a01c2015235ca4838",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+MenuSmartUpdate.swift",
+      "state": "present",
+      "sha256": "82b3cba114facc934fe23f27403f3aa75fcbf5f562656e3eb021ec40000bf332",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+MenuSwitcherWarmup.swift",
+      "state": "present",
+      "sha256": "5736eafee74feb2a8080d77cad417c6e7a095f6d4df02613f40c0e8b99a64aa2",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+MenuTextRows.swift",
+      "state": "present",
+      "sha256": "8472c4270e91004c0ea9cc7a7ca363670f69a8d0baa60fc66f008a9cf28189aa",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+MenuTracking.swift",
+      "state": "present",
+      "sha256": "60bcd1b3c2877ca24faad00e888b00ac9b8a97496d13cc540fc6f0fc1e06d7e3",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+MenuTypes.swift",
+      "state": "present",
+      "sha256": "00e72ad3b5539e41a5b9ba2d5557b855b031cc4730668091ea874cd5598f7edb",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+MenuViewportRestore.swift",
+      "state": "present",
+      "sha256": "77043b7087d2289da7e115e04ce31fa5bea1f6cc3fb784deee9d049df366df18",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+MenuWidthCache.swift",
+      "state": "present",
+      "sha256": "51d0b8bfb205eeac41a99f4bbf3f8698da934b6b8d78c9b41eabb8136f3c61fa",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+MergedSwitcherContentCache.swift",
+      "state": "present",
+      "sha256": "0edf5dbf6ac2769fd101e19a777e466a7cf06113b5e9dacfda3498e9a4e8b904",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+OverviewScroll.swift",
+      "state": "present",
+      "sha256": "e08918f4abdf766bf05db9108a3d3ba49ec7251151e33313e05a3352fc6bbea3",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+OverviewSpend.swift",
+      "state": "present",
+      "sha256": "07fa65e3786d78819da4aacf085876384c2bb065ff2310997483f5eec1324a79",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+OverviewSubmenus.swift",
+      "state": "present",
+      "sha256": "8d595fb6b2b7c607aeccb956aa3c382afd13109fae9781e57936dfddbf09a3a1",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+PersistentMenuActions.swift",
+      "state": "present",
+      "sha256": "54174cb2ea08a14bd946083c330d346a1d87b96cf98eae182c0a2a48778b9c15",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+PersistentRefreshMenuItem.swift",
+      "state": "present",
+      "sha256": "d8ef35094adfe2e9a2a96e7eb36ca8a03753aae552db3f1d70ec6c66e331de4b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+ProviderNavigation.swift",
+      "state": "present",
+      "sha256": "e9f7a432a21c497afb9c1311a8f6e15a9d8eb8e7a8945df10f8870386cd261d6",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+ProviderSwitcher.swift",
+      "state": "present",
+      "sha256": "9eecbd13eb738494c71b8932e529a521ac8ec65469b5bce3526c40c691b10736",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+Shutdown.swift",
+      "state": "present",
+      "sha256": "19a2301053a2826753192011339821f70e6b4ed3620862f96b83e5695a462f51",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+StatusItemVending.swift",
+      "state": "present",
+      "sha256": "112ff40ac6e8f82a763cbfa1f0517436914fd0f5a49263630dd2d8a409023273",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+StorageMenuCard.swift",
+      "state": "present",
+      "sha256": "e6c596633c420c7f06bf3a8bf98183f62ccd1126968014fee77a2e92d222f78c",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+SwitcherMetrics.swift",
+      "state": "present",
+      "sha256": "c18d2fc75871aadb33486ff2f2f5bed1100f06fc6b5619de502f93d2939cdbae",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+SwitcherViews.swift",
+      "state": "present",
+      "sha256": "11355d988fb365a9c85f2d7aaedffdb035f5ea1770aa744a0792e3379b7f9d84",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+UsageHistoryMenu.swift",
+      "state": "present",
+      "sha256": "b07b89204fe9d3fd86ec4c1dae3b7da9fc0690cfe9ab56cf447bf05fd750c55c",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+UserPlugins.swift",
+      "state": "present",
+      "sha256": "f3b9f12b6fb77e092b34e6a77ec4329ca3c383df9c3d05bb9aba1e0d883b4c5a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController+WidgetSnapshot.swift",
+      "state": "present",
+      "sha256": "16918b7096dbca4480cbf21bcd1cea05386f4dc4de3d8f4f8d3af8bb947d5163",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemController.swift",
+      "state": "present",
+      "sha256": "6d8f12a04af881f0bffc94085c260809190cc60cbb5fa4a3b1027799d59d7fa0",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/StatusItem/StatusItemMenu.swift",
+      "state": "present",
+      "sha256": "b10e65481d36ad4ddafd2b0f3129be3bcf6404152201acdadf022c86dd5c3722",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Sync/MockProviderInjector.swift",
+      "state": "present",
+      "sha256": "c574ce75721aaa5a8fb0d19f9a99391b19ed8e0d1b8e18f2c41ff70adc5480b2",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/Sync/SyncCoordinator.swift",
+      "state": "present",
+      "sha256": "948f8f412ecb26a86640b968c7a94ef5c9379e5e48f735cb6bbef69c4ee12797",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsagePaceText.swift",
+      "state": "present",
+      "sha256": "4b55424ac03998bee357ce03431a35cb8c3ecdebcdb228ec1fe96b912d7a403b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore+UserPlugins.swift",
+      "state": "deleted",
+      "sha256": null,
+      "mode": null,
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+APIKeyDebug.swift",
+      "state": "present",
+      "sha256": "9dae0815ec4858666b83d1e738bce6fce9c1fd0d1aac13edd10d85e4ec0ca3e2",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+Accessors.swift",
+      "state": "present",
+      "sha256": "e7dec1198730608951648838fa8ec966dfdd857272e160ce2e569bf4523a0f30",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+AdaptiveRefresh.swift",
+      "state": "present",
+      "sha256": "4c38890339bea7b380a12d0f676f1f26093df52ca2c0d93706fbe61bd7aaa528",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+BackgroundRefresh.swift",
+      "state": "present",
+      "sha256": "b553dd17446e06ea8ec41965a909135eaee6f7482e5995724660ebbad3ede34a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+CLIUsageCache.swift",
+      "state": "present",
+      "sha256": "08b5c568c95aafdced08b92a460aadf287a750043bb83e56efe292710287b4ac",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+ClaudeHistoryFallback.swift",
+      "state": "present",
+      "sha256": "551126b49cd0c4bbf403309c9b555bef15aaecb181c206725fe74752d61b7448",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+CredentialNotifications.swift",
+      "state": "present",
+      "sha256": "728c5417b2841af73d434e5d17dd138023e1149f4cc5453e21a50084f5a8fac5",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+HighestUsage.swift",
+      "state": "present",
+      "sha256": "988b8e7e679b2589fd607ccab7cfc00c1d2d32fac341d72ed699d8377f39ea96",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+HistoricalPace.swift",
+      "state": "present",
+      "sha256": "06343ba13a9b4bd785eba23a7c45481ba3d99e3bd14b37c5b802446211f91b92",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+Hooks.swift",
+      "state": "present",
+      "sha256": "738261a0a2b10e49c230ff83b5f0dcd649f742385216c168aca14d39b63ea99a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+LimitResetBoundary.swift",
+      "state": "present",
+      "sha256": "c4a41b385b1e4032fa3ff8dd97f7c98ede18af294637fe7f7760a4a52f52a9aa",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+LimitResetCelebration.swift",
+      "state": "present",
+      "sha256": "b98c8612152a690808a83aa07783ba5336fb0fc475e87c38843c96b2575727d1",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+LimitResetIdentity.swift",
+      "state": "present",
+      "sha256": "052ad8a608bbd1dd06110804ee1644ecf74d1977b67d89d05cd7c924ca414d08",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+Logging.swift",
+      "state": "present",
+      "sha256": "3b483d4b54256cc86d1603284ad5f901ea51b983c5e861d1632abc19135f0737",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+MemoryPressure.swift",
+      "state": "present",
+      "sha256": "9e3fb0a8933da96b95505b8322846f07b674f338c7e99bf10c6e0c354eb19c9f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+MenuCardModel.swift",
+      "state": "present",
+      "sha256": "e7195ab1130d42590321530780dccca7c921237adf19a079dc54e0e9b817e300",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+OverviewAccounts.swift",
+      "state": "present",
+      "sha256": "102ce562d80e3e28940e781941d7383e18773ee19a0d943e5f381e1c5df55762",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+PermissionPrompts.swift",
+      "state": "present",
+      "sha256": "cf0d6f03042c60dcf08f55dfbde67560f9d49f6e01444e9392d70dc65a7888ba",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+PlanUtilization.swift",
+      "state": "present",
+      "sha256": "b4387f33d37215f46e67d3998340a27c14e841aa549fd9d85615da0228d0ecb0",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+PlanUtilizationLoading.swift",
+      "state": "present",
+      "sha256": "ef9ef2d62d033619991cb71a648db1b998b08286e4a4a72b6435f86b8c8628b7",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+PluginSettings.swift",
+      "state": "present",
+      "sha256": "afc06873e65c9a6a0c88fe28f41f350161876fc42858f6d96559bae77b013387",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+ProviderRuntime.swift",
+      "state": "present",
+      "sha256": "9c608c552641f3701a5ce3424d98d4f61ea0029f95958444880f6e3cbb508b77",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+ProviderStatus.swift",
+      "state": "present",
+      "sha256": "4469132ea849796bc6a5ddda6c4a86fc5ff8b1f15b732861203aaa42f3eb3793",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+ProviderStorage.swift",
+      "state": "present",
+      "sha256": "c65b260255d77e20f2329c31074de28fdc1edae3dae57bd84d0e7faa92d403ee",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+QuotaWarnings.swift",
+      "state": "present",
+      "sha256": "9640b023f7a5557d885af8a141fde5399085fb450163db5b230bb729f1233cc2",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+QuotaWindowResets.swift",
+      "state": "present",
+      "sha256": "ffa59969fd12ed199eb8675a693d64263b05f669758b0b269083f01ea48943c9",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+Refresh.swift",
+      "state": "present",
+      "sha256": "54bba8a94ab233021c0b4f66e059c314b440fa6273ea208a7267d7b140fb6fdc",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+RefreshEnrichment.swift",
+      "state": "present",
+      "sha256": "b10166dabaf417f611afe6272e954ce211803cfcccffdf4d051ab3b80fcb712f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+RefreshNotifications.swift",
+      "state": "present",
+      "sha256": "7165c67a6be12b7206762d618a1831d28ecaa64f430d0fe2472955afc98931b6",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+ResetBoundaryRefresh.swift",
+      "state": "present",
+      "sha256": "902964d738d0f4e731cccf4bd400cf226e118954690ea4deef5e6a9245693d76",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+SessionEquivalents.swift",
+      "state": "present",
+      "sha256": "4f7998342cd83759eab0ad492c22cc5bdfa357d2c5bed42becadaffa089846ac",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+SessionQuotaTransition.swift",
+      "state": "present",
+      "sha256": "43da4daf3efa96cbc0efd4bd1bcf2a99a781f9852c4f5eb3d82c7aa57790c7dd",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+SpendDashboardPublication.swift",
+      "state": "present",
+      "sha256": "79e60497bd4fee7ed8034e673e9ae88bd0eb3cd5d3b2b73261c0d0a489b248ec",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+SpendDashboardTokenCost.swift",
+      "state": "present",
+      "sha256": "318d2ea7c11af125c2276f3b00bb590475ba0b11549e9b9d662320fced745345",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+SpendLimit.swift",
+      "state": "present",
+      "sha256": "cfc25e0ef622bf279579f312e32b63cd7878daf23312bb37748962dd084abc5b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+StartupConnectivityRetry.swift",
+      "state": "present",
+      "sha256": "8b7ea132f9d5299fad2f961de73b82aa341f28c2deb9069e373ec5c1242e0192",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+SupplementalUsage.swift",
+      "state": "present",
+      "sha256": "f0106b9d4e8221815494e326bca002ed06e0c9d5fd4c578c2074aa82222884db",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+Timeout.swift",
+      "state": "present",
+      "sha256": "34967c524fbd12ea2ca8e6d36ca5737fc6ea5dd34905d1ef85588d5639616f5f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+TokenAccountCacheKey.swift",
+      "state": "present",
+      "sha256": "f2d5b08006a9f655dfac362ee14bf44700699150e340649d37586b1becec3dbf",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+TokenAccounts.swift",
+      "state": "present",
+      "sha256": "c0c07c131657b28c5f0fd4144c5197439ff8705ffaee4f335026c0bfa24c025c",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+TokenCost.swift",
+      "state": "present",
+      "sha256": "1907951ea923ef4a984fcf8507507a443744b749d179f8a92c3b145e104c055e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+TokenRefreshSequence.swift",
+      "state": "present",
+      "sha256": "eaa1b862ad3df39fbd85571d7eb7b68ba2dc910ae29a629190295c50368504d0",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+UserPlugins.swift",
+      "state": "present",
+      "sha256": "072b0b54d99d4b1307361a7fdb31b36a57a30ea873f80776c2662fcba1fcc160",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+WidgetAccounts.swift",
+      "state": "present",
+      "sha256": "2d6310245d5d136b77fc140ca1b14ba8c4350b7a10c64ac3b88f5067a8a91a13",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore+WidgetSnapshot.swift",
+      "state": "present",
+      "sha256": "3619cf3e31c211ebf8caf064993a83fd9662c647e79c116c2b6909dd9e1b6c1b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStore.swift",
+      "state": "present",
+      "sha256": "4f407e9a75d0052cf465bfb7f50b14fb7112a090c400baba1c19d1f549d66f6e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBar/UsageStore/UsageStoreSupport.swift",
+      "state": "present",
+      "sha256": "8ed94410ddbc125cc1efc812735f729c74bd9dce9a20033b0623e8bea3560543",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCLI/CLIConfigClearCredentialCommand.swift",
+      "state": "present",
+      "sha256": "41152d0991ec484a7cc40e303e07448635bd8ab7b244d31791aa1f8889552221",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCLI/CLIConfigCommand.swift",
+      "state": "present",
+      "sha256": "bc42f96d250cba226bde1903acb6c9d0f7dffee22529d4c2c6ef60c9de1ca9ff",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCLI/CLIConfigCookieCommand.swift",
+      "state": "present",
+      "sha256": "70fa2b34ddfec3337d710a4387294d5c2f6b1cc845d5033f96be6438f0d14601",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCLI/CLIConfigLoginCommand.swift",
+      "state": "present",
+      "sha256": "559586623142192e4fcca48532c589bbc43af01fab8662d1e8524fac05835f28",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCLI/CLIEntry.swift",
+      "state": "present",
+      "sha256": "b318352da7964df6094d106193bd023d711246aa34fb62068d12b841bb3ebe1d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCLI/CLIHelp.swift",
+      "state": "present",
+      "sha256": "da38b21b25af81592ffb3986ab6be6811cbcde966641d6a57406fd53c1ae28e1",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCLI/CLIPluginsCommand.swift",
+      "state": "present",
+      "sha256": "600ee3ac270e5b3a328f8c5b30626dac8840d2b1acc05c57a05d6883548ce3c6",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCLI/CLIServeCommand.swift",
+      "state": "present",
+      "sha256": "4b513beb99ed33fc9765d6f5787cd40682eaa1b99e1db801fe744276c564b55a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCLI/CLIServeProviderIcons.swift",
+      "state": "present",
+      "sha256": "9bebae7b1c7a41c5ba10f66ba3a21d965bf2184b565b61408a536026e29ea1e1",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCLI/CLIUsageCommand.swift",
+      "state": "present",
+      "sha256": "7fecfb686c39744e8f96c95d065526722111229c15ca68cf855e26f4cb3ce539",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/AccountMenuLayoutPlanner.swift",
+      "state": "present",
+      "sha256": "56841fc6c11a5f24443b9f9a1e53757092266d60ba19a7fa98f115aa2073f6fb",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/ChromiumSafeStorage.swift",
+      "state": "present",
+      "sha256": "feab25af0f8cfe15dbbf604f43cf5f7baabc1140fddece55949cfd6b713587f8",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/CostUsageFetcher.swift",
+      "state": "present",
+      "sha256": "a4f23a1ba5ec779660f26633c41f4051faf27527126427cbde1d58b652a4bbe1",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/CostUsageModels.swift",
+      "state": "present",
+      "sha256": "285643e08d7dd82e4b578f6d8badc47db9452808b239aa2819435ee90f429ead",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/CostUsageSessionBreakdown.swift",
+      "state": "present",
+      "sha256": "b3c006f2b8cd97814995811d77d97be94e0534cdeaec887fca6ac044f9542809",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/CostUsageSessionDetails.swift",
+      "state": "present",
+      "sha256": "b54d4615896fc6c275fe467a852d89de847858e34ba19fce0ef40a6b8e5341e3",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/CostUsageSessionTurn.swift",
+      "state": "present",
+      "sha256": "7095ed592e92360ad69f85d2e474b11f1e5e70e40dca9c2f6b67f35624cccb55",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/CostUsageSessionTurns.swift",
+      "state": "present",
+      "sha256": "835c6aaec4a805e32ecc7fb8c8d604ade7d46d6e16ce8112eba06e4d76bc1607",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Generated/CodexParserHash.generated.swift",
+      "state": "present",
+      "sha256": "4534b7331d6f71e798f44649dec4965f090ba6654be7f1fb07880c2a9d526138",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Hooks/HookRule.swift",
+      "state": "present",
+      "sha256": "b8ffa75128504419dec5ce687f6d6dce71173464e3e6d28f0dc31bf06429dccd",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Host/Process/ProcessPipeCapture.swift",
+      "state": "present",
+      "sha256": "aff4491fb8a42604bd25146f6a776b72d15caf5e8774fa07546fa361307ca95b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Logging/LogCategories.swift",
+      "state": "present",
+      "sha256": "066b3b6ee1036976c1892b8205487286a7c207737974cae93bff167b3571c9a2",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/ManagedCodexAccountStore.swift",
+      "state": "present",
+      "sha256": "fe44fe7aa40722b59ef549aedb7f40fd202e63ac9441fd7eeac9874d9930ca3d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Plugins/ProviderPluginManifest.swift",
+      "state": "present",
+      "sha256": "83df42955b6da7936355d99ea3cc5e4fc9b4f4441657d102df1dfc166686cc8f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Plugins/ProviderPluginRuntime.swift",
+      "state": "present",
+      "sha256": "b18a49afec221b3737cf3d29c11c21509656b49f9ea8f1e57c1769114be9cd43",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Plugins/ProviderPluginSnapshotMapper.swift",
+      "state": "present",
+      "sha256": "8f1111180a3d38f54c3f16b64a8b06712bc4b4a6dd0f9faa7abe635616f26c74",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Plugins/UserProviderPlugins.swift",
+      "state": "present",
+      "sha256": "547da2800773aa461272ed049b2ebc7bc693627e5ba4948eb3d809d402d16411",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/ProviderDetailSection.swift",
+      "state": "present",
+      "sha256": "c9102c8bea2817c47bfc57f594ec14916b60d6cb620a1f8e66623978438c5433",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Abliteration/AbliterationProviderDescriptor.swift",
+      "state": "present",
+      "sha256": "a6c5317f4c89d15f3f755b7631f87c79cf67ba9f9a2675b54589290928b84156",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Antigravity/AntigravityCLISession.swift",
+      "state": "present",
+      "sha256": "b936c462ff0f03a464e437b854a4d10d94de6931da344c0cb93291c4411cde5b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Antigravity/AntigravityLocalSQLite.swift",
+      "state": "present",
+      "sha256": "bf5e6d36cd89dd78125b1cd84031de57062bf9c7d173c5e0323e2807aed9a988",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Antigravity/AntigravityProviderDescriptor.swift",
+      "state": "present",
+      "sha256": "af6bfe2725b3d5ac5be848a10170d579cf1c27f56275a0f2fc9c26dec852c650",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Antigravity/AntigravityScopedPrintFetch.swift",
+      "state": "present",
+      "sha256": "a11934fae43b9db4783be458d39722f8dc11ca3952cb628afcb81731ad232053",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Antigravity/AntigravityStatusProbe.swift",
+      "state": "present",
+      "sha256": "e9552908ca1e9ecc345f354d401dd6d0f702c4cd6d8de18e9db61fc29fd9ea6c",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Chatbox/ChatboxProviderDescriptor.swift",
+      "state": "present",
+      "sha256": "e11cdef482d420b5b3da220726ef538b418b733dd7ba0db96c9450545771c14b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Claude/ClaudeOAuth/ClaudeOAuthCredentials.swift",
+      "state": "present",
+      "sha256": "e4a8751ceeea552351933907c0029a388ed798f635f4a36088411f2e9ca2dcab",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Claude/ClaudeProviderDescriptor.swift",
+      "state": "present",
+      "sha256": "407a3d2560f3f67c43a54f465217e90bd603c2e5aa1210fedac738620203a9d7",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Claude/ClaudeUsageFetcher.swift",
+      "state": "present",
+      "sha256": "c552500f798d7fa4c9713cdc6ca072ed1efea518ee33225a6293d7013fb04af2",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/CodeRabbit/CodeRabbitCLIProbe.swift",
+      "state": "present",
+      "sha256": "352f0bc60c873452d226536e9f1bfc61a49b55f646a7dd26e1a99c5977526e5f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Codex/CodexAccountPromotionExecution.swift",
+      "state": "present",
+      "sha256": "71d6a8451c047fb80b06ca8fc770522d9275828c794c47679652ade0e5d9e080",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Codex/CodexProviderDescriptor.swift",
+      "state": "present",
+      "sha256": "1d03d553a31af3f6bea1fc673bd9d2125d8b24aba0ee521adbf5fe58c3255c99",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/CommandCode/CommandCodeProviderDescriptor.swift",
+      "state": "present",
+      "sha256": "6d3915b0b0caeaf10dbd6c4780677550ba640991cb67d65731a01e4335de023d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Copilot/CopilotAccountIdentity.swift",
+      "state": "present",
+      "sha256": "d9f1cb7922ee95a33035dd7aec1993b52b96d24ce51155ed5b24d5216433a0b1",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Copilot/CopilotDeviceFlow.swift",
+      "state": "present",
+      "sha256": "7ab319ba465567312d39a4ab3d60ab0eba329b8a0022e09e8404de3feabd6bf6",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Cursor/CursorAppAuth.swift",
+      "state": "present",
+      "sha256": "e46849811d362c86cd83874b2016eebcd4e5d38ed527a1dc5df0125de849c09a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Cursor/CursorProviderDescriptor.swift",
+      "state": "present",
+      "sha256": "b739111cab321890c695788baff215bf77bac7d31d4bc99008881cada5050573",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Cursor/CursorSandUsage.swift",
+      "state": "present",
+      "sha256": "28bbd9abe433382091fef1f98b2bf2684e04f26e54172d96eec77bcf45b0f71f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Cursor/CursorStatusProbe.swift",
+      "state": "present",
+      "sha256": "dc1105ce9b3a3dcd6ed47bf1501676ce2baacff79ab3b1f11931b084fa130ead",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Devin/DevinProviderDescriptor.swift",
+      "state": "present",
+      "sha256": "acf0481c8c8633be6a1f6f19e1559b66fb685c635c774e5226a20dc07d1ad5c2",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Grok/GrokProviderDescriptor.swift",
+      "state": "present",
+      "sha256": "64e3484d11f1ee6fa383a43d1738ec8996618e0c75025f5150337acb0fd09350",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Grok/GrokStatusProbe.swift",
+      "state": "present",
+      "sha256": "bc920636dfe42b8d0993759ce2f261b9b9e1d2875123c1900c3ea206260572ad",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Kimi/KimiModels.swift",
+      "state": "present",
+      "sha256": "cd1421ff31443e3580ce021e4d5a1724b57ab3887c756dbff257916da0e5349d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Kimi/KimiUsageFetcher.swift",
+      "state": "present",
+      "sha256": "9807ed33751de6c2dfe9c69b06add3d703d86ce45f54d996432b72726bc48125",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Kimi/KimiUsageSnapshot.swift",
+      "state": "present",
+      "sha256": "26d015840f0845e5f8cfc814b9613962f27ab2001d0c7909383f50d468fa3ca8",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Kiro/KiroProviderDescriptor.swift",
+      "state": "present",
+      "sha256": "5b03a29a5aa36cf1ba9afaca70cfb12805ee8de2480a405b69f9cef3669089e7",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Kiro/KiroUsageLimitsAPI.swift",
+      "state": "present",
+      "sha256": "dc6c5228b620591981e7be58da5ad75105c5cafd995804d9cbf659288253036b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Mistral/MistralProviderDescriptor.swift",
+      "state": "present",
+      "sha256": "f722d9911b38579f16441e4bb407a0a0ee2c39c6e10051f2828f1af768ff23d5",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/OpenAI/OpenAIAPIProviderDescriptor.swift",
+      "state": "present",
+      "sha256": "39012f505ca7b288cdbbc837111d5f11ca20a466687139da2c75918fd3a8546a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/OpenCode/OpenCodeLocalHistoryAdapter.swift",
+      "state": "present",
+      "sha256": "41524813bc0a21195c8c1ca97938f0db8b221ec78a9194aa5ae9806aa3c1482e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/OpenCode/OpenCodeLocalHistoryPublication.swift",
+      "state": "present",
+      "sha256": "3a6c96334488cc7911431ff759f0eb344b4afd332c6160f2d0c469888bf8e775",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/OpenCode/OpenCodeSourceCheckpoint.swift",
+      "state": "present",
+      "sha256": "8a4d4c8fbf4767737087b2bf21d052a512accb5fbce1c08f84c6f052ec2eb6c7",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/OpenCodeGo/OpenCodeGoLocalUsageReader.swift",
+      "state": "present",
+      "sha256": "18b0ce70fbbe912dbf8b0d660fb03eef735f91d267e9a42b4dcda69bd0987fcd",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/OpenCodeGo/OpenCodeGoProviderDescriptor.swift",
+      "state": "present",
+      "sha256": "979f85498ac7bf3a82801d30aa11964b655b024b6129f43f61ffda23288beac8",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/OpenCodeGo/OpenCodeGoSettingsReader.swift",
+      "state": "present",
+      "sha256": "0b362016f024cac75bcb82d5a314d31c39c0e6db196d9654919104fd6d6c60aa",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Pi/PiProviderDescriptor.swift",
+      "state": "present",
+      "sha256": "eb75efa757cf0f600e4b29fb78d3f072021b62594815f69b10e585ad0424fbe4",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/ProviderCredentialAdapter.swift",
+      "state": "present",
+      "sha256": "720026a1c6837d2525faa6fe107149f5e7d32525138b8a6be4a0031b8f7d3755",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/ProviderDescriptor.swift",
+      "state": "present",
+      "sha256": "07adddb560eb213efb441ed85dfdc491086bdc0e02492debc8ad313e8630a080",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/ProviderInstanceIDAliases.generated.swift",
+      "state": "present",
+      "sha256": "49c704b673cd45e941058f482a4c5ef7966abbf1c50fee8ec705f847f775a6f5",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/ProviderManifest.swift",
+      "state": "present",
+      "sha256": "c37ccaa6b62e057d09b2cf22a79a3a0795c6a73b82d2153b171efb27570db35a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/ProviderSettingsSnapshot.swift",
+      "state": "present",
+      "sha256": "4994370efae711a711c86e28afc645033de24ebbad3fb9268b270e1013983da8",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/ProviderUsagePresentation.swift",
+      "state": "present",
+      "sha256": "b7030d2307f45d6a29c661319d4456a8e8d665f02c16b2eed62eba1f83369113",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Providers.swift",
+      "state": "present",
+      "sha256": "21e134ee88458e30d38f4cbc4d3eda33b0c45e4eeba4127b047d19aa1c54c5b2",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Raycast/RaycastProviderDescriptor.swift",
+      "state": "present",
+      "sha256": "c32306c959c81b46d777a46a96b2c3acbcab11ea57e8d8aa0662829ddd09ddf4",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Shared/AliyunOneConsole/AliyunOneConsoleChromiumCookieFallbackImporter.swift",
+      "state": "present",
+      "sha256": "da3db6e9232d26552cb86c272e66fd9b0f585430f356268eeb4194aa58ecd814",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Soniox/SonioxProviderDescriptor.swift",
+      "state": "present",
+      "sha256": "ea8aa280e8498d31d81316fe5cb618a78aae3848e54252f1d04bf2be5f5164bd",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/TraeCN/TraeCNProviderDescriptor.swift",
+      "state": "present",
+      "sha256": "3f8dac3dbf7839c72ad96bd87f944c5da985c500b349072e154749a56cbeb494",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Providers/Windsurf/WindsurfProviderDescriptor.swift",
+      "state": "present",
+      "sha256": "b282e823f64c4e74058aee1868d2f3771c1c85ac0c734139744d034203ccf6a9",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Resources/Plugins/abliteration.js",
+      "state": "present",
+      "sha256": "16982dfb14ae7e1181c688f5084e6b17ea84f72a28c1a98623ebc03c1dff5516",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Resources/Plugins/abliteration.ts",
+      "state": "present",
+      "sha256": "36cf9e3a7bbc71af4b8141538c8380e7cfef67c40b0bd6bc59424781f34c5f45",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Resources/Plugins/chatbox.js",
+      "state": "present",
+      "sha256": "cf0ae84410aa3794635c0df1edf4936ae514a070968a189dc6ef613c5445f957",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Resources/Plugins/chatbox.ts",
+      "state": "present",
+      "sha256": "73502b862f5b75b30ab9b0da617de5fa4161ffecf4886864e44af3f3b9117420",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Resources/Plugins/codexbar-plugin.d.ts",
+      "state": "present",
+      "sha256": "873d7e6d82783e01794f2161027b16e97ae23a6429ea8e44c12218c16ebf04ff",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Resources/Plugins/futureagi.js",
+      "state": "present",
+      "sha256": "48c4e8b36e4556bc56dfe16f954e180aba0e11fb4111e382049fe015b4340c42",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Resources/Plugins/futureagi.ts",
+      "state": "present",
+      "sha256": "c23ef1992ec9490cb0bfd12910c284e11e4df82bc3c0021bb9f7f2088a8d5465",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Resources/Plugins/notion.js",
+      "state": "present",
+      "sha256": "31edabe229ca5dc6d033589bf63e45ccbaa339bc6ee95f95f9adf64cd33d0eda",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Resources/Plugins/notion.ts",
+      "state": "present",
+      "sha256": "2cb1dda5f16eb19caf567882b01fa971a016527cedd2c2a87df90a4045cd9833",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Resources/Plugins/soniox.js",
+      "state": "present",
+      "sha256": "205af76549b697bc66a8d1a16008463310c2ee218e4d9c5f44edbb7b2ceed0b0",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Resources/Plugins/soniox.ts",
+      "state": "present",
+      "sha256": "0fbfa12184a32721a537a14d92415b9fb729fa859a697f6c4b8783d56177a720",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Resources/Plugins/tavily.js",
+      "state": "present",
+      "sha256": "2859e56104c9e73d2650b87e034c5f2955c09ea7507e128a22e1ab42b5ae35a0",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Resources/Plugins/traecn.js",
+      "state": "present",
+      "sha256": "045bf8cbba44d779fc69a1ddbd14598a1d1178f265be875336b36b261af5604a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Resources/Plugins/workbuddy.js",
+      "state": "present",
+      "sha256": "9da73ec195a174e3ee96e3096a47db0b69295bc52dcfceb9fd9d1a2b8f74b08a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Resources/Plugins/workbuddy.ts",
+      "state": "present",
+      "sha256": "8f6a6973ede3e03981c11e8d03e76d56cbcf3a6ab22ec7ba6766fcd4690f31f4",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/SessionToolActivity.swift",
+      "state": "present",
+      "sha256": "75e533256570c5b1770122130762c19194b3ce724feff81f50bc0cca9b07a9d2",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Sync/AccountIdentityComputer.swift",
+      "state": "present",
+      "sha256": "74e8182c27f1d8b07922e15006b36e781f55e7122354e9df6cd0b40126ac65bc",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/UsageFetcher.swift",
+      "state": "present",
+      "sha256": "3610c046da2cf5ba005c7b39e31c29b5b6d61ba8eab2ce419b664b1a102186ba",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/UsageFormatter.swift",
+      "state": "present",
+      "sha256": "9cf97da4d4ca711fe9b641d003a90c60d1c4809bad6093dfeb4e87a536991d0e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/UsagePace.swift",
+      "state": "present",
+      "sha256": "b1fc539f3d4e69a680fb445729a4722d4ad7da3f6e3a6257c447d8b16376e6fa",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Vendored/CostUsage/CostUsageClaudeCache.swift",
+      "state": "present",
+      "sha256": "7ac2150dddd5ab13d2f4fca2ad2849274a33b60217202d3bd6fead7123406ec6",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Vendored/CostUsage/CostUsagePricing.swift",
+      "state": "present",
+      "sha256": "369754756ab88c810394c9ce13feaa794dd805784e6b051ef99ea1f1c0d7a31c",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Vendored/CostUsage/CostUsageScanner+CacheHelpers.swift",
+      "state": "present",
+      "sha256": "bb186f7f823f2fad87a64812f6efaa74616fd0d74a03fe0d075285f38e48a7f1",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Vendored/CostUsage/CostUsageScanner+Claude.swift",
+      "state": "present",
+      "sha256": "d025be7fd754ab4a951d38b67098a97292a238878a1a2820b028845a47ec6fcc",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Vendored/CostUsage/CostUsageScanner+CodexPriority.swift",
+      "state": "present",
+      "sha256": "06af280dc2f863344b08bf10e8b66b2e90d7c0cecc88b991301043c253eeed8f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Vendored/CostUsage/CostUsageScanner+Projects.swift",
+      "state": "present",
+      "sha256": "f0536dfe6bc9a1a70d82799e12a8d7f9ecf7e03642a2cdfacd73478dd9a02ea6",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Vendored/CostUsage/CostUsageScanner+TemporalBuckets.swift",
+      "state": "present",
+      "sha256": "3430f8520ab1f1ed33774aeb665dfc2d5c8a87b34a6e38f7c69f1c3e2789862b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Vendored/CostUsage/CostUsageScanner.swift",
+      "state": "present",
+      "sha256": "2a0f5def37ae5d9579aff333c1b1952e35b8864b87783e0e9c822a3d2309ecc3",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Vendored/CostUsage/CostUsageStore+CodexBaseline.swift",
+      "state": "present",
+      "sha256": "f4a4604e741c9e3cdf460f13273dd6c895daf9b98725fbfceb97d9248acedef9",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Vendored/CostUsage/CostUsageStore+CodexCache.swift",
+      "state": "present",
+      "sha256": "ed22f16249a8040f060de7376518d8e8e7a7f6ae46b22db62230b098e60e59ad",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Vendored/CostUsage/CostUsageStore+ReadView.swift",
+      "state": "present",
+      "sha256": "c5a02f6f911427e6142893c5c976662d0fa97bd434f4a729c004303ac9ff0fc7",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Vendored/CostUsage/CostUsageStore+Reads.swift",
+      "state": "present",
+      "sha256": "c4662e536caa3f3947d0fc3578180860cfe0d51111e06453e1ea90cb9920df6f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Vendored/CostUsage/CostUsageStore+Retention.swift",
+      "state": "present",
+      "sha256": "65fd48431f732696adfe7a6efb5fa0590ecd6535ce382f178dd5bc2fa1a28687",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Vendored/CostUsage/CostUsageStore+Writes.swift",
+      "state": "present",
+      "sha256": "9eb04a32b80b28840422de596d6257baa0aed52a17a9f070a906cc6c35cbcdf4",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Vendored/CostUsage/CostUsageStore.swift",
+      "state": "present",
+      "sha256": "c8c3fc5a484c4a8df6f5b1100ebdccd0096eda1a3835e539e28b30149fb808eb",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Vendored/CostUsage/CostUsageStoreModels.swift",
+      "state": "present",
+      "sha256": "1a1b6f1e8d01f27520020dac44839ec2c1dba52d5ff5297ad914f5236d8b7374",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarCore/Vendored/CostUsage/SQLiteIdleDatabaseState.swift",
+      "state": "present",
+      "sha256": "52c1ce74a4370575d490d19be32c35786facc1b92d7b7b39db938707b28ccdfa",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/BurnDownWidgetProvider.swift",
+      "state": "present",
+      "sha256": "86400ac7c2cc2be383d3e0ace1b18eebf2e0f2304604bf8a61ce0240b4eabc7b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/BurnDownWidgetViews.swift",
+      "state": "present",
+      "sha256": "12f7a3173dd75e510443981ba386c5f5e6acdf0785adad874a61d616025c0731",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/CodexBarWidgetViews.swift",
+      "state": "present",
+      "sha256": "9ac9fc380be4036e0bf5d7df51689da096807d3d60934256e419752ea5ce9ec2",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/Resources/ar.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "04f162616f675ac98f5c66f9fc53ccbc80350c2575ed78fac8fb4e1fdae5d5d6",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/Resources/ca.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "db9c03a91a3959362be44065d3bc1fe79f31977e8ef3d0ca6365ded4298b8307",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/Resources/de.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "b6c15676790145502d9064fc5d3ae7a1e8c3d4f799f2340817a5477a14467ef8",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/Resources/en.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "8d3073712b54a816a85877004ad12f141250302bb42bc89252233c6f7f7f8fb8",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/Resources/es.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "df99e7794d9240c3ca8842546a041db57fe9d512774a33f361230d19259f546c",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/Resources/fa.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "c861a11aafd8ce69cc05f4ec718c2fa5261c413f3cb3aa420c0890a72b382944",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/Resources/fr.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "a483e18bcee477009969c89340e332c0cf6ca33c3ba85e0966d8de8215f42438",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/Resources/gl.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "e00916d580e135abb75e6ad9c822eb2a3491481fc75540e399026dc5c7e9acd8",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/Resources/id.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "1307bc23978048cfa90b0bcb3462102e83f0a20b7f514cd24833a2da0560c5c0",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/Resources/it.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "14444586e12cae783948d1d60d7e1710c10ab9861ed5ca9bf80440c545f80c94",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/Resources/ja.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "61ad895390bd77f0c133a267b0f45c891e0d1850612758718102890d1d7c7439",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/Resources/ko.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "e330f2568506e03e2d2881052382db7cccdaaef1c76737ef5eef60bfd5d63b5f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/Resources/nl.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "675c95fc27c91a665288a391ce0906d794e1ae3020d70d4a4e0e8dc861912f7b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/Resources/pl.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "b5b9230ebadb796ae847d6a77f79f690b1abddb3b80569ee604e0c3f9c41c853",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/Resources/pt-BR.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "773b032b009302f1a77633565f7a9afef7b5b1136afd8f5f3dfd20baf204f160",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/Resources/ru.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "ac9d17e54824e72d624435362dfe4f9ebe9fc70a79f500fec9a11ee084efcd0b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/Resources/sv.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "06330211ddc999108b3ea0579a2c62e3a05487ab05d9abaab135ef5c32cdf5ac",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/Resources/th.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "e791759c67dcfce13680db160bc53469504e80bcb0b0aa3faefce85a725ca2eb",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/Resources/tr.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "b49c2b7c799a47cd061691d38beb2062e7e6ce4efa08c86b8a8d017d71e07f99",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/Resources/uk.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "4c08eb604f7f1bb0452f5a6c5750eb4298a6effe8a75eaed32e8deabe42e2676",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/Resources/vi.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "405ea81e7414272eb4b7ac17ace4bbfe9bd0701281108deeacf1fcac50da34e0",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/Resources/zh-Hans.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "743a510fbd464520d2b452f5656c3ca9cbe9bf01686772a9773be60342a1fe5c",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Sources/CodexBarWidget/Resources/zh-Hant.lproj/Localizable.strings",
+      "state": "present",
+      "sha256": "9ed0faf2bdeb302d862408f3d3f782818560facd5ed33a963d8ac13903b922a8",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/AbliterationProviderTests.swift",
+      "state": "present",
+      "sha256": "1fb2f36e3072e6ed95aca8076c35881b9bad2aabf4991e19d8190490d2c0d7b7",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/AboutUpdatePreferenceStateTests.swift",
+      "state": "present",
+      "sha256": "48c3b553c54a8fe63e23a5ade47dc340593ad2395b7a55618e449b1ad9ddcd51",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/AboutUpdatePreferenceTests.swift",
+      "state": "present",
+      "sha256": "553a2b6c7dd859463cd7b4ea675b4edac363d719f793e4736ca5d45bfbaac7ee",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/AboutWebsiteTests.swift",
+      "state": "present",
+      "sha256": "7077dc1ee45925242569a3a53a039d451617215325a5421856c9da6e41757e48",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/AlibabaCodingPlanCookieImporterTests.swift",
+      "state": "present",
+      "sha256": "e8691f4e714b1e097fdec6abf89d8492d2aeb919b869460baf50bc9058cff853",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/AntigravityCLILaneParityTests.swift",
+      "state": "present",
+      "sha256": "fd76e822d285e261252b9da743c3e084b7c69ba83ae61b24e36ec077e3473aae",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/AntigravityCLISessionTests.swift",
+      "state": "present",
+      "sha256": "c6e36ae393662bc9e425eba606b598d296705703714a3ee65b80c0471314ce31",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/AntigravityCLIUsageReportTests.swift",
+      "state": "present",
+      "sha256": "c1cf6fee00ad8d5b575339c32f9fe9614633ec8c4ba6d416ca8d2c22d2aa51c6",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/AntigravityLocalFixture.swift",
+      "state": "present",
+      "sha256": "4856569f59252cbf274a27a3b6ed184d43ad99ae178f1575aaa3ff6928081050",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/AntigravityScopedPrintFetchTests.swift",
+      "state": "present",
+      "sha256": "f6560b19c09d1fa37e139d964eff58551b586ae6357a35f03c9b356fcdb9a77d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/BurnDownCapabilityTests.swift",
+      "state": "present",
+      "sha256": "4996e5a5dc115dd2de214d0d7bbabcb094d9dd80b0fe0e80abd7b0b4eda8728a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CLICommonOptionsTests.swift",
+      "state": "present",
+      "sha256": "49a982d0a39ee186e29aa6b45fc16f1f7275263a26bc810ee341d361c8d09e6d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CLIConfigClearCredentialCommandTests.swift",
+      "state": "present",
+      "sha256": "4c922e9b1880b5e086f131880145cdc47c19edeebf05f72d584d229282cc907c",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CLIConfigCookieCommandTests.swift",
+      "state": "present",
+      "sha256": "f7721efe648fb01533ab92951843e9d703fd91a39ae31bf25507e864a97d3c1e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CLIConfigLoginTests.swift",
+      "state": "present",
+      "sha256": "67d9d7fd697eb53d3bbf34712ab8efbf958463da80cd749f9e12bb4c45648c23",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CLIEntryTests.swift",
+      "state": "present",
+      "sha256": "a875fe02172ddb487c34635432bf71f3f628681be10dbc6ad2409ed46d9f0012",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CLIPluginConfigPreservationTests.swift",
+      "state": "present",
+      "sha256": "e93a5dfb4619bd92155592c840c44ab37eb40732c3e1a1bf13d80fce96131919",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CLIProviderSelectionTests.swift",
+      "state": "present",
+      "sha256": "62b29cfd53f629e77e73142686090f6c9aac3cd621b973403b7f20030f5c552c",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CLIServeDashboardIdentityTests.swift",
+      "state": "present",
+      "sha256": "f0bd79f1d5f7445e949eeecf2f603033439e48aa439be580eb77b833ae7645d4",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CLIServeRouterTests.swift",
+      "state": "present",
+      "sha256": "1864f41c4401d7bd4be07db4eb025730754b5822385bbbbafea45b91e81e574a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/ChatboxPluginTests.swift",
+      "state": "present",
+      "sha256": "802c0330b1a5862e51b678675ad997e1ee743604515e8ce89825b581da21e8b4",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/ClaudeEmptyQuotaAvailabilityTests.swift",
+      "state": "present",
+      "sha256": "1ab988aeba02d2d07086774a7492646427e98c5e10f56d40f2eb7e0f40ebbd5e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/ClaudeEmptyQuotaSubtitleTests.swift",
+      "state": "present",
+      "sha256": "1cf881ec29a981d234a87d8f8062a5fb2e19650ca085bbb1c83638773054f708",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/ClaudeOAuthDefaultsFixtures.swift",
+      "state": "present",
+      "sha256": "69738b36b799f9e8e8f63d8493ad5930cd7435b5437e4970cd2abe1d58ac9de7",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/ClaudeOAuthUpgradeCompatibilityTests.swift",
+      "state": "present",
+      "sha256": "5184f500b735de1573be5d7c9c15354542fb3fe5673724a4770cc33f1c203e8c",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/ClaudeUIErrorMapperTests.swift",
+      "state": "present",
+      "sha256": "a46b8d6a4ea9abb8da1ea7d511e815a54360f1a89b8f85ceb0d55d5b68287814",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CodexAccountPromotionExecutionTests.swift",
+      "state": "present",
+      "sha256": "c94877a64def68df86da70cca1a88468d0c3583b20a7d69703a3f6ba4f5d4a43",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CodexCredentialFileAccessTests.swift",
+      "state": "present",
+      "sha256": "335115f0a1c1a997530be8f4cce50df847d7d09c2679ffe56108bb21438a754d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CodexLocalSessionCostSettingsTests.swift",
+      "state": "present",
+      "sha256": "86bd2e1751c182792a4a7cc38933600275cdb1bb35362070c3a906def7d83e0b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CodexOAuthCreditLimitTests.swift",
+      "state": "present",
+      "sha256": "d910f6875d20e83b4be55a35f6d75852946c94472f74a4dc7cd96429a0e9339f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CodexOAuthTests.swift",
+      "state": "present",
+      "sha256": "f50e857c8d3bca97083cb5e5485f3b5beee364328daada54fc33cf4a2da125f0",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CommandCodeProviderTests.swift",
+      "state": "present",
+      "sha256": "7f80f33f07cccc28dd07f573a86099f81c976290624afa777d918e6228057e7f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/ConfigValidationTests.swift",
+      "state": "present",
+      "sha256": "4e4096faa91b3800a6d680c708f14d7ab0d6a46e5ed6324909dacad5624d8140",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CopilotDeviceFlowTests.swift",
+      "state": "present",
+      "sha256": "bbe16a985bd9aafec5c09410ebb2ed2f80ba953e11d5a3a65846d3f5187a5a57",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CopilotMultiAccountTests.swift",
+      "state": "present",
+      "sha256": "077f111067b7b55c875b38f79ce698ad3cb72940e9d8f89fe5baed89590e5c44",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CostHistoryChartMenuViewTests.swift",
+      "state": "present",
+      "sha256": "2204180f0ffac0deab016836ff30d2438623ceecf9e2437cf5aa2cdf20894bb5",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CostUsageClaudeRowStorageTests.swift",
+      "state": "present",
+      "sha256": "15df1db2f8e165f93fbf1812e547f91d31cbf0b675234cef53eb56c816299b84",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CostUsageClaudeUnpricedCoverageTests.swift",
+      "state": "present",
+      "sha256": "9ad671de7448381d71fddce2a96582be6bee5c7124842b4fe2d27b53731fd209",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CostUsageClaudeWriteAmplificationTests.swift",
+      "state": "present",
+      "sha256": "eedb4c66bdee4ebdba762e7474aae106065bcca6af0e06c464e92cbd4b1eee7d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CostUsageCodexReportPricingWorkTests.swift",
+      "state": "present",
+      "sha256": "23baa9ce9da78a739455c467db0201e6a70d2cd090c47f8a40beaa27755abbce",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CostUsagePricingClaudeMythosTests.swift",
+      "state": "present",
+      "sha256": "019dcd9024093f9c0e2555e6c196415f26351b45494c7d3ac1c6503032d3c426",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CostUsageScannerClaudeCacheUpgradeTests.swift",
+      "state": "present",
+      "sha256": "82d7e9352967c9189a8a0ba35bbeebc3405596502e875e5dc2d26e606ab8040e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CostUsageScannerClaudeDesktopTests.swift",
+      "state": "present",
+      "sha256": "c6e0154489d236a2b959ea4c0247491459bfff79cbf653b8a83f363e301d3c8b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CostUsageScannerClaudeMemoTests.swift",
+      "state": "present",
+      "sha256": "a87864ea407112b7ba2dce8ad158a97292d216bd041c70a61183402df7c29dbd",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CostUsageScannerCodexPriorityCursorTests.swift",
+      "state": "present",
+      "sha256": "51251faab2c95421899bc1d235136c7ca1373493cc60307a4d9273b778f4db39",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CostUsageScannerCodexPriorityImmutableFallbackTests.swift",
+      "state": "present",
+      "sha256": "cae697379ea7372f59a314d94105b0edb44bb81c3f9baf841d2b1f0c2abdd038",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CostUsageScannerCodexPriorityTests.swift",
+      "state": "present",
+      "sha256": "fd54fede46da749536c770b244cb2e359d7fcfafa3b36447daa515e252a21fb9",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CostUsageScannerTests.swift",
+      "state": "present",
+      "sha256": "4ac78c850626f29797985d64355d283b6d85fb99b6bb4542f02a828345c0aa7b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CostUsageSessionDetailsTests.swift",
+      "state": "present",
+      "sha256": "a73e3ad1dbeffa47970e9f45e32606e255f93aaf2369565c55664cc431432996",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CostUsageSessionTurnsTests.swift",
+      "state": "present",
+      "sha256": "d2816f441a5ed149165b273e6f5aa612e879cc36da122d661a19109e7a612f54",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CostUsageStoreTests.swift",
+      "state": "present",
+      "sha256": "48e54b515eb3615b397780e22d59c9f5e81716a2aeafb7e50e1ad08f2fa638bc",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CursorAppAuthEncryptionTests.swift",
+      "state": "present",
+      "sha256": "360b4c86ea588757f0f5510292d8dabfed625db9457ca19586c85536971e76ca",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CursorProviderImplementationTests.swift",
+      "state": "present",
+      "sha256": "d139eb310d7baefd5a483299f052673b02d7367623b94948ca1f7461797acd2e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CursorSandUsageTests.swift",
+      "state": "present",
+      "sha256": "2d66186950de730dacf29908f6c73548989886f07e5c708db00b34e275b3ac5f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/CursorUnifiedWeeklyPresentationTests.swift",
+      "state": "present",
+      "sha256": "ca0b7dc27ec5b390cd47c29ffc4acdcc45b933885d9903ad44caf0e875cad501",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/FleetAccountMenuProjectionTests.swift",
+      "state": "present",
+      "sha256": "a60fa00cd75dc9b4728d8103e4f05ad76ab6e235ac5bdbf65af65a00eae6195a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/FutureAGIPluginTests.swift",
+      "state": "present",
+      "sha256": "e7fcec1c62d41c83cd16dc72e1ad38028cded63f29b5ae51adaef688a22f68a3",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/GrokACPUnknownUsageTests.swift",
+      "state": "present",
+      "sha256": "40d7b3e6cd80681fc3e4276c635d0cefbbafb08469d440137b0c737d8cb73fc9",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/HomebrewUpgradeCommandTests.swift",
+      "state": "present",
+      "sha256": "a9001c3e5d3cc1d186f73e434a05ddb397e9e8c21b02111ac9e2c6facd28ffaf",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/InlineCostHistoryCalendarTests.swift",
+      "state": "present",
+      "sha256": "a6169a213e39b3f39e4c18f8ba2279f65ad29580d10d6373f6158b2ab4819c4b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/InlineCostHistoryDashboardLabelTests.swift",
+      "state": "present",
+      "sha256": "c5c2148a4ccdafcaf55087b7678bf48336e36eff206e5e3feb5fe8605e517729",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/KimiGiftBalanceCLITests.swift",
+      "state": "present",
+      "sha256": "36370180bf56e6c535b294730581448b60b0215e88c188b6c2c1922fedbf57f6",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/KimiGiftBalanceTests.swift",
+      "state": "present",
+      "sha256": "937fa3b0d602bcbe7851bc39d1be1c05125a118a754c39c6f672d6525a25f3b5",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/KimiLapsedSubscriptionTests.swift",
+      "state": "present",
+      "sha256": "4def6ca415af43569cf0cea69bfd20d765417fec18487e01c159c3a123f80cf5",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/KimiMonthlyBreakdownCLITests.swift",
+      "state": "present",
+      "sha256": "266bc7ed14800a0a612650731cf103013bee2d7f6d18a2191dafcb549b729a6f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/KimiMonthlyBreakdownTests.swift",
+      "state": "present",
+      "sha256": "35dd801d4659dbc9c081b57b2c7cf664d07c434c0572b18a23dbf177fee9ae2c",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/KimiProviderTests.swift",
+      "state": "present",
+      "sha256": "3c3a625cada07b76afb6c7861bba8a44f2a9a49d53c0884debbc62008dfbda6b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/KimiTokenAccountTests.swift",
+      "state": "present",
+      "sha256": "ee069c4191f6e1797306aa7d15cf28668e52bd14d56e8918b39ce200f7a296d8",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/KiroBackgroundConnectivityTests.swift",
+      "state": "present",
+      "sha256": "d16f2890dd98c62e289b8b672e1ac78f09523a5dabea9dff3036258db6149ab3",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/KiroRegionalEnrichmentTests.swift",
+      "state": "present",
+      "sha256": "270f893bd6297128bf8622b3dbcb582fca6c0930f6ed34c472c03f5ced70a8f4",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/LocalizationFormattingTests.swift",
+      "state": "present",
+      "sha256": "c85d5b0ebc967e1536e8d9619d8cb8231996c6ccb697544b7044c703ea11a4c3",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/LocalizationLanguageCatalogTests.swift",
+      "state": "present",
+      "sha256": "b7b57c93512613da8ac35850ee47174c014156bd88b6d8aa089de586c3749756",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/ManagedCodexAccountServiceTests.swift",
+      "state": "present",
+      "sha256": "233773826fabc1377d61ce73637d84ccd02e296551d17df1c8255cba362098cd",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/ManagedCodexAccountStoreTests.swift",
+      "state": "present",
+      "sha256": "11f6eafa47178ee690f2e849524713aee3f59517b4afee569047f8ea16b913be",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/MenuBarAutomaticWindowLabelsTests.swift",
+      "state": "present",
+      "sha256": "97b3032ad9f57691550569e96d6856547f455c50c9594eec7c0644f7add264b9",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/MenuBarLayoutRendererTests.swift",
+      "state": "present",
+      "sha256": "90b53dc14a62b3c82d93888cef285e659da0a710eea75628d1d58e3d24b372b1",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/MenuBarLayoutThroughputTests.swift",
+      "state": "present",
+      "sha256": "f16ec49a1df0adc6c9e1fb11e940991aa393797dd5749ec8a4fd0d76bc1cd453",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/MenuBarPaceSignTests.swift",
+      "state": "present",
+      "sha256": "3435c38a814928d777263310d898787507071abe92eacde20d369f59dcf2b893",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/MenuBarWindowAlignmentTests.swift",
+      "state": "present",
+      "sha256": "4c2b470ac16fed15fc528dfee4fcd294dce8c9ad16fda3cdc84910b818b9bea4",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/MenuCardModelCodexBusinessCreditsTests.swift",
+      "state": "present",
+      "sha256": "eba7dd97ac699de137833552bb067e4e444b2030cb1256269935beadaeb2432b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/MenuCardModelCodexProjectionTests.swift",
+      "state": "present",
+      "sha256": "e10f331c0138e090f168fe899e465f6b15c1a761f3cbf1d9686f4c6966b89562",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/MenuCardModelTests.swift",
+      "state": "present",
+      "sha256": "057a574cfc56c50be6c3f1785308aefcae8cd557c38572968aeb169bf7634a07",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/MistralMenuBarMetricTests.swift",
+      "state": "present",
+      "sha256": "918d99fdc6eb97a206c943d3dea660934dffe4e6af03e184a0f717f3211eb5e6",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/MockProviderInjectorTests.swift",
+      "state": "present",
+      "sha256": "20bf44ccf25721e0527e9937092b63fb79e1d7649c2d31cc051ebc0bfe6dbb3c",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/MonthlyPacingTargetTests.swift",
+      "state": "present",
+      "sha256": "ae6cd007b4dcab0f9c840da5c3905150a6fa4ff5853e5bb7348d4b67bc4f7492",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/MuseTokenHistoryPresentationTests.swift",
+      "state": "present",
+      "sha256": "cdc4c6246682d4ca708ce695d6bdb46c97c91a5b22054c173c42e3fd6f0411d2",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/NotionAllowanceTests.swift",
+      "state": "present",
+      "sha256": "7a3ee5efeb9fe85f248c3eef625537f281078e13fa104da9bb4b19f8523fece5",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/OpenAIAPIMenuCardModelTests.swift",
+      "state": "present",
+      "sha256": "260081fe0677ade7a0bee4a65cc6e5f491b520c839b966091e68933b4420d8b7",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/OpenCodeGoCLICredentialsReaderTests.swift",
+      "state": "present",
+      "sha256": "d9a0fb8ee96580a95e5017d2cfb9fdd001c05ed666a7911d6f70b08d8666e2da",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/OpenCodeGoEstimatedPaceTests.swift",
+      "state": "present",
+      "sha256": "a4ae06429ecc8028ec5f77b582cab5c47e03ab065e2e35f6ab9a604fc01f425d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/OpenCodeGoProviderStrategyTests.swift",
+      "state": "present",
+      "sha256": "c2533e741f2df1007b96609b4527a3fe7e473e99a0b4b1c11d31f8aa932ed38e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/OpenCodeGoV2LocalUsageReaderTests.swift",
+      "state": "present",
+      "sha256": "148f24e17d275fdf1c0848f78125c511bf7b3593521943249fcfbc6c83db3d69",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/OpenCodeGoWebOverlayTests.swift",
+      "state": "present",
+      "sha256": "666cf2d81927600f6590459107cb02cca7e698e8407cffddd1011e3b50da6fbb",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/OpenCodeLocalHistoryAdapterTests.swift",
+      "state": "present",
+      "sha256": "fb4a796b7f2744b1f4b056700a90fe7d97cc5b91434553bb4a468d78a3f0e928",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/OpenCodeLocalHistoryPublicationTests.swift",
+      "state": "present",
+      "sha256": "0ffa01187597020a384711868aa52bce9ed3a7a94f9710ae7472ca1d8bca1a31",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/OpenCodeLocalHistoryRegressionTests.swift",
+      "state": "present",
+      "sha256": "4bf75df2414c6b72401617edafc986c95c348ae4d73414deb55929b886dc5fc6",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/OpenCodeSourceCheckpointTests.swift",
+      "state": "present",
+      "sha256": "9a3a50999d7ba6320ce1cd9f61deabd79e8f90ed0656292b9e859f746025fadd",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/PerplexityCreditPercentTests.swift",
+      "state": "present",
+      "sha256": "680bd0283c7e012190fb22bcd0b5019bdc534c47ebdb87f5d7a2860d5420c10d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/PreferencesPaneSmokeTests.swift",
+      "state": "present",
+      "sha256": "274b74399229bb65b8729025fde5121dbddd5a04d9152ea54bbdd44248653de6",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/PreferencesSelectionHistoryTests.swift",
+      "state": "present",
+      "sha256": "0258315146fd688c65051acd167b41e979fa50bce43635391a4de5fbd338dc86",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/ProcessPipeCaptureTests.swift",
+      "state": "present",
+      "sha256": "535a64cd9edca1c19f680bc872a5a17b471a35818a86285f7e8d5a5fe2986e58",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/ProviderArchitectureGatekeeperTests.swift",
+      "state": "present",
+      "sha256": "eb2289357309eb3e04539bb2e56cbb056d18b71caca1fc8e250701e3dd1af121",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/ProviderCredentialCharacterizationTests.swift",
+      "state": "present",
+      "sha256": "09508ce360d1faa8b3f709fe01d34139506b6939f0986a8393c87221144511d2",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/ProviderDetailPaceTests.swift",
+      "state": "present",
+      "sha256": "05c204b084d77ef2046454107cc7efee75e278540cfcc048c6b5b0b9d29e1f9e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/ProviderDetailSectionTests.swift",
+      "state": "present",
+      "sha256": "2c33a49f7e71325b94b7998e5f5f2142b7e8e76be8c9ca16494b544a0b778332",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/ProviderDetailSectionsContentTests.swift",
+      "state": "present",
+      "sha256": "ad5bd6e9f3656cd1c7220ca9887a5f0e5b2834f1230d03679a402c1ea2c7488e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/ProviderIconResourcesTests.swift",
+      "state": "present",
+      "sha256": "19fa681353d968be14bbe7e19abaa7cd707913830576623775837bc03f8828e3",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/ProviderPaceCapabilityTests.swift",
+      "state": "present",
+      "sha256": "0f519fb0aa20d5940c560125458df204491185e63c142ce277111ecd52807ba9",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/ProviderPaletteRegressionTests.swift",
+      "state": "present",
+      "sha256": "72b395e6321aab9234b4cdf0110998065f00c849074fac54d48846862a9a30f6",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/ProviderPluginRuntimeTests.swift",
+      "state": "present",
+      "sha256": "4bad6350a538f99c96ca8a13964bde416c9b6bb9a008d940230317d7d61b461c",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/ProviderSettingsDescriptorTests+VersionRow.swift",
+      "state": "present",
+      "sha256": "a287c6c2487d2438f0c1f9d5881f1b9a537ac0295d16c7ec3526cce21d3df32d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/ProviderSettingsDescriptorTests.swift",
+      "state": "present",
+      "sha256": "032880f8cccbe372cf4acf9291afd40775e95c179a2b4dfcd7f9b0670d637772",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/ProviderUsageItemVisibilityTests.swift",
+      "state": "present",
+      "sha256": "a786ae2208387b57d1e26d946b9272ed0904acff7ea02fd4909f5c686467a705",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/SessionToolActivityTests.swift",
+      "state": "present",
+      "sha256": "878e77164e0113d58d267132f9649cf8286565056c5720a04c1a3de61dab49f4",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/SessionUsageMenuActionTests.swift",
+      "state": "present",
+      "sha256": "4b6298c245be01a659e43bc166dfd567bdf49ed76e719a2aaa4de3cc154b6f0e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/SessionUsagePresentationTests.swift",
+      "state": "present",
+      "sha256": "89e743d03b8177cc957b0f8e3a1a889bc58af0eb9394de55384ed0d27d1d5da7",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/SettingsSidebarSizingTests.swift",
+      "state": "present",
+      "sha256": "f9afd529d2cee8969c95feb65bd02ef71a13ad5968b426425ecb9dc6f7c736dd",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/SettingsStoreAdditionalTests.swift",
+      "state": "present",
+      "sha256": "cf39a145ff84c61652cf81551f6927e04d185aa7a3ac3b13ce372d97989dc66c",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/SettingsWindowAppearanceTests.swift",
+      "state": "present",
+      "sha256": "92c8b2bdc96ffa772ce2d29d9e9e3f43989d1919aaec0c9f81dd4db6b16a4801",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/SettingsWindowControllerTests.swift",
+      "state": "present",
+      "sha256": "b96374b16f3363287e388d68e3680b9b4d00ec89a9def053e0a7f6189a9cf5a5",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/SonioxProviderTests.swift",
+      "state": "present",
+      "sha256": "02a5e0881669775c6172412cfca244083de4e944b5579a18d4316d9ed70da9cd",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/SparkleUpdaterControllerTests.swift",
+      "state": "present",
+      "sha256": "d356d49c402077f472b545da2a4c1c9cb64c01e6613341c1df1c772c55421ff6",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/SpendDashboardSessionRowTests.swift",
+      "state": "present",
+      "sha256": "b03ec01113cf87a63173e81e355c5c41626a3907eee087a2e2e96299fed6bf7e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/SpendToolActivityTests.swift",
+      "state": "present",
+      "sha256": "62088713d277526e361b13386444b5290189b518ffb1c5fc474cb52af6f25c6a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/TavilyPluginTests.swift",
+      "state": "present",
+      "sha256": "f46b0d842282fd50d42cd8a8e957dc9bc5628f513419113893d3376def9de1d2",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/TokenAccountCLISelectionTests.swift",
+      "state": "present",
+      "sha256": "a1272360bd71e1d01771a623a2746cbdf7d1d0fde2f1bb259e04d27f380cb0de",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/TokenAccountSyncCoverageTests.swift",
+      "state": "present",
+      "sha256": "aba36f7f108b740631d3e4b6fe53573b4b653cee9e8616e0de3bba68ee2765b7",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/TraeCNPluginTests.swift",
+      "state": "present",
+      "sha256": "a420c20c8a23abd5202326ad4b0bd205b9ec4969f85208cc74007cce425ca458",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/UpdaterPreferenceSyncTests.swift",
+      "state": "present",
+      "sha256": "32a4838f5461b37c4dc9b56a35fbfa949d438b576a03f7fce018e0a9704a3431",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/UsageFormatterTests.swift",
+      "state": "present",
+      "sha256": "1cd8b7d164bbd6069b1efb8889ce1a358e69dbeaf00487ec212a2f0382938142",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/UsageUpdatedHookTests.swift",
+      "state": "present",
+      "sha256": "a52c04ba442ca8dc7d17948528951b80edf8cb9e78c4a3052f56c90c705cc66a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/UserFacingLocalizationCoverageTests.swift",
+      "state": "present",
+      "sha256": "1985c0eabc2bb075045973dba93e1a696c41995981a7ba0fe74f6543276c4326",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/UserPluginPercentWindowTests.swift",
+      "state": "present",
+      "sha256": "1015b1029b4e08d554392256bd5e42b7c1fc15b8d35b6dc344ea5dbe28a0cfad",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/UserPluginQuotaPresentationTests.swift",
+      "state": "present",
+      "sha256": "00a4b160bf64c1081b1ab64503c120e513f3cef9577364f935f38a2ca48ead2b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/UserPluginRefreshTests.swift",
+      "state": "present",
+      "sha256": "91c38af7697bdf9acb20ec0dcdf2f2b273a2a4221ffadeb0c8bdd3d678a14292",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/UserProviderPluginHTTPClientTests.swift",
+      "state": "present",
+      "sha256": "f1842191dec28c6c74a370b813a864a431bb39df4b97d1df6468e9f3181d8561",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/UserProviderPluginTests.swift",
+      "state": "present",
+      "sha256": "a103b4d95f3de9521a7a3ec1bf5eeb2af11a9fae4e6ede6049fc02c6185537a2",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/V082MobileBridgeTests.swift",
+      "state": "present",
+      "sha256": "a208c7c81fd06d12ea5d93cc9121f6e4f4f0a52f82368fdbc656b03a7a71369d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/WarpAutomaticCreditsTests.swift",
+      "state": "present",
+      "sha256": "49f43363c38f292e5e205364154ebde465fce1dc922b5513c741c259bfd03210",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/WidgetEmptyStateCopyTests.swift",
+      "state": "present",
+      "sha256": "36891b8363c963df0202e138a18d2c6474193d71a3f34914087a5cf810551a13",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "Tests/CodexBarTests/WidgetLocalizationTests.swift",
+      "state": "present",
+      "sha256": "1f4bc7689627da63562b6ad8f3b257573d120b49f38b78ca71a5566b9e69785b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "TestsLinux/AlibabaTokenPlanLinuxTests.swift",
+      "state": "present",
+      "sha256": "e20d93e5f012d51f852d8d818ed5643b60b362d268c0fd1570860569cde8c5f3",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "TestsLinux/ClaudeWebManualCookieLinuxTests.swift",
+      "state": "present",
+      "sha256": "0e7147195507d0b5d33053d7f49823fe769cb5bf5c64697f06e606ecc8e04a2a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "TestsLinux/CodeRabbitUsageTests.swift",
+      "state": "present",
+      "sha256": "45aea342d1632b3d75720b1767b7b3b9f0a9047818dc5fc825003a43869ddc1e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "TestsLinux/CursorLinuxTests.swift",
+      "state": "present",
+      "sha256": "2ee9f6152c79c7b3070d360bd5bc32acc40c17ba3375a4abf9b242ee684aef5f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "TestsLinux/DeepSeekSourceModeTests.swift",
+      "state": "present",
+      "sha256": "80d520f68d1e11c790526f19936ce24d6f69544e23cbf9efe808168bbf875779",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "TestsLinux/DevinCLISettingsTests.swift",
+      "state": "present",
+      "sha256": "f1b512efd9d06e8c300c79286dab68897856c845e3b7025d5cb8d02a902fe211",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "TestsLinux/MiniMaxLinuxTests.swift",
+      "state": "present",
+      "sha256": "6af8ff35f3159ee6c97e786aab0f1bf5dc6814afa769313f0833674bc57e55d6",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "TestsLinux/MistralLinuxTests.swift",
+      "state": "present",
+      "sha256": "27d675d29e348c2649124af02c213bd5991b5dc3a1dca3f5b8b38f36cf9ae029",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "TestsLinux/MuseAIProviderTests.swift",
+      "state": "present",
+      "sha256": "4e47f2a2fdf37a6fc8c2140708c43fb564bb2738c9038cbaa5ebd7a295275497",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "TestsLinux/OpenCodeGoLinuxTests.swift",
+      "state": "present",
+      "sha256": "eccfe427b36ab2187925aa0f12745436c75ca113dff69300a6c9eb3b15340722",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "TestsLinux/PlatformGatingTests.swift",
+      "state": "present",
+      "sha256": "4905ed08177afd9f8b09e6d93b97379304f0a9a3c7b2e3f3211cbceadbd4a38e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "TestsPlugin/AbliterationPluginTests.swift",
+      "state": "present",
+      "sha256": "46784cc30671438dc3fea8ae63f9d5e9a63571f8664890165fab1d8165ece9df",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "TestsPlugin/ProviderPluginDetailPaceTests.swift",
+      "state": "present",
+      "sha256": "2107b756d6236f3e30864b437858f7eba0e87acd5055f40832ee231b3b7d1dde",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "TestsPlugin/ProviderPluginSnapshotContractTests.swift",
+      "state": "present",
+      "sha256": "4f1d3c7bf71acf112549eb6b8592ef042c456fd4066fbe86e2b0d9455da67ba3",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "TestsPlugin/SonioxPluginTests.swift",
+      "state": "present",
+      "sha256": "6ca373a401e7df74c958c87c6ed7530fcd5113104f3ef9c9ba1fd55adcce6d90",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "TestsPlugin/WorkBuddyPluginTests.swift",
+      "state": "present",
+      "sha256": "f67933636c64249864baef0e893c77fdf24936d8ba85bafe6ff0a466ff47af77",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/DEVELOPMENT.md",
+      "state": "present",
+      "sha256": "245f00f2ad2f705d37a83633936cb91a3a8b3bf12d1689598ff64a1174d2ddde",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/FORK_ROADMAP.md",
+      "state": "present",
+      "sha256": "3aca93ede30f78fd6954279c9368fe8a71849f5f908bae6996dbc0a8fd344a34",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/UPSTREAM_STRATEGY.md",
+      "state": "present",
+      "sha256": "d41f377c1f4884d76a7886a6edbe9904a4987b6eb2b7dc5fc3db8466df2f8d16",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/abliteration.md",
+      "state": "present",
+      "sha256": "c23fe0260101bf18797fae40ba59affebb5188474034cda996e0a689a480ec57",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/antigravity.md",
+      "state": "present",
+      "sha256": "cf7b041ee0eb356fc838888b8bd5526c98f048a1cecff732e9760cc33de0eeab",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/chatbox.md",
+      "state": "present",
+      "sha256": "ae9eff772634076f0d58d5fd6ec8ac612baa308af0d70ac8a25e8441fe439a27",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/claude.md",
+      "state": "present",
+      "sha256": "d28e1d5cc1b8dbeb1289f7317bf96f9123426cd41255328b2cfa2b30cccaa98e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/cli-configuration.md",
+      "state": "present",
+      "sha256": "b5233fc86029d8df40ee06d93d1a093045f90c11637eddea742ad00137cc79fd",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/cli.md",
+      "state": "present",
+      "sha256": "2534efb9551365afa1f85ca37c6f6f4d2434dd716fcebec6030065426286412b",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/cloudkit-deploy-audit.md",
+      "state": "present",
+      "sha256": "13f872899ae8091c590de112da8285437cf2a828f1f0982cb482ae134d7ffda3",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/coderabbit.md",
+      "state": "present",
+      "sha256": "ca79516b9d137e00e50cb2c5cbfc1be5aea795561ad80da03b4eac3cdf5658b1",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/codex.md",
+      "state": "present",
+      "sha256": "e2d710deee2158d3fae3d1690ed18122f93da2ceb4d9639431cd54067aaa51dc",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/command-code.md",
+      "state": "present",
+      "sha256": "9e3b8f2f903010b297807e856c85693bb6632af1d1b42f79b4b1779623a8e12d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/configuration.md",
+      "state": "present",
+      "sha256": "1c327a6410b4f007a93d0158a2132d463d7137f94a75187e064cb087216478e5",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/copilot.md",
+      "state": "present",
+      "sha256": "23ed568cc192a4330a0d7148c3dec0a6d71ab7d59890185d2e23b3bee11de500",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/cost-reporting-periods.md",
+      "state": "present",
+      "sha256": "77e8426bbd6be601b83434cfee8a1b25c7269ce429276f1272b8e2e9af4e6b4d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/cursor.md",
+      "state": "present",
+      "sha256": "64ccb9bd7af0531f6ec47a6a11931a09dade796eeb077fb564f053cb69ed68c1",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/dashboard-api.md",
+      "state": "present",
+      "sha256": "5c14fc4f31ef3d805d47278211098f735fd56942c8b801b70ab9f6b446bf4e62",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/deepseek.md",
+      "state": "present",
+      "sha256": "4e2136f05572b02b62c000ded1a52d19f73f287b9a2cc373d837392e7ec7ee6f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/futureagi.md",
+      "state": "present",
+      "sha256": "40707e6d87cbefd777bf8e767d82fabfd8aca06f8eb8b8bfca848cf747fc2cc5",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/grok.md",
+      "state": "present",
+      "sha256": "19bd7b30262a5002ff93ea4e9faa133f01e7c2343ea07061136e7379304cfde8",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/images/token-activity-readability/runtime/runtime-receipt.json",
+      "state": "present",
+      "sha256": "619eff9f38f1e1c7821d558184b50a276644c741d3dea7159feffff66bf2cc6f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/index.html",
+      "state": "present",
+      "sha256": "676174cd63ffe291a6f54477fa30b25087c91f5ff18f44b1948f2997108cce93",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/kimi.md",
+      "state": "present",
+      "sha256": "5dff50805329f1ab091aa99ba12e89729885f85bb5097cbf79cb160be60ae746",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/kiro.md",
+      "state": "present",
+      "sha256": "768336e638b33323e0ecb0a43cef31a352735fae1cec5dbb0b6afb58858ecbb4",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/linux.md",
+      "state": "present",
+      "sha256": "a7e77366f06270affdf1b9e76f46b2b5757d223e315bb6c76a481db4aafd50fc",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/llms.txt",
+      "state": "present",
+      "sha256": "99acc5a561ae0bc6a2dc9f017cecce8e496767f853387b8e2f4a488657ac57dd",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/logos/abliteration.svg",
+      "state": "present",
+      "sha256": "91aed6bc9a06c7b0f4605684c2c38b6bcd96211c727f01afa830bc664382a774",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/logos/chatbox.svg",
+      "state": "present",
+      "sha256": "63962481c3e046bce4e09691794987deeba5198181ab612631362a5ac4dd8d8a",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/logos/soniox.svg",
+      "state": "present",
+      "sha256": "3811c11ff1f9794cddbe76ffdf83b69bb8f3245fa45332a983436b62d2bd6e0f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/logos/traecn.svg",
+      "state": "present",
+      "sha256": "567a5551a5204acbbfd4d89b5954c57128d605b64878169b1730b3a202067b97",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/logos/workbuddy.svg",
+      "state": "present",
+      "sha256": "e08e9986bbe700e2a931d4a0fd7225f176b1a3940e856177b85331e6cad0a05f",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/notion.md",
+      "state": "present",
+      "sha256": "709202db5f844d4db46a720a5307e31f283639808e7c103504d223b816567964",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/opencode.md",
+      "state": "present",
+      "sha256": "a568dac71793bf49e4543dda45d6ce557f2511ca87e928f6b8e324feb6891872",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/opencodego.md",
+      "state": "present",
+      "sha256": "3b010ef5da1cf9dbdbfacf6ee72efc39861066253babe1e1370a37bdd81b31a9",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/overview-scroll-stutter-investigation.md",
+      "state": "present",
+      "sha256": "36a0c94c5dc7cf395f087a0d46f1d40b82d95463bd2699bcf0a6473dc851dcac",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/pi.md",
+      "state": "present",
+      "sha256": "f584f0287f60a970c1ef9ec08ba1968e20deb4cc7e4d7399a02c63c2a95ea161",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/plugin-conversion-matrix.md",
+      "state": "present",
+      "sha256": "282d2745cd3a0e27c85c69a0a09ba245812f2d59811049b8385312f6fcada5ee",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/plugins.md",
+      "state": "present",
+      "sha256": "4ac95fdaa55526d10cb71227add82330d7ff49c747d39105ec6b384699b8a7f5",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/predictive-refresh-policy.md",
+      "state": "present",
+      "sha256": "16404b6919ab4ea951fd076500924ec63b5fd55734babf42748586edaa7f5e84",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/provider-brand-icons.md",
+      "state": "present",
+      "sha256": "7e5d273b5a8c1127743f57c77da3f8545a98fb2f98b81cac0fcce6d1459da785",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/provider-ids.md",
+      "state": "present",
+      "sha256": "d51f8be2fd5c75801cb466c10919ee00df2a0e00db59e15ec25fed335e0bdcd0",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/provider-palette.md",
+      "state": "present",
+      "sha256": "e1768f0ce39e539ac5f9cfcc9e9459662c7bbe5b1d40b5f251c9b10c55a0371d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/provider.md",
+      "state": "present",
+      "sha256": "1ad6689d426add332e72cbaf9a749231a60e88fd7ecfe873d6b8fed9a48a9e20",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/providers.md",
+      "state": "present",
+      "sha256": "3a0314883791735e2a8fc3a8e4e309a4eab51f24f97bfffb397d590684f8832d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/raycast.md",
+      "state": "present",
+      "sha256": "48a541fa8c39ab135d9d6d933855ee0f10000080b824026787d674b172ca2d09",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/sakana.md",
+      "state": "present",
+      "sha256": "68ce153ec743415a1e4146c39ee9e47da2cb78410328143a0684111ac1b18924",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/site-locales.mjs",
+      "state": "present",
+      "sha256": "87f789f09e7c337584486aa86a2b834f27a75ad50d978e6868c1c8b7c821ef78",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/social-card.json",
+      "state": "present",
+      "sha256": "8b4542935a2a0409b1fd738111170339a916eda3d4dfcb32c7240de5e8f401cc",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/social.html",
+      "state": "present",
+      "sha256": "51ee39d422923aeb918007c108dc432759caaf66ad743caf7133bee587a930db",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/social.png",
+      "state": "present",
+      "sha256": "1436859e75bb3a24c1c055714bebccdfa8b7f994636b6608bf638f995eacc77d",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/soniox.md",
+      "state": "present",
+      "sha256": "a906f0bd7cfdbce48455981f6afc611de0dd60ee7dd4de3273319f81090a6302",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/sparkle.md",
+      "state": "present",
+      "sha256": "c0eb5949274f77050b471aa68241720f5596ec96d56472bacb2c9073dd0635a9",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/superpowers/plans/2026-05-11-kilo-organization-selection.md",
+      "state": "present",
+      "sha256": "94bc5a1c28ed346d672772685456bff8adb5e88aa6c08257b96e954da66b28c5",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/superpowers/plans/2026-07-30-global-low-power-mode.md",
+      "state": "present",
+      "sha256": "b0ea0510dd75f3b422f8752386608982112f7fb13b3de2c683415e2e951a993e",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/tavily.md",
+      "state": "present",
+      "sha256": "049f22bf43175129972f671f806912683c33dbd0be464f474f35ccbb5431c415",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/traecn.md",
+      "state": "present",
+      "sha256": "ea16841a5d5a42a4eb28f7b3ba31f1d0c05444754ea4a571fe70599d7cdb3d01",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/ui.md",
+      "state": "present",
+      "sha256": "77017d52583d5c3bf3e40188edde7c61815d78c23e8329677dcc3a665617bc17",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/versioning.md",
+      "state": "present",
+      "sha256": "e3a80a9b0cd714d4b7998b435920eb733239b5b19440bc54b1ed6a86561f62e0",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/widgets.md",
+      "state": "present",
+      "sha256": "1e8ffacac56f459336d1524c9b9fd8ef52b104abcb943fafeacc41078adf56bf",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/windsurf.md",
+      "state": "present",
+      "sha256": "57b270101d90c54fde607974360b4c70ec31c41afdb5396021ed5d635257bead",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/workbuddy.md",
+      "state": "present",
+      "sha256": "59733eca82e99406b521eb90b97a62b80e7331963df36e2bf308c0d5c5598216",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "docs/zai.md",
+      "state": "present",
+      "sha256": "948448c8a731da25fb030c2c944d86a4b05d75277a67987ef0be58aa190fb6bd",
+      "mode": "0o644",
+      "untrackedNew": false
+    },
+    {
+      "path": "version.env",
+      "state": "present",
+      "sha256": "2fba0ea7ad79f1b13e7628d8565d157ce976761ee56215826f9d202b34e7fb4c",
+      "mode": "0o644",
+      "untrackedNew": false
+    }
+  ],
+  "diffSHA256": "7708c680dae55f8b7513b4432c20cadeefa2838b35de0e65d307a94ad911c856"
+}

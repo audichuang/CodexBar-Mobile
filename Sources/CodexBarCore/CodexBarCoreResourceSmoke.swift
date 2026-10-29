@@ -65,6 +65,19 @@ public enum CodexBarCoreResourceSmoke {
             }
             return 1
         }
+        #if os(macOS)
+        let bundleID = Bundle.main.bundleIdentifier
+        let groups = [
+            "bundleID": bundleID ?? "",
+            "runtimeGroupID": AppGroupSupport.currentGroupID(for: bundleID),
+            "widgetRuntimeGroupID": bundleID.map { AppGroupSupport.currentGroupID(for: "\($0).widget") } ?? "",
+        ]
+        if let data = try? JSONSerialization.data(withJSONObject: groups, options: .sortedKeys),
+           let json = String(data: data, encoding: .utf8)
+        {
+            print("CODEXBAR_APP_GROUP_DIAGNOSTIC \(json)")
+        }
+        #endif
         print(self.successMarker)
         return 0
     }

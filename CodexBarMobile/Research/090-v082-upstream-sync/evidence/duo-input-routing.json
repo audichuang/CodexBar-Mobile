@@ -1,0 +1,1571 @@
+[
+  {
+    "file": "689DDF16-65CB-46BE-A06F-88D76FA95B54",
+    "time": "Synthesized Event 2026-10-28 at 02.09.44 下午",
+    "event": "tap",
+    "displayID": 3,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        669.0,
+        951.0
+      ]
+    },
+    "points": [
+      [
+        287.0,
+        52.0
+      ],
+      [
+        287.0,
+        52.0
+      ]
+    ]
+  },
+  {
+    "file": "B4860066-8EDB-4535-A8D7-D25AB3CA8762",
+    "time": "Synthesized Event 2026-10-28 at 02.10.08 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "B688786C-7E34-4FF9-870D-7367D79431C8",
+    "time": "Synthesized Event 2026-10-28 at 02.10.09 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "BAF4D50B-4193-43FE-99B0-F3075C27D440",
+    "time": "Synthesized Event 2026-10-28 at 02.10.11 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "A75E5FBF-8AE7-4F40-939A-DF37C1006A14",
+    "time": "Synthesized Event 2026-10-28 at 02.10.12 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "3A5D0524-539C-4E0E-B6EA-1142EB4CC686",
+    "time": "Synthesized Event 2026-10-28 at 02.10.13 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "4A7A808C-6F11-434F-BFEC-68BD994411DB",
+    "time": "Synthesized Event 2026-10-28 at 02.10.14 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "2577063F-3178-4D94-8F91-52DF766B16B2",
+    "time": "Synthesized Event 2026-10-28 at 02.10.15 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "ECF3FBE4-0F55-43BD-971B-2371E47BA203",
+    "time": "Synthesized Event 2026-10-28 at 02.10.17 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "F4CA9DE0-FF68-46FD-B7C7-C7DEA9B4DB23",
+    "time": "Synthesized Event 2026-10-28 at 02.10.18 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "99725ED4-564A-49E1-B82A-3A7D0C58D252",
+    "time": "Synthesized Event 2026-10-28 at 02.10.19 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "6E3EFF63-271D-4987-8444-5486098821DD",
+    "time": "Synthesized Event 2026-10-28 at 02.10.20 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "9FC75F83-A67F-4ABD-ADD2-87EA9097611C",
+    "time": "Synthesized Event 2026-10-28 at 02.10.21 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "AE6BC8B5-3CD8-4B78-A46F-C22A9751D111",
+    "time": "Synthesized Event 2026-10-28 at 02.10.22 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "ACFD07C8-3DDF-48BB-AE10-1AEC35110FFA",
+    "time": "Synthesized Event 2026-10-28 at 02.10.23 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "AB053121-08BB-43C1-B97D-0ED0C46A374B",
+    "time": "Synthesized Event 2026-10-28 at 02.10.24 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "CFB0EE13-369A-4E9E-BC87-8C5500A49C0F",
+    "time": "Synthesized Event 2026-10-28 at 02.10.25 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "5B26E371-E218-483D-9F9E-2ACDCD5B00F3",
+    "time": "Synthesized Event 2026-10-28 at 02.10.27 下午",
+    "event": "tap",
+    "displayID": 3,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        669.0,
+        951.0
+      ]
+    },
+    "points": [
+      [
+        158.0,
+        903.0
+      ],
+      [
+        158.0,
+        903.0
+      ]
+    ]
+  },
+  {
+    "file": "A66B29B2-A93F-4676-BD33-7D36EB385477",
+    "time": "Synthesized Event 2026-10-28 at 02.10.30 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "C35DBBD6-169F-4629-961D-53C0BF499A1B",
+    "time": "Synthesized Event 2026-10-28 at 02.10.31 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "04AC43C7-99FE-4290-B106-22FD8F3AD92D",
+    "time": "Synthesized Event 2026-10-28 at 02.10.32 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "A901C426-B451-44C9-8D9C-9E7F6A27A4C7",
+    "time": "Synthesized Event 2026-10-28 at 02.10.33 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "BDE56EA7-CDF2-4537-A856-07928FB9382A",
+    "time": "Synthesized Event 2026-10-28 at 02.10.34 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "AE028095-36DF-4A6A-9078-CDA8D79522B4",
+    "time": "Synthesized Event 2026-10-28 at 02.10.36 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "82FB49BC-1F48-4562-81E4-0D1101B4997A",
+    "time": "Synthesized Event 2026-10-28 at 02.10.37 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "4AD0CDDD-A32F-48CD-A1F0-7CEC10FA54D5",
+    "time": "Synthesized Event 2026-10-28 at 02.10.38 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "255A2953-42D6-4760-9B79-7FCA5C4A9F4D",
+    "time": "Synthesized Event 2026-10-28 at 02.10.39 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "161208EB-704C-4DBC-85B2-A4ADE8B70DBC",
+    "time": "Synthesized Event 2026-10-28 at 02.10.40 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "6DC0101A-923D-4638-BC3F-F69B9EF14C20",
+    "time": "Synthesized Event 2026-10-28 at 02.10.41 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "1BA492E6-73AC-4B1B-BA67-AFC2F5B74303",
+    "time": "Synthesized Event 2026-10-28 at 02.10.42 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "F9D7BFA3-16DB-46DB-8052-53BBF40FB4DE",
+    "time": "Synthesized Event 2026-10-28 at 02.10.44 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "4B4F8435-B560-4D94-892E-E0CEDEC9E63F",
+    "time": "Synthesized Event 2026-10-28 at 02.10.45 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "9B7D8C79-3C18-453E-9A82-84F9E170BA6C",
+    "time": "Synthesized Event 2026-10-28 at 02.10.46 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "8B22552A-1E1B-4539-9A9B-033B6330903D",
+    "time": "Synthesized Event 2026-10-28 at 02.10.47 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "4CADC5FA-2A02-4E75-AB58-660EF0EC1D4C",
+    "time": "Synthesized Event 2026-10-28 at 02.10.49 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "ABC05530-AE2D-4EF4-93E6-E9E62366B781",
+    "time": "Synthesized Event 2026-10-28 at 02.10.50 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "3D893FC8-124E-4D20-A38A-2DF843A9EEF4",
+    "time": "Synthesized Event 2026-10-28 at 02.10.51 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "2EA7D928-D6BC-40F3-99EE-24E8796806E3",
+    "time": "Synthesized Event 2026-10-28 at 02.10.52 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "B4F1FB3E-A283-4DCB-AF82-673A37AA8B05",
+    "time": "Synthesized Event 2026-10-28 at 02.10.54 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "BB40A2E0-6CA0-49E7-AA9E-F6BFD359FD8F",
+    "time": "Synthesized Event 2026-10-28 at 02.10.55 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "7C98ABD5-190E-4E48-883E-36175EE0C864",
+    "time": "Synthesized Event 2026-10-28 at 02.10.56 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "F9E3C948-EAD0-4F71-95B3-EF720C862C8D",
+    "time": "Synthesized Event 2026-10-28 at 02.10.57 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "70F1B63C-48CB-4840-B792-A308243E3A26",
+    "time": "Synthesized Event 2026-10-28 at 02.10.58 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "409FA081-6132-4FF5-BE0F-94C0CBEEBC27",
+    "time": "Synthesized Event 2026-10-28 at 02.10.59 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "39C594FB-8839-42E9-B875-36C574790070",
+    "time": "Synthesized Event 2026-10-28 at 02.11.02 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "C81AE99B-F4CB-4D08-B503-EFF39658C610",
+    "time": "Synthesized Event 2026-10-28 at 02.11.03 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "FDF88FED-CFC7-47E2-8286-AF9DC5572297",
+    "time": "Synthesized Event 2026-10-28 at 02.11.04 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "1DCDB8B0-979F-4CC7-BDED-16F8634D40BC",
+    "time": "Synthesized Event 2026-10-28 at 02.11.05 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "F282A60F-A870-4A29-9C8B-318C46636022",
+    "time": "Synthesized Event 2026-10-28 at 02.11.06 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "587075D9-A1F8-440D-B64D-2554B070568E",
+    "time": "Synthesized Event 2026-10-28 at 02.11.07 下午",
+    "event": "press, hold, drag, and hold",
+    "displayID": 1,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        0.0,
+        0.0
+      ]
+    },
+    "points": [
+      [
+        334.5,
+        375.5
+      ],
+      [
+        334.5,
+        575.5
+      ],
+      [
+        334.5,
+        575.5
+      ]
+    ]
+  },
+  {
+    "file": "84833332-EACC-4456-A3B9-4C0936D19A2E",
+    "time": "Synthesized Event 2026-10-28 at 02.11.09 下午",
+    "event": "tap",
+    "displayID": 3,
+    "orientation": 1,
+    "parentWindowSize": {
+      "NS.keys": [
+        "Width",
+        "Height"
+      ],
+      "NS.objects": [
+        669.0,
+        951.0
+      ]
+    },
+    "points": [
+      [
+        625.0,
+        903.0
+      ],
+      [
+        625.0,
+        903.0
+      ]
+    ]
+  }
+]

@@ -179,8 +179,10 @@ phase1() {
 
   "$ROOT/Scripts/lint.sh" lint
 
-  # `swift test` is authoritatively gated by CI on every push to
-  # mobile-dev; re-running it here is belt-and-suspenders. Some tests
+  # The release checklist requires separately recorded full local test
+  # evidence. PR Fast Checks do not run the heavy suite; optional in-script
+  # re-execution below is only for an appropriately isolated test environment.
+  # Some tests
   # (Claude OAuth delegated-refresh, credential prompts) block on real
   # keychain on a developer Mac and hang indefinitely, unlike the
   # sandboxed CI environment where they run to completion. Opt in via
@@ -188,7 +190,7 @@ phase1() {
   if [[ "${RUN_SWIFT_TEST:-0}" == "1" ]]; then
     swift test
   else
-    echo "Skipping swift test locally (CI gates it on every push; set RUN_SWIFT_TEST=1 to run)."
+    echo "Skipping in-script swift test; separately recorded full local test evidence is required by the release checklist (RUN_SWIFT_TEST=1 opts in)."
   fi
 
   if [[ -f "${ROOT}/${RELEASE_ASSET_BASENAME}.zip" \

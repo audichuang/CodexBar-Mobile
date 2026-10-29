@@ -50,6 +50,9 @@ public struct SyncRateWindow: Codable, Sendable, Equatable {
     /// Mac 0.72+: the reset description states a balance ("X / Y credits left") that the Mac
     /// card shows next to the reset time. Nil from older Macs and for real reset text.
     public let balanceDescription: String?
+    /// Original allowance metadata for reader-local monthly daily targets (Mac 0.82+).
+    public let quotaLimit: Double?
+    public let quotaUnit: String?
 
     public var remainingPercent: Double {
         max(0, 100 - self.usedPercent)
@@ -67,7 +70,9 @@ public struct SyncRateWindow: Codable, Sendable, Equatable {
         nextRegenPercent: Double? = nil,
         isSyntheticPlaceholder: Bool = false,
         blockingQuota: SyncBlockingQuota? = nil,
-        balanceDescription: String? = nil)
+        balanceDescription: String? = nil,
+        quotaLimit: Double? = nil,
+        quotaUnit: String? = nil)
     {
         self.id = id
         self.label = label
@@ -81,6 +86,8 @@ public struct SyncRateWindow: Codable, Sendable, Equatable {
         self.isSyntheticPlaceholder = isSyntheticPlaceholder
         self.blockingQuota = blockingQuota
         self.balanceDescription = balanceDescription
+        self.quotaLimit = quotaLimit.flatMap { $0.isFinite && $0 > 0 ? $0 : nil }
+        self.quotaUnit = quotaUnit
     }
 
     public init(from decoder: Decoder) throws {
@@ -99,6 +106,9 @@ public struct SyncRateWindow: Codable, Sendable, Equatable {
             try container.decodeIfPresent(Bool.self, forKey: .isSyntheticPlaceholder) ?? false
         self.blockingQuota = try container.decodeIfPresent(SyncBlockingQuota.self, forKey: .blockingQuota)
         self.balanceDescription = try? container.decodeIfPresent(String.self, forKey: .balanceDescription)
+        self.quotaLimit = (try? container.decodeIfPresent(Double.self, forKey: .quotaLimit))
+            .flatMap { $0.isFinite && $0 > 0 ? $0 : nil }
+        self.quotaUnit = try? container.decodeIfPresent(String.self, forKey: .quotaUnit)
     }
 }
 
@@ -218,6 +228,7 @@ public enum SyncCostProvenance: String, Codable, Sendable, Equatable {
     case listPriceEstimate
     case vendorMetered
     case mixed
+    case sourceRecorded
     case unknown
 
     public init(from decoder: Decoder) throws {
@@ -919,23 +930,30 @@ public struct SyncProviderDetailSection: Codable, Sendable, Equatable {
         public struct Progress: Codable, Sendable, Equatable {
             public let used: Double
             public let total: Double
+            /// Expected consumption in the same units, optional for old readers and unknown pace.
+            public let expectedUsed: Double?
 
-            public init?(used: Double, total: Double) {
+            public init?(used: Double, total: Double, expectedUsed: Double? = nil) {
                 guard used.isFinite, total.isFinite, total > 0 else { return nil }
                 self.used = used
                 self.total = total
+                self.expectedUsed = expectedUsed.flatMap {
+                    $0.isFinite && (0...total).contains($0) ? $0 : nil
+                }
             }
 
             private enum CodingKeys: String, CodingKey {
                 case used
                 case total
+                case expectedUsed
             }
 
             public init(from decoder: Decoder) throws {
                 let container = try decoder.container(keyedBy: CodingKeys.self)
                 let used = try container.decode(Double.self, forKey: .used)
                 let total = try container.decode(Double.self, forKey: .total)
-                guard let progress = Self(used: used, total: total) else {
+                let expectedUsed = try? container.decodeIfPresent(Double.self, forKey: .expectedUsed)
+                guard let progress = Self(used: used, total: total, expectedUsed: expectedUsed) else {
                     throw SyncProviderDetailValidationError("row.progress must be finite with a positive total")
                 }
                 self = progress
@@ -951,6 +969,7 @@ public struct SyncProviderDetailSection: Codable, Sendable, Equatable {
         public let progress: Progress?
         /// Numeric usage behind the row when known (Mac 0.72+), independent of `progress`.
         public let usageValue: Double?
+        public let expiresAt: Date?
 
         public init(
             id: String? = nil,
@@ -959,7 +978,8 @@ public struct SyncProviderDetailSection: Codable, Sendable, Equatable {
             secondaryValue: String? = nil,
             progress: Progress? = nil,
             severity: Severity? = nil,
-            usageValue: Double? = nil)
+            usageValue: Double? = nil,
+            expiresAt: Date? = nil)
         {
             self.id = id
             self.label = label
@@ -968,6 +988,7 @@ public struct SyncProviderDetailSection: Codable, Sendable, Equatable {
             self.severity = severity
             self.progress = progress
             self.usageValue = usageValue.flatMap { $0.isFinite ? $0 : nil }
+            self.expiresAt = expiresAt.flatMap { $0.timeIntervalSince1970.isFinite ? $0 : nil }
         }
 
         private enum CodingKeys: String, CodingKey {
@@ -978,6 +999,7 @@ public struct SyncProviderDetailSection: Codable, Sendable, Equatable {
             case severity
             case progress
             case usageValue
+            case expiresAt
         }
 
         public init(from decoder: Decoder) throws {
@@ -1000,6 +1022,8 @@ public struct SyncProviderDetailSection: Codable, Sendable, Equatable {
             self.progress = try? container.decodeIfPresent(Progress.self, forKey: .progress)
             self.usageValue = (try? container.decodeIfPresent(Double.self, forKey: .usageValue))
                 .flatMap { $0.isFinite ? $0 : nil }
+            self.expiresAt = (try? container.decodeIfPresent(Date.self, forKey: .expiresAt))
+                .flatMap { $0.timeIntervalSince1970.isFinite ? $0 : nil }
         }
     }
 

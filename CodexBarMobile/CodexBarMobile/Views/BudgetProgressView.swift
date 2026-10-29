@@ -2,13 +2,14 @@ import CodexBarSync
 import SwiftUI
 
 struct BudgetProgressView: View {
+    @Environment(\.locale) private var locale
     let budget: SyncBudgetSnapshot
     let providerID: String
     var tintColor: Color = .blue
 
     private var progress: Double {
-        guard budget.limitAmount > 0 else { return 0 }
-        return min(budget.usedAmount / budget.limitAmount, 1.0)
+        guard self.budget.limitAmount > 0 else { return 0 }
+        return min(self.budget.usedAmount / self.budget.limitAmount, 1.0)
     }
 
     private var progressColor: Color {
@@ -18,29 +19,43 @@ struct BudgetProgressView: View {
         // semantic once ("orange = close, red = critical") and it applies
         // across rate limits, budgets, and any future quota-shaped UI.
         // If you adjust here, adjust `UsageCardView` in the same commit.
-        if progress >= 0.9 { return .red }
-        if progress >= 0.7 { return .orange }
-        return tintColor
+        if self.progress >= 0.9 { return .red }
+        if self.progress >= 0.7 { return .orange }
+        return self.tintColor
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                Text("Budget")
-                    .font(.subheadline)
-                    .fontWeight(.semibold)
-                Spacer()
-                Text(self.formattedUsed)
-                    .font(.subheadline.monospacedDigit())
-                    .fontWeight(.medium)
-                Text("/ \(self.formattedLimit)")
-                    .font(.subheadline.monospacedDigit())
-                    .foregroundStyle(.secondary)
+            ViewThatFits(in: .horizontal) {
+                HStack {
+                    Text("Budget").font(.subheadline.weight(.semibold))
+                        .fixedSize()
+                    Spacer()
+                    Text(self.formattedUsed).font(.subheadline.monospacedDigit().weight(.medium))
+                        .fixedSize()
+                    Text("/ \(self.formattedLimit)").font(.subheadline.monospacedDigit())
+                        .foregroundStyle(.secondary).fixedSize()
+                }
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Budget").font(.subheadline.weight(.semibold))
+                    Text("\(self.formattedUsed) / \(self.formattedLimit)")
+                        .font(.subheadline.monospacedDigit())
+                        .fixedSize(horizontal: false, vertical: true)
+                }
             }
 
             ProgressView(value: self.progress)
                 .tint(self.progressColor)
                 .scaleEffect(y: 2, anchor: .center)
+
+            TimelineView(.periodic(from: .now, by: 60)) { context in
+                if let target = DailyAllowanceTarget(budget: self.budget, now: context.date) {
+                    Text(target.text(locale: self.locale))
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .accessibilityIdentifier("budget.daily-target")
+                }
+            }
 
             HStack(spacing: 8) {
                 if let period = self.budget.period {

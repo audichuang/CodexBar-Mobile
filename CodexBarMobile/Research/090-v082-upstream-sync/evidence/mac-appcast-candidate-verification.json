@@ -1,0 +1,16 @@
+{
+  "sourceCommit": "18ebb97272a68853473b3c3c565fc56f719901e2",
+  "candidateXML": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/appcast-candidate/appcast.xml",
+  "candidateXMLSHA256": "e31cf4563f9663cb04a6e77b3918d5885f76505b7a450019ba7da817d6d9d36e",
+  "repositoryFeedSHA256": "64eaed972cfda8729d7d691ac647cd02f00ccceb1f735f1e26f5adf5e22d9980",
+  "version": "175.1.3.2.0",
+  "shortVersion": "0.82.0.1",
+  "enclosureURL": "https://github.com/o1xhack/CodexBar-Mobile/releases/download/v0.82.0.1-mobile.3.2.0/CodexBar-0.82.0.1-mobile.3.2.0.zip",
+  "length": 92810809,
+  "zipSHA256": "06dcb2492cc1bdeac809650deceb4d1a4388c0170f167b866ec57bdb23473aa1",
+  "signaturePresent": true,
+  "monotonic": true,
+  "published": false,
+  "ed25519Verified": true,
+  "clientBundlePublicKeyVerified": true
+}

@@ -355,7 +355,12 @@ public enum WidgetSelectionStore {
 
     public static func loadSelectedProvider(bundleID: String? = Bundle.main.bundleIdentifier) -> ProviderInstanceID? {
         let defaults = self.sharedDefaults(bundleID: bundleID)
-        guard let raw = defaults.string(forKey: self.selectedProviderKey) else { return nil }
+        return self.selectedProvider(in: defaults, fallback: .standard)
+    }
+
+    static func selectedProvider(in defaults: UserDefaults, fallback: UserDefaults) -> ProviderInstanceID? {
+        guard let raw = defaults.string(forKey: self.selectedProviderKey)
+            ?? fallback.string(forKey: self.selectedProviderKey) else { return nil }
         return ProviderInstanceID(rawValue: raw)
     }
 
@@ -364,7 +369,14 @@ public enum WidgetSelectionStore {
         bundleID: String? = Bundle.main.bundleIdentifier)
     {
         let defaults = self.sharedDefaults(bundleID: bundleID)
+        self.persist(instanceID, to: defaults)
+    }
+
+    @discardableResult
+    static func persist(_ instanceID: ProviderInstanceID, to defaults: UserDefaults) -> Bool {
+        guard defaults.string(forKey: self.selectedProviderKey) != instanceID.rawValue else { return false }
         defaults.set(instanceID.rawValue, forKey: self.selectedProviderKey)
+        return true
     }
 
     public static func saveSelectedProvider(

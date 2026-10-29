@@ -1,0 +1,142 @@
+{
+  "result": "Passed",
+  "test": "DuoWorkspaceUITests/testCostAndSharePanesAreAccessibleAtTheCurrentSize()",
+  "durationSeconds": 45.05963408946991,
+  "runtime": "iOS 27.1 24A94232",
+  "device": "44FF07DE-FAD8-4670-B9D8-35542A3FE199",
+  "eventSource": {
+    "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-routing-xcode-diagnostics.txt",
+    "sha256": "5f74d778a1e0c60a67c0f4b8db3e3af8ccb3f3ce739760767a3d8e7e59b4bea9",
+    "note": "Successful test deletes automatic event attachments; retained compressed Xcode diagnostics contain explicit synthesis records."
+  },
+  "events": [
+    {
+      "line": 1679,
+      "event": "tap",
+      "displayID": 3,
+      "path": [
+        "Path 1:",
+        "\tTouch down at 287.0, 52.0, offset=0.00s",
+        "\tTouch up at 287.0, 52.0, offset=0.05s",
+        "14:25:22.139 CodexBarMobileUITests-Runner[68531:17666002] Event upper bound on duration 30.05",
+        "14:25:22.139 CodexBarMobileUITests-Runner[68531:17666002] Computed timeout 30.05 for future for 'synthesizing event'",
+        "14:25:22.139 CodexBarMobileUITests-Runner[68531:17666002] <XCTWaiter: 0x107ef1e60> entering wait loop for 30.05s with expectations: `synthesizing event`"
+      ]
+    },
+    {
+      "line": 4101,
+      "event": "press, hold, drag, and hold",
+      "displayID": 3,
+      "path": [
+        "Path 1:",
+        "\tTouch down at 334.5, 190.2, offset=0.00s",
+        "\tMove to 334.5, 190.2, offset=0.05s",
+        "\tMove to 334.5, 713.2, offset=1.10s",
+        "\tTouch up at 334.5, 713.2, offset=1.10s",
+        "14:25:28.205 CodexBarMobileUITests-Runner[68531:17666002] Event upper bound on duration 31.10"
+      ]
+    },
+    {
+      "line": 6431,
+      "event": "press, hold, drag, and hold",
+      "displayID": 3,
+      "path": [
+        "Path 1:",
+        "\tTouch down at 334.5, 190.2, offset=0.00s",
+        "\tMove to 334.5, 190.2, offset=0.05s",
+        "\tMove to 334.5, 713.2, offset=1.10s",
+        "\tTouch up at 334.5, 713.2, offset=1.10s",
+        "14:25:31.683 CodexBarMobileUITests-Runner[68531:17666002] Event upper bound on duration 31.10"
+      ]
+    },
+    {
+      "line": 8771,
+      "event": "press, hold, drag, and hold",
+      "displayID": 3,
+      "path": [
+        "Path 1:",
+        "\tTouch down at 334.5, 190.2, offset=0.00s",
+        "\tMove to 334.5, 190.2, offset=0.05s",
+        "\tMove to 334.5, 713.2, offset=1.10s",
+        "\tTouch up at 334.5, 713.2, offset=1.10s",
+        "14:25:36.854 CodexBarMobileUITests-Runner[68531:17666002] Event upper bound on duration 31.10"
+      ]
+    },
+    {
+      "line": 12614,
+      "event": "tap",
+      "displayID": 3,
+      "path": [
+        "Path 1:",
+        "\tTouch down at 158.0, 903.0, offset=0.00s",
+        "\tTouch up at 158.0, 903.0, offset=0.05s",
+        "14:25:41.917 CodexBarMobileUITests-Runner[68531:17666002] Event upper bound on duration 30.05",
+        "14:25:41.917 CodexBarMobileUITests-Runner[68531:17666002] Computed timeout 30.05 for future for 'synthesizing event'",
+        "14:25:41.917 CodexBarMobileUITests-Runner[68531:17666002] <XCTWaiter: 0x1114071b0> entering wait loop for 30.05s with expectations: `synthesizing event`"
+      ]
+    },
+    {
+      "line": 14837,
+      "event": "press, hold, drag, and hold",
+      "displayID": 3,
+      "path": [
+        "Path 1:",
+        "\tTouch down at 334.5, 190.2, offset=0.00s",
+        "\tMove to 334.5, 190.2, offset=0.05s",
+        "\tMove to 334.5, 713.2, offset=1.10s",
+        "\tTouch up at 334.5, 713.2, offset=1.10s",
+        "14:25:46.226 CodexBarMobileUITests-Runner[68531:17666002] Event upper bound on duration 31.10"
+      ]
+    },
+    {
+      "line": 22499,
+      "event": "tap",
+      "displayID": 3,
+      "path": [
+        "Path 1:",
+        "\tTouch down at 625.0, 903.0, offset=0.00s",
+        "\tTouch up at 625.0, 903.0, offset=0.05s",
+        "14:25:56.282 CodexBarMobileUITests-Runner[68531:17666002] Event upper bound on duration 30.05",
+        "14:25:56.282 CodexBarMobileUITests-Runner[68531:17666002] Computed timeout 30.05 for future for 'synthesizing event'",
+        "14:25:56.282 CodexBarMobileUITests-Runner[68531:17666002] <XCTWaiter: 0x11297f6f0> entering wait loop for 30.05s with expectations: `synthesizing event`"
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-routing-retest-attachments/7DC808CC-9C4A-4AC8-8F21-44C2F4FE69F5.png",
+      "name": "Share editor with reachable controls - screen 1_0_9917E3F3-A134-4CC8-83C2-CFA9D924EAD7.png",
+      "sha256": "f5aac95a96b05bcbec7dc3f975c49c486193999c6b5db9766b1caf058289f23e"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-routing-retest-attachments/1848AB42-FEF4-4439-B50E-6B875E667C54.png",
+      "name": "Share editor with reachable controls - screen 0_0_AE9E7C3B-FFFF-4C22-861B-6FCC4EA48BD8.png",
+      "sha256": "5d26661e5205097f6c89f35447e7b74afac0e132a7a7619fdeefa2cf10e734ba"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-routing-retest-attachments/15D52B2E-5E65-4E43-920A-58B8BA93DE0A.png",
+      "name": "Cost report production layout - screen 1_0_D9F1D493-8CFC-4A36-97D8-FDD0515C05E9.png",
+      "sha256": "d6a7f401acb73ef48b0079d3d6e56beac53f1e159e63e94753ed95e32c020891"
+    },
+    {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-routing-retest-attachments/CE2F7A39-0E18-46DC-9102-BBB2DA40C207.png",
+      "name": "Cost report production layout - screen 0_0_A755A806-DB31-4E07-B4B3-5F889F78C634.png",
+      "sha256": "5d26661e5205097f6c89f35447e7b74afac0e132a7a7619fdeefa2cf10e734ba"
+    }
+  ],
+  "previousFailure": {
+    "source": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-input-routing.json",
+    "drags": 48,
+    "dragDisplayIDs": [
+      1
+    ],
+    "tapDisplayIDs": [
+      3
+    ]
+  },
+  "visualReview": {
+    "cost": "Daily Spend curve visible after scroll",
+    "share": "Template, Period 30 Days and Share Image all visible",
+    "close": "Tap display 3 followed by cost-share-button exists assertion; no separate final screenshot or hittable assertion"
+  }
+}

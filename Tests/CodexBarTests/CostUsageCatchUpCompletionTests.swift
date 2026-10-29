@@ -442,13 +442,12 @@ struct CostUsageCatchUpCompletionTests {
         #expect(completedUsage.codexScanFileId != currentIdentity)
         #expect(completedUsage.codexTokenIndexAnchor != nil)
         staleCache.files[path] = completedUsage
-        let normalizedPath = path.hasPrefix("/var/")
-            ? "/private" + path
-            : path.replacingOccurrences(
-                of: "/private/var/",
-                with: "/var/",
-                options: [.anchored])
+        // Do not depend on macOS placing test fixtures below the /var alias.
+        // Keep a raw lexical alias: production normalizes ./ but does not resolve symlinks.
+        let fileURL = URL(fileURLWithPath: path)
+        let normalizedPath = fileURL.deletingLastPathComponent().path + "/./" + fileURL.lastPathComponent
         #expect(normalizedPath != path)
+        #expect(URL(fileURLWithPath: normalizedPath).standardizedFileURL.path == path)
         staleCache.codexActiveLookbackState = try CostUsageCodexActiveLookbackState(
             scanSinceKey: #require(staleCache.scanSinceKey),
             rootPaths: roots,

@@ -170,7 +170,7 @@ sources and setup guide. The [provider ID list](provider-ids.md) is generated fr
   - `--allow-plain-http` is the explicit acknowledgment that the bearer token crosses the network **in cleartext on every request** when serving on a non-loopback host. `serve` refuses to start on a non-loopback host without it.
   - Provider config is reloaded for each usage/cost request; cache entries are keyed by the loaded config so provider toggles and source changes do not require restarting `serve`.
   - Transient refresh failures fall back to the last good response for up to ten refresh intervals (minimum five minutes) so polling clients do not flicker between data and errors; disabled when `--refresh-interval 0`.
-  - After a cached response expires, `serve` returns the last-good response immediately while rebuilding it in the background; `--refresh-interval 0` keeps every request blocking.
+  - After a cached usage or cost response expires, `serve` returns the last-good response immediately while rebuilding it in the background. Dashboard snapshots wait for a rebuild after their normal refresh interval, including when returning to a previously cached used/remaining mode; request deadlines and last-good fallback on failure still apply. `--refresh-interval 0` keeps every request blocking.
   - On glibc Linux, `serve` periodically returns freed heap pages to the operating system (30-second maintenance interval). Allocator arena settings remain controlled by the environment. macOS and musl keep their normal allocator behavior.
   - The default loopback bind rejects non-loopback `Host` headers; a configured non-loopback `--host` additionally accepts its own name. No CORS, TLS, or daemon mode.
   - Endpoints: `GET /` (web UI), `GET /health`, `GET /usage`, `GET /usage?provider=<id|both|all>`, `GET /cost`, `GET /cost?provider=<id|both|all>`, `GET /dashboard/v1/snapshot` (plus `provider=<id>` and `detail=<full|shell>`).
@@ -364,6 +364,8 @@ MOONSHOT_API_KEY=... codexbar --provider moonshot --source api --format json --p
 codexbar config validate --format json --pretty
 codexbar config dump --pretty
 printf '%s' "$OPENAI_ADMIN_KEY" | codexbar config set-api-key --provider openai --stdin
+pbpaste | codexbar config set-cookie --provider claude --stdin
+codexbar config clear-credential --provider claude --cookie
 codexbar config enable --provider grok
 codexbar config set-source --provider claude --source cli
 codexbar config set-source --provider claude --source auto

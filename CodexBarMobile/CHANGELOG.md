@@ -2,6 +2,21 @@
 
 All notable changes to the CodexBar iOS companion app will be documented in this file.
 
+## [3.3.0] — Unreleased
+
+### Added
+- Sync and display Soniox, Trae CN, abliteration.ai and Chatbox AI through the existing generic quota/balance/detail surfaces, with append-only quota subscriptions and device-scoped identities when the source has no verified account ID.
+- Reader-local monthly allowance and spend-budget daily targets using local calendar days, actual reset times and optional source allowance units.
+- Optional expected-use metadata and native detail progress markers; localized Kimi monthly Code/other-feature breakdown and new first-party provider details.
+
+### Changed
+- Align Mac sync with upstream v0.80.0–v0.82.0 while retaining existing Duo navigation/layout, account/reset history isolation and older payload support.
+
+### Fixed
+- Preserve OpenCode source-recorded cost provenance, including recorded zero and mixed windows, through cached/fresh Mac snapshots and multi-Mac iOS merges; never relabel these amounts as verified provider billing or pure list-price estimates.
+- Retain Cursor X Subscription’s shared Weekly label and independent uncapped on-demand spend, including confirmed zero, instead of losing them in the mobile bridge.
+- Render cached Kimi bonus-credit expiry in the reader’s language and stop presenting an expired gift as spendable; legacy payloads without a machine-readable expiry retain their original text.
+
 ## [3.2.0 (260)] — Unreleased
 
 ### Added

@@ -114,7 +114,7 @@ files successfully before extracting either archive, then use the installation
 commands above with the downloaded filenames.
 
 To upgrade, quit CodexBar, rerun the installation block, and reopen it.
-Preferences and disabled autostart are preserved. There is no desktop
+Preferences and disabled autostart are preserved, including `Hidden = true` entries and comments in existing desktop files. There is no desktop
 auto-updater or distro repository package yet. Ordinary CI artifacts are
 previews, not releases. See [validation and removal](#validation-and-removal)
 for uninstall paths.
@@ -129,6 +129,10 @@ The installer honors absolute `XDG_CONFIG_HOME` and `XDG_DATA_HOME` paths.
 Unset, empty, or relative values use `~/.config` and `~/.local/share`, respectively.
 The executable always installs to `~/.local/bin/codexbar-linux`; `XDG_BIN_HOME`
 does not change that destination.
+
+Launcher actions and login startup support home paths containing spaces, quotes,
+dollar signs, backticks, backslashes, and percent signs. Rerun the installer to
+repair entries created by an older version in these paths.
 
 ## Build and install
 
@@ -196,7 +200,7 @@ Ordinary launch and `--usage` open the full Usage & Spend window. Quick View ope
 with `--quick-view`, from the tray menu, or by clicking the tray icon after enabling
 "Use compact Quick View from the tray" in Settings (off by default). It presents
 an Overview and provider tabs with the same provider icons used by the macOS menu, compact quota meters,
-reset times, pace, and optional local cost. The footer opens the full Usage & Spend
+reset times, pace, and optional local cost. Providers without a bundled logo use a contrasting initial instead of an empty icon slot. The footer opens the full Usage & Spend
 window, Settings, About, or Quit. `--spending` opens its Spending tab. The full Usage & Spend window retains
 generic provider details and charts. Unknown values stay unknown. Identity is hidden by default. Display preferences control reset countdowns,
 absolute times, pace visibility, the Omarchy bar's detail, per-model caps and provider
@@ -286,6 +290,8 @@ python3 Integrations/Linux/tests/test_desktop.py
 python3 Integrations/Linux/tests/test_package.py
 # With qml6-module-qttest installed (Ubuntu/Debian):
 QT_QPA_PLATFORM=offscreen QT_QUICK_BACKEND=software /usr/lib/qt6/bin/qmltestrunner -input Integrations/Linux/tests/qml
+# Icon test: qmake6 Integrations/Linux/tests/icons.pro in a build directory,
+# then make and run QT_QPA_PLATFORM=offscreen ./tst_icons.
 # Account-action test: qmake6 Integrations/Linux/tests/accounts.pro in a build directory,
 # then make and run ./tst_accounts. Uses a fake terminal and fake provider CLIs.
 ```

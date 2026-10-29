@@ -1,0 +1,345 @@
+{
+  "duo-native-fold-3": {
+    "result": "Passed",
+    "device": "44FF07DE-FAD8-4670-B9D8-35542A3FE199",
+    "runtime": "iOS 27.1 24A94232",
+    "diagnostics": {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-native-fold-3-review-diagnostics.txt",
+      "sha256": "0667296f57f2edae2d41abcac9486ed684e7b342f54ddf006516aa45b8daa203"
+    },
+    "events": [
+      {
+        "line": 1658,
+        "event": "tap",
+        "displayID": 3,
+        "path": [
+          "Path 1:",
+          "\tTouch down at 565.0, 170.0, offset=0.00s",
+          "\tTouch up at 565.0, 170.0, offset=0.05s",
+          "14:41:20.913 CodexBarMobileUITests-Runner[85598:17764535] Event upper bound on duration 30.05",
+          "14:41:20.913 CodexBarMobileUITests-Runner[85598:17764535] Computed timeout 30.05 for future for 'synthesizing event'",
+          "14:41:20.913 CodexBarMobileUITests-Runner[85598:17764535] <XCTWaiter: 0x109ad87e0> entering wait loop for 30.05s with expectations: `synthesizing event`"
+        ]
+      },
+      {
+        "line": 2464,
+        "event": "Type 'Codex'",
+        "displayID": 3,
+        "path": [
+          "Path 1:",
+          "\tType string 'Codex'",
+          "14:41:22.807 CodexBarMobileUITests-Runner[85598:17764535] Event upper bound on duration 31.10",
+          "14:41:22.807 CodexBarMobileUITests-Runner[85598:17764535] Computed timeout 31.10 for future for 'synthesizing event'",
+          "14:41:22.807 CodexBarMobileUITests-Runner[85598:17764535] <XCTWaiter: 0x109a768e0> entering wait loop for 31.10s with expectations: `synthesizing event`",
+          "14:41:22.883 CodexBarMobileUITests-Runner[85598:17764784] Handling kAXUserTestingNotification"
+        ]
+      },
+      {
+        "line": 3279,
+        "event": "tap",
+        "displayID": 3,
+        "path": [
+          "Path 1:",
+          "\tTouch down at 352.3, 170.0, offset=0.00s",
+          "\tTouch up at 352.3, 170.0, offset=0.05s",
+          "14:41:24.441 CodexBarMobileUITests-Runner[85598:17764535] Event upper bound on duration 30.05",
+          "14:41:24.441 CodexBarMobileUITests-Runner[85598:17764535] Computed timeout 30.05 for future for 'synthesizing event'",
+          "14:41:24.441 CodexBarMobileUITests-Runner[85598:17764535] <XCTWaiter: 0x109ada940> entering wait loop for 30.05s with expectations: `synthesizing event`"
+        ]
+      },
+      {
+        "line": 4525,
+        "event": "tap",
+        "displayID": 3,
+        "path": [
+          "Path 1:",
+          "\tTouch down at 105.0, 903.0, offset=0.00s",
+          "\tTouch up at 105.0, 903.0, offset=0.05s",
+          "14:41:26.865 CodexBarMobileUITests-Runner[85598:17764535] Event upper bound on duration 30.05",
+          "14:41:26.865 CodexBarMobileUITests-Runner[85598:17764535] Computed timeout 30.05 for future for 'synthesizing event'",
+          "14:41:26.865 CodexBarMobileUITests-Runner[85598:17764535] <XCTWaiter: 0x109b18cf0> entering wait loop for 30.05s with expectations: `synthesizing event`"
+        ]
+      },
+      {
+        "line": 5270,
+        "event": "tap",
+        "displayID": 3,
+        "path": [
+          "Path 1:",
+          "\tTouch down at 473.0, 903.0, offset=0.00s",
+          "\tTouch up at 473.0, 903.0, offset=0.05s",
+          "14:41:30.235 CodexBarMobileUITests-Runner[85598:17764535] Event upper bound on duration 30.05",
+          "14:41:30.235 CodexBarMobileUITests-Runner[85598:17764535] Computed timeout 30.05 for future for 'synthesizing event'",
+          "14:41:30.235 CodexBarMobileUITests-Runner[85598:17764535] <XCTWaiter: 0x109b19e90> entering wait loop for 30.05s with expectations: `synthesizing event`"
+        ]
+      },
+      {
+        "line": 9324,
+        "event": "tap",
+        "displayID": 3,
+        "path": [
+          "Path 1:",
+          "\tTouch down at 498.7, 786.5, offset=0.00s",
+          "\tTouch up at 498.7, 786.5, offset=0.05s",
+          "14:41:36.203 CodexBarMobileUITests-Runner[85598:17764535] Event upper bound on duration 30.05",
+          "14:41:36.203 CodexBarMobileUITests-Runner[85598:17764535] Computed timeout 30.05 for future for 'synthesizing event'",
+          "14:41:36.203 CodexBarMobileUITests-Runner[85598:17764535] <XCTWaiter: 0x10a186e80> entering wait loop for 30.05s with expectations: `synthesizing event`"
+        ]
+      },
+      {
+        "line": 62122,
+        "event": "press, hold, drag, and hold",
+        "displayID": 1,
+        "path": [
+          "Path 1:",
+          "\tTouch down at 93.2, 339.0, offset=0.00s",
+          "\tMove to 93.2, 339.0, offset=0.05s",
+          "\tMove to 349.5, 339.0, offset=0.56s",
+          "\tTouch up at 349.5, 339.0, offset=0.56s",
+          "14:42:08.825 CodexBarMobileUITests-Runner[85598:17764535] Event upper bound on duration 30.56"
+        ]
+      },
+      {
+        "line": 64350,
+        "event": "press, hold, drag, and hold",
+        "displayID": 1,
+        "path": [
+          "Path 1:",
+          "\tTouch down at 93.2, 339.0, offset=0.00s",
+          "\tMove to 93.2, 339.0, offset=0.05s",
+          "\tMove to 349.5, 339.0, offset=0.56s",
+          "\tTouch up at 349.5, 339.0, offset=0.56s",
+          "14:42:13.725 CodexBarMobileUITests-Runner[85598:17764535] Event upper bound on duration 30.56"
+        ]
+      },
+      {
+        "line": 68160,
+        "event": "tap",
+        "displayID": 1,
+        "path": [
+          "Path 1:",
+          "\tTouch down at 360.0, 48.0, offset=0.00s",
+          "\tTouch up at 360.0, 48.0, offset=0.05s",
+          "14:42:21.668 CodexBarMobileUITests-Runner[85598:17764535] Event upper bound on duration 30.05",
+          "14:42:21.668 CodexBarMobileUITests-Runner[85598:17764535] Computed timeout 30.05 for future for 'synthesizing event'",
+          "14:42:21.668 CodexBarMobileUITests-Runner[85598:17764535] <XCTWaiter: 0x11438b030> entering wait loop for 30.05s with expectations: `synthesizing event`"
+        ]
+      },
+      {
+        "line": 69348,
+        "event": "tap",
+        "displayID": 1,
+        "path": [
+          "Path 1:",
+          "\tTouch down at 205.0, 48.0, offset=0.00s",
+          "\tTouch up at 205.0, 48.0, offset=0.05s",
+          "14:42:24.609 CodexBarMobileUITests-Runner[85598:17764535] Event upper bound on duration 30.05",
+          "14:42:24.609 CodexBarMobileUITests-Runner[85598:17764535] Computed timeout 30.05 for future for 'synthesizing event'",
+          "14:42:24.609 CodexBarMobileUITests-Runner[85598:17764535] <XCTWaiter: 0x11440c960> entering wait loop for 30.05s with expectations: `synthesizing event`"
+        ]
+      },
+      {
+        "line": 119107,
+        "event": "tap",
+        "displayID": 3,
+        "path": [
+          "Path 1:",
+          "\tTouch down at 105.0, 903.0, offset=0.00s",
+          "\tTouch up at 105.0, 903.0, offset=0.05s",
+          "14:42:48.439 CodexBarMobileUITests-Runner[85598:17764535] Event upper bound on duration 30.05",
+          "14:42:48.439 CodexBarMobileUITests-Runner[85598:17764535] Computed timeout 30.05 for future for 'synthesizing event'",
+          "14:42:48.439 CodexBarMobileUITests-Runner[85598:17764535] <XCTWaiter: 0x1144ae8e0> entering wait loop for 30.05s with expectations: `synthesizing event`"
+        ]
+      },
+      {
+        "line": 119873,
+        "event": "tap",
+        "displayID": 3,
+        "path": [
+          "Path 1:",
+          "\tTouch down at 473.0, 903.0, offset=0.00s",
+          "\tTouch up at 473.0, 903.0, offset=0.05s",
+          "14:42:51.844 CodexBarMobileUITests-Runner[85598:17764535] Event upper bound on duration 30.05",
+          "14:42:51.844 CodexBarMobileUITests-Runner[85598:17764535] Computed timeout 30.05 for future for 'synthesizing event'",
+          "14:42:51.844 CodexBarMobileUITests-Runner[85598:17764535] <XCTWaiter: 0x1144aedf0> entering wait loop for 30.05s with expectations: `synthesizing event`"
+        ]
+      },
+      {
+        "line": 120703,
+        "event": "tap",
+        "displayID": 3,
+        "path": [
+          "Path 1:",
+          "\tTouch down at 525.0, 903.0, offset=0.00s",
+          "\tTouch up at 525.0, 903.0, offset=0.05s",
+          "14:42:55.586 CodexBarMobileUITests-Runner[85598:17764535] Event upper bound on duration 30.05",
+          "14:42:55.586 CodexBarMobileUITests-Runner[85598:17764535] Computed timeout 30.05 for future for 'synthesizing event'",
+          "14:42:55.586 CodexBarMobileUITests-Runner[85598:17764535] <XCTWaiter: 0x1144afdb0> entering wait loop for 30.05s with expectations: `synthesizing event`"
+        ]
+      }
+    ],
+    "images": [
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-native-fold-review-attachments/C24C0693-C788-4B69-ABB1-4EE789733FA2.png",
+        "name": "Native unfolded display permits a fresh share draft - screen 1_0_E126CA70-4F1C-406F-8351-599BF93B74F4.png",
+        "sha256": "4e0990eb6dcffa7a25eb5126c3ccab8390c2613c0a3d1b84611cc6e59d8b5ff1"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-native-fold-review-attachments/2FADFAE8-010D-4F60-8E97-9596638DE6D9.png",
+        "name": "Native unfolded display permits a fresh share draft - screen 0_0_BA34AEFA-0841-49B3-A7B6-02F53706591B.png",
+        "sha256": "8b0878276ea7ac5041b2e7e9679e63774547ffb5610addc65ee5dd4f02e5e65d"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-native-fold-review-attachments/7F1A36C2-94C8-4B74-8722-430683A57225.png",
+        "name": "WAIT NATIVE UNFOLD - selected Codex account after cancelling draft - screen 1_0_C24AC6F8-3F0D-4E62-B9AA-88AE29E1D73F.png",
+        "sha256": "2b41948b1e935f55bb5fbc1469bb4b5eab75313ce3166f31cbe2416ac5eabfdc"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-native-fold-review-attachments/314C0C2B-A351-4C9C-8D53-2EF8405C5549.png",
+        "name": "WAIT NATIVE UNFOLD - selected Codex account after cancelling draft - screen 0_0_8502026D-29B2-43F2-8654-2444B56124A9.png",
+        "sha256": "bf279a6b3927b0cc6cb1ab83cecf49af22febc15ab8f31bb42767629d920debf"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-native-fold-review-attachments/F0A99E2D-1622-453F-A32B-E5C75990D932.png",
+        "name": "Native folded outer display retains reachable heatmap draft - screen 1_0_0E28CE7A-5A02-4B56-8FA0-A1303D7D23FA.png",
+        "sha256": "2b41948b1e935f55bb5fbc1469bb4b5eab75313ce3166f31cbe2416ac5eabfdc"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-native-fold-review-attachments/48E8A912-A435-47C2-B97B-29CE962BA131.png",
+        "name": "Native folded outer display retains reachable heatmap draft - screen 0_0_B83C08E0-DF19-4F0E-823A-7B17AA073CA3.png",
+        "sha256": "9b763f4ddbf7f142b9acf378f2a667fdb8a2472f81ceaab829479a96332bdfb6"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-native-fold-review-attachments/7CC3BC60-CE5F-40E2-8C00-B98819462080.png",
+        "name": "WAIT NATIVE FOLD - heatmap draft prepared on inner display - screen 1_0_92793260-F92A-4C93-A1CC-1D14E5B0C112.png",
+        "sha256": "2d9ee24b675b03cd5496515be1e6fea5d364a2117a62a785a8407c4b22b32a3f"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-native-fold-review-attachments/31C115FE-E24D-4280-81D1-6801C3FE8352.png",
+        "name": "WAIT NATIVE FOLD - heatmap draft prepared on inner display - screen 0_0_D04FA027-6367-4B96-BB2B-75B271C6258F.png",
+        "sha256": "8b0878276ea7ac5041b2e7e9679e63774547ffb5610addc65ee5dd4f02e5e65d"
+      }
+    ]
+  },
+  "duo-inner-landscape-cost": {
+    "result": "Passed",
+    "device": "44FF07DE-FAD8-4670-B9D8-35542A3FE199",
+    "runtime": "iOS 27.1 24A94232",
+    "diagnostics": {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-inner-landscape-cost-review-diagnostics.txt",
+      "sha256": "54d5ab65dbd84082fd5a530eacba879beafa0bfa9e19dc5b6dba8790eb00c2a6"
+    },
+    "events": [
+      {
+        "line": 2022,
+        "event": "tap",
+        "displayID": 3,
+        "path": [
+          "Path 1:",
+          "\tTouch down at 105.0, 903.0, offset=0.00s",
+          "\tTouch up at 105.0, 903.0, offset=0.05s",
+          "14:44:23.135 CodexBarMobileUITests-Runner[88382:17784098] Event upper bound on duration 30.05",
+          "14:44:23.135 CodexBarMobileUITests-Runner[88382:17784098] Computed timeout 30.05 for future for 'synthesizing event'",
+          "14:44:23.135 CodexBarMobileUITests-Runner[88382:17784098] <XCTWaiter: 0x107b07030> entering wait loop for 30.05s with expectations: `synthesizing event`"
+        ]
+      },
+      {
+        "line": 6558,
+        "event": "tap",
+        "displayID": 3,
+        "path": [
+          "Path 1:",
+          "\tTouch down at 473.0, 903.0, offset=0.00s",
+          "\tTouch up at 473.0, 903.0, offset=0.05s",
+          "14:44:30.105 CodexBarMobileUITests-Runner[88382:17784098] Event upper bound on duration 30.05",
+          "14:44:30.105 CodexBarMobileUITests-Runner[88382:17784098] Computed timeout 30.05 for future for 'synthesizing event'",
+          "14:44:30.105 CodexBarMobileUITests-Runner[88382:17784098] <XCTWaiter: 0x10815bab0> entering wait loop for 30.05s with expectations: `synthesizing event`"
+        ]
+      },
+      {
+        "line": 14402,
+        "event": "tap",
+        "displayID": 3,
+        "path": [
+          "Path 1:",
+          "\tTouch down at 525.0, 903.0, offset=0.00s",
+          "\tTouch up at 525.0, 903.0, offset=0.05s",
+          "14:44:39.075 CodexBarMobileUITests-Runner[88382:17784098] Event upper bound on duration 30.05",
+          "14:44:39.075 CodexBarMobileUITests-Runner[88382:17784098] Computed timeout 30.05 for future for 'synthesizing event'",
+          "14:44:39.075 CodexBarMobileUITests-Runner[88382:17784098] <XCTWaiter: 0x112246f70> entering wait loop for 30.05s with expectations: `synthesizing event`"
+        ]
+      },
+      {
+        "line": 16288,
+        "event": "tap",
+        "displayID": 3,
+        "path": [
+          "Path 1:",
+          "\tTouch down at 105.0, 903.0, offset=0.00s",
+          "\tTouch up at 105.0, 903.0, offset=0.05s",
+          "14:44:47.820 CodexBarMobileUITests-Runner[88382:17784098] Event upper bound on duration 30.05",
+          "14:44:47.820 CodexBarMobileUITests-Runner[88382:17784098] Computed timeout 30.05 for future for 'synthesizing event'",
+          "14:44:47.820 CodexBarMobileUITests-Runner[88382:17784098] <XCTWaiter: 0x107b42c40> entering wait loop for 30.05s with expectations: `synthesizing event`"
+        ]
+      },
+      {
+        "line": 18448,
+        "event": "press, hold, drag, and hold",
+        "displayID": 3,
+        "path": [
+          "Path 1:",
+          "\tTouch down at 210.5, 211.8, offset=0.00s",
+          "\tMove to 410.5, 211.8, offset=0.20s",
+          "\tTouch up at 410.5, 211.8, offset=0.20s",
+          "14:44:52.067 CodexBarMobileUITests-Runner[88382:17784098] Event upper bound on duration 30.20",
+          "14:44:52.067 CodexBarMobileUITests-Runner[88382:17784098] Computed timeout 30.20 for future for 'synthesizing event'"
+        ]
+      },
+      {
+        "line": 20403,
+        "event": "press, hold, drag, and hold",
+        "displayID": 3,
+        "path": [
+          "Path 1:",
+          "\tTouch down at 210.5, 655.3, offset=0.00s",
+          "\tMove to 410.5, 655.3, offset=0.20s",
+          "\tTouch up at 410.5, 655.3, offset=0.20s",
+          "14:44:55.398 CodexBarMobileUITests-Runner[88382:17784098] Event upper bound on duration 30.20",
+          "14:44:55.398 CodexBarMobileUITests-Runner[88382:17784098] Computed timeout 30.20 for future for 'synthesizing event'"
+        ]
+      }
+    ],
+    "images": [
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-landscape-cost-review-attachments/D9B007D1-600C-4481-8893-413D8AF95D6D.png",
+        "name": "Share editor with reachable controls - screen 1_0_663359E2-1F23-477E-88A6-CC20EED221AA.png",
+        "sha256": "223095d92a27eceb6a998b728e3c15b4c7aed35dd85be8e302dd1feebefdfca2"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-landscape-cost-review-attachments/A269DDCF-82B9-4221-B0E8-EAD3A5C626F4.png",
+        "name": "Share editor with reachable controls - screen 0_0_8E646104-BED8-4D95-965D-6856322141D9.png",
+        "sha256": "8b0878276ea7ac5041b2e7e9679e63774547ffb5610addc65ee5dd4f02e5e65d"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-landscape-cost-review-attachments/E187DAAA-6FC0-489D-B9FA-49C7FB4C82EE.png",
+        "name": "Cost report production layout - screen 1_0_A3E714BF-E826-4FC5-B78F-EAD6EC8B051A.png",
+        "sha256": "c5aec6968fb9decfca01d2e49b704cab87458b105d8d9175d0ba4f81f873da8d"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-landscape-cost-review-attachments/82E66DE1-2583-499D-9EB1-CE580D330A7C.png",
+        "name": "Cost report production layout - screen 0_0_1E662C1C-CBB4-4B7D-8223-06A5BDFE2371.png",
+        "sha256": "8b0878276ea7ac5041b2e7e9679e63774547ffb5610addc65ee5dd4f02e5e65d"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-landscape-cost-review-attachments/89AD738C-4D65-4364-A575-9DD85CE54C05.png",
+        "name": "Cost panes independently scrolled - screen 1_0_CDDFC160-E5EC-47ED-9534-AE14153335DC.png",
+        "sha256": "ef7e495c4fd0ebe513f3d64ed72c54c6a537a1ed84398e5284fa2007c45b635b"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-landscape-cost-review-attachments/AC240943-0A60-4827-8116-532AAE6D77FC.png",
+        "name": "Cost panes independently scrolled - screen 0_0_46382993-9AA8-48CC-9377-5C9F7DD720B8.png",
+        "sha256": "8b0878276ea7ac5041b2e7e9679e63774547ffb5610addc65ee5dd4f02e5e65d"
+      }
+    ]
+  }
+}

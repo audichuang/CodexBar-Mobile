@@ -5094,8 +5094,34 @@ private struct NSEInvocationLogSection: View {
 enum MobileReleaseNotesCatalog {
     static let versions: [ReleaseNotesVersion] = [
         ReleaseNotesVersion(
-            version: "3.2.0",
+            version: "3.3.0",
             status: String(localized: "Latest"),
+            summary: String(localized: "More services, clearer allowance details"),
+            highlights: [
+                .init(
+                    id: "providers", symbol: "square.grid.2x2",
+                    title: String(localized: "See four more services"),
+                    detail: String(
+                        localized: "See Soniox, Trae CN, abliteration.ai and Chatbox AI usage and balances synced from your Mac.")),
+                .init(
+                    id: "daily-target", symbol: "calendar",
+                    title: String(localized: "Plan your monthly allowance"),
+                    detail: String(
+                        localized: "See how much you can use each day until reset, in the allowance’s own units.")),
+                .init(
+                    id: "details", symbol: "chart.bar",
+                    title: String(localized: "Clearer provider details"),
+                    detail: String(
+                        localized: "See Cursor’s weekly allowance and extra spend, Kimi’s breakdown and expiring gifts, and expected-use markers. Cost details distinguish source records from estimates.")),
+            ],
+            sections: [
+                .init(title: String(localized: "What's New"), items: [
+                    String(localized: "Update CodexBar on your Mac to receive these new details."),
+                ]),
+            ]),
+        ReleaseNotesVersion(
+            version: "3.2.0",
+            status: "",
             summary: String(localized: "Your personal Summary, clearer quota planning"),
             highlights: [
                 .init(

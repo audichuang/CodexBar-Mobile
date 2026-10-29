@@ -26,6 +26,12 @@ struct ProviderDetailRowPresentation: Equatable {
             self = Self.claudeCloudCredits(row: row, now: now, locale: locale)
             return
         }
+        if providerID == "kimi",
+           sectionTitle == "Bonus credits" || ["kimi-monthly-code", "kimi-monthly-other"].contains(row.id ?? "")
+        {
+            self = Self.kimiUsage(row: row, gift: sectionTitle == "Bonus credits", now: now, locale: locale)
+            return
+        }
         self.value = ProviderDetailLocalization.localizedValue(
             row.value, providerID: providerID, rowLabel: row.label, sectionTitle: sectionTitle, locale: locale)
         self.secondaryValue = row.secondaryValue.map {
@@ -45,6 +51,33 @@ struct ProviderDetailRowPresentation: Equatable {
 
     static func fraction(_ progress: SyncProviderDetailSection.Row.Progress) -> Double {
         min(1, max(0, progress.used / progress.total))
+    }
+
+    private static func kimiUsage(row: SyncProviderDetailSection.Row, gift: Bool, now: Date, locale: Locale) -> Self {
+        let expired = gift && row.expiresAt.map { $0 <= now } == true
+        let secondary = row.expiresAt.map { date in
+            let key = expired ? "Expired %@" : "Expires %@"
+            return String(
+                format: MobileLocalizedString.value(key, defaultValue: key, locale: locale),
+                locale: locale,
+                arguments: [date.formatted(Date.FormatStyle(date: .abbreviated, time: .shortened).locale(locale))])
+        } ?? row.secondaryValue // Old payloads have no machine expiry; never parse a Mac-local date.
+        if expired {
+            return Self(
+                value: MobileLocalizedString.value("Expired", defaultValue: "Expired", locale: locale),
+                secondaryValue: secondary, progressFraction: nil, isExpired: true)
+        }
+        guard let progress = row.progress else {
+            return Self(value: row.value, secondaryValue: secondary, progressFraction: nil, isExpired: false)
+        }
+        let ratio = gift ? max(0, 1 - progress.used / progress.total) : progress.used / progress.total
+        let key = gift ? "%@ left" : "%@ used"
+        return Self(
+            value: String(
+                format: MobileLocalizedString.value(key, defaultValue: key, locale: locale),
+                locale: locale,
+                arguments: [ratio.formatted(.percent.precision(.fractionLength(0...1)).locale(locale))]),
+            secondaryValue: secondary, progressFraction: Self.fraction(progress), isExpired: false)
     }
 
     /// The Mac writes "Expires <ISO-8601>" or "Expired <ISO-8601>" and an English amount.

@@ -62,6 +62,8 @@ struct ProviderAmountCard: View {
             String(localized: "v045_period_zenmux_payg", defaultValue: "ZenMux PAYG balance")
         case "Prepaid balance":
             String(localized: "v045_period_prepaid_balance", defaultValue: "Prepaid balance")
+        case "This month":
+            String(localized: "This month")
         case "Prepaid credits":
             String(localized: "v072_period_prepaid_credits", defaultValue: "Prepaid credits")
         case "Purchased credits":

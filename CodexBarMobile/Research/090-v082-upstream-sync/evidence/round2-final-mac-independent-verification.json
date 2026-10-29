@@ -1,0 +1,102 @@
+{
+  "timestamp_utc": "2026-10-29T03:36:55.488971+00:00",
+  "sourceCommit": "18ebb97272a68853473b3c3c565fc56f719901e2",
+  "currentHead": "18ebb97272a68853473b3c3c565fc56f719901e2",
+  "sourceInputCount": 1826,
+  "inputCoverageExact": true,
+  "assets": [
+    {
+      "name": "CodexBar-0.82.0.1-mobile.3.2.0.zip",
+      "sha256": "06dcb2492cc1bdeac809650deceb4d1a4388c0170f167b866ec57bdb23473aa1",
+      "size": 92810809
+    },
+    {
+      "name": "CodexBar-0.82.0.1-mobile.3.2.0.dSYM.zip",
+      "sha256": "d0d3be366d0d243c562b44a1d8df904aecdf16db860fedd86d45185199c00162",
+      "size": 74088431
+    }
+  ],
+  "executables": [
+    {
+      "role": "App",
+      "sha256": "75aaf96431ef55c18d1544e0ec3766732111d80f6ead03bfafe69c0fea23b261",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "minimumOS": [
+        "14.0",
+        "14.0"
+      ],
+      "signatureVerified": true
+    },
+    {
+      "role": "CLI",
+      "sha256": "952a052f98172d3e7c0a9c08a431194394635da457e983704758afda2839be43",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "minimumOS": [
+        "14.0",
+        "14.0"
+      ],
+      "signatureVerified": true
+    },
+    {
+      "role": "Watchdog",
+      "sha256": "624af25759bafbcc2006612c562dd509d4063f5d50c1ff3877a5f0c71bb2847b",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "minimumOS": [
+        "14.0",
+        "14.0"
+      ],
+      "signatureVerified": true
+    },
+    {
+      "role": "Widget",
+      "sha256": "6cba6dbb2bef212ce108048e363cd2a557fe340aded92bacd37e9dd758968375",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "minimumOS": [
+        "14.0",
+        "14.0"
+      ],
+      "signatureVerified": true
+    }
+  ],
+  "signedGroups": [
+    {
+      "role": "CodexBar.app",
+      "groups": [
+        "3TUERHN53E.com.steipete.codexbar"
+      ],
+      "cloudKit": "Production"
+    },
+    {
+      "role": "CodexBarWidget.appex",
+      "groups": [
+        "3TUERHN53E.com.steipete.codexbar"
+      ],
+      "cloudKit": null
+    },
+    {
+      "role": "CodexBarCLI",
+      "groups": [
+        "3TUERHN53E.com.steipete.codexbar"
+      ],
+      "cloudKit": null
+    }
+  ],
+  "clientPublicKeySignature": "cryptography unavailable; root CryptoKit verification evidence retained",
+  "candidateXMLSHA256": "e31cf4563f9663cb04a6e77b3918d5885f76505b7a450019ba7da817d6d9d36e",
+  "repositoryFeedSHA256": "64eaed972cfda8729d7d691ac647cd02f00ccceb1f735f1e26f5adf5e22d9980",
+  "errors": [],
+  "mode": "Independent read-only source/actual artifact/hash/codesign/vtool/appcast readback; no build, UI, accounts or live containers",
+  "remaining": "Root draft update and final documentation evidence pending; no full candidate clean declaration yet"
+}

@@ -1,6 +1,499 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "%@ used": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ used"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已用 %@"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已用 %@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 使用済み"
+          }
+        }
+      }
+    },
+    "Clearer provider details": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clearer provider details"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更清晰的服务详情"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更清楚的服務詳情"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "サービスの詳細がより明確に"
+          }
+        }
+      }
+    },
+    "Daily target: %@ per day": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daily target: %@ per day"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "每日目标：%@"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "每日目標：%@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1日あたりの目安：%@"
+          }
+        }
+      }
+    },
+    "Expected usage: %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Expected usage: %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "预期用量：%@"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "預期用量：%@"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "想定使用量：%@"
+          }
+        }
+      }
+    },
+    "Image Generation": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Image Generation"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "图像生成"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "影像生成"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "画像生成"
+          }
+        }
+      }
+    },
+    "Invoice billing": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invoice billing"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "发票结算"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "發票結算"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請求書払い"
+          }
+        }
+      }
+    },
+    "Kimi Code": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kimi Code"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kimi Code"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kimi Code"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kimi Code"
+          }
+        }
+      }
+    },
+    "Monthly budget": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Monthly budget"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "每月预算"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "每月預算"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "月間予算"
+          }
+        }
+      }
+    },
+    "More services, clearer allowance details": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "More services, clearer allowance details"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更多服务，更清晰的额度详情"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更多服務，更清楚的額度詳情"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "対応サービスと利用枠の詳細が充実"
+          }
+        }
+      }
+    },
+    "Other features": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Other features"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "其他功能"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "其他功能"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "その他の機能"
+          }
+        }
+      }
+    },
+    "Plan your monthly allowance": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plan your monthly allowance"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "规划每月额度"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "規劃每月額度"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "月間利用枠を計画"
+          }
+        }
+      }
+    },
+    "Prepaid": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prepaid"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "预付费"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "預付費"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "前払い"
+          }
+        }
+      }
+    },
+    "See Cursor’s weekly allowance and extra spend, Kimi’s breakdown and expiring gifts, and expected-use markers. Cost details distinguish source records from estimates.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "See Cursor’s weekly allowance and extra spend, Kimi’s breakdown and expiring gifts, and expected-use markers. Cost details distinguish source records from estimates."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查看 Cursor 每周额度与额外费用、Kimi 用量明细与即将到期的赠送额度，以及预期用量标记。费用详情会区分来源记录与估算。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查看 Cursor 每週額度與額外費用、Kimi 用量明細與即將到期的贈送額度，以及預期用量標記。費用詳情會區分來源記錄與估算。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cursor の週間上限と追加費用、Kimi の内訳と期限のある特典、使用量の目安を確認できます。費用詳細では記録元の金額と推定額を区別します。"
+          }
+        }
+      }
+    },
+    "See Soniox, Trae CN, abliteration.ai and Chatbox AI usage and balances synced from your Mac.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "See Soniox, Trae CN, abliteration.ai and Chatbox AI usage and balances synced from your Mac."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查看从 Mac 同步的 Soniox、Trae CN、abliteration.ai 和 Chatbox AI 用量与余额。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查看從 Mac 同步的 Soniox、Trae CN、abliteration.ai 和 Chatbox AI 用量與餘額。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Macから同期されたSoniox、Trae CN、abliteration.ai、Chatbox AIの使用量と残高を確認できます。"
+          }
+        }
+      }
+    },
+    "See four more services": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "See four more services"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查看四个新增服务"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查看四個新增服務"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "4つの新しいサービスを表示"
+          }
+        }
+      }
+    },
+    "See how much you can use each day until reset, in the allowance’s own units.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "See how much you can use each day until reset, in the allowance’s own units."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "按额度原有单位查看重置前每天可使用的目标用量。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "以額度原有單位查看重置前每天可使用的目標用量。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リセットまでの1日あたりの目安を、利用枠本来の単位で確認できます。"
+          }
+        }
+      }
+    },
+    "Update CodexBar on your Mac to receive these new details.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Update CodexBar on your Mac to receive these new details."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请更新 Mac 上的 CodexBar 以接收这些新增详情。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "請更新 Mac 上的 CodexBar 以接收這些新增詳情。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "新しい詳細を受け取るには、MacのCodexBarを更新してください。"
+          }
+        }
+      }
+    },
   "Latest observations": {
     "extractionState": "manual",
     "localizations": {
@@ -27960,6 +28453,35 @@
           "stringUnit": {
             "state": "translated",
             "value": "気になる指標をコンパクトなカードでまとめて確認。リセットまでの残り時間や使い切る予測日時も選べます。"
+          }
+        }
+      }
+    },
+    "Includes costs recorded by the source; not a billing receipt.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Includes costs recorded by the source; not a billing receipt."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "包含来源记录的费用；不代表账单收据。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "包含來源記錄的費用；不代表帳單收據。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "記録元の費用を含みます。請求書や領収書ではありません。"
           }
         }
       }

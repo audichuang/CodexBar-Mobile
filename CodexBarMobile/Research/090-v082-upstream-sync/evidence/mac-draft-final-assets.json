@@ -1,0 +1,26 @@
+{
+  "id": 427366941,
+  "draft": true,
+  "tag_name": "untagged-780e47f927e739ed48a3",
+  "target_commitish": "mobile-dev",
+  "html_url": "https://github.com/o1xhack/CodexBar-Mobile/releases/tag/untagged-780e47f927e739ed48a3",
+  "updated_at": "2026-10-29T03:37:55Z",
+  "assets": [
+    {
+      "id": 687242624,
+      "name": "CodexBar-0.82.0.1-mobile.3.2.0.dSYM.zip",
+      "size": 74088431,
+      "digest": "sha256:d0d3be366d0d243c562b44a1d8df904aecdf16db860fedd86d45185199c00162"
+    },
+    {
+      "id": 687242232,
+      "name": "CodexBar-0.82.0.1-mobile.3.2.0.zip",
+      "size": 92810809,
+      "digest": "sha256:06dcb2492cc1bdeac809650deceb4d1a4388c0170f167b866ec57bdb23473aa1"
+    }
+  ],
+  "artifactSourceCommit": "18ebb97272a68853473b3c3c565fc56f719901e2",
+  "logicalPublicationTag": "v0.82.0.1-mobile.3.2.0",
+  "gitTagAbsent": true,
+  "appcastPublished": false
+}

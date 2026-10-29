@@ -1397,7 +1397,10 @@ struct CostUsageTestEnvironment {
     let piSessionsRoot: URL
 
     init() throws {
-        let root = FileManager.default.temporaryDirectory.appendingPathComponent(
+        let temporaryRoot = ProcessInfo.processInfo.environment["TMPDIR"]
+            .flatMap { $0.isEmpty ? nil : URL(fileURLWithPath: $0, isDirectory: true) }
+            ?? FileManager.default.temporaryDirectory
+        let root = temporaryRoot.appendingPathComponent(
             "codexbar-cost-usage-\(UUID().uuidString)",
             isDirectory: true)
         try FileManager.default.createDirectory(at: root, withIntermediateDirectories: true)

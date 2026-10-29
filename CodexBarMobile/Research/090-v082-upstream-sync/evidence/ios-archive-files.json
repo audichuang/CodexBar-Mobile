@@ -1,0 +1,507 @@
+[
+  {
+    "path": "Info.plist",
+    "sha256": "58d5d1c089d70bed13e77b3e59b24eb21b1516f01808c4580163e60d3e02ebc4",
+    "size": 944
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/AppIcon60x60@2x.png",
+    "sha256": "fd3bbe2a436a6a369bb89833b2d80fdca060c39ab7bc61b1e2be4d3f0f37a23f",
+    "size": 15128
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/AppIcon76x76@2x~ipad.png",
+    "sha256": "898f258bfe3edf6a46224fed9cf95667ecfc4b564aa4996f94ca6728c185c145",
+    "size": 22733
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/Assets.car",
+    "sha256": "5a9dfa498f3673a3a4ebba5e61b66486eafe9eac5796776e8ca50e272ae2d085",
+    "size": 3053656
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/Base.lproj/WidgetActivity.intentdefinition",
+    "sha256": "763469702ad88e865f0172ddf964b04eedcc96d481b45629db991d8089802857",
+    "size": 8601
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/Base.lproj/WidgetStatus.intentdefinition",
+    "sha256": "ccf24d9520669ce783323b5e44040cb539d90276025179982eb0f0e359c4a6e2",
+    "size": 26819
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/CodexBarMobile",
+    "sha256": "5df57e470d2bcc3875e3f68991b0ecad983187e25d6703e7861154fc04eed456",
+    "size": 7836416
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/Frameworks/CodexBarSync.framework/CodexBarSync",
+    "sha256": "436bb066b3b3b0132ebd5879f0c02cf6260c32752bf87eb10463a8a98a46ca6b",
+    "size": 1336192
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/Frameworks/CodexBarSync.framework/Info.plist",
+    "sha256": "bf9515c7a47da44d7832775d282765b3d112607f224885bb22274c1f6210e748",
+    "size": 768
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/Frameworks/CodexBarSync.framework/_CodeSignature/CodeResources",
+    "sha256": "49cd6495d0402a4ecf9cb3ab7b2ea58f1209546ab6b5badb254dc5de2b74584a",
+    "size": 1798
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/Info.plist",
+    "sha256": "49d9c37b03a24f1b32d0ec7e8b9957cbd33b12d94c72e4338176c783ebca54b1",
+    "size": 1710
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/Metadata.appintents/extract.actionsdata",
+    "sha256": "9e462c460090da9c738b2727a329f53562f53879058b7f022595755cb36dc636",
+    "size": 26719
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/Metadata.appintents/version.json",
+    "sha256": "9734d5bb42c949505a719cbca76baa9736fb9678e638b43ff527c200d3d9dea1",
+    "size": 53
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PkgInfo",
+    "sha256": "82502191c9484b04d685374f9879a0066069c49b8acae7a04b01d38d07e8eca0",
+    "size": 8
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobilePushExtension.appex/CodexBarMobilePushExtension",
+    "sha256": "cf66da661657e8122e281c5888d363c8777c078669579b4ca65a56649a9a136d",
+    "size": 134880
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobilePushExtension.appex/Info.plist",
+    "sha256": "30f975dc981570f7f996a6c00f44bf98f422eb91bbf847cf6b2882456e5879ec",
+    "size": 1031
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobilePushExtension.appex/_CodeSignature/CodeResources",
+    "sha256": "022f28d2267f0e7f57c0bb1c382eea1722216fa97052ee68a11d074e947ee01f",
+    "size": 3464
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobilePushExtension.appex/embedded.mobileprovision",
+    "sha256": "8574cfbecefea1b38503bad9452f6293841b1b5ca4718e255a8326386aa9a78a",
+    "size": 17023
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobilePushExtension.appex/en.lproj/Localizable.strings",
+    "sha256": "c60a820570573a77a03428c1660674db7b9cc459739b0c51af3573ddd5491b7f",
+    "size": 129138
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobilePushExtension.appex/ja.lproj/Localizable.strings",
+    "sha256": "8307831efa262b8bbd60f64a312a45f25b87cc3fc29be56eb44d1e6ac196b5f5",
+    "size": 227548
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobilePushExtension.appex/zh-Hans.lproj/Localizable.strings",
+    "sha256": "f5e2e313a91a5308c9765a4333ddf0a163eccc9d5c3c723536275e58bb924018",
+    "size": 207146
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobilePushExtension.appex/zh-Hant.lproj/Localizable.strings",
+    "sha256": "a20a4d8bc0e75873326bc7628bd6a8f22a80baec84edf7ae1c1bd8fdd97cf7d8",
+    "size": 207517
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgetOptions.appex/Base.lproj/WidgetStatus.intentdefinition",
+    "sha256": "ccf24d9520669ce783323b5e44040cb539d90276025179982eb0f0e359c4a6e2",
+    "size": 26819
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgetOptions.appex/CodexBarMobileWidgetOptions",
+    "sha256": "277438fc4c6f698ca72cb329e27a986f44cf984de1845e8e029f26c7b90f2175",
+    "size": 152320
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgetOptions.appex/Info.plist",
+    "sha256": "72bdfeb7fba48f699b67c3180485f8f4d9bcd3e5e5f6c0e73a0dac06f9c1ba3d",
+    "size": 1173
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgetOptions.appex/_CodeSignature/CodeResources",
+    "sha256": "b36ea23efe5c4b54be87e80734e50d6912bdcae9a00d4e0666e49f3235edd85f",
+    "size": 6650
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgetOptions.appex/embedded.mobileprovision",
+    "sha256": "34b7c1ee09a33d3e21a27396379a9e594810e4d3872d9400e394d2359ea207fb",
+    "size": 12702
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgetOptions.appex/en.lproj/Localizable.strings",
+    "sha256": "11c989545cab9a10db72bd4aba7610bbd3ff742e246d81d884b15302409c96f7",
+    "size": 80
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgetOptions.appex/en.lproj/WidgetConfiguration.strings",
+    "sha256": "42e7738843ca1eba3622e9e70f545f2282361bae94c67869d05f8855e0e10eb6",
+    "size": 768
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgetOptions.appex/en.lproj/WidgetStatus.strings",
+    "sha256": "4bd5288fbd980286320e1584b9141c3cb4431f6596860466ce7a5754e8fc4739",
+    "size": 1847
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgetOptions.appex/ja.lproj/Localizable.strings",
+    "sha256": "b91a4e974792c0e574b9da3111e90c73261edcbca9e72ce50c240dceb49c7905",
+    "size": 108
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgetOptions.appex/ja.lproj/WidgetConfiguration.strings",
+    "sha256": "07c70c2b4097ad982286265e15e13c66014e5b4c82daa360e6b90f981032c9bd",
+    "size": 1475
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgetOptions.appex/ja.lproj/WidgetStatus.strings",
+    "sha256": "3bc79dfa99db7896f97acee707b0cd11c8af135a7fa1c7b923e9582bdcb9f94b",
+    "size": 1882
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgetOptions.appex/zh-Hans.lproj/Localizable.strings",
+    "sha256": "797f1268c3daf7522936bffa8c51bb0b62845015b534aa6f8b2028c4c3bcbacc",
+    "size": 102
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgetOptions.appex/zh-Hans.lproj/WidgetConfiguration.strings",
+    "sha256": "8cdb0af8008bfb3d28adebc8ea8f2fb1d921476ef9728f878a09c1b6aedade91",
+    "size": 1305
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgetOptions.appex/zh-Hans.lproj/WidgetStatus.strings",
+    "sha256": "2f87725bf44c156bfcb7192752f97afb3636d8e2874600f6716b9cc66ae1f17a",
+    "size": 1746
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgetOptions.appex/zh-Hant.lproj/Localizable.strings",
+    "sha256": "0c0af2cd8cfe0376ab49c9d2c1329d1bc8ecb786fde8a6898f9b9ec4b3d23d05",
+    "size": 102
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgetOptions.appex/zh-Hant.lproj/WidgetConfiguration.strings",
+    "sha256": "565345bbb7b95ae0553d27f56a6e1a4b49594be50b5735f42e93b46683b8f9c2",
+    "size": 1313
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgetOptions.appex/zh-Hant.lproj/WidgetStatus.strings",
+    "sha256": "9d3b36bc790d6e6e0e0d71659e64c775f5dbd38a4db8058d5fb1f51bcda81f31",
+    "size": 1746
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgets.appex/Base.lproj/WidgetActivity.intentdefinition",
+    "sha256": "763469702ad88e865f0172ddf964b04eedcc96d481b45629db991d8089802857",
+    "size": 8601
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgets.appex/Base.lproj/WidgetStatus.intentdefinition",
+    "sha256": "ccf24d9520669ce783323b5e44040cb539d90276025179982eb0f0e359c4a6e2",
+    "size": 26819
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgets.appex/CodexBarMobileWidgets",
+    "sha256": "7bc922e787aa560caa220542515d0ef6aacd6f06aec8136a686a68326835c835",
+    "size": 1403360
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgets.appex/Info.plist",
+    "sha256": "72a02499a778190bd5974ab69b64c6045ed322e7795cd5c439796c22ee83eb32",
+    "size": 922
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgets.appex/Metadata.appintents/extract.actionsdata",
+    "sha256": "1aea85f2faf5b73dbe5011149d8c9733f225a5924ed9a7c887b909a5542aeade",
+    "size": 26999
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgets.appex/Metadata.appintents/version.json",
+    "sha256": "9734d5bb42c949505a719cbca76baa9736fb9678e638b43ff527c200d3d9dea1",
+    "size": 53
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgets.appex/_CodeSignature/CodeResources",
+    "sha256": "a5d00d9fec18edfb4a717749eb2c8439e85bfc3d2419ac3606914fa4784ed052",
+    "size": 8882
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgets.appex/embedded.mobileprovision",
+    "sha256": "53156a6130749c19c1b84042d17e59a3c0a2bcbd196abda1b7f1a8c7a2692234",
+    "size": 14061
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgets.appex/en.lproj/Localizable.strings",
+    "sha256": "c60a820570573a77a03428c1660674db7b9cc459739b0c51af3573ddd5491b7f",
+    "size": 129138
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgets.appex/en.lproj/WidgetActivity.strings",
+    "sha256": "4cb92f0435577fc016e373a026c9e8d52151e23537d22a4ec3e3eab30a700bc4",
+    "size": 500
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgets.appex/en.lproj/WidgetConfiguration.strings",
+    "sha256": "42e7738843ca1eba3622e9e70f545f2282361bae94c67869d05f8855e0e10eb6",
+    "size": 768
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgets.appex/en.lproj/WidgetStatus.strings",
+    "sha256": "4bd5288fbd980286320e1584b9141c3cb4431f6596860466ce7a5754e8fc4739",
+    "size": 1847
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgets.appex/ja.lproj/Localizable.strings",
+    "sha256": "8307831efa262b8bbd60f64a312a45f25b87cc3fc29be56eb44d1e6ac196b5f5",
+    "size": 227548
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgets.appex/ja.lproj/WidgetActivity.strings",
+    "sha256": "e46a7f27cf87c8fa658e5da89a89c9c16ab33271d322d26c6e660e9e8e1af028",
+    "size": 537
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgets.appex/ja.lproj/WidgetConfiguration.strings",
+    "sha256": "07c70c2b4097ad982286265e15e13c66014e5b4c82daa360e6b90f981032c9bd",
+    "size": 1475
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgets.appex/ja.lproj/WidgetStatus.strings",
+    "sha256": "3bc79dfa99db7896f97acee707b0cd11c8af135a7fa1c7b923e9582bdcb9f94b",
+    "size": 1882
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgets.appex/zh-Hans.lproj/Localizable.strings",
+    "sha256": "f5e2e313a91a5308c9765a4333ddf0a163eccc9d5c3c723536275e58bb924018",
+    "size": 207146
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgets.appex/zh-Hans.lproj/WidgetActivity.strings",
+    "sha256": "9479f2a5c7d75b8294fb9f3b3993c59819ee9a1cb7c241537676535b2c0ed955",
+    "size": 503
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgets.appex/zh-Hans.lproj/WidgetConfiguration.strings",
+    "sha256": "8cdb0af8008bfb3d28adebc8ea8f2fb1d921476ef9728f878a09c1b6aedade91",
+    "size": 1305
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgets.appex/zh-Hans.lproj/WidgetStatus.strings",
+    "sha256": "2f87725bf44c156bfcb7192752f97afb3636d8e2874600f6716b9cc66ae1f17a",
+    "size": 1746
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgets.appex/zh-Hant.lproj/Localizable.strings",
+    "sha256": "a20a4d8bc0e75873326bc7628bd6a8f22a80baec84edf7ae1c1bd8fdd97cf7d8",
+    "size": 207517
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgets.appex/zh-Hant.lproj/WidgetActivity.strings",
+    "sha256": "ebde2fa5434a8f6bf47fa0a82b7a5cc49153a3a01e60a2cef01ca5ce82759c40",
+    "size": 511
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgets.appex/zh-Hant.lproj/WidgetConfiguration.strings",
+    "sha256": "565345bbb7b95ae0553d27f56a6e1a4b49594be50b5735f42e93b46683b8f9c2",
+    "size": 1313
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PlugIns/CodexBarMobileWidgets.appex/zh-Hant.lproj/WidgetStatus.strings",
+    "sha256": "9d3b36bc790d6e6e0e0d71659e64c775f5dbd38a4db8058d5fb1f51bcda81f31",
+    "size": 1746
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/PrivacyInfo.xcprivacy",
+    "sha256": "521eb6ef8430773e5c010e1838fe9dd8fa5d62b7b76d1cea8d7d8daadcb144e2",
+    "size": 373
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/_CodeSignature/CodeResources",
+    "sha256": "74c8666384d9d0e2d2d76f3a9f316df090fb2f6d703ed5dfffd285f43b470a36",
+    "size": 31900
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/embedded.mobileprovision",
+    "sha256": "5cd3af1b1acccb718a835f2db877a4d20a9c9e4f85c754d1285a96bcca116940",
+    "size": 17003
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/en.lproj/InfoPlist.strings",
+    "sha256": "61716773ed4f45b9ac42b2e907947b0899bb46f046e795c22df0d0c1a73d3bb6",
+    "size": 299
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/en.lproj/Localizable.strings",
+    "sha256": "c60a820570573a77a03428c1660674db7b9cc459739b0c51af3573ddd5491b7f",
+    "size": 129138
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/en.lproj/WidgetActivity.strings",
+    "sha256": "4cb92f0435577fc016e373a026c9e8d52151e23537d22a4ec3e3eab30a700bc4",
+    "size": 500
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/en.lproj/WidgetConfiguration.strings",
+    "sha256": "42e7738843ca1eba3622e9e70f545f2282361bae94c67869d05f8855e0e10eb6",
+    "size": 768
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/en.lproj/WidgetStatus.strings",
+    "sha256": "4bd5288fbd980286320e1584b9141c3cb4431f6596860466ce7a5754e8fc4739",
+    "size": 1847
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/ja.lproj/InfoPlist.strings",
+    "sha256": "7f443d6f84f3bde53cab60a4236d194048433fb2661a4e128d56de4c3bfda540",
+    "size": 313
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/ja.lproj/Localizable.strings",
+    "sha256": "8307831efa262b8bbd60f64a312a45f25b87cc3fc29be56eb44d1e6ac196b5f5",
+    "size": 227548
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/ja.lproj/WidgetActivity.strings",
+    "sha256": "e46a7f27cf87c8fa658e5da89a89c9c16ab33271d322d26c6e660e9e8e1af028",
+    "size": 537
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/ja.lproj/WidgetConfiguration.strings",
+    "sha256": "07c70c2b4097ad982286265e15e13c66014e5b4c82daa360e6b90f981032c9bd",
+    "size": 1475
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/ja.lproj/WidgetStatus.strings",
+    "sha256": "3bc79dfa99db7896f97acee707b0cd11c8af135a7fa1c7b923e9582bdcb9f94b",
+    "size": 1882
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/zh-Hans.lproj/InfoPlist.strings",
+    "sha256": "c683bf6d6d09f72037e156b89896e72eca97f3f87a9f4ce00e5d8bf64b09fc3a",
+    "size": 262
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/zh-Hans.lproj/Localizable.strings",
+    "sha256": "f5e2e313a91a5308c9765a4333ddf0a163eccc9d5c3c723536275e58bb924018",
+    "size": 207146
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/zh-Hans.lproj/WidgetActivity.strings",
+    "sha256": "9479f2a5c7d75b8294fb9f3b3993c59819ee9a1cb7c241537676535b2c0ed955",
+    "size": 503
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/zh-Hans.lproj/WidgetConfiguration.strings",
+    "sha256": "8cdb0af8008bfb3d28adebc8ea8f2fb1d921476ef9728f878a09c1b6aedade91",
+    "size": 1305
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/zh-Hans.lproj/WidgetStatus.strings",
+    "sha256": "2f87725bf44c156bfcb7192752f97afb3636d8e2874600f6716b9cc66ae1f17a",
+    "size": 1746
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/zh-Hant.lproj/InfoPlist.strings",
+    "sha256": "4a8460b725a6407eb4063511559c1b98cd672958e7a02b9e8c0e874ea41633f1",
+    "size": 262
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/zh-Hant.lproj/Localizable.strings",
+    "sha256": "a20a4d8bc0e75873326bc7628bd6a8f22a80baec84edf7ae1c1bd8fdd97cf7d8",
+    "size": 207517
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/zh-Hant.lproj/WidgetActivity.strings",
+    "sha256": "ebde2fa5434a8f6bf47fa0a82b7a5cc49153a3a01e60a2cef01ca5ce82759c40",
+    "size": 511
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/zh-Hant.lproj/WidgetConfiguration.strings",
+    "sha256": "565345bbb7b95ae0553d27f56a6e1a4b49594be50b5735f42e93b46683b8f9c2",
+    "size": 1313
+  },
+  {
+    "path": "Products/Applications/CodexBarMobile.app/zh-Hant.lproj/WidgetStatus.strings",
+    "sha256": "9d3b36bc790d6e6e0e0d71659e64c775f5dbd38a4db8058d5fb1f51bcda81f31",
+    "size": 1746
+  },
+  {
+    "path": "dSYMs/CodexBarMobile.app.dSYM/Contents/Info.plist",
+    "sha256": "9e43f12968057fdb97e714df28e75146fd5eebb38e8c566f44c2dfe4e86cef37",
+    "size": 660
+  },
+  {
+    "path": "dSYMs/CodexBarMobile.app.dSYM/Contents/Resources/DWARF/CodexBarMobile",
+    "sha256": "2ed809e54c21110407780f3836ab653dcc868643c645af96e9fb86ea80449bfd",
+    "size": 29643492
+  },
+  {
+    "path": "dSYMs/CodexBarMobile.app.dSYM/Contents/Resources/Relocations/aarch64/CodexBarMobile.yml",
+    "sha256": "cf8b090b38cc06e23af5e2245dc91866dd593f266928b372514f32684293468e",
+    "size": 3527982
+  },
+  {
+    "path": "dSYMs/CodexBarMobilePushExtension.appex.dSYM/Contents/Info.plist",
+    "sha256": "96f6fe942901d367202012fec097ddde4a84e6a5f696b9680ad8cda074ff9ac3",
+    "size": 674
+  },
+  {
+    "path": "dSYMs/CodexBarMobilePushExtension.appex.dSYM/Contents/Resources/DWARF/CodexBarMobilePushExtension",
+    "sha256": "e8a5db553f1b5aade471796af893e43b29fb4f435a407910c60a2d54fbfe6847",
+    "size": 836008
+  },
+  {
+    "path": "dSYMs/CodexBarMobilePushExtension.appex.dSYM/Contents/Resources/Relocations/aarch64/CodexBarMobilePushExtension.yml",
+    "sha256": "46bffa9a79c0f72c68d43d2caf94352c4c5c5878ff126ce99defb9457ff49775",
+    "size": 27467
+  },
+  {
+    "path": "dSYMs/CodexBarMobileWidgetOptions.appex.dSYM/Contents/Info.plist",
+    "sha256": "fc62457add99577cf482b30c518955e8af66a275fc33b3d39c9872aa66f6f7cd",
+    "size": 674
+  },
+  {
+    "path": "dSYMs/CodexBarMobileWidgetOptions.appex.dSYM/Contents/Resources/DWARF/CodexBarMobileWidgetOptions",
+    "sha256": "da4100b211960353e2a4bb64df6cf91c1ed49d7ebcd85fd8c1ce2f2d53421773",
+    "size": 1139964
+  },
+  {
+    "path": "dSYMs/CodexBarMobileWidgetOptions.appex.dSYM/Contents/Resources/Relocations/aarch64/CodexBarMobileWidgetOptions.yml",
+    "sha256": "b086962a663ebc9d21a2db16e86e43cb04c1f57abfa926a78763956126a96af2",
+    "size": 56598
+  },
+  {
+    "path": "dSYMs/CodexBarMobileWidgets.appex.dSYM/Contents/Info.plist",
+    "sha256": "31f816c382bee47b93ccad553a39f0b062faa6ee812da614025c747af6563841",
+    "size": 668
+  },
+  {
+    "path": "dSYMs/CodexBarMobileWidgets.appex.dSYM/Contents/Resources/DWARF/CodexBarMobileWidgets",
+    "sha256": "e953318efc0fe3491bb45832469b64cc3cc02b5e544baf1b0fc2873b92822467",
+    "size": 6944116
+  },
+  {
+    "path": "dSYMs/CodexBarMobileWidgets.appex.dSYM/Contents/Resources/Relocations/aarch64/CodexBarMobileWidgets.yml",
+    "sha256": "04d3a4da245e4a40c9fa842bd6ec2f29c2505ac9839c46742624a07fc3115790",
+    "size": 640199
+  },
+  {
+    "path": "dSYMs/CodexBarSync.framework.dSYM/Contents/Info.plist",
+    "sha256": "a96946ceeff412f9a955cf57548b359d41641184ed6760ff61694cb944dec672",
+    "size": 658
+  },
+  {
+    "path": "dSYMs/CodexBarSync.framework.dSYM/Contents/Resources/DWARF/CodexBarSync",
+    "sha256": "c86b2189dd1aedc78e4ff1d96d8924cb6ac6aa92fbfb0a88eae920cb1f11b392",
+    "size": 4335680
+  },
+  {
+    "path": "dSYMs/CodexBarSync.framework.dSYM/Contents/Resources/Relocations/aarch64/CodexBarSync.yml",
+    "sha256": "d5bb8cceac4cb2e78c063ae1562ac595b599aa48327148c678ea3f676ea1fe37",
+    "size": 711869
+  }
+]

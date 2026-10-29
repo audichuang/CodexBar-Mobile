@@ -1,0 +1,8 @@
+{
+  "archiveSourceCommit": "a36c6b110da3d994c8bba6bbcfa777627efa42ff",
+  "verifiedAgainstCommit": "18ebb97272a68853473b3c3c565fc56f719901e2",
+  "inputCount": 353,
+  "allInputHashesMatch": true,
+  "archiveUnchanged": true,
+  "scope": "All original Archive manifest inputs rehashed after Mac-only App Group fixes; no iOS export/upload"
+}

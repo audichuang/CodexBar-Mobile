@@ -6,6 +6,40 @@ import Testing
 
 // swiftlint:disable:next type_body_length
 struct CLICostTests {
+    @Test(arguments: [0.0, 1.25])
+    func `source recorded CLI amounts never claim to be list price estimates`(amount: Double) throws {
+        let now = Date(timeIntervalSince1970: 1_784_179_200)
+        let snapshot = CostUsageTokenSnapshot(
+            sessionTokens: nil,
+            sessionCostUSD: amount,
+            last30DaysTokens: nil,
+            last30DaysCostUSD: amount,
+            costProvenance: .sourceRecorded,
+            daily: [.init(
+                date: "2026-07-16",
+                inputTokens: nil,
+                outputTokens: nil,
+                totalTokens: nil,
+                costUSD: amount,
+                modelsUsed: nil,
+                modelBreakdowns: [.init(
+                    modelName: "Synthetic recorded model",
+                    costUSD: amount,
+                    sourceRecorded: true)])],
+            bucketTimeZoneIdentifier: "UTC",
+            updatedAt: now)
+        let output = CodexBarCLI.renderCostText(provider: .codex, snapshot: snapshot, useColor: false)
+        #expect(output.contains("source-recorded costs"))
+        #expect(output.contains("not a billing receipt"))
+        #expect(!output.contains("API-equivalent estimate"))
+        let payload = CodexBarCLI.makeCostPayload(provider: .codex, snapshot: snapshot, error: nil)
+        #expect(payload.provenance == "sourceRecorded")
+        #expect(payload.last30DaysCostUSD == amount)
+        let usage = UsageSnapshot(primary: nil, secondary: nil, costUsage: snapshot, updatedAt: now)
+        let history = try #require(CLIRenderer.liveHistoryLine(snapshot: usage, useColor: false))
+        #expect(history.contains("includes source-recorded costs"))
+    }
+
     @Test
     func `cost json shortcut does not enable json logs`() throws {
         let signature = CodexBarCLI._costSignatureForTesting()

@@ -181,6 +181,11 @@ public enum QuotaProviderList {
         Provider(id: "claudeplatform", displayName: "Claude Platform"),
         Provider(id: "futureagi", displayName: "Future AGI"),
         Provider(id: "munito", displayName: "Munito"),
+        // v0.80-v0.82: append only to preserve deployed subscription IDs.
+        Provider(id: "soniox", displayName: "Soniox"),
+        Provider(id: "traecn", displayName: "Trae CN"),
+        Provider(id: "abliteration", displayName: "abliteration.ai"),
+        Provider(id: "chatbox", displayName: "Chatbox AI"),
     ]
 
     /// Returns the CloudKit zone name for a given `(providerID, state)`. The

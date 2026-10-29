@@ -17,6 +17,7 @@ for name in (
     'resolve_package_signing_mode',
     'verify_no_quarantine_attribute',
     'verify_packaged_app_integrity',
+    'resign',
 ):
     start = script.index(f'{name}() {{')
     end = script.index('\n}\n', start) + 3
@@ -79,6 +80,42 @@ if verify_packaged_app_integrity "$APP" 2>/dev/null; then
 fi
 unset MOCK_CODESIGN_STATUS
 
+# A timestamp outage must retry every target, including calls without extra arguments.
+(
+  CODESIGN_ARGS=(--force --timestamp --options runtime --sign 'Fictional Developer ID')
+  CODESIGN_ARGS_NO_TIMESTAMP=(--force --options runtime --sign 'Fictional Developer ID')
+  calls="$TEMP_DIR/resign-calls"
+  codesign() {
+    printf 'CALL\0' >> "$calls"
+    printf '%s\0' "$@" >> "$calls"
+    for argument in "$@"; do
+      [[ "$argument" != "--timestamp" ]] || return 1
+    done
+    return 0
+  }
+  resign "$TEMP_DIR/Fictional Framework"
+  resign "$TEMP_DIR/Fictional CLI" --entitlements "$TEMP_DIR/Fictional CLI.entitlements"
+  python3 - "$calls" "$TEMP_DIR" <<'PY'
+import sys
+from pathlib import Path
+parts = Path(sys.argv[1]).read_bytes().decode().split('\0')
+calls = []
+for value in filter(None, parts):
+    if value == 'CALL':
+        calls.append([])
+    else:
+        calls[-1].append(value)
+assert len(calls) == 4
+for index, target in enumerate(['Fictional Framework', 'Fictional CLI']):
+    first, retry = calls[index * 2:index * 2 + 2]
+    assert first[-1] == retry[-1] == str(Path(sys.argv[2]) / target)
+    assert '--timestamp' in first and '--timestamp' not in retry
+    assert [value for value in first if value != '--timestamp'] == retry
+    assert ('--entitlements' in retry) == (index == 1)
+print('Timestamp retry preserves target and optional entitlements.')
+PY
+)
+
 python3 - "$PACKAGE_SCRIPT" <<'PY'
 import itertools
 import os
@@ -123,14 +160,21 @@ for configuration, signing, profile_present, allow_lldb in itertools.product(
         assert result.returncode == 0, result.stderr
         app_entitlements = plistlib.loads((root / '.build/entitlements/CodexBar.entitlements').read_bytes())
         widget_entitlements = plistlib.loads((root / '.build/entitlements/CodexBarWidget.entitlements').read_bytes())
+        cli_entitlements = plistlib.loads((root / '.build/entitlements/CodexBarCLI.entitlements').read_bytes())
         cloudkit = signing == 'identity'
         if cloudkit:
             assert app_entitlements['com.apple.developer.team-identifier'] == '3TUERHN53E'
             assert app_entitlements['com.apple.developer.icloud-container-environment'] == 'Production'
             assert app_entitlements['com.apple.developer.icloud-container-identifiers'] == ['iCloud.com.o1xhack.codexbar']
-            assert app_entitlements['com.apple.security.application-groups'][0].startswith('group.com.o1xhack.codexbar')
+            group = '3TUERHN53E.com.steipete.codexbar' + ('.debug' if configuration == 'debug' else '')
+            assert app_entitlements['com.apple.security.application-groups'] == [group]
+            assert widget_entitlements['com.apple.security.application-groups'] == [group]
+            assert cli_entitlements['com.apple.security.application-groups'] == [group]
+            assert 'com.apple.developer.icloud-services' not in widget_entitlements
+            assert 'com.apple.developer.icloud-services' not in cli_entitlements
         else:
             assert 'com.apple.developer.icloud-services' not in app_entitlements
+            assert 'com.apple.security.application-groups' not in cli_entitlements
         assert widget_entitlements['com.apple.security.app-sandbox'] is True
         embedded = app / 'Contents/embedded.provisionprofile'
         assert embedded.exists() == profile_present

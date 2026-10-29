@@ -1,0 +1,153 @@
+{
+  "verifiedAt": "2026-10-29T03:31:40.514684+00:00",
+  "sourceCommit": "18ebb97272a68853473b3c3c565fc56f719901e2",
+  "artifactSourceShort": "18ebb9727",
+  "currentHead": "18ebb97272a68853473b3c3c565fc56f719901e2",
+  "appVersion": "0.82.0.1",
+  "sparkleVersion": "175.1.3.2.0",
+  "mobileVersion": "3.2.0",
+  "feedURL": "https://raw.githubusercontent.com/o1xhack/CodexBar-Mobile/mobile-dev/appcast.xml",
+  "buildTimestamp": "2026-10-29T03:24:04Z",
+  "appBinarySHA256": "75aaf96431ef55c18d1544e0ec3766732111d80f6ead03bfafe69c0fea23b261",
+  "dSYMSHA256": "ff0c6334f759ff36293adcce2928a715f9af221111f5b7e66ead45389badb97d",
+  "architectureUUIDs": {
+    "x86_64": "EF4E8639-98CD-33F9-A018-302755901675",
+    "arm64": "08D6D554-9876-3A81-9D5F-A68A8CD7CCBB"
+  },
+  "assets": [
+    {
+      "name": "CodexBar-0.82.0.1-mobile.3.2.0.zip",
+      "size": 92810809,
+      "sha256": "06dcb2492cc1bdeac809650deceb4d1a4388c0170f167b866ec57bdb23473aa1",
+      "zipEntries": 1211
+    },
+    {
+      "name": "CodexBar-0.82.0.1-mobile.3.2.0.dSYM.zip",
+      "size": 74088431,
+      "sha256": "d0d3be366d0d243c562b44a1d8df904aecdf16db860fedd86d45185199c00162",
+      "zipEntries": 11
+    }
+  ],
+  "bundles": [
+    {
+      "path": "CodexBar.app",
+      "identifier": "com.o1xhack.codexbar",
+      "bundleVersion": "175.1.3.2.0",
+      "shortVersion": "0.82.0.1",
+      "signatureTeam": "3TUERHN53E",
+      "hardenedRuntime": true,
+      "runtimeGroup": "3TUERHN53E.com.steipete.codexbar",
+      "groupAuthorization": "Team-prefixed group matches actual signing team; no profile needed for this group",
+      "groupAuthorizationReference": "https://developer.apple.com/documentation/xcode/accessing-app-group-containers",
+      "environment": "Production",
+      "profileSHA256": "784b521c53e615c459f22eabce8b839027879cc69ba44715e809dcb70c1d7736",
+      "profileExpiration": "2044-03-22 05:39:11",
+      "profileRole": "CloudKit Production",
+      "entitlementKeys": [
+        "com.apple.application-identifier",
+        "com.apple.developer.icloud-container-environment",
+        "com.apple.developer.icloud-container-identifiers",
+        "com.apple.developer.icloud-services",
+        "com.apple.developer.team-identifier",
+        "com.apple.developer.ubiquity-kvstore-identifier",
+        "com.apple.security.application-groups"
+      ]
+    },
+    {
+      "path": "CodexBar.app/Contents/PlugIns/CodexBarWidget.appex",
+      "identifier": "com.o1xhack.codexbar.widget",
+      "bundleVersion": "175.1",
+      "shortVersion": "0.82.0.1",
+      "signatureTeam": "3TUERHN53E",
+      "hardenedRuntime": true,
+      "runtimeGroup": "3TUERHN53E.com.steipete.codexbar",
+      "groupAuthorization": "Team-prefixed group matches actual signing team; no profile needed for this group",
+      "groupAuthorizationReference": "https://developer.apple.com/documentation/xcode/accessing-app-group-containers",
+      "environment": "not applicable: app-group-only widget; no CloudKit calls",
+      "profileRequired": false,
+      "entitlementKeys": [
+        "com.apple.security.app-sandbox",
+        "com.apple.security.application-groups"
+      ]
+    }
+  ],
+  "executables": [
+    {
+      "role": "App",
+      "path": "CodexBar.app/Contents/MacOS/CodexBar",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "sha256": "75aaf96431ef55c18d1544e0ec3766732111d80f6ead03bfafe69c0fea23b261",
+      "developerIDAuthorityVerified": true,
+      "hardenedRuntime": true,
+      "minimumOSPerArchitecture": [
+        "14.0",
+        "14.0"
+      ]
+    },
+    {
+      "role": "CLI",
+      "path": "CodexBar.app/Contents/Helpers/CodexBarCLI",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "sha256": "952a052f98172d3e7c0a9c08a431194394635da457e983704758afda2839be43",
+      "developerIDAuthorityVerified": true,
+      "hardenedRuntime": true,
+      "minimumOSPerArchitecture": [
+        "14.0",
+        "14.0"
+      ]
+    },
+    {
+      "role": "Watchdog",
+      "path": "CodexBar.app/Contents/Helpers/CodexBarClaudeWatchdog",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "sha256": "624af25759bafbcc2006612c562dd509d4063f5d50c1ff3877a5f0c71bb2847b",
+      "developerIDAuthorityVerified": true,
+      "hardenedRuntime": true,
+      "minimumOSPerArchitecture": [
+        "14.0",
+        "14.0"
+      ]
+    },
+    {
+      "role": "Widget",
+      "path": "CodexBar.app/Contents/PlugIns/CodexBarWidget.appex/Contents/MacOS/CodexBarWidget",
+      "architectures": [
+        "x86_64",
+        "arm64"
+      ],
+      "sha256": "6cba6dbb2bef212ce108048e363cd2a557fe340aded92bacd37e9dd758968375",
+      "developerIDAuthorityVerified": true,
+      "hardenedRuntime": true,
+      "minimumOSPerArchitecture": [
+        "14.0",
+        "14.0"
+      ]
+    }
+  ],
+  "checks": {
+    "codesign": "--prepared:/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/mac-artifact-verification/CodexBar.app/Contents/Helpers/CodexBar_CodexBarCore.bundle\n--prepared:/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/mac-artifact-verification/CodexBar.app/Contents/Helpers/CodexBarClaudeWatchdog\n--validated:/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/mac-artifact-verification/CodexBar.app/Contents/Helpers/CodexBarClaudeWatchdog\n--validated:/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/mac-artifact-verification/CodexBar.app/Contents/Helpers/CodexBar_CodexBarCore.bundle\n--prepared:/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/mac-artifact-verification/CodexBar.app/Contents/Frameworks/Sparkle.framework/Versions/Current/.\n--prepared:/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/mac-artifact-verification/CodexBar.app/Contents/PlugIns/CodexBarWidget.appex\n--validated:/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/mac-artifact-verification/CodexBar.app/Contents/PlugIns/CodexBarWidget.appex\n--prepared:/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/mac-artifact-verification/CodexBar.app/Contents/Frameworks/Sparkle.framework/Versions/Current/Autoupdate\n--validated:/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/mac-artifact-verification/CodexBar.app/Contents/Frameworks/Sparkle.framework/Versions/Current/Autoupdate\n--prepared:/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/mac-artifact-verification/CodexBar.app/Contents/Frameworks/Sparkle.framework/Versions/Current/Updater.app\n--validated:/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/mac-artifact-verification/CodexBar.app/Contents/Frameworks/Sparkle.framework/Versions/Current/Updater.app\n--prepared:/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/mac-artifact-verification/CodexBar.app/Contents/Frameworks/Sparkle.framework/Versions/Current/XPCServices/Installer.xpc\n--validated:/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/mac-artifact-verification/CodexBar.app/Contents/Frameworks/Sparkle.framework/Versions/Current/XPCServices/Installer.xpc\n--prepared:/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/mac-artifact-verification/CodexBar.app/Contents/Frameworks/Sparkle.framework/Versions/Current/XPCServices/Downloader.xpc\n--validated:/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/mac-artifact-verification/CodexBar.app/Contents/Frameworks/Sparkle.framework/Versions/Current/XPCServices/Downloader.xpc\n--validated:/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/mac-artifact-verification/CodexBar.app/Contents/Frameworks/Sparkle.framework/Versions/Current/.\n--prepared:/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/mac-artifact-verification/CodexBar.app/Contents/Helpers/CodexBarCLI\n--validated:/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/mac-artifact-verification/CodexBar.app/Contents/Helpers/CodexBarCLI\n/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/mac-artifact-verification/CodexBar.app: valid on disk\n/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/mac-artifact-verification/CodexBar.app: satisfies its Designated Requirement",
+    "stapler": "Processing: /Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/mac-artifact-verification/CodexBar.app\nThe validate action worked!",
+    "distribution": "Only one signature found in file:///Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/mac-artifact-verification/CodexBar.app, skipping dual signature check\nApp passed all pre-distribution checks and is ready for distribution.",
+    "signedRuntimeGroupDiagnostic": {
+      "bundleID": "com.o1xhack.codexbar",
+      "runtimeGroupID": "3TUERHN53E.com.steipete.codexbar",
+      "widgetRuntimeGroupID": "3TUERHN53E.com.steipete.codexbar"
+    },
+    "signedCLIRuntimeGroupDiagnostic": {
+      "bundleID": "",
+      "runtimeGroupID": "3TUERHN53E.com.steipete.codexbar",
+      "widgetRuntimeGroupID": ""
+    }
+  },
+  "allInputHashesMatch": true,
+  "published": false
+}

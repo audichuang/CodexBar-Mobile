@@ -145,3 +145,7 @@ git diff $LAST_TAG..HEAD -- Shared/Models/UsageSnapshot.swift | grep -E "^\+.*pu
 ## 2026-10-21：v0.79.0.1-mobile.3.1.0 正式发布复核
 
 沿用本轮发布前对照 `v0.76.0.2-mobile.2.10.0` 的代码审计，仍为 **NO_DEPLOY**。MOBILE_VERSION更新和后续CI/发布验证工具修复未改wire/schema；CloudConstants、直接CKRecord field/type/index/predicate没有新增，payloadVersion仍1，provider zone为既有type的运行时实例。最终Mac signed/notarized包及iOS3.1.0(246)的Production entitlement均核对。未执行Production export/deploy或声称实体验证。16组合替代验证、限制与正式发布来源见Research079/03和07。
+
+## 2026-10-28：v0.82.0.1-mobile.3.2.0 候选代码审计
+
+相对最新 published `v0.79.0.1-mobile.3.1.0`，Shared/iCloud、Scripts/cloudkit、CloudSyncEngine.swift、SyncModels.swift 均无 diff，providerPayloadVersion 保持1。quotaLimit/quotaUnit/Progress.expectedUsed/details.rows.expiresAt 增加现有 opaque payload 的 optional JSON，sourceRecorded 增加既有 costProvenance 的容错 raw value；Soniox金额/支出、自定义额度标题使用既有 providerAmount/details/rateWindows。四个新provider只增加已部署 QuotaTransition 类型的运行时 zone/subscription 实例，无新直接 CKRecord type/field/index/query/predicate。判定 **NO_DEPLOY（代码审计）**；未做 Production export、deploy 或数据库读写。签名产物 Production entitlement、最终修复后复查、16组合替代验证和剩余风险见 Research090；本记录不冒充实包或实体多设备验证。

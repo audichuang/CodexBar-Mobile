@@ -597,6 +597,7 @@ enum CLIRenderer {
             case .vendorMetered: "reported"
             case .listPriceEstimate: "estimated"
             case .mixed: "includes estimates"
+            case .sourceRecorded: "includes source-recorded costs"
             case .unknown: nil
             }
             values.append(provenance.map { "\(value) (\($0))" } ?? value)
