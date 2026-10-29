@@ -2,7 +2,7 @@
 
 状态：`in-progress`。
 
-当前已完成：读取规则、官方Releases、open/历史closed Issues、源commit与版本/工具链预检；建立本轮分支；形成设计。
+当前已完成完整上游合并、Shared/iOS适配、Mac Group/CLI修复、最终测试和签名候选；最终产品源码18ebb9727。历史实施过程如下，当前验收以03–05为准。
 
 后续在本文件记录merge冲突、fork保留、bridge/iOS实现、版本与本地检查；不以计划代替结果。
 
@@ -52,3 +52,17 @@
 小签名probe实际发现Helper Bundle.main是Contents/Helpers目录，原Team解析回退Y5PE65HELJ；改为验证实际executable签名并从外层App识别debug（含symlink），after probe为3TUERHN53E。CLI在初签、copy seal、最终sign三阶段均携带AppGroup-only权限。sourceRole/resource smoke新增只读实际Group JSON供最终实包对齐，不调用containerURL/NSUserDefaults/Keychain。所有新增迁移tests为dictionary defaults/双snapshotURL/contained RecordingFileManager/synthetic HOME。
 
 两位独立agent发现并闭环首次Widget写默认的竞态与resign shift后$1时间戳fallback错误；补真实caller顺序、partial/publisher、helper/debug及timestamp带/不带entitlement重试回归。128项受影响复测（127原审计+resource smoke suite）、full lint/build和重签包尚待通过。首次新gate在源码仍审查变更时编到旧Widget module、新test调用seam导致compile失败，400.9秒/0执行，不计成功；后续从稳定commit fresh重跑。
+
+
+## 最终候选验收（2026-10-28）
+
+当前产品源码：`18ebb97272a68853473b3c3c565fc56f719901e2`，后续仅补文档/证据。Mac Group/CLI 修复后重新构建、公证与校验；旧草稿包已hold，最终附件替换结果见04。iOS原353项Archive输入重新逐项SHA256核对不变（evidence/ios-archive-final-input-equivalence.json），保留a36来源Archive。
+
+- 最终Mac受影响128 selections/43组全部首遍PASS，0fail/timeout/retry；与成本修复97项及原完整gate1620项去重，覆盖1845 selections/16194 method identifiers。123个条件XCTest skip及Swift Testing opt-in early-return限制保留；不是单一最终binary全量body通过。见evidence/mac-appgroup-final-coverage-review.md与proof。
+- `mac-appgroup-full-lint.log`完整lint与`mac-appgroup-final-build.log`的swift build --jobs4通过；SwiftLint 3211文件0违规，4语言533keys、parser24/hash、CI/fork guards通过。16个打包合同及timestamp retry stub通过。
+- 真实Developer ID签名QA正负控：独立nonce group的声明成员可open，无成员EPERM；containerURL非nil不能证明授权。未操作用户业务容器，任务QA容器已清理。最终App/CLI runtime group均与Widget签名Group一致，生产包本身单独验证。
+- Mac最终双架构App/CLI/Watchdog/Widget均Developer ID、hardened runtime、minOS14.0；App与dSYM双架构UUID一致。公证`343e9fc0-4ac2-4f2e-9300-c0492953d430` Accepted，stapler、distribution policy、隔离启动通过。
+- Sparkle175.1.3.2.0单调递增；最终ZIP长度92810809、Ed25519以及实际App内SUPublicEDKey客户端校验均通过。仅scratch候选appcast，仓库feed无修改。
+- iOS全量1278 Swift Testing/85 suites +75 XCTest及后续150 tests/6 suites通过；普通iPhone/iPad、Duo实际内外屏横竖、partial和跨折叠操作、严格SpringBoard Widget及四语原生渲染证据继续有效。
+- 16组合全部为 **substituted**（64 reads/32真实冻结consumer merges），没有实体双Mac/双iPhone CloudKit/APNs/缓存收敛实测。CloudKit结论 **NO_DEPLOY**；本轮Group仅Mac本地共享容器，iOS/Shared wire不变。
+- GitHub PR review仍待完成；不把本地测试或notary结果当远端review通过。未merge/tag/live/feed发布或iOS上传。后续Final CI在授权合并后执行。

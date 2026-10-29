@@ -1,0 +1,104 @@
+{
+  "verdict": "Composed Mac selection/method inventory coverage complete at 18ebb9727; optional proof skips and multi-build limits remain",
+  "sourceCommit": "18ebb97272a68853473b3c3c565fc56f719901e2",
+  "trackedInputCleanAtAudit": true,
+  "totalSelections": 1845,
+  "totalMethodIdentifiers": 16194,
+  "appGroupSelections": 128,
+  "appGroupMethods": 1113,
+  "retainedSelections": 1717,
+  "retainedMethods": 15081,
+  "retainedMethodSetEqualsA36Freeze": true,
+  "partitions": {
+    "latestAppGroup": {
+      "selectionCount": 128,
+      "methodCount": 1113,
+      "selectionSetSHA256": "88e4e6bb968a893f01ee671a9153e88291568be1a2ab8356db71ee82732ea7d3"
+    },
+    "costReviewNotOverwritten": {
+      "selectionCount": 97,
+      "methodCount": 1121,
+      "selectionSetSHA256": "3f215cd5a789edae461d11cb5682289c7dfc7cd517889fe0d7081e0719548660"
+    },
+    "oldCompleteUnaffected": {
+      "selectionCount": 1620,
+      "methodCount": 13960,
+      "selectionSetSHA256": "46d607dccdbc3a77e0567342fffa71d4ad7ada8b6e0f4d51e3ff731c2e7ddeb2"
+    }
+  },
+  "costAndAppGroupSelectionOverlap": [
+    "CodexBarTests.CloudSyncSettingsTests",
+    "CodexBarTests.PiWidgetFreshnessTests",
+    "CodexBarTests.PreferencesPaneSmokeTests",
+    "CodexBarTests.ProviderArchitectureGatekeeperTests",
+    "CodexBarTests.SettingsStoreTokenCostSourceTests"
+  ],
+  "missingSelections": [],
+  "missingMethodIdentifiers": [],
+  "zeroMethodSelectors": [],
+  "acceptedNewGroups": 43,
+  "allNewGroupsFrameworkPass": true,
+  "firstPassFailure": 0,
+  "timeout": 0,
+  "retry": 0,
+  "failedGate2PrefixCounted": false,
+  "newMethodIdentifiers": [
+    "CodexBarTests.AppGroupSupportTests/`a publisher racing migration keeps its newer snapshot`()",
+    "CodexBarTests.AppGroupSupportTests/`absent fallback data completes without inventing a snapshot or selection`()",
+    "CodexBarTests.AppGroupSupportTests/`failed fallback copy remains retryable without deleting the source`()",
+    "CodexBarTests.AppGroupSupportTests/`fallback migration never overwrites newer shared data or an existing selection`()",
+    "CodexBarTests.AppGroupSupportTests/`fallback migration preserves bytes and selection after the old migration completed`()",
+    "CodexBarTests.AppGroupSupportTests/`helper debug identity is read from its contained app even through a symlink`()",
+    "CodexBarTests.AppGroupSupportTests/`real provider removal can still persist its supported fallback`()",
+    "CodexBarTests.AppGroupSupportTests/`signed helper executable team wins over plist and upstream fallback`()",
+    "CodexBarTests.AppGroupSupportTests/`unavailable fallback target retains retry eligibility`()",
+    "CodexBarTests.AppGroupSupportTests/`widget local legacy choice stays effective without overwriting a newer explicit choice`()",
+    "CodexBarTests.AppGroupSupportTests/`widget selection reads app-local preference until migration and prefers shared choice`()",
+    "CodexBarTests.AppGroupSupportTests/`widget-first startup never persists an inferred default before host preference migration`(snapshotAvailable:)"
+  ],
+  "newConditionalSkipMethods": [
+    "CodexBarTests.ProviderAccentColorScreenshotRenderTests/test_renderAccentColorSettingsScreenshots",
+    "CodexBarTests.WidgetReadabilityNativeProofTests/test_syntheticWidgetViews"
+  ],
+  "newConditionalSkipReasons": [
+    "Set CODEXBAR_ACCENT_SCREENSHOT_DIR to render accent color screenshots.",
+    "Set CODEXBAR_WIDGET_READABILITY_PROOF_DIR for signed native widget proof"
+  ],
+  "priorSkippedMethodsReexecutedAndSkippedAgain": 2,
+  "priorSkipMethodsRetainedWithoutNewExecution": 121,
+  "overallConditionalXCTestSkipMethods": 123,
+  "conditionalSwiftGuardReturnsNotCountedAsBodyProof": true,
+  "testBinarySHA256RecheckMatches": {
+    "/Volumes/StudioSSD/Projects/working/apple/CodexBar/.build/out/Products/Debug/AdaptiveReplayCLITests.xctest/Contents/MacOS/AdaptiveReplayCLITests": true,
+    "/Volumes/StudioSSD/Projects/working/apple/CodexBar/.build/out/Products/Debug/AdaptiveReplayKitTests.xctest/Contents/MacOS/AdaptiveReplayKitTests": true,
+    "/Volumes/StudioSSD/Projects/working/apple/CodexBar/.build/out/Products/Debug/CodexBarLinuxTests.xctest/Contents/MacOS/CodexBarLinuxTests": true,
+    "/Volumes/StudioSSD/Projects/working/apple/CodexBar/.build/out/Products/Debug/CodexBarPluginTests.xctest/Contents/MacOS/CodexBarPluginTests": true,
+    "/Volumes/StudioSSD/Projects/working/apple/CodexBar/.build/out/Products/Debug/CodexBarTests.xctest/Contents/MacOS/CodexBarTests": true
+  },
+  "reviewedTwoFileDeltaFrom0c80": [
+    "Sources/CodexBarWidget/CodexBarWidgetProvider.swift",
+    "Tests/CodexBarTests/ProviderArchitectureGatekeeperTests.swift"
+  ],
+  "twoFileDeltaSourceFindingCount": 0,
+  "fullLintBuildStatus": "pending session38018/mac-appgroup-full-lint.log; not claimed passed",
+  "singleBinaryFullPass": false,
+  "sha256": {
+    "mac-appgroup-gate-3.log": "d6a3b271d0531272c3925a09336c003d10a9e13298697b76f75cb2979304341c",
+    "mac-appgroup-selection-coverage.json": "d7b50484951e3ec7cad63230d11073d6213f9d715f4e6c4f4069ea154b797684",
+    "run_mac_appgroup_gate.py": "e3a7ef0668a03ad9dd6bdcfeff1d6492e5fb99b0fc1f718fdacd846bf0d42b06",
+    "mac-source-freeze-inventory.json": "dcaec33b6c6714aabe8c57f5df696d907dd4a7a5d1fc3ee47d5d3159e6909950",
+    "mac-review-final-gate-4.log": "98a11ad693dfeff541b8fc5453cc04d0c87759455d57aad958ce1871200c66cb",
+    "mac-source-freeze-delta.log": "b39cf0a0843028fb911d1d2a17c8ef2573915f25d3573cdffcb9c92a8545e97d",
+    "mac-frozen-composite-gate-proof.json": "6a4a999d0a355af9fb128c250e4b96283180d6287abaa18b42d10b1de1022ab9",
+    "mac-final-coverage-review-proof.json": "01e7a5bd5976f8cf402b125a83425f11946cd68b9bd4c098f99ef0838518742c"
+  },
+  "osAuthorizationEvidence": {
+    "proofSHA256": "4cd8093083d3236cdf7f09ef1dcfb291b080dbe895f9a2acf44e031bb83ccd51",
+    "sourceCommit": "0c80fb5b1207e049f543d6634146b62c06b8e990",
+    "positiveControlPassed": true,
+    "negativeControlPassed": true,
+    "payloadOrDefaultsAccess": false,
+    "scope": "Only a freshly generated nonce QA group; no existing user business container was accessed",
+    "separateFromUnitCoverage": true
+  }
+}

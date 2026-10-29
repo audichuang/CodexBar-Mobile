@@ -20,3 +20,10 @@ PR仅关联#221/#222，不提前关闭issues。最终停在用户merge/Mac正式
 
 
 Archive独立补审核对353项输入、101个逐文件产物、五bundle版本/Team/签名、Production角色、dSYM UUID全部一致。manifest解析序列化hash与实际文件hash已分别命名并记录算法；详见evidence/round2-ios-archive-independent-review.json和ios-archive-verified.json。0新增产品阻塞，不提前标完整候选gate clean。
+
+
+## 最终产物补审
+
+最终产品18ebb9727已通过128项受影响gate和full lint/build，重签、公证、真实runtime Group及appcast客户端签名校验。独立review已确认固定releaseID附件更新脚本，完整候选终审进行中；详细结果与最终PR/head在后续本节记录。未进入远端review前不宣称clean PR。
+
+最终draft资产更新脚本补审无阻塞：禁止按logicaltag clobber，改为fresh API固定ID/assetID操作；实际tagless server标识与future logicaltag分别校验。已执行更新并回读新附件hash。

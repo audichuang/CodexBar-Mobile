@@ -1,8 +1,19 @@
 # 测试、兼容与证据
 
-状态：`in-progress`。当前源码冻结为 `a36c6b110da3d994c8bba6bbcfa777627efa42ff`。Mac完整库存组合、102项受影响复测及最终3suite delta已通过；iOS unit/原生四语渲染、普通iPhone/iPad、Duo真实姿态和系统Widget验收通过；iOS本地Archive完成。尚待最终quiet全lint/build、Mac签名公证/no-tag draft和完整候选/PR review。下文按时间保留失败与修复过程，各段的“待验证”是当时状态，以本段及末尾最新记录为准。
+状态：`in-progress`（等待最终本地与PR review）。历史失败、修复和当时待验状态保留，以本段为当前结论。
 
-**最新覆盖状态：** 最终Mac实包审计又发现基线App Group运行ID/签名错配，原Mac draft已hold。现补签名对齐及本地缓存/选择保留迁移；新增受影响专项、重签公证和终审待完成。此前a36冻结与测试证据是历史输入，保留不受此次修复影响的部分，不能将旧候选冒充当前通过。iOS/Shared shipping inputs未改。
+## 最终候选验收（2026-10-28）
+
+当前产品源码：`18ebb97272a68853473b3c3c565fc56f719901e2`，后续仅补文档/证据。Mac Group/CLI 修复后重新构建、公证与校验；旧草稿包已hold，最终附件替换结果见04。iOS原353项Archive输入重新逐项SHA256核对不变（evidence/ios-archive-final-input-equivalence.json），保留a36来源Archive。
+
+- 最终Mac受影响128 selections/43组全部首遍PASS，0fail/timeout/retry；与成本修复97项及原完整gate1620项去重，覆盖1845 selections/16194 method identifiers。123个条件XCTest skip及Swift Testing opt-in early-return限制保留；不是单一最终binary全量body通过。见evidence/mac-appgroup-final-coverage-review.md与proof。
+- `mac-appgroup-full-lint.log`完整lint与`mac-appgroup-final-build.log`的swift build --jobs4通过；SwiftLint 3211文件0违规，4语言533keys、parser24/hash、CI/fork guards通过。16个打包合同及timestamp retry stub通过。
+- 真实Developer ID签名QA正负控：独立nonce group的声明成员可open，无成员EPERM；containerURL非nil不能证明授权。未操作用户业务容器，任务QA容器已清理。最终App/CLI runtime group均与Widget签名Group一致，生产包本身单独验证。
+- Mac最终双架构App/CLI/Watchdog/Widget均Developer ID、hardened runtime、minOS14.0；App与dSYM双架构UUID一致。公证`343e9fc0-4ac2-4f2e-9300-c0492953d430` Accepted，stapler、distribution policy、隔离启动通过。
+- Sparkle175.1.3.2.0单调递增；最终ZIP长度92810809、Ed25519以及实际App内SUPublicEDKey客户端校验均通过。仅scratch候选appcast，仓库feed无修改。
+- iOS全量1278 Swift Testing/85 suites +75 XCTest及后续150 tests/6 suites通过；普通iPhone/iPad、Duo实际内外屏横竖、partial和跨折叠操作、严格SpringBoard Widget及四语原生渲染证据继续有效。
+- 16组合全部为 **substituted**（64 reads/32真实冻结consumer merges），没有实体双Mac/双iPhone CloudKit/APNs/缓存收敛实测。CloudKit结论 **NO_DEPLOY**；本轮Group仅Mac本地共享容器，iOS/Shared wire不变。
+- GitHub PR review仍待完成；不把本地测试或notary结果当远端review通过。未merge/tag/live/feed发布或iOS上传。后续Final CI在授权合并后执行。
 
 ## 旧/新定义
 
