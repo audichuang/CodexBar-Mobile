@@ -1,6 +1,6 @@
 # iOS 影响逐项审计
 
-状态：`in-progress`。75项范围与数据合同已有逐项结论；iOS测试、Duo、系统Widget与本地Archive已完成，当前产物及最终review状态见03–05；远端review仍待完成。
+状态：`done`（本轮候选的调研、实现、测试、产物与审查记录完成；尚未合并或正式发布）。本地完整审查与7f6bdc416的GitHub review已clean，Fast Checks通过；收尾文档之后的最终current-head门禁结果见PR #225。历史失败及当时“待验证”字样按时间保留，不能替代当前结论。
 
 ## 上游完整性
 

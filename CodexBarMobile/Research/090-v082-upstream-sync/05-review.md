@@ -1,6 +1,6 @@
 # 审查与 PR
 
-状态：`in-progress`；完整本地候选review已通过，0 unresolved findings。已推送并创建PR #225，等待最终当前head的GitHub Codex review；未merge/tag/live。
+状态：`done`（本轮候选的调研、实现、测试、产物与审查记录完成；尚未合并或正式发布）。本地完整审查与7f6bdc416的GitHub review已clean，Fast Checks通过；收尾文档之后的最终current-head门禁结果见PR #225。历史失败及当时“待验证”字样按时间保留，不能替代当前结论。
 
 ## 完整源码审查
 
@@ -39,3 +39,11 @@ PR：[225](https://github.com/o1xhack/CodexBar-Mobile/pull/225)，base mobile-de
 ## PR Fast Checks证据文件大小修复
 
 55fad94b2的run40813721269执行到仓库size guard失败：mac-appgroup-selection-coverage.json为2270244字节，超过2097152限制。紧凑排版后仍超限，故仅将fullMethodInventory拆为独立JSON，用文件名+SHA256引用；重新组合后的所有键/值与SSD原始清单完全相等，不删库存/结果/二进制hash。evidence/mac-appgroup-coverage-split-proof.json记录可复核关系；原完整日志与原JSON保留SSD。产品输入未改，无需重打包。修复后本地size guard与文档增量审查通过再push；GitHub仍须对最终head完成检查和review。
+
+## GitHub审查与交接记录
+
+- 55fad首次请求于2026-10-29T03:43:15Z，曾running；后因证据大小修复被新head取代，不作为最终通过结果。
+- 7f6bdc416请求 [6487381088](https://github.com/o1xhack/CodexBar-Mobile/pull/225#issuecomment-6487381088)，03:49:42Z接受；03:51:11Z机器人 [clean receipt](https://github.com/o1xhack/CodexBar-Mobile/pull/225#issuecomment-6487407087) 精确绑定该commit，summary completed/has_findings=false；reviewThreads为空，无需伪造回复或Resolve。
+- Fast Checks [40814283730](https://github.com/o1xhack/CodexBar-Mobile/actions/runs/40814283730) success（3m8s）。前次文件大小failure已修复，保留证据。
+- 此收尾提交只改Research状态/记录，不改shipping inputs。按规范本地增量审查后push，再对最终head运行远端review和check_pr_review_gate.sh；最终回执/gate保存在本PR评论及SSD，避免为了写入自己的SHA反复生成提交。Research done表示候选工作记录完成，不代替最终门禁，不代表public release。
+- 最终交接须分别决定PR合并、Mac live及iOS的TestFlight/App Review/public阶段。未授权merge/auto-merge、tag/live/feed、iOS上传、CloudKit deploy；issues继续open。重型Final CI尚未运行，授权merge后、public前必须验证。

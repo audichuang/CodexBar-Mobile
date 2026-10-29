@@ -1,0 +1,11 @@
+{
+  "reviewedHead": "7f6bdc41666d3900c8816fe8fe0a70c649afbfcd",
+  "reviewReceipt": "https://github.com/o1xhack/CodexBar-Mobile/pull/225#issuecomment-6487407087",
+  "reviewResult": "Didn't find any major issues",
+  "unresolvedThreads": 0,
+  "fastChecksRun": 40814283730,
+  "fastChecks": "success",
+  "draft": true,
+  "mergeOrPublicationAuthorized": false,
+  "closeoutDocs": "Subsequent documentation-only closeout requires local delta review and a fresh exact-head remote gate; final result is recorded on PR225, without rewriting artifact provenance."
+}

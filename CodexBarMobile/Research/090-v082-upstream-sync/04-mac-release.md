@@ -1,6 +1,6 @@
 # 候选产物与签名
 
-状态：`in-progress`（本地产物与draft附件更新完成，等待完整候选review）。无live release、tag、appcast发布、iOS export/upload。
+状态：`done`（本轮候选的调研、实现、测试、产物与审查记录完成；尚未合并或正式发布）。本地完整审查与7f6bdc416的GitHub review已clean，Fast Checks通过；收尾文档之后的最终current-head门禁结果见PR #225。历史失败及当时“待验证”字样按时间保留，不能替代当前结论。
 
 ## 固定版本
 
@@ -41,7 +41,7 @@ Mac0.82.0.1 / BUILD175.1 / Mobile3.2.0 / Sparkle175.1.3.2.0；draft逻辑tag v0.
 - Sparkle175.1.3.2.0单调递增；最终ZIP长度92810809、Ed25519以及实际App内SUPublicEDKey客户端校验均通过。仅scratch候选appcast，仓库feed无修改。
 - iOS全量1278 Swift Testing/85 suites +75 XCTest及后续150 tests/6 suites通过；普通iPhone/iPad、Duo实际内外屏横竖、partial和跨折叠操作、严格SpringBoard Widget及四语原生渲染证据继续有效。
 - 16组合全部为 **substituted**（64 reads/32真实冻结consumer merges），没有实体双Mac/双iPhone CloudKit/APNs/缓存收敛实测。CloudKit结论 **NO_DEPLOY**；本轮Group仅Mac本地共享容器，iOS/Shared wire不变。
-- GitHub PR review仍待完成；不把本地测试或notary结果当远端review通过。未merge/tag/live/feed发布或iOS上传。后续Final CI在授权合并后执行。
+- GitHub已对7f6bdc416返回clean，Fast Checks通过；最终收尾文档仍需current-head复核，动态结果以PR225为准。未merge/tag/live/feed发布或iOS上传。Final CI在授权合并后执行。
 
 ### 最终资产身份
 
