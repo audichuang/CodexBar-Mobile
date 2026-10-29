@@ -45,3 +45,7 @@ StudioSSD UUID、working symbolic link、项目 realpath 与 BuildScratch 可写
 - iOS全量1278 Swift Testing/85 suites +75 XCTest及后续150 tests/6 suites通过；普通iPhone/iPad、Duo实际内外屏横竖、partial和跨折叠操作、严格SpringBoard Widget及四语原生渲染证据继续有效。
 - 16组合全部为 **substituted**（64 reads/32真实冻结consumer merges），没有实体双Mac/双iPhone CloudKit/APNs/缓存收敛实测。CloudKit结论 **NO_DEPLOY**；本轮Group仅Mac本地共享容器，iOS/Shared wire不变。
 - GitHub PR review仍待完成；不把本地测试或notary结果当远端review通过。未merge/tag/live/feed发布或iOS上传。后续Final CI在授权合并后执行。
+
+## PR对应关系
+
+候选PR [#225](https://github.com/o1xhack/CodexBar-Mobile/pull/225) → open upstream-sync #221/#222，累计v0.80–v0.82一个版本。完整独立本地review已clean，远端review进行中；最终交接按05。

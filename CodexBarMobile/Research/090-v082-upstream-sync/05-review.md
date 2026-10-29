@@ -1,6 +1,6 @@
 # 审查与 PR
 
-状态：`in-progress`；完整本地源码审查已完成两轮，当前无未解决源码 finding。最终测试、签名产物与冻结提交仍须补审；未创建本轮 PR，未 push/merge/tag。
+状态：`in-progress`；完整本地候选review已通过，0 unresolved findings。已推送并创建PR #225，等待最终当前head的GitHub Codex review；未merge/tag/live。
 
 ## 完整源码审查
 
@@ -27,3 +27,11 @@ Archive独立补审核对353项输入、101个逐文件产物、五bundle版本/
 最终产品18ebb9727已通过128项受影响gate和full lint/build，重签、公证、真实runtime Group及appcast客户端签名校验。独立review已确认固定releaseID附件更新脚本，完整候选终审进行中；详细结果与最终PR/head在后续本节记录。未进入远端review前不宣称clean PR。
 
 最终draft资产更新脚本补审无阻塞：禁止按logicaltag clobber，改为fresh API固定ID/assetID操作；实际tagless server标识与future logicaltag分别校验。已执行更新并回读新附件hash。
+
+## 本地完整候选终审通过与远端交接
+
+独立reviewer `/root/final_candidate_review` 在 `4ef5f75674b1788163c868bb350994b2e900a2b9` 对完整base→candidate及相关caller/tests/config/产物完成终审，0 unresolved findings。报告evidence/final-local-review-round2-current-clean.md及source-end JSON覆盖当前822 tracked变更路径；保留前轮发现与修复历史，不能将历史open状态当当前结论。
+
+独立复核1826项Mac inputs与18ebb源码、两ZIP内部4exec签名/双架构/minOS、Group/Production角色、公证/UUID/远端附件hash；使用OpenSSL独立按真实App公钥验证Sparkle签名。iOS353 inputs与a36 Archive、Archive101文件重新核对一致；用户原有error.log/work与before/after记录一致，未纳入提交。见round2-final-mac-independent-verification.json和round2-final-artifact-public-checks.json。
+
+PR：[225](https://github.com/o1xhack/CodexBar-Mobile/pull/225)，base mobile-dev，关联#221/#222，不自动关闭。当前文档增量只补报告与链接，无shipping input改动；补审后push，请求GitHub Codex review最终head，最终结果及线程/CI/gate以本PR记录交叉核对。达到clean reviewed PR后才询问用户合并、Mac live与iOS具体阶段。

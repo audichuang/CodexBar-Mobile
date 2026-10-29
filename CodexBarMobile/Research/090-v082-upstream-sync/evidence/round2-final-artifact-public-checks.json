@@ -1,0 +1,31 @@
+{
+  "sourceCommit": "18ebb97272a68853473b3c3c565fc56f719901e2",
+  "errors": [],
+  "MacProfileProductionAuthorityVerified": true,
+  "deepSignature": {
+    "exitCode": 0,
+    "output": ""
+  },
+  "stapler": {
+    "exitCode": 0,
+    "output": "Processing: /Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/mac-artifact-verification/CodexBar.app\nThe validate action worked!"
+  },
+  "distribution": {
+    "exitCode": 0,
+    "output": "Only one signature found in file:///Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/mac-artifact-verification/CodexBar.app, skipping dual signature check\nApp passed all pre-distribution checks and is ready for distribution."
+  },
+  "dSYMPairUUIDMatch": true,
+  "independentEd25519": {
+    "exitCode": 0,
+    "output": "Signature Verified Successfully",
+    "usesActualBundledClientPublicKey": true
+  },
+  "retainedIOSArchive": {
+    "sourceCommit": "a36c6b110da3d994c8bba6bbcfa777627efa42ff",
+    "currentMacCommit": "18ebb97272a68853473b3c3c565fc56f719901e2",
+    "inputCount": 353,
+    "currentInputsUnchanged": true,
+    "mismatches": [],
+    "delivery": "Local Apple Development signed Archive only; no export/upload"
+  }
+}
