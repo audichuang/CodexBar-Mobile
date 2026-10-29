@@ -12,20 +12,26 @@ struct SettingsSidebarSizingTests {
         try await self.settle(firstWindow)
         let firstContent = try #require(firstWindow.contentView)
         let firstSplit = try #require(self.splitView(in: firstContent))
-        #expect(firstSplit.subviews[0].frame.width == 320)
+        let sidebar = try self.sidebar(in: firstSplit)
+        #expect(sidebar.viewController.view.frame.width == 320)
+        #expect(width.value == 320)
 
-        firstSplit.setPosition(300, ofDividerAt: 0)
+        // The native pane can include system chrome outside the content measured by the modifier.
+        // Move its divider to a 300-point content width without assuming that chrome's size.
+        let dividerPosition = firstSplit.subviews[0].frame.maxX + (300 - sidebar.viewController.view.frame.width)
+        firstSplit.setPosition(dividerPosition, ofDividerAt: 0)
         try await self.settle(firstWindow)
+        #expect(sidebar.viewController.view.frame.width == 300)
         #expect(width.value == 300)
 
         let secondWindow = self.makeWindow(width: width)
         try await self.settle(secondWindow)
         let secondContent = try #require(secondWindow.contentView)
         let secondSplit = try #require(self.splitView(in: secondContent))
-        #expect(secondSplit.subviews[0].frame.width == 300)
+        let restoredSidebar = try self.sidebar(in: secondSplit)
+        #expect(restoredSidebar.viewController.view.frame.width == 300)
+        #expect(width.value == 300)
 
-        let controller = try #require(firstSplit.delegate as? NSSplitViewController)
-        let sidebar = try #require(controller.splitViewItems.first)
         #expect(sidebar.canCollapse)
         sidebar.isCollapsed = true
         try await self.settle(firstWindow)
@@ -33,6 +39,7 @@ struct SettingsSidebarSizingTests {
         #expect(width.value == 300)
         sidebar.isCollapsed = false
         try await self.settle(firstWindow)
+        #expect(sidebar.viewController.view.frame.width == 300)
         #expect(width.value == 300)
     }
 
@@ -43,8 +50,7 @@ struct SettingsSidebarSizingTests {
         try await self.settle(window)
         let content = try #require(window.contentView)
         let split = try #require(self.splitView(in: content))
-        let controller = try #require(split.delegate as? NSSplitViewController)
-        let sidebar = try #require(controller.splitViewItems.first)
+        let sidebar = try self.sidebar(in: split)
         #expect(sidebar.viewController.view.frame.width == 200)
         #expect(width.value == 200)
         #expect(sidebar.canCollapse)
@@ -67,6 +73,11 @@ struct SettingsSidebarSizingTests {
     private func splitView(in view: NSView) -> NSSplitView? {
         if let split = view as? NSSplitView { return split }
         return view.subviews.lazy.compactMap { self.splitView(in: $0) }.first
+    }
+
+    private func sidebar(in split: NSSplitView) throws -> NSSplitViewItem {
+        let controller = try #require(split.delegate as? NSSplitViewController)
+        return try #require(controller.splitViewItems.first)
     }
 
     private func settle(_ window: NSWindow) async throws {

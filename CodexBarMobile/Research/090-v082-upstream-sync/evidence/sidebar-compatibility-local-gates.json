@@ -1,0 +1,39 @@
+{
+  "checkedAt": "2026-10-29T19:20:47.412829+00:00",
+  "baseCommit": "3802170c1c53d4e81a6fed50c2bd9fe214e3aca4",
+  "branch": "fix/v082-sidebar-compatibility",
+  "macOS": "27.0.1",
+  "xcode": "27.1 (27A9275)",
+  "swift": "6.4",
+  "testFile": "Tests/CodexBarTests/SettingsSidebarSizingTests.swift",
+  "testFileSHA256": "b6e81ddc1e4792975cf6e11b2024643d7cfb9d08478495f18df1f9975d31845e",
+  "focusedTests": {
+    "exitCode": 0,
+    "tests": 2,
+    "suites": 1,
+    "durationSeconds": 0.972,
+    "buildSeconds": 104.14
+  },
+  "lint": {
+    "exitCode": 0,
+    "swiftLintFiles": 3211,
+    "violations": 0,
+    "localizedSourceKeys": 533,
+    "parserChanged": false
+  },
+  "unchangedArtifactInputs": {
+    "Mac": 1826,
+    "iOS": 353
+  },
+  "remoteMac26FinalCI": "required after merge; old run40931175535 remains failed",
+  "logs": [
+    {
+      "file": "sidebar-compat-final-focused-tests.log",
+      "sha256": "f724fe9c2698fbbe70d8359aff878ce5a0d3934734815573566d34033d6c47c6"
+    },
+    {
+      "file": "sidebar-compat-lint.log",
+      "sha256": "2ba3c80b2fe66b2262e0b6dfabcf6bfb49684266391a316ae6903fcb97d11f75"
+    }
+  ]
+}
