@@ -212,7 +212,7 @@ struct CodexBarSwitcherTimelineProvider: TimelineProvider {
     {
         let available = snapshot.map { Self.supportedProviders(from: $0, includePlaceholder: false) } ?? []
         let snapshot = snapshot ?? WidgetPreviewData.emptySnapshot()
-        let providers = available.isEmpty ? [.codex] : available
+        let providers = Self.supportedProviders(from: snapshot)
         let selected = providers.first { $0.instanceID == stored } ?? providers.first ?? .codex
         // A placeholder or inferred first choice must not beat the app's pending preference migration.
         if let stored, !available.isEmpty, selected.instanceID != stored {
