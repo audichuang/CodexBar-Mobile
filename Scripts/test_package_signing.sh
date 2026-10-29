@@ -108,7 +108,7 @@ for value in filter(None, parts):
 assert len(calls) == 4
 for index, target in enumerate(['Fictional Framework', 'Fictional CLI']):
     first, retry = calls[index * 2:index * 2 + 2]
-    assert first[-1] == retry[-1] == str(Path(sys.argv[2]) / target)
+    assert Path(first[-1]) == Path(retry[-1]) == Path(sys.argv[2]) / target
     assert '--timestamp' in first and '--timestamp' not in retry
     assert [value for value in first if value != '--timestamp'] == retry
     assert ('--entitlements' in retry) == (index == 1)
