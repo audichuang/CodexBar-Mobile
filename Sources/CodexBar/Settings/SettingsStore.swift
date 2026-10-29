@@ -479,10 +479,12 @@ extension SettingsStore {
     private static func scheduleAppGroupMigration() {
         Task.detached(priority: .utility) {
             let result = AppGroupSupport.migrateLegacyDataIfNeeded()
+            let fallback = AppGroupSupport.migrateWidgetFallbackDataIfNeeded()
             CodexBarLog.logger(LogCategories.settings).info(
                 "App group migration completed",
                 metadata: [
                     "migrationStatus": result.status.rawValue,
+                    "fallbackMigrationStatus": fallback.status.rawValue,
                     "migratedSnapshot": result.copiedSnapshot ? "1" : "0",
                     "migratedDefaults": "\(result.copiedDefaults)",
                 ])

@@ -11,6 +11,7 @@ public enum AppGroupSupport {
     public static let widgetSnapshotFilename = "widget-snapshot.json"
     public static let migrationVersion = 1
     public static let migrationVersionKey = "appGroupMigrationVersion"
+    public static let widgetFallbackMigrationVersionKey = "widgetFallbackMigrationVersion"
     private static let sharedDefaultsMigrationKeys = [
         "debugDisableKeychainAccess",
         "widgetSelectedProvider",
@@ -22,6 +23,7 @@ public enum AppGroupSupport {
             case targetUnavailable
             case noChangesNeeded
             case migrated
+            case retryNeeded
         }
 
         public let status: Status
@@ -157,23 +159,9 @@ public enum AppGroupSupport {
             ?? self.legacyContainerCandidateURL(bundleID: bundleID, homeDirectory: homeDirectory)
             .appendingPathComponent(self.widgetSnapshotFilename, isDirectory: false)
 
-        let copiedSnapshot = {
-            guard let currentSnapshotURL else { return false }
-            guard !fileManager.fileExists(atPath: currentSnapshotURL.path),
-                  fileManager.fileExists(atPath: legacySnapshotURL.path)
-            else {
-                return false
-            }
-            do {
-                try fileManager.createDirectory(
-                    at: currentSnapshotURL.deletingLastPathComponent(),
-                    withIntermediateDirectories: true)
-                try fileManager.copyItem(at: legacySnapshotURL, to: currentSnapshotURL)
-                return true
-            } catch {
-                return false
-            }
-        }()
+        let copiedSnapshot = currentSnapshotURL.map {
+            self.copySnapshotIfNeeded(from: legacySnapshotURL, to: $0, fileManager: fileManager) == .copied
+        } ?? false
 
         let copiedDefaults = self.copyLegacySharedDefaults(
             from: legacyDefaults,
@@ -190,6 +178,59 @@ public enum AppGroupSupport {
 
         standardDefaults.set(self.migrationVersion, forKey: self.migrationVersionKey)
         return result
+    }
+
+    /// Recover app-local data used while the shared container was unavailable.
+    /// Its marker is independent of the older group-to-group migration.
+    public static func migrateWidgetFallbackDataIfNeeded(
+        bundleID: String? = Bundle.main.bundleIdentifier,
+        standardDefaults: UserDefaults = .standard,
+        fileManager: FileManager = .default,
+        homeDirectory: URL = FileManager.default.homeDirectoryForCurrentUser,
+        currentDefaultsOverride: UserDefaults? = nil,
+        currentSnapshotURLOverride: URL? = nil,
+        fallbackSnapshotURLOverride: URL? = nil) -> MigrationResult
+    {
+        guard standardDefaults.integer(forKey: self.widgetFallbackMigrationVersionKey) < 1 else {
+            return MigrationResult(status: .alreadyCompleted)
+        }
+        guard let currentDefaults = currentDefaultsOverride ?? self.sharedDefaults(
+            bundleID: bundleID, fileManager: fileManager),
+            let currentURL = currentSnapshotURLOverride ?? self.currentContainerURL(
+                bundleID: bundleID, fileManager: fileManager)?
+                .appendingPathComponent(self.widgetSnapshotFilename)
+        else { return MigrationResult(status: .targetUnavailable) }
+
+        let fallbackURL = fallbackSnapshotURLOverride ?? self.localFallbackDirectory(
+            fileManager: fileManager, homeDirectory: homeDirectory)
+            .appendingPathComponent(self.widgetSnapshotFilename)
+        let snapshotResult = self.copySnapshotIfNeeded(from: fallbackURL, to: currentURL, fileManager: fileManager)
+        let copiedDefaults = self.copyLegacySharedDefaults(from: standardDefaults, to: currentDefaults)
+        if snapshotResult == .failed {
+            return MigrationResult(status: .retryNeeded, copiedDefaults: copiedDefaults)
+        }
+        standardDefaults.set(1, forKey: self.widgetFallbackMigrationVersionKey)
+        return MigrationResult(
+            status: snapshotResult == .copied || copiedDefaults > 0 ? .migrated : .noChangesNeeded,
+            copiedSnapshot: snapshotResult == .copied,
+            copiedDefaults: copiedDefaults)
+    }
+
+    private enum SnapshotCopyResult { case unchanged, copied, failed }
+
+    private static func copySnapshotIfNeeded(
+        from source: URL, to target: URL, fileManager: FileManager) -> SnapshotCopyResult
+    {
+        guard !fileManager.fileExists(atPath: target.path), fileManager.fileExists(atPath: source.path) else {
+            return .unchanged
+        }
+        do {
+            try fileManager.createDirectory(at: target.deletingLastPathComponent(), withIntermediateDirectories: true)
+            try fileManager.copyItem(at: source, to: target)
+            return .copied
+        } catch {
+            return .failed
+        }
     }
 
     private static func copyLegacySharedDefaults(

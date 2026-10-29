@@ -21,3 +21,10 @@ Mac0.82.0.1 / BUILD175.1 / Mobile3.2.0 / Sparkle175.1.3.2.0；draft逻辑tag v0.
 最初sign-and-notarize在签名/公证前因lint纯排版修复取消，owned进程/编译孤儿已终止，private notarization temp副本无遗留；不把该次当成功。
 
 后续从已冻结source重跑真实签名公证、ZIP/dSYM UUID、Production、Gatekeeper与isolated launch smoke；再用release.sh --draft-no-tag-push创建draft并核对附件digest，记录实际source SHA和placeholder target mobile-dev。候选appcast仅在scratch生成/签名验证，不修改/发布仓库feed。任何review修复改变artifact inputs就重建相应产物。
+
+
+## 首个Mac实包：已hold，须替换
+
+82a2adb47运行release.sh --draft-no-tag-push，首次Xcode缓存缺SweetCookieKit固定5b0提交/tree失败，按官方v0.5.9补齐本任务cache（全部8个锁定依赖复核可读），不改lock。第二次完整lint、双架构、Widget Xcode、Developer ID签名、公证62dab5c1-5190-4d35-a0c1-331dd89093f2、stapler、distribution policy、isolated CLI/资源/启动均通过，draft427366941创建。ZIP f408e157c96a80b908d335a17184edb112af666a31973ec7a73bf6b8c7dae1cc，dSYM23a0ee2ef91cb10a35fe8daa179df2fc5ee084efe77ff792ad753c4419b430a1。
+
+后续更强实包验证发现真实Group错配，独立复审确认阻塞，故这些资产不是最终候选。draft正文已标hold，后续保留旧包证据并重签替换；没有live/tag/feed发布。链接：https://github.com/o1xhack/CodexBar-Mobile/releases/tag/untagged-780e47f927e739ed48a3 。具体修复设计见01。

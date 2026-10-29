@@ -128,7 +128,10 @@ for configuration, signing, profile_present, allow_lldb in itertools.product(
             assert app_entitlements['com.apple.developer.team-identifier'] == '3TUERHN53E'
             assert app_entitlements['com.apple.developer.icloud-container-environment'] == 'Production'
             assert app_entitlements['com.apple.developer.icloud-container-identifiers'] == ['iCloud.com.o1xhack.codexbar']
-            assert app_entitlements['com.apple.security.application-groups'][0].startswith('group.com.o1xhack.codexbar')
+            group = '3TUERHN53E.com.steipete.codexbar' + ('.debug' if configuration == 'debug' else '')
+            assert app_entitlements['com.apple.security.application-groups'] == [group]
+            assert widget_entitlements['com.apple.security.application-groups'] == [group]
+            assert 'com.apple.developer.icloud-services' not in widget_entitlements
         else:
             assert 'com.apple.developer.icloud-services' not in app_entitlements
         assert widget_entitlements['com.apple.security.app-sandbox'] is True

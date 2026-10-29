@@ -12,6 +12,12 @@ struct AppGroupSupportTests {
             AppGroupSupport.currentGroupID(teamID: "ABCDE12345", bundleID: "com.steipete.codexbar.debug")
                 == "ABCDE12345.com.steipete.codexbar.debug")
         #expect(
+            AppGroupSupport.currentGroupID(teamID: "3TUERHN53E", bundleID: "com.o1xhack.codexbar")
+                == "3TUERHN53E.com.steipete.codexbar")
+        #expect(
+            AppGroupSupport.currentGroupID(teamID: "3TUERHN53E", bundleID: "com.o1xhack.codexbar.debug.widget")
+                == "3TUERHN53E.com.steipete.codexbar.debug")
+        #expect(
             AppGroupSupport.legacyGroupID(for: "com.steipete.codexbar")
                 == "group.com.steipete.codexbar")
         #expect(
@@ -127,6 +133,91 @@ struct AppGroupSupportTests {
     }
 
     @Test
+    func `fallback migration preserves bytes and selection after the old migration completed`() throws {
+        let fixture = try MigrationFixture()
+        defer { fixture.cleanUp() }
+        fixture.standardDefaults.set(1, forKey: AppGroupSupport.migrationVersionKey)
+        fixture.standardDefaults.set("cursor", forKey: "widgetSelectedProvider")
+        fixture.standardDefaults.set(true, forKey: "debugDisableKeychainAccess")
+        let snapshot = #"{"generatedAt":"2026-01-02T03:04:05Z","entries":[]}"#
+        try fixture.writeSnapshot(snapshot, to: fixture.legacySnapshotURL)
+
+        let result = fixture.migrateFallback()
+
+        #expect(result.status == .migrated)
+        #expect(result.copiedSnapshot && result.copiedDefaults == 2)
+        #expect(try Data(contentsOf: fixture.currentSnapshotURL) == Data(snapshot.utf8))
+        #expect(try Data(contentsOf: fixture.legacySnapshotURL) == Data(snapshot.utf8))
+        #expect(fixture.currentDefaults.string(forKey: "widgetSelectedProvider") == "cursor")
+        #expect(fixture.standardDefaults.string(forKey: "widgetSelectedProvider") == "cursor")
+        #expect(fixture.standardDefaults.integer(forKey: AppGroupSupport.widgetFallbackMigrationVersionKey) == 1)
+    }
+
+    @Test
+    func `fallback migration never overwrites newer shared data or an existing selection`() throws {
+        let fixture = try MigrationFixture()
+        defer { fixture.cleanUp() }
+        fixture.currentDefaults.set("codex", forKey: "widgetSelectedProvider")
+        fixture.standardDefaults.set("cursor", forKey: "widgetSelectedProvider")
+        try fixture.writeSnapshot("current", to: fixture.currentSnapshotURL)
+        try fixture.writeSnapshot("fallback", to: fixture.legacySnapshotURL)
+
+        let result = fixture.migrateFallback()
+
+        #expect(result.status == .noChangesNeeded)
+        #expect(try Data(contentsOf: fixture.currentSnapshotURL) == Data("current".utf8))
+        #expect(try Data(contentsOf: fixture.legacySnapshotURL) == Data("fallback".utf8))
+        #expect(fixture.currentDefaults.string(forKey: "widgetSelectedProvider") == "codex")
+        #expect(fixture.fileManager.operations == [.exists(fixture.currentSnapshotURL.path)])
+    }
+
+    @Test
+    func `failed fallback copy remains retryable without deleting the source`() throws {
+        let fixture = try MigrationFixture()
+        defer { fixture.cleanUp() }
+        try fixture.writeSnapshot("fallback", to: fixture.legacySnapshotURL)
+        fixture.fileManager.failCopies = true
+
+        let failed = fixture.migrateFallback()
+
+        #expect(failed.status == .retryNeeded)
+        #expect(fixture.standardDefaults.object(forKey: AppGroupSupport.widgetFallbackMigrationVersionKey) == nil)
+        #expect(try Data(contentsOf: fixture.legacySnapshotURL) == Data("fallback".utf8))
+        fixture.fileManager.failCopies = false
+        #expect(fixture.migrateFallback().copiedSnapshot)
+        #expect(fixture.migrateFallback().status == .alreadyCompleted)
+    }
+
+    @Test
+    func `unavailable fallback target retains retry eligibility`() throws {
+        let fixture = try MigrationFixture()
+        defer { fixture.cleanUp() }
+        #expect(fixture.migrateFallback(currentDefaultsAvailable: false).status == .targetUnavailable)
+        #expect(fixture.standardDefaults.object(forKey: AppGroupSupport.widgetFallbackMigrationVersionKey) == nil)
+        #expect(fixture.fileManager.operations == [.containerLookup])
+    }
+
+    @Test
+    func `absent fallback data completes without inventing a snapshot or selection`() throws {
+        let fixture = try MigrationFixture()
+        defer { fixture.cleanUp() }
+        #expect(fixture.migrateFallback().status == .noChangesNeeded)
+        #expect(fixture.currentDefaults.dictionaryRepresentation().isEmpty)
+        #expect(!FileManager.default.fileExists(atPath: fixture.currentSnapshotURL.path))
+    }
+
+    @Test
+    func `widget selection reads app-local preference until migration and prefers shared choice`() {
+        let current = InMemoryUserDefaults()
+        let fallback = InMemoryUserDefaults()
+        #expect(WidgetSelectionStore.selectedProvider(in: current, fallback: fallback) == nil)
+        fallback.set("cursor", forKey: "widgetSelectedProvider")
+        #expect(WidgetSelectionStore.selectedProvider(in: current, fallback: fallback)?.rawValue == "cursor")
+        current.set("codex", forKey: "widgetSelectedProvider")
+        #expect(WidgetSelectionStore.selectedProvider(in: current, fallback: fallback)?.rawValue == "codex")
+    }
+
+    @Test
     func `unavailable synthetic target does not mark migration complete`() throws {
         let fixture = try MigrationFixture()
         defer { fixture.cleanUp() }
@@ -182,6 +273,17 @@ private struct MigrationFixture {
             legacySnapshotURLOverride: self.legacySnapshotURL)
     }
 
+    func migrateFallback(currentDefaultsAvailable: Bool = true) -> AppGroupSupport.MigrationResult {
+        AppGroupSupport.migrateWidgetFallbackDataIfNeeded(
+            bundleID: "com.o1xhack.codexbar",
+            standardDefaults: self.standardDefaults,
+            fileManager: self.fileManager,
+            homeDirectory: self.root.appendingPathComponent("home"),
+            currentDefaultsOverride: currentDefaultsAvailable ? self.currentDefaults : nil,
+            currentSnapshotURLOverride: self.currentSnapshotURL,
+            fallbackSnapshotURLOverride: self.legacySnapshotURL)
+    }
+
     func cleanUp() {
         do {
             try FileManager.default.removeItem(at: self.root)
@@ -204,6 +306,7 @@ private final class MigrationFileManager: FileManager, @unchecked Sendable {
     let root: URL
     private let backing = FileManager()
     var operations: [Operation] = []
+    var failCopies = false
 
     init(root: URL) {
         self.root = root
@@ -248,6 +351,7 @@ private final class MigrationFileManager: FileManager, @unchecked Sendable {
         self.operations.append(.copy(srcURL, dstURL))
         try self.requireContained(srcURL)
         try self.requireContained(dstURL)
+        if self.failCopies { throw CocoaError(.fileWriteNoPermission) }
         try self.backing.copyItem(at: srcURL, to: dstURL)
     }
 

@@ -251,11 +251,12 @@ WIDGET_BUNDLE_ID="${BUNDLE_ID}.widget"
 # embeds (CodexBarTeamID key) at line ~324 / ~420 — required for app group
 # discovery between the main app and Widget extension.
 APP_TEAM_ID="${APP_TEAM_ID:-3TUERHN53E}"
-APP_GROUP_ID="group.com.o1xhack.codexbar"
+# Match AppGroupSupport.currentGroupID; Team-prefixed macOS groups need no profile.
+APP_GROUP_ID="${APP_TEAM_ID}.com.steipete.codexbar"
 ICLOUD_KVS_ID="${CODEXBAR_ICLOUD_KVS_ID:-3TUERHN53E.com.codexbar.shared}"
 INCLUDE_SHARED_ENTITLEMENTS=1
 if [[ "$BUNDLE_ID" == *".debug"* ]]; then
-  APP_GROUP_ID="group.com.o1xhack.codexbar.debug"
+  APP_GROUP_ID="${APP_TEAM_ID}.com.steipete.codexbar.debug"
 fi
 if [[ "$SIGNING_MODE" == "adhoc" ]]; then
   INCLUDE_SHARED_ENTITLEMENTS=0

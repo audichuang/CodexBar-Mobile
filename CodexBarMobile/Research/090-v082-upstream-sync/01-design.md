@@ -39,3 +39,12 @@ README 在 merge 中 byte-for-byte 保留 mobile-dev；之后独立审计上游 
 ## iOS局部review补充
 
 Kimi gift新增Core/Shared Row.expiresAt optional（旧/坏optional容错），保留Mac原secondary文字，手机根据机器时间本地化expiry并在缓存到期后禁用进度、显示Expired；monthly稳定row ID用numeric progress重建读端百分比。旧payload无machine expiry不猜Mac本地化日期，保留原文与既有陈旧提示。动态gift名称保留原样，仅默认Bonus credits翻译。Daily target已知units走四语语义keys，未知自定义unit原样。Copilot无duration的calendar月在桥接端依据既有descriptor.pace标period.monthly，保留显式period、原windowMinutes和真实reset。16组合需重跑新expiry，CloudKit仍仅opaque optional JSON；最终代码审计与测试结果待刷新。
+
+
+## 最终实包审计补充方案：Mac App Group（2026-10-28）
+
+独立实包审计发现基线已有错配：AppGroupSupport实际请求3TUERHN53E.com.steipete.codexbar（debug加.debug），但Mac包只声明group.com.o1xhack.codexbar，且现有Developer ID profile未授权group.组。Apple官方说明Team前缀组可免profile，但必须在签名中声明；notary/Gatekeeper/短存活不能证明共享缓存可用。参考：https://developer.apple.com/documentation/xcode/accessing-app-group-containers 。Mac Widget只有AppGroup角色，不需要CloudKit/profile；主App继续使用已有CloudKit Production profile。
+
+采取最小签名修复：Mac App/Widget统一签现有运行算法的Team组，debug规则一致。iOS group.com.o1xhack与CloudKit wire/schema不变，不新建Apple账号资源或迁移身份。为旧无权限时的Application Support fallback及standard widget选择补独立、copy-only/目标优先的迁移；保留源文件、原时间和已存在选择，copy失败保留重试资格，不伪造新快照。所有迁移测试用dictionary defaults、双snapshot URL、synthetic HOME与contained recording FileManager。
+
+增加打包合同断言（两个签名组==实际运行ID，release/debug/adhoc行为）及AppGroup/Widget/Settings专项。重签/公证并替换本轮自己创建的draft附件，保留原坏候选证据；版本不变。最终签名包核对真实请求组、双架构/最低OS/签名/主App Production、客户端公钥与附件哈希，再完成完整候选review。

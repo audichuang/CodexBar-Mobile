@@ -6,6 +6,7 @@
 - Sync upstream v0.80.0–v0.82.0 in one update: Soniox, Trae CN, abliteration.ai and Chatbox AI; clearer monthly allowances and Kimi details; safer passive probes, Cursor sign-in recovery, improved cost accounting and separate automatic update preferences.
 - Carry monthly allowance units, custom quota titles, Cursor shared-weekly and uncapped spend, Kimi gift expiry, and plugin pace details to compatible iPhones while keeping older iOS payload readers compatible.
 - Preserve multi-account and multi-Mac sync and existing cost history, with compatible quota details for current and newer iPhone versions.
+- Restore Mac widgets by authorizing their existing shared container, preserving app-local cached snapshots and provider selections during recovery.
 - Keep source-recorded costs distinct from price estimates across fresh/cached history, the CLI and compatible iPhones; Mac settings-sync options follow their own switch independently of iPhone usage sync.
 
 ## 0.82.0 — 2026-10-26

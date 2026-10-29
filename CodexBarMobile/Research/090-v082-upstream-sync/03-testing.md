@@ -2,6 +2,8 @@
 
 状态：`in-progress`。当前源码冻结为 `a36c6b110da3d994c8bba6bbcfa777627efa42ff`。Mac完整库存组合、102项受影响复测及最终3suite delta已通过；iOS unit/原生四语渲染、普通iPhone/iPad、Duo真实姿态和系统Widget验收通过；iOS本地Archive完成。尚待最终quiet全lint/build、Mac签名公证/no-tag draft和完整候选/PR review。下文按时间保留失败与修复过程，各段的“待验证”是当时状态，以本段及末尾最新记录为准。
 
+**最新覆盖状态：** 最终Mac实包审计又发现基线App Group运行ID/签名错配，原Mac draft已hold。现补签名对齐及本地缓存/选择保留迁移；新增受影响专项、重签公证和终审待完成。此前a36冻结与测试证据是历史输入，保留不受此次修复影响的部分，不能将旧候选冒充当前通过。iOS/Shared shipping inputs未改。
+
 ## 旧/新定义
 
 - old Mac：最近published `v0.79.0.1-mobile.3.1.0`；old iOS：已发布3.2.0 (260)，ASC version→build关系只读回读绑定build ID c0e4d298-e201-471e-8625-1e79a667eb1f；源码使用已交付3.2基线bdfb51085（未重新下载商店二进制验证）。
