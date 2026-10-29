@@ -1,7 +1,7 @@
 {
   "oldRef": "bdfb510853270c1ebf6b9d6f5ccbb289a2634db1",
   "oldCommit": "bdfb510853270c1ebf6b9d6f5ccbb289a2634db1",
-  "newCommit": "2f4e6a4baa6f8a4b9d00fa3870eac074aae661c8",
+  "newCommit": "82cd093d1780b0540308a9e4029ae9d400e5401c",
   "files": [
     {
       "path": "Shared/Models/DeviceLifecycleEvent.swift",
@@ -26,7 +26,7 @@
     {
       "path": "Shared/Models/UsageSnapshot.swift",
       "oldSHA256": "941846dbcf7c94a087af4347150463d43a9132cfd7ae1e6ea2e89840ef4ea57d",
-      "newSHA256": "9173dee5dee4373cce91a653e4b361dbc9519de0d58b6bb25bdb5f7bbd9c334e"
+      "newSHA256": "0a6656cd84c4a62c1d035742db818a9a7dd6701ee2a7401fae4a4ba2db8c5ab7"
     },
     {
       "path": "Shared/Models/V026Snapshots.swift",
@@ -96,8 +96,10 @@
     {
       "path": "CodexBarMobile/CodexBarWidgetShared/ProviderSnapshotMerger.swift",
       "oldSHA256": "97d81a5087e6a0e25e1fd458bb169a7f801369237f465d354f435dc939675af0",
-      "newSHA256": "97d81a5087e6a0e25e1fd458bb169a7f801369237f465d354f435dc939675af0"
+      "newSHA256": "d83c7e733937981586d61d4ceb17202c7a801afff0c3a8fd08726b1c2e9e19a4"
     }
   ],
-  "harnessSHA256": "4b4ecb4459c45d393075eac9a1c6cdc5d2cf5628423d8a753af45d61c1e45080"
+  "harnessSHA256": "c44522bde2215b9e45ff201560338852ed47b9579a696ff63703fefa8c091988",
+  "frozenSourceCommit": "a36c6b110da3d994c8bba6bbcfa777627efa42ff",
+  "newCommitMeaning": "HEAD at harness execution before pending source was committed; per-file hashes are authoritative and match frozenSourceCommit inputs"
 }

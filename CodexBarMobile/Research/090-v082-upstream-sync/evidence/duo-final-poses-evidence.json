@@ -1,0 +1,303 @@
+{
+  "duo-outer-landscape-native-2": {
+    "tests": [
+      {
+        "name": "testSummaryExpandedLandscapeViewport()",
+        "result": "Passed",
+        "durationInSeconds": 26.069921016693115
+      }
+    ],
+    "skipped": 0,
+    "failed": 0,
+    "events": [
+      {
+        "type": "tap",
+        "displayID": 1,
+        "count": 2
+      }
+    ],
+    "summaryViewport": [
+      "{{0.0, 0.0}, {678.0, 466.0}}"
+    ],
+    "diagnostics": {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-landscape-native-2-review-diagnostics.txt",
+      "sha256": "13ab1d5695389ae687781d194a992de5d6fe690072638fd3e67bf4e6a85b291d"
+    },
+    "screenshots": [
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-landscape-native-2-review-attachments/36C5FA36-99B3-4DF7-8D63-ACB1612053EC.png",
+        "name": "Summary provider filter remains actionable after native pose screen 1_0_C8025D85-0B8E-420D-901E-7953810F1C50.png",
+        "sha256": "2b41948b1e935f55bb5fbc1469bb4b5eab75313ce3166f31cbe2416ac5eabfdc"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-landscape-native-2-review-attachments/286CA917-68C9-491A-B000-DC224768E24A.png",
+        "name": "Summary provider filter remains actionable after native pose screen 0_0_8B0E6B0B-0772-401A-9E29-F9D33D34D053.png",
+        "sha256": "80acc5358d9923b7932fa6e826b26186d36240af628362288fb8aed9aa48837c"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-landscape-native-2-review-attachments/2E1AF229-3AF0-4E54-BC04-C82EC7FDC135.png",
+        "name": "Summary Duo landscape full-width grid with native chrome screen 1_0_97F9E03E-7DBC-4ED4-B71F-5F69A09A0A2C.png",
+        "sha256": "2b41948b1e935f55bb5fbc1469bb4b5eab75313ce3166f31cbe2416ac5eabfdc"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-landscape-native-2-review-attachments/45B75EF7-46B6-424D-91F5-041E4D7689E7.png",
+        "name": "Summary Duo landscape full-width grid with native chrome screen 0_0_0D83B249-69B3-4428-875B-CEF61B3242CD.png",
+        "sha256": "518fa1cd683b070da8e13e9cf1af2716feb249bb6f80f8673db607acdffa05e9"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-landscape-native-2-review-attachments/4D7E258F-213A-4620-8E46-E394DD6861E8.png",
+        "name": "Summary actual viewport before pose assertion screen 1_0_7493F277-2EE7-4CCE-A77E-B9AED65EBB75.png",
+        "sha256": "2b41948b1e935f55bb5fbc1469bb4b5eab75313ce3166f31cbe2416ac5eabfdc"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-landscape-native-2-review-attachments/C98B2E1B-A185-417D-96DD-A2F6DA4495F0.png",
+        "name": "Summary actual viewport before pose assertion screen 0_0_F2A6ED2B-D66D-4703-AE09-5DC7F48AFFAE.png",
+        "sha256": "518fa1cd683b070da8e13e9cf1af2716feb249bb6f80f8673db607acdffa05e9"
+      }
+    ]
+  },
+  "duo-outer-landscape-cost-native": {
+    "tests": [
+      {
+        "name": "testCostAndSharePanesAreAccessibleAtTheCurrentSize()",
+        "result": "Passed",
+        "durationInSeconds": 62.19531798362732
+      }
+    ],
+    "skipped": 0,
+    "failed": 0,
+    "events": [
+      {
+        "type": "tap",
+        "displayID": 1,
+        "count": 3
+      },
+      {
+        "type": "press, hold, drag, and hold",
+        "displayID": 1,
+        "count": 6
+      }
+    ],
+    "summaryViewport": [],
+    "diagnostics": {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-landscape-cost-native-review-diagnostics.txt",
+      "sha256": "0442b625207ec30d5628e27b33e0b8eba83906d32f1597d759d7c7b3e032f3e2"
+    },
+    "screenshots": [
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-landscape-cost-native-review-attachments/94755287-DE61-468C-84E2-4EBBFBDF034B.png",
+        "name": "Share editor with reachable controls - screen 1_0_0F5052A4-76C0-4778-B2E9-49E1DA9F7741.png",
+        "sha256": "2b41948b1e935f55bb5fbc1469bb4b5eab75313ce3166f31cbe2416ac5eabfdc"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-landscape-cost-native-review-attachments/6C9EC419-2975-4E36-B069-1D72D44C5054.png",
+        "name": "Share editor with reachable controls - screen 0_0_D9347FF6-4537-4604-B8C0-088F95254C0E.png",
+        "sha256": "bd4ae8ac61e80fd1137c189c9eb393faeea0378edffe5e9c3d56057a02eed9bc"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-landscape-cost-native-review-attachments/D3AF0138-4C5F-4A74-A17F-19560DD19D9B.png",
+        "name": "Cost report production layout - screen 1_0_A883D471-E96C-4FEC-AEC5-9004662D1A9E.png",
+        "sha256": "2b41948b1e935f55bb5fbc1469bb4b5eab75313ce3166f31cbe2416ac5eabfdc"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-landscape-cost-native-review-attachments/AADC08CA-0606-4094-93EA-0BD78E6127A2.png",
+        "name": "Cost report production layout - screen 0_0_F407FA47-C3CE-49C9-BBA5-D3E0A0C029AB.png",
+        "sha256": "27ce8dcee41b362aa5f455666fca519d457dac30a4a985979c2c89091fa1cd6d"
+      }
+    ]
+  },
+  "duo-outer-portrait": {
+    "tests": [
+      {
+        "name": "testCostAndSharePanesAreAccessibleAtTheCurrentSize()",
+        "result": "Passed",
+        "durationInSeconds": 44.09731900691986
+      },
+      {
+        "name": "testSummaryCardPushAndBackPreserveProviderFilter()",
+        "result": "Passed",
+        "durationInSeconds": 20.697102904319763
+      },
+      {
+        "name": "testSummaryExpandedPortraitViewport()",
+        "result": "Passed",
+        "durationInSeconds": 15.809821963310242
+      }
+    ],
+    "skipped": 0,
+    "failed": 0,
+    "events": [
+      {
+        "type": "tap",
+        "displayID": 1,
+        "count": 9
+      },
+      {
+        "type": "press, hold, drag, and hold",
+        "displayID": 1,
+        "count": 4
+      }
+    ],
+    "summaryViewport": [
+      "{{0.0, 151.7}, {466.0, 526.3}}"
+    ],
+    "diagnostics": {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-portrait-review-diagnostics.txt",
+      "sha256": "3bc73960f64852e5491ad07f28f4bf6f0fb57f4cf5b0de3dd632ea52b29ccbc4"
+    },
+    "screenshots": [
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-portrait-review-attachments/3CDCD2E7-1BC3-4C28-AA72-3DA28D15D060.png",
+        "name": "Share editor with reachable controls - screen 1_0_AA4ABB01-E25E-40D4-AD8F-031CDCADEF80.png",
+        "sha256": "cfed1b66f55a985942921001a7a9fc45fe5f92b17f9247b1abea52557d7fe7b8"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-portrait-review-attachments/633BB396-2999-4E09-BDC6-7B9A8E3A8CCD.png",
+        "name": "Share editor with reachable controls - screen 0_0_2D39524E-C966-4B1D-B312-1348DF405D7C.png",
+        "sha256": "99eff75bf40c362719268ff60bb9587504911a80734d866336fc8f0983fa7550"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-portrait-review-attachments/974C108B-5B32-48C4-A18A-E8E071404A77.png",
+        "name": "Cost report production layout - screen 1_0_24843D09-61B7-4833-9E7F-0B9653C68D84.png",
+        "sha256": "cfed1b66f55a985942921001a7a9fc45fe5f92b17f9247b1abea52557d7fe7b8"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-portrait-review-attachments/99C3C4F6-E3F9-4FD9-8445-39D98664F6D3.png",
+        "name": "Cost report production layout - screen 0_0_921F6AC0-DB85-4ACC-996E-8809A8D3A04C.png",
+        "sha256": "ccbf741228e829ad63e76f5fdb4295675e3a86314eaa87a84204a80342653b5b"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-portrait-review-attachments/EDEA995F-FDC6-45A3-9B8E-9D3756BABD07.png",
+        "name": "Summary Duo returned to grid with Codex filter retained screen 1_0_8AC91593-A507-4EDB-9651-982249F88E3C.png",
+        "sha256": "cfed1b66f55a985942921001a7a9fc45fe5f92b17f9247b1abea52557d7fe7b8"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-portrait-review-attachments/39C2647D-F2AF-4F09-A9C1-EEBCA8A677C9.png",
+        "name": "Summary Duo returned to grid with Codex filter retained screen 0_0_FA19CACF-098E-4F61-BD18-B89C432B218A.png",
+        "sha256": "5967d46bda46d03446a12032e7600158eaf03cbe28e852e0e97114496152afec"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-portrait-review-attachments/B61876BC-113D-4676-A499-4DB49831DCDA.png",
+        "name": "Summary Duo account details after explicit card tap screen 1_0_79FCDCA4-7B4A-439F-842C-8E4E922E1713.png",
+        "sha256": "cfed1b66f55a985942921001a7a9fc45fe5f92b17f9247b1abea52557d7fe7b8"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-portrait-review-attachments/778B1679-CC22-4ECF-BFEB-653E62C238B1.png",
+        "name": "Summary Duo account details after explicit card tap screen 0_0_1BB47647-D4A3-4634-8E3A-D53850F76688.png",
+        "sha256": "f9d2db41c2122ef4fb24a9961f29f6cdb834d388e748cad24bb12e5e74386ce9"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-portrait-review-attachments/BD706CAA-0F55-4FEF-89DE-23A43F56E149.png",
+        "name": "Summary provider filter remains actionable after native pose screen 1_0_B7D2C688-0625-447E-A8C4-2541BEAF8AC6.png",
+        "sha256": "cfed1b66f55a985942921001a7a9fc45fe5f92b17f9247b1abea52557d7fe7b8"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-portrait-review-attachments/CE0601B0-C18D-4BF7-A108-7C7CB17B1BC7.png",
+        "name": "Summary provider filter remains actionable after native pose screen 0_0_5953C4B3-E8EE-4722-A1B3-17A2DCD7B45C.png",
+        "sha256": "382cbc5a12303dbaf56ad10a70d30ae70dcf5e72a37b5a37ab3303b82e8aace9"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-portrait-review-attachments/03CCA79F-A370-4E4D-B16C-6D413D5DBA18.png",
+        "name": "Summary Duo portrait full-width grid with native chrome screen 1_0_1C5319CA-4910-4586-AB80-30B036659287.png",
+        "sha256": "cfed1b66f55a985942921001a7a9fc45fe5f92b17f9247b1abea52557d7fe7b8"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-portrait-review-attachments/A892A255-2484-4563-AF7B-504127D78684.png",
+        "name": "Summary Duo portrait full-width grid with native chrome screen 0_0_EFDFC7BA-F0B1-445B-AB07-90D3BBF00834.png",
+        "sha256": "eef53cd7447106aaa75ef86b581b9dd27eda19ef7a8c33c1d2889aba6c6d26d1"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-portrait-review-attachments/F00ECEA5-878A-4855-86E2-F24A25E3E7DB.png",
+        "name": "Summary actual viewport before pose assertion screen 1_0_B7EAD1FA-0AA6-4ED0-B6A6-2CA25603C9B6.png",
+        "sha256": "cfed1b66f55a985942921001a7a9fc45fe5f92b17f9247b1abea52557d7fe7b8"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-outer-portrait-review-attachments/6A364EEA-CFB4-49CE-8E7F-9509F2BE0EA5.png",
+        "name": "Summary actual viewport before pose assertion screen 0_0_831F9069-943E-44B3-AE23-524AAEF7BDE9.png",
+        "sha256": "eef53cd7447106aaa75ef86b581b9dd27eda19ef7a8c33c1d2889aba6c6d26d1"
+      }
+    ]
+  },
+  "duo-partial-landscape": {
+    "tests": [
+      {
+        "name": "testCostAndSharePanesAreAccessibleAtTheCurrentSize()",
+        "result": "Passed",
+        "durationInSeconds": 55.49043893814087
+      },
+      {
+        "name": "testSummaryExpandedLandscapeViewport()",
+        "result": "Passed",
+        "durationInSeconds": 18.765298008918762
+      }
+    ],
+    "skipped": 0,
+    "failed": 0,
+    "events": [
+      {
+        "type": "tap",
+        "displayID": 3,
+        "count": 5
+      }
+    ],
+    "summaryViewport": [
+      "{{0.0, 151.7}, {951.0, 517.3}}"
+    ],
+    "diagnostics": {
+      "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-partial-landscape-review-diagnostics.txt",
+      "sha256": "afbe08576b50c2048dd4054d43bd469e1d23913d58ea33865bc5437361a80818"
+    },
+    "screenshots": [
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-partial-landscape-review-attachments/9253C93F-AB50-42D9-9757-CF2531879A34.png",
+        "name": "Share editor with reachable controls - screen 1_0_2346240E-CF18-49AA-B8E9-01D04486CDCD.png",
+        "sha256": "81e60d0803108be2c43ab7db8c42bc633ad41af8fecb722a0a7f93a7b7430f15"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-partial-landscape-review-attachments/A1DDC498-5F99-412C-A25F-6FDBDDEADCF9.png",
+        "name": "Share editor with reachable controls - screen 0_0_633DAC0B-A8BC-4CA8-A9E4-7E9FBE053795.png",
+        "sha256": "a1dea182f4d8a888a2dca00ceaefba8f033e9c021a632f3e51cad7e838ae5e64"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-partial-landscape-review-attachments/7CF57DE3-7E46-4D78-ABEF-69E48B155992.png",
+        "name": "Cost report production layout - screen 1_0_1FAE7195-4B38-4C88-AE38-77EB5A9D5094.png",
+        "sha256": "78cd9fb9eaef40c7e4b52a25d59f14a490db8826ad4db71ea08e95b8de0dd52a"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-partial-landscape-review-attachments/CEB230C6-1968-49F4-AD08-3C79EE146392.png",
+        "name": "Cost report production layout - screen 0_0_F63CFF10-1F3A-402F-8373-62F67AB3F520.png",
+        "sha256": "a1dea182f4d8a888a2dca00ceaefba8f033e9c021a632f3e51cad7e838ae5e64"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-partial-landscape-review-attachments/66E0027B-FB49-43B8-AD91-0274196D1DDD.png",
+        "name": "Summary provider filter remains actionable after native pose screen 1_0_F19EF1C1-DE44-4F9A-B06A-827BD62F37D7.png",
+        "sha256": "ef4d5b859571869f40d07f6d3a354cef18ba6571d7dba80867c832c387d310be"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-partial-landscape-review-attachments/52E28FD4-D090-44C7-A75B-EBDB6FA13655.png",
+        "name": "Summary provider filter remains actionable after native pose screen 0_0_3F056FED-526E-4ECA-B0FB-985DC6DD2E30.png",
+        "sha256": "a1dea182f4d8a888a2dca00ceaefba8f033e9c021a632f3e51cad7e838ae5e64"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-partial-landscape-review-attachments/9D627B63-36B0-4F84-901B-CD9368179C8A.png",
+        "name": "Summary Duo landscape full-width grid with native chrome screen 1_0_FA74829A-6B56-4E3F-A282-8915CEE63C8B.png",
+        "sha256": "86e848d35b7ff160f42b620a4f95753164deea92e18cf0b24ada44ffa0cbda3d"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-partial-landscape-review-attachments/D8B43093-8EE7-4E20-B5AF-63C4A0DE39D1.png",
+        "name": "Summary Duo landscape full-width grid with native chrome screen 0_0_4FE45B68-274B-4820-BD42-1666D371A96C.png",
+        "sha256": "a1dea182f4d8a888a2dca00ceaefba8f033e9c021a632f3e51cad7e838ae5e64"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-partial-landscape-review-attachments/B25287A6-F8FA-4F0C-8144-AE6FF60E071C.png",
+        "name": "Summary actual viewport before pose assertion screen 1_0_DE1AA38F-769D-46ED-9796-AB9C1E68C981.png",
+        "sha256": "86e848d35b7ff160f42b620a4f95753164deea92e18cf0b24ada44ffa0cbda3d"
+      },
+      {
+        "file": "/Volumes/StudioSSD/Developer/BuildScratch/CodexBar/Upstream082/duo-partial-landscape-review-attachments/7F30546F-D5DC-42E9-B621-3175005C594A.png",
+        "name": "Summary actual viewport before pose assertion screen 0_0_CC72A2D4-C594-4E1D-A414-A423F6428128.png",
+        "sha256": "a1dea182f4d8a888a2dca00ceaefba8f033e9c021a632f3e51cad7e838ae5e64"
+      }
+    ]
+  }
+}

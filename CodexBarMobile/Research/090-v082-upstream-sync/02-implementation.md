@@ -30,3 +30,14 @@
 - iOS 3.3(261)五targets；daily target、expected-use marker、4provider配色/语义与四语release notes已实现。1272项完整单测通过；新增render专项11项通过并导出9图，但图片审查发现ImageRenderer不能证明native ProgressView（占位黄条），故改用真实UIHostingController/窗口渲染复测；日本语大字预算金额被挤断，补ViewThatFits竖排fallback。Kimi缺第一方provider allowlist导致新标签不翻译，已补并加断言。
 - lint发现新mock数值/新测试参数格式及上游两个超长类型，正按原行为拆helper extension修复，不放宽lint阈值。
 - 官方Added/Changed/Fixed逐项清单75条在06；CloudKit源码审计NO_DEPLOY，证据见evidence/cloudkit-code-audit.md，未声称签名产物或Production实测。
+
+## 完整本地review第一轮补修
+
+独立完整审查发现两项Cursor v0.80用户数据遗漏：shared weekly pool仍走metadata Total标签；无上限on-demand spend被budget正limit guard丢失且无amount lane。现抽取生产调用的syncPrimaryRateWindow，复用Cursor descriptor Weekly fallback，显式label/title与legacy Total保持；Cursor limit<=0映射spend，0为真实清除值，正limit仍仅走budget。上游sanitized XSubscription真实fixture扩展验证Weekly/Total与4.47金额/周期/观察时间，另加zero/capped回归。受影响编译/测试待完整旧输入gate结束后运行，未因源码review通过提前关闭验证。
+
+## 第二轮完整review修复
+
+- 基线既存的 Mac fleet 子选项门控误读手机同步开关，直接影响本轮fleet能力；现改为macFleetSyncEnabled，保留可用性与版本限制，未自动打开秘密同步。
+- OpenCode本地来源成本曾被fork结构化summary标成list-price estimate。增加含义为“包含来源记录金额、可混合估算”的sourceRecorded provenance；不冒充vendor billing/receipt。central tokenSnapshot覆盖fresh/cached/native/Pi窗口，按实际日期entries收窄；Mac菜单、CLI text/JSON/live history、Shared和iOS、两Mac合并均跟进。0为真实金额，缺失/非有限值不发明来源；isEstimated/coverage保持独立，不因来源记录强行清除。
+- Core/window、Dashboard month/week、CLI zero/mixed解释、builtin publisher、plugin3currency×2、缓存/新扫描和双writer正反序均补断言。新增async参数fixture采用dictionary defaults、stub stores、synthetic HOME/contained widget URL、no-op reloader和显式deviceID，并串行，避免真实defaults/账号/文件探测。
+- 3.3同一in-app details条目合并来源成本说明，四语齐全；未加可见版本。执行结果在03分开记录，不把源码审查当测试通过。

@@ -1,6 +1,6 @@
 # iOS 影响逐项审计
 
-状态：`in-progress`。范围与数据合同已有逐项结论，完整测试、Duo与产物仍须验收，不以源码覆盖冒充测试通过。
+状态：`in-progress`。75项范围与数据合同已有逐项结论；iOS测试、Duo、系统Widget与本地Archive已完成，当前产物及最终review状态见03–05；远端review仍待完成。
 
 ## 上游完整性
 
@@ -37,7 +37,7 @@
 - Mac bridge：SyncCoordinator.swift 的 buildProviderUsageSnapshot、mapPluginProviderUsageSnapshot、mapSyncedDetails、mapProviderAmount、tokenBasedMultiAccountProviders。源provider位于CodexBarCore/Resources/Plugins；协议在Shared/Models/UsageSnapshot.swift。
 - iOS：DailyAllowanceTarget、UsageCardView、BudgetProgressView、ProviderDetailsView、V045ProviderCards、ProviderDetailLocalization、ProviderColorPalette。保留原有Summary/Usage/Cost/分享的容器与状态模型。
 - 新专项：V082MobileBridgeTests、TokenAccountSyncCoverageTests；V082DailyAllowanceTargetTests、V082SyncMetadataTests、V082RenderTests。上游MonthlyPacingTarget/Kimi/Cursor/WorkBuddy/OpenCode/CommandCode/Plugin/Subprocess等专项随Mac完整gate验收。
-- iOS 1272 tests /84 suites已通过，包含CloudKitMerge、成本authority、WidgetSnapshotBuilder；该结果早于后续Soniox周期文案、detail locale修复和新render tests，必须补受影响复测。原生Duo和产物未作为完成证据。
+- 最终iOS26.5全量1278 Swift Testing tests /85 suites +75 XCTest通过，新增来源/merger受影响150 tests /6 suites及native rendering另过；Duo真实四方向/partial/跨fold后操作、普通iPhone/iPad、严格SpringBoard Widget均有独立验收；本地3.3.0(261) Archive已验证。完整证据和局限见03–05，不把native hosting fixture当Duo或实体CloudKit证明。
 
 ## 官方条目覆盖
 

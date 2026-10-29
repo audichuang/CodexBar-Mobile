@@ -1,0 +1,381 @@
+{
+  "head": "d3a961d28c6a1876cf6352bdf6f1c477e22c2a19",
+  "logSHA256": "fd333020964c399ce4611de191b8a5e2b8aee6caaa5edb3728084032eeb7a7cb",
+  "sourceSHA256": {
+    "Sources/CodexBar/Sync/MockProviderInjector.swift": "c574ce75721aaa5a8fb0d19f9a99391b19ed8e0d1b8e18f2c41ff70adc5480b2",
+    "Sources/CodexBar/Sync/SyncCoordinator.swift": "948f8f412ecb26a86640b968c7a94ef5c9379e5e48f735cb6bbef69c4ee12797",
+    "Sources/CodexBar/UsageStore/UsageStore+QuotaWarnings.swift": "9640b023f7a5557d885af8a141fde5399085fb450163db5b230bb729f1233cc2",
+    "Sources/CodexBar/UsageStore/UsageStore+Refresh.swift": "54bba8a94ab233021c0b4f66e059c314b440fa6273ea208a7267d7b140fb6fdc",
+    "Sources/CodexBarCore/Sync/AccountIdentityComputer.swift": "74e8182c27f1d8b07922e15006b36e781f55e7122354e9df6cd0b40126ac65bc",
+    "Tests/CodexBarTests/ProviderArchitectureGatekeeperTests.swift": "eb2289357309eb3e04539bb2e56cbb056d18b71caca1fc8e250701e3dd1af121"
+  },
+  "diagnostics": [
+    "\u21b3 Sources/CodexBar/Sync/MockProviderInjector.swift:2032 has an unjustified provider-specific construct (chatbox; references: 1; fingerprint: [\"chatbox@0\"]); newly recognized: []; derive it or add '// Provider-specific by design: <specific reason>' immediately before this cluster.",
+    "  Sources/CodexBar/Sync/SyncCoordinator.swift:1191 allowlisted construct fingerprint changed; expected [\"alibabatokenplan\", \"grok\", \"ollama\", \"qwencloud\"]/7/[\"alibabatokenplan@0\", \"grok@4\", \"ollama@6\", \"qwencloud@8\", \"qwencloud@11\", \"alibabatokenplan@21\", \"alibabatokenplan@31\"], found [\"alibabatokenplan\", \"cursor\", \"grok\", \"ollama\", \"qwencloud\"]/6/[\"alibabatokenplan@0\", \"grok@3\", \"ollama@5\", \"cursor@7\", \"qwencloud@9\", \"qwencloud@11\"]",
+    "  Sources/CodexBar/Sync/SyncCoordinator.swift:1500 allowlisted construct fingerprint changed; expected [\"futureagi\", \"gemini\", \"munito\", \"wayfinder\"]/4/[\"wayfinder@0\", \"munito@2\", \"futureagi@11\", \"gemini@13\"], found [\"abliteration\", \"chatbox\", \"futureagi\", \"gemini\", \"munito\", \"soniox\", \"traecn\", \"wayfinder\"]/8/[\"wayfinder@0\", \"munito@2\", \"abliteration@11\", \"chatbox@11\", \"futureagi@11\", \"soniox@11\", \"traecn@11\", \"gemini@13\"]",
+    "  Sources/CodexBar/Sync/SyncCoordinator.swift:1613 allowlisted construct fingerprint changed; expected [\"aiand\", \"claude\", \"claudeplatform\", \"codex\", \"fireworks\", \"grok\", \"lithosai\", \"neuralwatt\", \"xai\", \"xapi\", \"zenmux\"]/11/[\"lithosai@0\", \"neuralwatt@0\", \"zenmux@0\", \"aiand@4\", \"fireworks@4\", \"codex@8\", \"claude@16\", \"xapi@20\", \"claudeplatform@26\", \"xai@33\", \"grok@36\"], found [\"aiand\", \"claude\", \"claudeplatform\", \"codex\", \"cursor\", \"fireworks\", \"lithosai\", \"neuralwatt\", \"soniox\", \"xapi\", \"zenmux\"]/11/[\"lithosai@0\", \"neuralwatt@0\", \"zenmux@0\", \"aiand@4\", \"cursor@4\", \"fireworks@4\", \"soniox@8\", \"codex@18\", \"claude@26\", \"xapi@30\", \"claudeplatform@36\"]",
+    "  Sources/CodexBar/Sync/SyncCoordinator.swift:932 has an unjustified provider-specific construct (claude, soniox; references: 2; fingerprint: [\"soniox@0\", \"claude@8\"]); newly recognized: []; derive it or add '// Provider-specific by design: <specific reason>' immediately before this cluster.",
+    "  Sources/CodexBar/Sync/SyncCoordinator.swift:1191 has an unjustified provider-specific construct (alibabatokenplan, cursor, grok, ollama, qwencloud; references: 6; fingerprint: [\"alibabatokenplan@0\", \"grok@3\", \"ollama@5\", \"cursor@7\", \"qwencloud@9\", \"qwencloud@11\"]); newly recognized: [\"qwencloud@11\"]; derive it or add '// Provider-specific by design: <specific reason>' immediately before this cluster.",
+    "  Sources/CodexBar/Sync/SyncCoordinator.swift:1233 has an unjustified provider-specific construct (alibabatokenplan; references: 2; fingerprint: [\"alibabatokenplan@0\", \"alibabatokenplan@11\"]); newly recognized: []; derive it or add '// Provider-specific by design: <specific reason>' immediately before this cluster.",
+    "  Sources/CodexBar/Sync/SyncCoordinator.swift:1613 has an unjustified provider-specific construct (aiand, claude, claudeplatform, codex, cursor, fireworks, lithosai, neuralwatt, soniox, xapi, zenmux; references: 11; fingerprint: [\"lithosai@0\", \"neuralwatt@0\", \"zenmux@0\", \"aiand@4\", \"cursor@4\", \"fireworks@4\", \"soniox@8\", \"codex@18\", \"claude@26\", \"xapi@30\", \"claudeplatform@36\"]); newly recognized: []; derive it or add '// Provider-specific by design: <specific reason>' immediately before this cluster.",
+    "  Sources/CodexBar/UsageStore/UsageStore+QuotaWarnings.swift:61 allowlisted construct fingerprint changed; expected [\"aixy\", \"amp\", \"antigravity\", \"claude\", \"mimo\", \"qoder\"]/10/[\"antigravity@0\", \"antigravity@9\", \"mimo@13\", \"qoder@13\", \"amp@17\", \"aixy@19\", \"amp@24\", \"aixy@26\", \"claude@32\", \"aixy@33\"], found [\"aixy\", \"amp\", \"antigravity\", \"claude\", \"cursor\", \"mimo\", \"qoder\"]/11/[\"antigravity@0\", \"antigravity@9\", \"cursor@12\", \"mimo@16\", \"qoder@16\", \"amp@20\", \"aixy@22\", \"amp@27\", \"aixy@29\", \"claude@35\", \"aixy@36\"]",
+    "  Sources/CodexBar/UsageStore/UsageStore+Refresh.swift: allowlisted construct anchor occurrence 2 is outside 1...1 for 'if provider == .codex {'",
+    "  Sources/CodexBarCore/Sync/AccountIdentityComputer.swift:47 allowlisted construct fingerprint changed; expected [\"abacus\", \"aixy\", \"alibaba\", \"alibabatokenplan\", \"amp\", \"antigravity\", \"augment\", \"azureopenai\", \"bedrock\", \"chutes\", \"claude\", \"clawrouter\", \"codebuff\", \"codex\", \"commandcode\", \"copilot\", \"cursor\", \"deepgram\", \"deepseek\", \"devin\", \"doubao\", \"elevenlabs\", \"factory\", \"gemini\", \"grok\", \"groq\", \"jetbrains\", \"kilo\", \"kimi\", \"kiro\", \"litellm\", \"llmproxy\", \"manus\", \"mimo\", \"minimax\", \"mistral\", \"moonshot\", \"ollama\", \"openai\", \"opencode\", \"opencodego\", \"openrouter\", \"perplexity\", \"poe\", \"qoder\", \"sakana\", \"stepfun\", \"synthetic\", \"t3chat\", \"venice\", \"vertexai\", \"warp\", \"windsurf\", \"zai\", \"zed\"]/55/[\"codex@0\", \"claude@2\", \"vertexai@4\", \"aixy@6\", \"alibaba@8\", \"antigravity@8\", \"copilot@8\", \"cursor@8\", \"devin@8\", \"factory@8\", \"gemini@8\", \"opencode@8\", \"opencodego@8\", \"zai@8\", \"amp@9\", \"augment@9\", \"jetbrains@9\", \"kilo@9\", \"kimi@9\", \"kiro@9\", \"minimax@9\", \"ollama@9\", \"synthetic@9\", \"abacus@10\", \"mistral@10\", \"openrouter@10\", \"perplexity@10\", \"warp@10\", \"deepseek@16\", \"doubao@16\", \"manus@16\", \"mimo@16\", \"openai@16\", \"windsurf@16\", \"codebuff@17\", \"commandcode@17\", \"stepfun@17\", \"venice@17\", \"bedrock@21\", \"moonshot@21\", \"deepgram@25\", \"elevenlabs@25\", \"grok@25\", \"groq@25\", \"llmproxy@25\", \"alibabatokenplan@29\", \"azureopenai@29\", \"t3chat@29\", \"chutes@33\", \"litellm@33\", \"poe@33\", \"zed@33\", \"clawrouter@37\", \"qoder@37\", \"sakana@37\"], found [\"abacus\", \"abliteration\", \"aixy\", \"alibaba\", \"alibabatokenplan\", \"amp\", \"antigravity\", \"augment\", \"azureopenai\", \"bedrock\", \"chatbox\", \"chutes\", \"claude\", \"clawrouter\", \"codebuff\", \"codex\", \"commandcode\", \"copilot\", \"cursor\", \"deepgram\", \"deepseek\", \"devin\", \"doubao\", \"elevenlabs\", \"factory\", \"gemini\", \"grok\", \"groq\", \"jetbrains\", \"kilo\", \"kimi\", \"kiro\", \"litellm\", \"llmproxy\", \"manus\", \"mimo\", \"minimax\", \"mistral\", \"moonshot\", \"ollama\", \"openai\", \"opencode\", \"opencodego\", \"openrouter\", \"perplexity\", \"poe\", \"qoder\", \"sakana\", \"soniox\", \"stepfun\", \"synthetic\", \"t3chat\", \"traecn\", \"venice\", \"vertexai\", \"warp\", \"windsurf\", \"zai\", \"zed\"]/59/[\"codex@0\", \"claude@2\", \"vertexai@4\", \"aixy@6\", \"abliteration@8\", \"chatbox@8\", \"soniox@8\", \"traecn@8\", \"alibaba@9\", \"antigravity@9\", \"copilot@9\", \"cursor@9\", \"devin@9\", \"factory@9\", \"gemini@9\", \"opencode@9\", \"opencodego@9\", \"zai@9\", \"amp@10\", \"augment@10\", \"jetbrains@10\", \"kilo@10\", \"kimi@10\", \"kiro@10\", \"minimax@10\", \"ollama@10\", \"synthetic@10\", \"abacus@11\", \"mistral@11\", \"openrouter@11\", \"perplexity@11\", \"warp@11\", \"deepseek@17\", \"doubao@17\", \"manus@17\", \"mimo@17\", \"openai@17\", \"windsurf@17\", \"codebuff@18\", \"commandcode@18\", \"stepfun@18\", \"venice@18\", \"bedrock@22\", \"moonshot@22\", \"deepgram@26\", \"elevenlabs@26\", \"grok@26\", \"groq@26\", \"llmproxy@26\", \"alibabatokenplan@30\", \"azureopenai@30\", \"t3chat@30\", \"chutes@34\", \"litellm@34\", \"poe@34\", \"zed@34\", \"clawrouter@38\", \"qoder@38\", \"sakana@38\"]",
+    "  Sources/CodexBarCore/Sync/AccountIdentityComputer.swift:47 has an unjustified provider-specific construct (abacus, abliteration, aixy, alibaba, alibabatokenplan, amp, antigravity, augment, azureopenai, bedrock, chatbox, chutes, claude, clawrouter, codebuff, codex, commandcode, copilot, cursor, deepgram, deepseek, devin, doubao, elevenlabs, factory, gemini, grok, groq, jetbrains, kilo, kimi, kiro, litellm, llmproxy, manus, mimo, minimax, mistral, moonshot, ollama, openai, opencode, opencodego, openrouter, perplexity, poe, qoder, sakana, soniox, stepfun, synthetic, t3chat, traecn, venice, vertexai, warp, windsurf, zai, zed; references: 59; fingerprint: [\"codex@0\", \"claude@2\", \"vertexai@4\", \"aixy@6\", \"abliteration@8\", \"chatbox@8\", \"soniox@8\", \"traecn@8\", \"alibaba@9\", \"antigravity@9\", \"copilot@9\", \"cursor@9\", \"devin@9\", \"factory@9\", \"gemini@9\", \"opencode@9\", \"opencodego@9\", \"zai@9\", \"amp@10\", \"augment@10\", \"jetbrains@10\", \"kilo@10\", \"kimi@10\", \"kiro@10\", \"minimax@10\", \"ollama@10\", \"synthetic@10\", \"abacus@11\", \"mistral@11\", \"openrouter@11\", \"perplexity@11\", \"warp@11\", \"deepseek@17\", \"doubao@17\", \"manus@17\", \"mimo@17\", \"openai@17\", \"windsurf@17\", \"codebuff@18\", \"commandcode@18\", \"stepfun@18\", \"venice@18\", \"bedrock@22\", \"moonshot@22\", \"deepgram@26\", \"elevenlabs@26\", \"grok@26\", \"groq@26\", \"llmproxy@26\", \"alibabatokenplan@30\", \"azureopenai@30\", \"t3chat@30\", \"chutes@34\", \"litellm@34\", \"poe@34\", \"zed@34\", \"clawrouter@38\", \"qoder@38\", \"sakana@38\"]); newly recognized: []; derive it or add '// Provider-specific by design: <specific reason>' immediately before this cluster."
+  ],
+  "entries": [
+    {
+      "action": "update-existing",
+      "path": "Sources/CodexBar/Sync/SyncCoordinator.swift",
+      "lineAtReview": 1191,
+      "anchor": "let label: String? = if provider == .alibabatokenplan {",
+      "occurrence": 1,
+      "expectedProviderIDs": [
+        "alibabatokenplan",
+        "cursor",
+        "grok",
+        "ollama",
+        "qwencloud"
+      ],
+      "expectedReferenceCount": 6,
+      "expectedReferenceFingerprint": [
+        "alibabatokenplan@0",
+        "grok@3",
+        "ollama@5",
+        "cursor@7",
+        "qwencloud@9",
+        "qwencloud@11"
+      ],
+      "reason": "Primary wire labels preserve Alibaba-specific duration labels, Grok/Ollama dynamic labels, Cursor unified weekly pool naming, and Qwen Team/Monthly presentation; explicit RateWindow label/title still wins."
+    },
+    {
+      "action": "update-existing",
+      "path": "Sources/CodexBar/Sync/SyncCoordinator.swift",
+      "lineAtReview": 1500,
+      "anchor": "case .wayfinder:",
+      "occurrence": 1,
+      "expectedProviderIDs": [
+        "abliteration",
+        "chatbox",
+        "futureagi",
+        "gemini",
+        "munito",
+        "soniox",
+        "traecn",
+        "wayfinder"
+      ],
+      "expectedReferenceCount": 8,
+      "expectedReferenceFingerprint": [
+        "wayfinder@0",
+        "munito@2",
+        "abliteration@11",
+        "chatbox@11",
+        "futureagi@11",
+        "soniox@11",
+        "traecn@11",
+        "gemini@13"
+      ],
+      "reason": "Verified Munito organization IDs may merge; Wayfinder and unverified Future AGI/Soniox/Trae CN/abliteration/Chatbox credentials remain device scoped; Gemini Web stays separate from CLI identity."
+    },
+    {
+      "action": "update-existing",
+      "path": "Sources/CodexBar/Sync/SyncCoordinator.swift",
+      "lineAtReview": 1613,
+      "anchor": "case .neuralwatt, .zenmux, .lithosai:",
+      "occurrence": 1,
+      "expectedProviderIDs": [
+        "aiand",
+        "claude",
+        "claudeplatform",
+        "codex",
+        "cursor",
+        "fireworks",
+        "lithosai",
+        "neuralwatt",
+        "soniox",
+        "xapi",
+        "zenmux"
+      ],
+      "expectedReferenceCount": 11,
+      "expectedReferenceFingerprint": [
+        "lithosai@0",
+        "neuralwatt@0",
+        "zenmux@0",
+        "aiand@4",
+        "cursor@4",
+        "fireworks@4",
+        "soniox@8",
+        "codex@18",
+        "claude@26",
+        "xapi@30",
+        "claudeplatform@36"
+      ],
+      "reason": "ProviderCost.used has provider-owned balance versus spend semantics. Uncapped Cursor is spend, Soniox independently exposes prepaid balance and monthly spend; Codex/Claude/X API/Claude Platform credit lanes keep their own balance contracts."
+    },
+    {
+      "action": "update-existing",
+      "path": "Sources/CodexBar/UsageStore/UsageStore+QuotaWarnings.swift",
+      "lineAtReview": 61,
+      "anchor": "let source: SessionQuotaWindowSource? = if provider == .antigravity {",
+      "occurrence": 1,
+      "expectedProviderIDs": [
+        "aixy",
+        "amp",
+        "antigravity",
+        "claude",
+        "cursor",
+        "mimo",
+        "qoder"
+      ],
+      "expectedReferenceCount": 11,
+      "expectedReferenceFingerprint": [
+        "antigravity@0",
+        "antigravity@9",
+        "cursor@12",
+        "mimo@16",
+        "qoder@16",
+        "amp@20",
+        "aixy@22",
+        "amp@27",
+        "aixy@29",
+        "claude@35",
+        "aixy@36"
+      ],
+      "reason": "Warning windows follow Antigravity families, Cursor unified weekly-pool promotion, balance-only suppression, Amp/Aixy dynamic labels and Claude/Aixy authoritative extra-window rules."
+    },
+    {
+      "action": "update-existing",
+      "path": "Sources/CodexBarCore/Sync/AccountIdentityComputer.swift",
+      "lineAtReview": 47,
+      "anchor": "case .codex:",
+      "occurrence": 1,
+      "expectedProviderIDs": [
+        "abacus",
+        "abliteration",
+        "aixy",
+        "alibaba",
+        "alibabatokenplan",
+        "amp",
+        "antigravity",
+        "augment",
+        "azureopenai",
+        "bedrock",
+        "chatbox",
+        "chutes",
+        "claude",
+        "clawrouter",
+        "codebuff",
+        "codex",
+        "commandcode",
+        "copilot",
+        "cursor",
+        "deepgram",
+        "deepseek",
+        "devin",
+        "doubao",
+        "elevenlabs",
+        "factory",
+        "gemini",
+        "grok",
+        "groq",
+        "jetbrains",
+        "kilo",
+        "kimi",
+        "kiro",
+        "litellm",
+        "llmproxy",
+        "manus",
+        "mimo",
+        "minimax",
+        "mistral",
+        "moonshot",
+        "ollama",
+        "openai",
+        "opencode",
+        "opencodego",
+        "openrouter",
+        "perplexity",
+        "poe",
+        "qoder",
+        "sakana",
+        "soniox",
+        "stepfun",
+        "synthetic",
+        "t3chat",
+        "traecn",
+        "venice",
+        "vertexai",
+        "warp",
+        "windsurf",
+        "zai",
+        "zed"
+      ],
+      "expectedReferenceCount": 59,
+      "expectedReferenceFingerprint": [
+        "codex@0",
+        "claude@2",
+        "vertexai@4",
+        "aixy@6",
+        "abliteration@8",
+        "chatbox@8",
+        "soniox@8",
+        "traecn@8",
+        "alibaba@9",
+        "antigravity@9",
+        "copilot@9",
+        "cursor@9",
+        "devin@9",
+        "factory@9",
+        "gemini@9",
+        "opencode@9",
+        "opencodego@9",
+        "zai@9",
+        "amp@10",
+        "augment@10",
+        "jetbrains@10",
+        "kilo@10",
+        "kimi@10",
+        "kiro@10",
+        "minimax@10",
+        "ollama@10",
+        "synthetic@10",
+        "abacus@11",
+        "mistral@11",
+        "openrouter@11",
+        "perplexity@11",
+        "warp@11",
+        "deepseek@17",
+        "doubao@17",
+        "manus@17",
+        "mimo@17",
+        "openai@17",
+        "windsurf@17",
+        "codebuff@18",
+        "commandcode@18",
+        "stepfun@18",
+        "venice@18",
+        "bedrock@22",
+        "moonshot@22",
+        "deepgram@26",
+        "elevenlabs@26",
+        "grok@26",
+        "groq@26",
+        "llmproxy@26",
+        "alibabatokenplan@30",
+        "azureopenai@30",
+        "t3chat@30",
+        "chutes@34",
+        "litellm@34",
+        "poe@34",
+        "zed@34",
+        "clawrouter@38",
+        "qoder@38",
+        "sakana@38"
+      ],
+      "reason": "Only verified Tier-A credential-scope contracts emit stable cross-Mac identities. The four new providers have no verified account identity extraction and remain explicitly non-Tier-A to avoid merging unrelated credentials."
+    },
+    {
+      "action": "add-exact",
+      "path": "Sources/CodexBar/Sync/SyncCoordinator.swift",
+      "lineAtReview": 932,
+      "anchor": "if provider == .soniox, let cost = providerCost, cost.limit <= 0, cost.balance != nil,",
+      "occurrence": 1,
+      "expectedProviderIDs": [
+        "claude",
+        "soniox"
+      ],
+      "expectedReferenceCount": 2,
+      "expectedReferenceFingerprint": [
+        "soniox@0",
+        "claude@8"
+      ],
+      "reason": "Soniox prepaid balance occupies providerAmount while independent uncapped monthly spend must remain in details; Claude native reset-credit inventory is live-only and must be filtered before iOS persistence."
+    },
+    {
+      "action": "add-exact",
+      "path": "Sources/CodexBar/Sync/SyncCoordinator.swift",
+      "lineAtReview": 1233,
+      "anchor": "let label = provider == .alibabatokenplan",
+      "occurrence": 1,
+      "expectedProviderIDs": [
+        "alibabatokenplan"
+      ],
+      "expectedReferenceCount": 2,
+      "expectedReferenceFingerprint": [
+        "alibabatokenplan@0",
+        "alibabatokenplan@11"
+      ],
+      "reason": "Alibaba secondary/tertiary windows need provider-authored duration labels rather than positional weekly/Opus fallbacks; preserve explicit window label/title and stable tertiary ID."
+    },
+    {
+      "action": "add-exact",
+      "path": "Sources/CodexBar/Sync/MockProviderInjector.swift",
+      "lineAtReview": 2032,
+      "anchor": "providerID: \"chatbox\", providerName: \"Chatbox AI\",",
+      "occurrence": 1,
+      "expectedProviderIDs": [
+        "chatbox"
+      ],
+      "expectedReferenceCount": 1,
+      "expectedReferenceFingerprint": [
+        "chatbox@0"
+      ],
+      "reason": "The opt-in mock catalog deliberately enumerates a synthetic Chatbox license-key account and quota shape; count, allowlist and sync write-path tests verify that this new provider fixture reaches iOS."
+    },
+    {
+      "action": "delete-stale-exact",
+      "path": "Sources/CodexBar/UsageStore/UsageStore+Refresh.swift",
+      "lineAtReview": 820,
+      "anchor": "if provider == .codex {",
+      "occurrence": 2,
+      "expectedProviderIDs": [
+        "codex"
+      ],
+      "expectedReferenceCount": 1,
+      "expectedReferenceFingerprint": [
+        "codex@0"
+      ],
+      "reason": "Delete only the stale occurrence-2 single-Codex allowlist record. The surviving standalone occurrence-1 anchor is inside the existing four-reference Codex/DeepSeek failure-publication cluster, whose separate occurrence-1 record must remain unchanged."
+    },
+    {
+      "action": "add-exact-to-preserve-split-tail",
+      "path": "Sources/CodexBar/Sync/SyncCoordinator.swift",
+      "lineAtReview": 1656,
+      "anchor": "case .xai:",
+      "occurrence": 1,
+      "expectedProviderIDs": [
+        "grok",
+        "xai"
+      ],
+      "expectedReferenceCount": 2,
+      "expectedReferenceFingerprint": [
+        "xai@0",
+        "grok@3"
+      ],
+      "reason": "xAI uses its provider-owned balance-or-used balance contract, while Grok requires purchased Extra Usage Credits balance; an observed zero clears prior credits. This tail must not borrow the preceding Claude Platform marker."
+    }
+  ],
+  "preservedRelatedConstructs": [
+    {
+      "action": "preserve-unchanged",
+      "path": "Sources/CodexBar/UsageStore/UsageStore+Refresh.swift",
+      "anchor": "if provider == .codex {",
+      "occurrence": 1,
+      "expectedProviderIDs": [
+        "codex",
+        "deepseek"
+      ],
+      "expectedReferenceCount": 4,
+      "expectedReferenceFingerprint": [
+        "codex@0",
+        "deepseek@11",
+        "deepseek@19",
+        "codex@29"
+      ],
+      "clusterStartLine": 791,
+      "anchorLine": 820,
+      "explanation": "The exact anchor can fall anywhere inside a cluster. Codex791, DeepSeek802, DeepSeek810 and Codex820 form one cluster (29-line span; adjacent gaps11,8,10), so the occurrence-1 record already covers widget failure reconciliation."
+    }
+  ],
+  "correction": "Earlier advice to change occurrence2 to1 was incorrect because it did not account for the existing occurrence1 record and its containing four-reference cluster. No tracked changes were applied from that advice."
+}
