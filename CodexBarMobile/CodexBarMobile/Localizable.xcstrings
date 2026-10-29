@@ -349,31 +349,31 @@
         }
       }
     },
-    "See Cursor’s weekly allowance and extra spend, Kimi’s monthly breakdown and expiring gifts, plus expected-use markers from your Mac.": {
+    "See Cursor’s weekly allowance and extra spend, Kimi’s breakdown and expiring gifts, and expected-use markers. Cost details distinguish source records from estimates.": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "See Cursor’s weekly allowance and extra spend, Kimi’s monthly breakdown and expiring gifts, plus expected-use markers from your Mac."
+            "value": "See Cursor’s weekly allowance and extra spend, Kimi’s breakdown and expiring gifts, and expected-use markers. Cost details distinguish source records from estimates."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "查看从 Mac 同步的 Cursor 每周额度与额外消费、Kimi 每月用量明细和赠送额度到期时间，以及预期用量标记。"
+            "value": "查看 Cursor 每周额度与额外费用、Kimi 用量明细与即将到期的赠送额度，以及预期用量标记。费用详情会区分来源记录与估算。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "查看從 Mac 同步的 Cursor 每週額度與額外消費、Kimi 每月用量明細和贈送額度到期時間，以及預期用量標記。"
+            "value": "查看 Cursor 每週額度與額外費用、Kimi 用量明細與即將到期的贈送額度，以及預期用量標記。費用詳情會區分來源記錄與估算。"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Mac から同期した Cursor の週間利用枠と追加支出、Kimi の月間内訳とボーナスの有効期限、想定使用量の目印を確認できます。"
+            "value": "Cursor の週間上限と追加費用、Kimi の内訳と期限のある特典、使用量の目安を確認できます。費用詳細では記録元の金額と推定額を区別します。"
           }
         }
       }
@@ -28453,6 +28453,35 @@
           "stringUnit": {
             "state": "translated",
             "value": "気になる指標をコンパクトなカードでまとめて確認。リセットまでの残り時間や使い切る予測日時も選べます。"
+          }
+        }
+      }
+    },
+    "Includes costs recorded by the source; not a billing receipt.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Includes costs recorded by the source; not a billing receipt."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "包含来源记录的费用；不代表账单收据。"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "包含來源記錄的費用；不代表帳單收據。"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "記録元の費用を含みます。請求書や領収書ではありません。"
           }
         }
       }

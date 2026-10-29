@@ -1,6 +1,5 @@
 import CodexBarSync
 import Testing
-
 @testable import CodexBarMobile
 
 /// Pins the push-notification subscription provider list. iOS 1.5.0 added
@@ -18,7 +17,6 @@ import Testing
 /// update here.
 @Suite("Quota provider list")
 struct QuotaProviderListTests {
-
     @Test("Total count is 94 after the v0.82 catch-up")
     func totalCount() {
         // Outcome: 25 → 27 in iOS 1.5.0 (Abacus + Mistral) →
@@ -45,7 +43,7 @@ struct QuotaProviderListTests {
         // the push-subscription set drifts out of sync with Mac's
         // actual emitting providers.
         #expect(QuotaProviderList.providers.count == 94)
-        #expect(QuotaProviderList.providers.suffix(4).map { $0.id } == ["soniox", "traecn", "abliteration", "chatbox"])
+        #expect(QuotaProviderList.providers.suffix(4).map(\.id) == ["soniox", "traecn", "abliteration", "chatbox"])
     }
 
     @Test("Subscription zone count is 282 (94 providers × 3 states)")
@@ -118,9 +116,11 @@ struct QuotaProviderListTests {
     @Test("Cause: every provider ID is lowercase and contains no whitespace")
     func providerIDFormatInvariant() {
         for provider in QuotaProviderList.providers {
-            #expect(provider.id == provider.id.lowercased(),
+            #expect(
+                provider.id == provider.id.lowercased(),
                 "Provider ID '\(provider.id)' must be lowercase")
-            #expect(!provider.id.contains(" "),
+            #expect(
+                !provider.id.contains(" "),
                 "Provider ID '\(provider.id)' must not contain spaces")
             #expect(!provider.id.isEmpty, "Provider ID must not be empty")
         }
@@ -418,14 +418,16 @@ struct QuotaProviderListTests {
     func v073LangdockAppended() {
         let ids = QuotaProviderList.providers.map(\.id)
         #expect(ids.firstIndex(of: "workbuddy").map { $0 + 1 } == ids.firstIndex(of: "langdock"))
-        #expect(QuotaProviderList.quotaZoneName(providerID: "langdock", state: "warning") == "Quota-langdock-warningZone")
+        #expect(QuotaProviderList
+            .quotaZoneName(providerID: "langdock", state: "warning") == "Quota-langdock-warningZone")
     }
 
     @Test("v0.76 Claude Platform is appended after Tavily; balance-only v0.75/v0.76 providers are absent")
     func v076ProvidersAppended() {
         let ids = QuotaProviderList.providers.map(\.id)
         #expect(Array(ids.prefix(88).suffix(2)) == ["tavily", "claudeplatform"])
-        #expect(QuotaProviderList.providers.first(where: { $0.id == "claudeplatform" })?.displayName == "Claude Platform")
+        #expect(QuotaProviderList.providers.first(where: { $0.id == "claudeplatform" })?
+            .displayName == "Claude Platform")
         // fal, FLORA and Parallel report balances only; nothing to warn on.
         for id in ["fal", "flora", "parallel"] {
             #expect(!ids.contains(id), "\(id) must not subscribe to quota pushes")

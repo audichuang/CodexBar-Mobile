@@ -5,9 +5,81 @@ import Testing
 struct CostProvenanceTests {
     @Test
     func `cost figures are never billing receipts`() {
-        for provenance in [CostProvenance.listPriceEstimate, .vendorMetered, .mixed, .unknown] {
+        for provenance in [CostProvenance.listPriceEstimate, .vendorMetered, .mixed, .sourceRecorded, .unknown] {
             #expect(!provenance.isBillingReceipt)
         }
+    }
+
+    @Test(arguments: [0.0, 0.75])
+    func `local source recorded costs keep provenance including present zero`(amount: Double) {
+        let day = Self.provenanceDay("2026-07-01", amount: amount, recorded: true)
+        let snapshot = CostUsageFetcher.tokenSnapshot(
+            from: CostUsageDailyReport(data: [day], summary: nil),
+            now: Date(timeIntervalSince1970: 1_782_864_000),
+            calendar: Self.utcCalendar,
+            costProvenance: .listPriceEstimate)
+        #expect(snapshot.costProvenance == .sourceRecorded)
+        #expect(snapshot.last30DaysCostUSD == amount)
+        #expect(snapshot.summary(forLastDays: 7, calendar: Self.utcCalendar).provenance == .sourceRecorded)
+        #expect(!snapshot.costProvenance.isBillingReceipt)
+    }
+
+    @Test
+    func `cost provenance narrows source recorded and priced rows to the selected window`() {
+        let days = [
+            Self.provenanceDay("2026-06-15", amount: 0, recorded: true),
+            Self.provenanceDay("2026-07-01", amount: 1.25, recorded: false),
+        ]
+        let snapshot = CostUsageFetcher.tokenSnapshot(
+            from: CostUsageDailyReport(data: days, summary: nil),
+            now: Date(timeIntervalSince1970: 1_782_864_000),
+            calendar: Self.utcCalendar,
+            costProvenance: .listPriceEstimate)
+        #expect(snapshot.costProvenance == .sourceRecorded)
+        #expect(snapshot.summary(forLastDays: 7, calendar: Self.utcCalendar).provenance == .listPriceEstimate)
+        #expect(snapshot.summary(forLastDays: 30, calendar: Self.utcCalendar).provenance == .sourceRecorded)
+        #expect(snapshot.summary(forLastDays: 30, calendar: Self.utcCalendar).totalCostUSD == 1.25)
+    }
+
+    @Test
+    func `mixed costs retain recorded provenance while unpriced flags do not invent it`() {
+        var mixed = Self.provenanceDay("2026-07-01", amount: 1.25, recorded: false)
+        let recorded = CostUsageDailyReport.ModelBreakdown(
+            modelName: "Synthetic recorded zero",
+            costUSD: 0,
+            sourceRecorded: true)
+        mixed = CostUsageDailyReport.Entry(
+            date: mixed.date,
+            inputTokens: nil,
+            outputTokens: nil,
+            totalTokens: nil,
+            costUSD: mixed.costUSD,
+            modelsUsed: nil,
+            modelBreakdowns: (mixed.modelBreakdowns ?? []) + [recorded])
+        #expect(CostProvenance
+            .includingSourceRecordedCosts(in: [mixed], fallback: .listPriceEstimate) == .sourceRecorded)
+        let unknown = Self.provenanceDay("2026-07-01", amount: nil, recorded: true)
+        #expect(CostProvenance.includingSourceRecordedCosts(in: [unknown], fallback: .unknown) == .unknown)
+        let priced = Self.provenanceDay("2026-07-01", amount: 0, recorded: false)
+        #expect(CostProvenance
+            .includingSourceRecordedCosts(in: [priced], fallback: .listPriceEstimate) == .listPriceEstimate)
+    }
+
+    private static var utcCalendar: Calendar {
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = .gmt
+        return calendar
+    }
+
+    private static func provenanceDay(_ date: String, amount: Double?, recorded: Bool) -> CostUsageDailyReport.Entry {
+        CostUsageDailyReport.Entry(
+            date: date,
+            inputTokens: nil,
+            outputTokens: nil,
+            totalTokens: nil,
+            costUSD: amount,
+            modelsUsed: nil,
+            modelBreakdowns: [.init(modelName: "Synthetic provenance row", costUSD: amount, sourceRecorded: recorded)])
     }
 
     @Test

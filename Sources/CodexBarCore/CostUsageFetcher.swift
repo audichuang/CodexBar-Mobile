@@ -1842,7 +1842,7 @@ public struct CostUsageFetcher: Sendable {
             historyScanIsPartial: historyScanIsPartial,
             historyLabel: historyLabel,
             meteredCostUSD: monetaryValuesAreAvailable ? meteredCostUSD : nil,
-            costProvenance: costProvenance,
+            costProvenance: CostProvenance.includingSourceRecordedCosts(in: daily.data, fallback: costProvenance),
             credentialScopeFingerprint: credentialScopeFingerprint,
             daily: daily.data,
             projects: projects,

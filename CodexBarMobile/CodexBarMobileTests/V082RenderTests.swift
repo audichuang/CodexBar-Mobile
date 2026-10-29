@@ -35,6 +35,10 @@ final class V082RenderTests: XCTestCase {
                 "Other features")
         }
 
+        let provenanceKey = "Includes costs recorded by the source; not a billing receipt."
+        let provenanceText = MobileLocalizedString.value(provenanceKey, defaultValue: provenanceKey, locale: locale)
+        if language != "en" { XCTAssertNotEqual(provenanceText, provenanceKey) }
+
         let budget = SyncBudgetSnapshot(
             usedAmount: 12.5, limitAmount: 100, currencyCode: "USD", period: "This month",
             resetsAt: reset, observedAt: now)
@@ -43,12 +47,16 @@ final class V082RenderTests: XCTestCase {
             .init(label: "Other features", value: "5 / 100", progress: .init(used: 5, total: 100)),
         ])
         let expiredGift = SyncProviderDetailSection(title: "Bonus credits", rows: [
-            .init(label: "Synthetic gift", value: "75% left", progress: .init(used: 0.25, total: 1),
-                  expiresAt: now.addingTimeInterval(-60)),
+            .init(
+                label: "Synthetic gift",
+                value: "75% left",
+                progress: .init(used: 0.25, total: 1),
+                expiresAt: now.addingTimeInterval(-60)),
         ])
         let content = VStack(alignment: .leading, spacing: 16) {
             UsageCardView(label: "Workspace allowance", window: quota, providerID: "synthetic-workspace")
             BudgetProgressView(budget: budget, providerID: "soniox")
+            Text(provenanceText).font(.caption2).foregroundStyle(.secondary)
             ProviderDetailsView(providerID: "kimi", sections: [details, expiredGift], tintColor: .blue)
             HStack {
                 ForEach(["soniox", "traecn", "abliteration", "chatbox"], id: \.self) { providerID in
@@ -56,6 +64,9 @@ final class V082RenderTests: XCTestCase {
                 }
             }
         }
+        // Preserve each view's intrinsic height; the fixture must not compress
+        // a monetary target merely because the diagnostic stack gains a caption.
+        .fixedSize(horizontal: false, vertical: true)
         .padding(16).frame(width: 390)
         .background(dark ? Color.black : Color.white)
         .environment(\.locale, locale)
@@ -63,7 +74,7 @@ final class V082RenderTests: XCTestCase {
         .environment(\.dynamicTypeSize, largeText ? .accessibility3 : .large)
         // UIKit-backed controls such as ProgressView need a real hosting window;
         // ImageRenderer substitutes unsupported-control placeholders.
-        let size = CGSize(width: 390, height: largeText ? 1800 : 700)
+        let size = CGSize(width: 390, height: largeText ? 2400 : 900)
         let controller = UIHostingController(rootView: content)
         let host = UIWindow(frame: CGRect(origin: .zero, size: size))
         host.overrideUserInterfaceStyle = dark ? .dark : .light

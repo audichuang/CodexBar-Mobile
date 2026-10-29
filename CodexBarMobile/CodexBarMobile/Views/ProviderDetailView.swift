@@ -735,6 +735,10 @@ struct ProviderDetailView: View {
             Text("Includes provider-reported and estimated costs.")
                 .font(.caption2)
                 .foregroundStyle(.tertiary)
+        case .sourceRecorded:
+            Text(String(localized: "Includes costs recorded by the source; not a billing receipt."))
+                .font(.caption2)
+                .foregroundStyle(.tertiary)
         case .unknown, nil:
             EmptyView()
         }

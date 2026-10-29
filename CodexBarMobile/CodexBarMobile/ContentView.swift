@@ -5112,7 +5112,7 @@ enum MobileReleaseNotesCatalog {
                     id: "details", symbol: "chart.bar",
                     title: String(localized: "Clearer provider details"),
                     detail: String(
-                        localized: "See Cursor’s weekly allowance and extra spend, Kimi’s monthly breakdown and expiring gifts, plus expected-use markers from your Mac.")),
+                        localized: "See Cursor’s weekly allowance and extra spend, Kimi’s breakdown and expiring gifts, and expected-use markers. Cost details distinguish source records from estimates.")),
             ],
             sections: [
                 .init(title: String(localized: "What's New"), items: [

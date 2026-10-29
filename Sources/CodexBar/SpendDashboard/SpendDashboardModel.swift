@@ -642,6 +642,7 @@ struct SpendDashboardModel: Equatable, Sendable {
         var hasMeteredCostAmount = false
         var sawVendorMeteredProvenance = false
         var sawEstimate = false
+        var sawSourceRecorded = false
         for summary in scopedSummaries {
             for windowEntry in summary.entries {
                 tokenMix.merge(.from(entry: windowEntry.entry))
@@ -655,7 +656,15 @@ struct SpendDashboardModel: Equatable, Sendable {
                 metered = (metered ?? 0) + meteredCost * summary.costMultiplier
             }
             if summary.totalCost != nil {
-                switch summary.input.snapshot.costProvenance {
+                let provenance = summary.input.snapshot.costProvenance == .sourceRecorded
+                    ? CostProvenance.forWindow(
+                        snapshot: .sourceRecorded,
+                        hasWindowCosts: summary.totalCost != nil,
+                        includesMetered: selectedDay == nil && days >= summary.input.snapshot.historyDays
+                            && summary.input.snapshot.meteredCostUSD != nil,
+                        entries: summary.entries.map(\.entry))
+                    : summary.input.snapshot.costProvenance
+                switch provenance {
                 case .vendorMetered:
                     sawVendorMeteredProvenance = true
                 case .listPriceEstimate:
@@ -663,6 +672,8 @@ struct SpendDashboardModel: Equatable, Sendable {
                 case .mixed:
                     sawVendorMeteredProvenance = true
                     sawEstimate = true
+                case .sourceRecorded:
+                    sawSourceRecorded = true
                 case .unknown:
                     // Preserve the existing conservative display for legacy snapshots that
                     // predate explicit provenance.
@@ -670,11 +681,15 @@ struct SpendDashboardModel: Equatable, Sendable {
                 }
             }
         }
-        let provenance: CostProvenance = switch (sawVendorMeteredProvenance, sawEstimate) {
-        case (true, true): .mixed
-        case (true, false): .vendorMetered
-        case (false, true): .listPriceEstimate
-        case (false, false): .unknown
+        let provenance: CostProvenance = if sawSourceRecorded {
+            .sourceRecorded
+        } else {
+            switch (sawVendorMeteredProvenance, sawEstimate) {
+            case (true, true): .mixed
+            case (true, false): .vendorMetered
+            case (false, true): .listPriceEstimate
+            case (false, false): .unknown
+            }
         }
         let hourlyPoints = Self.hourlyPoints(
             summaries: summaries,

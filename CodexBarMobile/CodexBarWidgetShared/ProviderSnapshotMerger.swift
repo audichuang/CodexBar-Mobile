@@ -1294,6 +1294,7 @@ enum ProviderSnapshotMerger {
         let values = summaries.compactMap(\.reportingPeriodCostProvenance)
         guard !values.isEmpty, values.count == summaries.count else { return nil }
         if values.contains(.unknown) { return .unknown }
+        if values.contains(.sourceRecorded) { return .sourceRecorded }
         if values.contains(.mixed) { return .mixed }
         return Set(values).count == 1 ? values.first : .mixed
     }

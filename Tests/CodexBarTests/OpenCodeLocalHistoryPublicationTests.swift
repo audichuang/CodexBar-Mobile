@@ -58,6 +58,8 @@ struct OpenCodeLocalHistoryPublicationTests {
                 reportContext: context)
         }
         let regular = try await load(.regular)
+        #expect(regular.snapshot.costProvenance == .sourceRecorded)
+        #expect(regular.snapshot.summary(forLastDays: 1, calendar: calendar).provenance == .sourceRecorded)
         try #require(regular.snapshot.daily.flatMap { $0.modelsUsed ?? [] }.contains("fixture-opencode-dashboard-only"))
         let cached = await CostUsageFetcher.loadCachedCodexTokenSnapshotResult(
             now: Date(timeIntervalSince1970: Double(timestamp) / 1000),
@@ -69,6 +71,8 @@ struct OpenCodeLocalHistoryPublicationTests {
         #expect(cached?.snapshot.daily.flatMap { $0.modelsUsed ?? [] }
             .contains("fixture-opencode-dashboard-only") == true)
         #expect(cached?.snapshot.daily.first?.totalTokens == nil)
+        #expect(cached?.snapshot.costProvenance == .sourceRecorded)
+        #expect(cached?.snapshot.summary(forLastDays: 1, calendar: calendar).provenance == .sourceRecorded)
         try #require(sqlite3_open(url.path, &database) == SQLITE_OK)
         let appendSQL = """
         INSERT INTO session_message SELECT 'catch-up-fixture', type,
@@ -128,6 +132,25 @@ struct OpenCodeLocalHistoryPublicationTests {
             environment: ["OPENCODE_DB": url.path, "CODEX_HOME": root.appendingPathComponent("scoped").path])
         #expect(explicitHome?.snapshot.daily.flatMap { $0.modelBreakdowns ?? [] }
             .contains { $0.sourceRecorded == true } != true)
+
+        // The schema-1 SSH summary invokes this public native-only API, even
+        // after an ambient report has populated the same contained cache.
+        let native = try await fetcher.loadTokenSnapshot(
+            provider: .codex,
+            environment: ["HOME": home, "OPENCODE_DB": url.path],
+            now: Date(timeIntervalSince1970: Double(timestamp) / 1000),
+            forceRefresh: true,
+            historyDays: 1,
+            allowPricingRefresh: false,
+            refreshPricingInBackground: false,
+            includePiSessions: false,
+            calendar: calendar)
+        #expect(native.daily.flatMap { $0.modelBreakdowns ?? [] }.allSatisfy { $0.sourceRecorded != true })
+        #expect(native.costProvenance != .sourceRecorded)
+        let transport = CodexCostSummary(snapshot: native, calendar: calendar)
+        #expect(transport.schemaVersion == 1)
+        #expect(transport.today.provenance != .sourceRecorded)
+        #expect(transport.history.provenance != .sourceRecorded)
     }
 }
 

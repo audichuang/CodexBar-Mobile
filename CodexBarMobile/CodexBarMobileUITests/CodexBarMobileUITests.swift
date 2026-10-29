@@ -512,39 +512,34 @@ final class CodexBarMobileUITests: XCTestCase {
     func testSpringBoardWidgetCanSelectOverview() throws {
         try self.runSpringBoardWidgetModeSelection(
             name: "Overview",
-            pickerLabels: ["Overview", "概览", "概覽", "概要"],
-            pickerRowY: 0.44)
+            pickerLabels: ["Overview", "概览", "概覽", "概要"])
     }
 
     @MainActor
     func testSpringBoardWidgetCanSelectProviderFocus() throws {
         try self.runSpringBoardWidgetModeSelection(
             name: "Provider Focus",
-            pickerLabels: ["Provider Focus", "提供商焦点", "供應商焦點", "プロバイダーフォーカス"],
-            pickerRowY: 0.50)
+            pickerLabels: ["Provider Focus", "服务商详情", "服務商詳情", "提供商焦点", "供應商焦點", "プロバイダー詳細", "プロバイダーフォーカス"])
     }
 
     @MainActor
     func testSpringBoardWidgetCanSelectTodayCost() throws {
         try self.runSpringBoardWidgetModeSelection(
             name: "Today Cost",
-            pickerLabels: ["Today Cost", "今日成本", "今日成本", "今日のコスト"],
-            pickerRowY: 0.56)
+            pickerLabels: ["Today Cost", "今日费用", "今日費用", "今日成本", "今日のコスト"])
     }
 
     @MainActor
     func testSpringBoardWidgetCanSelectSyncHealth() throws {
         try self.runSpringBoardWidgetModeSelection(
             name: "Sync Health",
-            pickerLabels: ["Sync Health", "同步健康", "同步健康", "同期の健全性"],
-            pickerRowY: 0.64)
+            pickerLabels: ["Sync Health", "同步状态", "同步狀態", "同步健康", "同期状況", "同期の健全性"])
     }
 
     @MainActor
     private func runSpringBoardWidgetModeSelection(
         name: String,
-        pickerLabels: [String],
-        pickerRowY: CGFloat) throws
+        pickerLabels: [String]) throws
     {
         let environment = ProcessInfo.processInfo.environment
         guard environment["UI_TEST_SPRINGBOARD_WIDGET"] == "1"
@@ -560,6 +555,7 @@ final class CodexBarMobileUITests: XCTestCase {
         let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
         XCTAssertTrue(springboard.wait(for: .runningForeground, timeout: 5))
 
+        self.captureScreen(springboard, name: "Home Screen before editing placed CodexBar status widget")
         self.openSpringBoardWidgetConfigurationPanel(on: springboard)
 
         let openedAttachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
@@ -570,7 +566,16 @@ final class CodexBarMobileUITests: XCTestCase {
         // The system-hosted configuration UI is not consistently exposed through
         // XCTest accessibility on iOS 26 simulators, so use normalized screen
         // coordinates after proving the configuration extension is foreground.
-        springboard.coordinate(withNormalizedOffset: CGVector(dx: 0.80, dy: 0.43)).tap()
+        let typeRow = springboard.staticTexts.matching(NSPredicate(
+            format: "label IN %@", ["Widget Type", "小组件类型", "小工具類型", "ウィジェットの種類"]))
+            .firstMatch
+        try XCTSkipUnless(
+            typeRow.waitForExistence(timeout: 5),
+            "System editor Type row is unavailable to XCTest; use the recorded native interaction gate.")
+        let screen = springboard.frame
+        XCTAssertTrue(screen.contains(typeRow.frame))
+        springboard.coordinate(withNormalizedOffset: CGVector(
+            dx: 0.80, dy: (typeRow.frame.midY - screen.minY) / screen.height)).tap()
         Thread.sleep(forTimeInterval: 0.5)
 
         let modePickerAttachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
@@ -578,11 +583,10 @@ final class CodexBarMobileUITests: XCTestCase {
         modePickerAttachment.lifetime = .keepAlways
         add(modePickerAttachment)
 
-        self.selectSpringBoardWidgetMode(
+        try self.selectSpringBoardWidgetMode(
             on: springboard,
             name: name,
-            pickerLabels: pickerLabels,
-            pickerRowY: pickerRowY)
+            pickerLabels: pickerLabels)
     }
 
     @MainActor
@@ -767,9 +771,9 @@ final class CodexBarMobileUITests: XCTestCase {
         } else {
             // XCTest can miss WidgetKit host views even when SpringBoard exposes
             // them to the runtime accessibility snapshot. Fall back to the
-            // release-gate simulator layout: a medium CodexBar widget centered
-            // near the top of the first Home Screen page.
-            springboard.coordinate(withNormalizedOffset: CGVector(dx: 0.50, dy: 0.20))
+            // opt-in release-gate layout, visually verified before running:
+            // a small or medium CodexBar status widget at the top left.
+            springboard.coordinate(withNormalizedOffset: CGVector(dx: 0.25, dy: 0.20))
                 .press(forDuration: 1.2)
         }
 
@@ -781,39 +785,72 @@ final class CodexBarMobileUITests: XCTestCase {
 
         let configurationExtension = XCUIApplication(
             bundleIdentifier: "com.apple.WorkflowUI.WidgetConfigurationExtension")
-        XCTAssertTrue(
-            configurationExtension.wait(for: .runningForeground, timeout: 5),
-            "SpringBoard did not foreground the widget configuration extension.")
+        let panel = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+            let hasType = ["Widget Type", "小组件类型", "小工具類型", "ウィジェットの種類"].contains {
+                springboard.staticTexts[$0].exists
+            }
+            let hasStyle = ["Color Style", "颜色样式", "顏色樣式", "カラースタイル"].contains {
+                springboard.staticTexts[$0].exists
+            }
+            return configurationExtension.state == .runningForeground || (hasType && hasStyle)
+        }, object: nil)
+        self.captureScreen(springboard, name: "System widget editor after Edit Widget action")
+        let tree = XCTAttachment(string: springboard.debugDescription)
+        tree.name = "System widget editor hierarchy"
+        tree.lifetime = .keepAlways
+        self.add(tree)
+        XCTAssertEqual(
+            XCTWaiter.wait(for: [panel], timeout: 10),
+            .completed,
+            "System editor must expose its configuration host or actual Type and Style controls.")
     }
 
     @MainActor
     private func selectSpringBoardWidgetMode(
         on springboard: XCUIApplication,
         name: String,
-        pickerLabels: [String],
-        pickerRowY: CGFloat)
+        pickerLabels: [String]) throws
     {
         let configurationExtension = XCUIApplication(
             bundleIdentifier: "com.apple.WorkflowUI.WidgetConfigurationExtension")
-        if !self.tapFirstExistingPickerLabel(in: configurationExtension, labels: pickerLabels),
-           !self.tapFirstExistingPickerLabel(in: springboard, labels: pickerLabels)
-        {
-            springboard.coordinate(withNormalizedOffset: CGVector(dx: 0.46, dy: pickerRowY)).tap()
-        }
+        let selected = self.tapFirstExistingPickerLabel(in: springboard, labels: pickerLabels)
+            || self.tapFirstExistingPickerLabel(in: configurationExtension, labels: pickerLabels)
+        try XCTSkipUnless(
+            selected,
+            "System mode picker is unavailable to XCTest; do not infer selection from a coordinate receipt.")
         Thread.sleep(forTimeInterval: 1.0)
+        let configuredValue = springboard.buttons.matching(NSPredicate(format: "label IN %@", pickerLabels)).firstMatch
+        XCTAssertTrue(
+            configuredValue.waitForExistence(timeout: 5),
+            "The system editor must read back the selected mode")
 
         let selectionAttachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         selectionAttachment.name = "SpringBoard \(name) Configuration Selected"
         selectionAttachment.lifetime = .keepAlways
         add(selectionAttachment)
 
-        XCUIDevice.shared.press(.home)
+        let typeRow = springboard.staticTexts.matching(NSPredicate(
+            format: "label IN %@", ["Widget Type", "小组件类型", "小工具類型", "ウィジェットの種類"]))
+            .firstMatch
+        springboard.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.15)).tap()
+        XCTAssertTrue(typeRow.waitForNonExistence(timeout: 5), "Dismiss the actual editor before capturing Home Screen")
         Thread.sleep(forTimeInterval: 2.0)
 
         let widgetAttachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
         widgetAttachment.name = "SpringBoard \(name) Widget"
         widgetAttachment.lifetime = .keepAlways
         add(widgetAttachment)
+
+        // Capture the stored configuration again. System-hosted controls can be
+        // absent from AX; release QA must read these screenshots, not infer a
+        // successful mode change from this test's exit status alone.
+        self.openSpringBoardWidgetConfigurationPanel(on: springboard)
+        XCTAssertTrue(
+            configuredValue.waitForExistence(timeout: 5),
+            "The selected mode must survive closing and reopening the editor")
+        self.captureScreen(springboard, name: "SpringBoard \(name) persisted configuration reopened")
+        springboard.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.15)).tap()
+        XCTAssertTrue(typeRow.waitForNonExistence(timeout: 5))
     }
 
     @MainActor
@@ -838,5 +875,74 @@ final class CodexBarMobileUITests: XCTestCase {
             }
         }
         return false
+    }
+}
+
+extension CodexBarMobileUITests {
+    /// Opt-in setup for a task-owned simulator, followed by the existing system editor gate.
+    @MainActor
+    func testPrepareSpringBoardWidgetForReleaseQA() throws {
+        let environment = ProcessInfo.processInfo.environment
+        guard environment["UI_TEST_SPRINGBOARD_WIDGET_SETUP"] == "1"
+            || environment["TEST_RUNNER_UI_TEST_SPRINGBOARD_WIDGET_SETUP"] == "1"
+        else { throw XCTSkip("Requires opt-in setup on a task-owned simulator.") }
+        let app = self.makeApp()
+        app.launch()
+        XCTAssertTrue(app.searchFields.firstMatch.waitForExistence(timeout: 10))
+        XCUIDevice.shared.press(.home)
+        let springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+        XCTAssertTrue(springboard.wait(for: .runningForeground, timeout: 10))
+        // Press empty space, below the default icon rows and above the dock.
+        springboard.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.68)).press(forDuration: 1.5)
+        let edit = self.firstExistingElement(in: springboard, labels: ["Edit", "编辑", "編輯", "編集"])
+        XCTAssertTrue(edit.waitForExistence(timeout: 5))
+        edit.tap()
+        let add = self.firstExistingElement(in: springboard, labels: ["Add Widget", "添加小组件", "加入小工具", "ウィジェットを追加"])
+        XCTAssertTrue(add.waitForExistence(timeout: 5))
+        add.tap()
+        let search = springboard.searchFields.firstMatch
+        if !search.waitForExistence(timeout: 8) {
+            let tree = XCTAttachment(string: springboard.debugDescription)
+            tree.name = "Widget gallery hierarchy"
+            tree.lifetime = .keepAlways
+            self.add(tree)
+        }
+        XCTAssertTrue(search.exists)
+        search.tap()
+        search.typeText("CodexBar")
+        let result = springboard.staticTexts["CodexBar"].firstMatch
+        XCTAssertTrue(result.waitForExistence(timeout: 8))
+        result.tap()
+        let statusTitle = springboard.staticTexts.matching(NSPredicate(
+            format: "label IN %@", ["CodexBar Widget", "CodexBar 小组件", "CodexBar 小工具", "CodexBar ウィジェット"]))
+            .firstMatch
+        for _ in 0..<10 {
+            if statusTitle.exists, statusTitle.isHittable { break }
+            springboard.coordinate(withNormalizedOffset: CGVector(dx: 0.85, dy: 0.58))
+                .press(forDuration: 0.05, thenDragTo: springboard.coordinate(
+                    withNormalizedOffset: CGVector(dx: 0.15, dy: 0.58)))
+        }
+        XCTAssertTrue(
+            statusTitle.waitForExistence(timeout: 10),
+            "Select the configurable status widget, not Token Activity")
+        self.captureScreen(springboard, name: "CodexBar status widget selected in system gallery")
+        let install = springboard.descendants(matching: .any).matching(NSPredicate(
+            format: "label CONTAINS %@ OR label CONTAINS %@ OR label CONTAINS %@ OR label CONTAINS %@",
+            "Add Widget",
+            "添加小组件",
+            "加入小工具",
+            "ウィジェットを追加")).firstMatch
+        if !install.waitForExistence(timeout: 15) {
+            let tree = XCTAttachment(string: springboard.debugDescription)
+            tree.name = "CodexBar gallery before installation"
+            tree.lifetime = .keepAlways
+            self.add(tree)
+        }
+        XCTAssertTrue(install.exists)
+        install.tap()
+        let done = self.firstExistingElement(in: springboard, labels: ["Done", "完成", "完了"])
+        XCTAssertTrue(done.waitForExistence(timeout: 5))
+        done.tap()
+        self.captureScreen(springboard, name: "Task simulator CodexBar widget placed on Home Screen")
     }
 }

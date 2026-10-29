@@ -210,9 +210,17 @@ struct SyncCostIsEstimatedTests {
         #expect(breakdown.priorityTokens == 200)
     }
 
-    @Test
-    func `SyncCoordinator publishes independent cost timestamp and explicit Today knownness`() async throws {
-        let settings = self.makeSettingsStore(suite: "SyncCoord-cost-source-time")
+    @Test(.serialized, arguments: [CostProvenance.unknown, .sourceRecorded])
+    func `SyncCoordinator publishes independent cost timestamp and explicit Today knownness`(
+        provenance: CostProvenance) async throws
+    {
+        let environment = try CostUsageTestEnvironment()
+        defer { environment.cleanup() }
+        let settings = testSettingsStore(
+            suiteName: "SyncCoord-cost-source-time-\(provenance.rawValue)",
+            userDefaults: InMemoryUserDefaults(),
+            config: testConfigWithAllProvidersDisabled(),
+            keychainAccessPolicy: .init(setDisabled: { _ in }, isExplicitlyDisabled: { false }))
         settings.iCloudSyncEnabled = true
         try settings.setProviderEnabled(
             provider: .codex,
@@ -221,7 +229,14 @@ struct SyncCostIsEstimatedTests {
 
         let now = Date()
         let dayKey = Self.dayKey(for: now)
-        let store = self.makeUsageStore(settings: settings)
+        let store = UsageStore(
+            fetcher: UsageFetcher(environment: [:]),
+            browserDetection: BrowserDetection(cacheTTL: 0),
+            settings: settings,
+            startupBehavior: .testing,
+            environmentBase: ["HOME": environment.root.path],
+            widgetSnapshotURL: environment.root.appendingPathComponent("widget.json"),
+            widgetTimelineReloader: {})
         store._setSnapshotForTesting(
             UsageSnapshot(
                 primary: nil,
@@ -234,6 +249,7 @@ struct SyncCostIsEstimatedTests {
                 sessionCostUSD: 1,
                 last30DaysTokens: 100,
                 last30DaysCostUSD: 1,
+                costProvenance: provenance,
                 daily: [CostUsageDailyReport.Entry(
                     date: dayKey,
                     inputTokens: 50,
@@ -243,17 +259,25 @@ struct SyncCostIsEstimatedTests {
                     totalTokens: 100,
                     costUSD: 1,
                     modelsUsed: ["gpt-5.5"],
-                    modelBreakdowns: nil)],
+                    modelBreakdowns: [.init(
+                        modelName: "Synthetic provenance model",
+                        costUSD: 1,
+                        sourceRecorded: provenance == .sourceRecorded ? true : nil)])],
                 updatedAt: now),
             provider: .codex)
 
         let mock = MockSyncPusher()
-        let coordinator = SyncCoordinator(store: store, settings: settings, syncManager: mock)
+        let coordinator = SyncCoordinator(
+            store: store,
+            settings: settings,
+            syncManager: mock,
+            deviceID: "SYNTHETIC-COST-MAC-\(provenance.rawValue)")
         await coordinator.pushCurrentSnapshot()
 
         let summary = try #require(mock.lastSnapshot?.providers.first?.costSummary)
         #expect(summary.sourceUpdatedAt == now)
         #expect(summary.sessionCostIsKnown == true)
+        #expect(summary.costProvenance == (provenance == .sourceRecorded ? .sourceRecorded : .unknown))
     }
 
     @Test

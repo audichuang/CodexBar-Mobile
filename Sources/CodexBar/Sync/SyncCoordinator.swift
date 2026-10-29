@@ -2836,6 +2836,7 @@ final class SyncCoordinator {
         case .listPriceEstimate: .listPriceEstimate
         case .vendorMetered: .vendorMetered
         case .mixed: .mixed
+        case .sourceRecorded: .sourceRecorded
         case .unknown: .unknown
         }
     }
@@ -3235,7 +3236,8 @@ final class SyncCoordinator {
             provenance: CostProvenance.forWindow(
                 snapshot: snapshot.costProvenance,
                 hasWindowCosts: !costs.isEmpty || snapshot.last30DaysCostUSD != nil,
-                includesMetered: snapshot.meteredCostUSD != nil),
+                includesMetered: snapshot.meteredCostUSD != nil,
+                entries: snapshot.daily),
             meteredCostUSD: snapshot.meteredCostUSD)
     }
 }

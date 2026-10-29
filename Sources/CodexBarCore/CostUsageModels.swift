@@ -301,7 +301,8 @@ public struct CostUsageTokenSnapshot: Sendable, Equatable {
             provenance: CostProvenance.forWindow(
                 snapshot: self.costProvenance,
                 hasWindowCosts: !costs.isEmpty,
-                includesMetered: windowMetered != nil),
+                includesMetered: windowMetered != nil,
+                entries: entries),
             meteredCostUSD: windowMetered,
             incompleteRequestCount: CostUsageIncompleteRequests.sum(entries.map(\.incompleteRequestCount)))
     }

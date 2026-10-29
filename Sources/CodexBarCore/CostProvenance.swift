@@ -8,6 +8,9 @@ public enum CostProvenance: String, Sendable, Equatable, Codable {
     case vendorMetered
     /// Window mixes list-price rows with vendor-metered rows.
     case mixed
+    /// Contains locally source-recorded amounts, possibly alongside list-price estimates.
+    /// Presence is provenance, including an explicit zero; this is not verified vendor billing.
+    case sourceRecorded
     case unknown
 
     public var isBillingReceipt: Bool {
@@ -19,9 +22,15 @@ public enum CostProvenance: String, Sendable, Equatable, Codable {
     public static func forWindow(
         snapshot: CostProvenance,
         hasWindowCosts: Bool,
-        includesMetered: Bool) -> CostProvenance
+        includesMetered: Bool,
+        entries: [CostUsageDailyReport.Entry]? = nil) -> CostProvenance
     {
-        switch snapshot {
+        if hasWindowCosts, let entries,
+           includingSourceRecordedCosts(in: entries, fallback: .unknown) == .sourceRecorded
+        {
+            return .sourceRecorded
+        }
+        return switch snapshot {
         case .vendorMetered:
             includesMetered || hasWindowCosts ? .vendorMetered : .unknown
         case .mixed:
@@ -37,9 +46,30 @@ public enum CostProvenance: String, Sendable, Equatable, Codable {
             }
         case .listPriceEstimate:
             hasWindowCosts ? .listPriceEstimate : .unknown
+        case .sourceRecorded:
+            if !hasWindowCosts {
+                includesMetered ? .vendorMetered : .unknown
+            } else if let entries, !entries.isEmpty {
+                includesMetered ? .mixed : .listPriceEstimate
+            } else {
+                .sourceRecorded
+            }
         case .unknown:
             .unknown
         }
+    }
+
+    public static func includingSourceRecordedCosts(
+        in entries: [CostUsageDailyReport.Entry],
+        fallback: CostProvenance) -> CostProvenance
+    {
+        let hasRecordedCost = entries.contains { entry in
+            guard let cost = entry.costUSD, cost.isFinite else { return false }
+            return (entry.modelBreakdowns ?? []).contains { row in
+                row.sourceRecorded == true && row.costUSD?.isFinite == true
+            }
+        }
+        return hasRecordedCost ? .sourceRecorded : fallback
     }
 }
 

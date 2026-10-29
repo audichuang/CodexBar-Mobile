@@ -1,8 +1,49 @@
 import CodexBarSync
 import Foundation
 import Testing
+@testable import CodexBarMobile
 
 struct V082SyncMetadataTests {
+    @Test(arguments: [
+        SyncCostProvenance.listPriceEstimate, .vendorMetered, .mixed, .unknown, .sourceRecorded,
+    ])
+    func `Two Mac cost merge preserves source recorded meaning in both orders`(other: SyncCostProvenance) throws {
+        let now = Date(timeIntervalSince1970: 1_793_174_400)
+        func source(_ device: String, provenance: SyncCostProvenance) -> SyncedUsageSnapshot {
+            let cost = SyncCostSummary(
+                sessionCostUSD: 0,
+                sessionTokens: nil,
+                last30DaysCostUSD: 0,
+                last30DaysTokens: nil,
+                daily: [],
+                historyDays: 30,
+                currencyCode: "USD",
+                costProvenance: provenance)
+            let provider = ProviderUsageSnapshot(
+                providerID: "claude",
+                providerName: "Claude",
+                primary: nil,
+                secondary: nil,
+                accountEmail: "provenance@example.invalid",
+                loginMethod: nil,
+                statusMessage: nil,
+                isError: false,
+                lastUpdated: now,
+                costSummary: cost)
+            return SyncedUsageSnapshot(
+                providers: [provider], syncTimestamp: now, deviceName: device, deviceID: device)
+        }
+        let a = source("Synthetic Mac A", provenance: .sourceRecorded)
+        let b = source("Synthetic Mac B", provenance: other)
+        for values in [[a, b], [b, a]] {
+            let merged = try #require(CloudSyncReader.mergeSnapshots(values))
+            #expect(merged.providers.count == 1)
+            let cost = try #require(merged.providers.first?.costSummary)
+            #expect(cost.reportingPeriodCostProvenance == (other == .unknown ? .unknown : .sourceRecorded))
+            #expect(cost.last30DaysCostUSD == 0)
+        }
+    }
+
     @Test func `Missing or malformed optional expiry preserves a readable detail row`() throws {
         for suffix in ["", ",\"expiresAt\":\"bad date\"", ",\"expiresAt\":{}"] {
             let data = Data("{\"label\":\"Bonus\",\"value\":\"75% left\"\(suffix)}".utf8)

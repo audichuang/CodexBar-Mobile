@@ -13,6 +13,7 @@ All notable changes to the CodexBar iOS companion app will be documented in this
 - Align Mac sync with upstream v0.80.0–v0.82.0 while retaining existing Duo navigation/layout, account/reset history isolation and older payload support.
 
 ### Fixed
+- Preserve OpenCode source-recorded cost provenance, including recorded zero and mixed windows, through cached/fresh Mac snapshots and multi-Mac iOS merges; never relabel these amounts as verified provider billing or pure list-price estimates.
 - Retain Cursor X Subscription’s shared Weekly label and independent uncapped on-demand spend, including confirmed zero, instead of losing them in the mobile bridge.
 - Render cached Kimi bonus-credit expiry in the reader’s language and stop presenting an expired gift as spendable; legacy payloads without a machine-readable expiry retain their original text.
 

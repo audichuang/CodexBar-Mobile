@@ -228,6 +228,7 @@ public enum SyncCostProvenance: String, Codable, Sendable, Equatable {
     case listPriceEstimate
     case vendorMetered
     case mixed
+    case sourceRecorded
     case unknown
 
     public init(from decoder: Decoder) throws {

@@ -183,8 +183,11 @@ struct SyncProviderMapperTests {
         #expect(balance.providerAmount?.amount == 40)
     }
 
-    @Test(arguments: ["USD", "EUR", "CNY"])
-    func `custom plugin cost-only snapshot remains visible to iOS with UTC day metadata`(currency: String) throws {
+    @Test(arguments: ["USD", "EUR", "CNY"], [CostProvenance.mixed, .sourceRecorded])
+    func `custom plugin cost-only snapshot remains visible to iOS with UTC day metadata`(
+        currency: String,
+        provenance: CostProvenance) throws
+    {
         let instanceID = try #require(ProviderInstanceID(rawValue: "acme-meter"))
         let costUpdatedAt = try #require(ISO8601DateFormatter().date(from: "2026-08-22T12:00:00Z"))
         let costUsage = CostUsageTokenSnapshot(
@@ -197,7 +200,7 @@ struct SyncProviderMapperTests {
             historyDays: 7,
             historyCoverageIsEstablished: true,
             meteredCostUSD: 3.0,
-            costProvenance: .mixed,
+            costProvenance: provenance,
             daily: [CostUsageDailyReport.Entry(
                 date: "2026-08-22",
                 inputTokens: 200,
@@ -211,7 +214,8 @@ struct SyncProviderMapperTests {
                     costUSD: 4.25,
                     totalTokens: 300,
                     requestCount: 3,
-                    isEstimated: true)],
+                    isEstimated: true,
+                    sourceRecorded: provenance == .sourceRecorded ? true : nil)],
                 estimatedRequestCount: 1)],
             bucketTimeZoneIdentifier: "UTC",
             windowEndDayKey: "2026-08-18",
@@ -228,7 +232,7 @@ struct SyncProviderMapperTests {
         #expect(summary.last30DaysTokens == 300)
         #expect(summary.daily.first?.dayKey == "2026-08-22")
         #expect(summary.daily.first?.isEstimated == true)
-        #expect(summary.costProvenance == .mixed)
+        #expect(summary.costProvenance == (provenance == .sourceRecorded ? .sourceRecorded : .mixed))
         #expect(summary.coverage?.estimated == 1)
         #expect(summary.sourceUpdatedAt == costUpdatedAt)
         #expect(summary.sourceDayKey == "2026-08-18")

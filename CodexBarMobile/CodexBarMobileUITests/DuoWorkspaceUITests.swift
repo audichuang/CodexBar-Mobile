@@ -48,6 +48,14 @@ final class DuoWorkspaceUITests: XCTestCase {
         app.nativeTab("Cost").tap()
         let share = app.buttons["cost-share-button"]
         XCTAssertTrue(share.waitForExistence(timeout: 15))
+        if ProcessInfo.processInfo.environment["DUO_WAIT_FOR_NATIVE_LANDSCAPE"] == "1" {
+            let window = app.windows.containing(NSPredicate(format: "identifier == %@", "cost-share-button")).firstMatch
+            print("WAIT NATIVE LANDSCAPE - Cost window \(window.frame)")
+            XCTAssertEqual(XCTWaiter.wait(
+                for: [XCTNSPredicateExpectation(
+                    predicate: NSPredicate { _, _ in window.frame.width > window.frame.height }, object: nil)],
+                timeout: 180), .completed)
+        }
         let trend = app.staticTexts["cost-dashboard-daily-spend-title"]
         self.reveal(trend, in: app)
         XCTAssertTrue(trend.isHittable, "The second report must remain reachable in a narrow window")
@@ -68,7 +76,8 @@ final class DuoWorkspaceUITests: XCTestCase {
     func testWidePanesScrollIndependently() throws {
         let app = self.launch(preserveCurrentPose: true)
         app.nativeTab("Cost").tap()
-        let activeWindow = app.windows.containing(NSPredicate(format: "identifier == %@", "cost-share-button")).firstMatch
+        let activeWindow = app.windows.containing(NSPredicate(format: "identifier == %@", "cost-share-button"))
+            .firstMatch
         try XCTSkipUnless(activeWindow.frame.width >= 760, "Requires an actually wide active window")
         let trend = app.staticTexts["cost-dashboard-daily-spend-title"]
         XCTAssertTrue(trend.waitForExistence(timeout: 15))
@@ -142,7 +151,9 @@ final class DuoWorkspaceUITests: XCTestCase {
         XCTAssertTrue(share.waitForExistence(timeout: 5))
         share.tap()
         XCTAssertTrue(app.buttons["share-style-classic"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["share-style-classic"].isSelected, "Cancel must not export or reuse the cancelled draft")
+        XCTAssertTrue(
+            app.buttons["share-style-classic"].isSelected,
+            "Cancel must not export or reuse the cancelled draft")
         self.capture("Native unfolded display permits a fresh share draft")
         app.buttons["share-card-close"].tap()
     }
@@ -170,7 +181,8 @@ final class DuoWorkspaceUITests: XCTestCase {
                 guard !viewport.isNull, viewport.width >= 100, viewport.height >= 150 else { return nil }
                 return (scroll, viewport)
             }
-            guard let (scroll, viewport) = visible.min(by: { $0.1.width * $0.1.height < $1.1.width * $1.1.height }) else {
+            guard let (scroll, viewport) = visible.min(by: { $0.1.width * $0.1.height < $1.1.width * $1.1.height })
+            else {
                 XCTFail("No visible scrolling viewport for \(element.identifier)")
                 return
             }
@@ -211,7 +223,12 @@ extension XCUIApplication {
     func nativeTab(_ name: String) -> XCUIElement {
         let bottomButton = self.tabBars.buttons[name]
         if bottomButton.exists { return bottomButton }
-        let symbol = ["Usage": "chart.bar.fill", "Summary": "square.grid.2x2.fill", "Cost": "dollarsign.circle.fill", "Setting": "gearshape"][name] ?? name
+        let symbol = [
+            "Usage": "chart.bar.fill",
+            "Summary": "square.grid.2x2.fill",
+            "Cost": "dollarsign.circle.fill",
+            "Setting": "gearshape",
+        ][name] ?? name
         let predicate = NSPredicate(format: "identifier == %@ OR label == %@", symbol, name)
         let local = self.descendants(matching: .any).matching(predicate).firstMatch
         if local.exists { return local }
