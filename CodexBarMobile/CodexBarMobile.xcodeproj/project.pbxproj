@@ -82,6 +82,7 @@
 		3780FB0FC279E8D7FAA2F248 /* CloudOperationDeadline.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFA0C60270F7D18A289343E8 /* CloudOperationDeadline.swift */; };
 		37D05E7A04ABF89129C7D284 /* DualZoneReaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F06B5BB1489F508FCD20228A /* DualZoneReaderTests.swift */; };
 		383E1D735F75F0B574447EDF /* ShareCardRenderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A260F62AFF50B05ED7E6401 /* ShareCardRenderTests.swift */; };
+		38564375BBC3B2CF7C2B7D49 /* WidgetAccountRoundTripTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007E6EE38C96EB01A623D014 /* WidgetAccountRoundTripTests.swift */; };
 		392D382890D25DF86B36BFBA /* V073ProviderPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CEDF725C1A4CEE926DA916A /* V073ProviderPresentationTests.swift */; };
 		398EB3075E2D458C30FB05EF /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = F86C7B298B18F83C42E6329D /* Localizable.xcstrings */; };
 		3A544D8A778766DDA73496B3 /* ResetCreditObservation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 130642076781C7271006C8E8 /* ResetCreditObservation.swift */; };
@@ -452,6 +453,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		007E6EE38C96EB01A623D014 /* WidgetAccountRoundTripTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetAccountRoundTripTests.swift; sourceTree = "<group>"; };
 		01AA3F7A048F7301BC92A1A2 /* QuotaZoneNotificationParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuotaZoneNotificationParser.swift; sourceTree = "<group>"; };
 		026226E3F5DB8E1DD9E87257 /* CrossModelUsageCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrossModelUsageCard.swift; sourceTree = "<group>"; };
 		037C02AFA0AD5472CE3B718E /* QuotaPaceWindowSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuotaPaceWindowSelection.swift; sourceTree = "<group>"; };
@@ -913,6 +915,7 @@
 				FFF4778481814E84B90018D6 /* V082RenderTests.swift */,
 				0C9DF80F80ACB23AE4247006 /* V082SyncMetadataTests.swift */,
 				44D42B29EEA7ECECF396429B /* ViewCacheIdentityTests.swift */,
+				007E6EE38C96EB01A623D014 /* WidgetAccountRoundTripTests.swift */,
 				B1BB1B7D889AC7E25520F356 /* WidgetActivityProjectionTests.swift */,
 				4E99CE7398A3BA54F4202DB5 /* WidgetConfigurationAppIntentsTests.swift */,
 				6C84584F7A18675D8A2E8A81 /* WidgetProviderSelectionTests.swift */,
@@ -1640,6 +1643,7 @@
 				82BAB6D1CB5A6925CAE1E37C /* V082RenderTests.swift in Sources */,
 				5ED16D5A7BEC1276D73A9C03 /* V082SyncMetadataTests.swift in Sources */,
 				26AC46B00EDA26107412B467 /* ViewCacheIdentityTests.swift in Sources */,
+				38564375BBC3B2CF7C2B7D49 /* WidgetAccountRoundTripTests.swift in Sources */,
 				AAD38B49F341E26428134603 /* WidgetActivityProjectionTests.swift in Sources */,
 				59EE9A6CBF65D6788166FC48 /* WidgetConfigurationAppIntentsTests.swift in Sources */,
 				42134B4609545C30FA66ECCB /* WidgetProviderSelectionTests+Fork.swift in Sources */,
