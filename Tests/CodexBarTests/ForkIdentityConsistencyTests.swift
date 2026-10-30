@@ -53,6 +53,21 @@ struct ForkIdentityConsistencyTests {
         #expect(CodexBarSync.ForkIdentity.appGroup == CodexBarCore.ForkIdentity.appGroup)
         #expect(CodexBarSync.ForkIdentity.oslogSubsystem == CodexBarCore.ForkIdentity.oslogSubsystem)
         #expect(CodexBarSync.ForkIdentity.repoSlug == CodexBarCore.ForkIdentity.repoSlug)
+        #expect(CodexBarSync.ForkIdentity.repoURL == CodexBarCore.ForkIdentity.repoURL)
+        #expect(CodexBarSync.ForkIdentity.helpURL == CodexBarCore.ForkIdentity.helpURL)
+        #expect(CodexBarSync.ForkIdentity.widgetOslogSubsystem == CodexBarCore.ForkIdentity.widgetOslogSubsystem)
+        #expect(CodexBarSync.ForkIdentity.providerZoneDidChangeNotification
+            == CodexBarCore.ForkIdentity.providerZoneDidChangeNotification)
+    }
+
+    @Test
+    func `helpURL points at the fork README that exists on mobile-dev`() {
+        let prefix = CodexBarCore.ForkIdentity.repoURL + "/blob/mobile-dev/"
+        let url = CodexBarCore.ForkIdentity.helpURL
+        #expect(url.hasPrefix(prefix))
+        let path = String(url.dropFirst(prefix.count))
+        #expect(path == ".github/README.md")
+        #expect(FileManager.default.fileExists(atPath: Self.repoRoot.appendingPathComponent(path).path))
     }
 
     @Test
