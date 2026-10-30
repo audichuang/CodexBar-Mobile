@@ -11,13 +11,16 @@
 #   --baseline <dir>  the full Mac / iOS runs pass when `comm -13 <dir>/baseline-{mac,ios}-fail.txt
 #               <this run's fail list>` is empty; without it they require zero failures.
 #   --base-tag <tag>  upstream-based fork tag the branch is rebased on
-#               (default: $FORK_BASE_TAG, else the nearest reachable v*-mobile.* tag).
+#               (default: $FORK_BASE_TAG, else the nearest reachable upstream v*-mobile.* tag, fork -audi.* tags excluded).
 # Logs: ${CODEXBAR_GATE_DIR:-~/Library/Caches/codexbar-gate}/gate-<stage>.log
 # Exit: 0 all stages passed, 1 first failing stage, 2 usage error.
 set -uo pipefail
 
 ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 cd "$ROOT_DIR"
+
+# shellcheck source=fork/gate_lib.sh
+source "$ROOT_DIR/Scripts/fork/gate_lib.sh"
 
 IOS=0
 FULL=0
@@ -40,7 +43,7 @@ if [[ -n "$BASELINE" && ! -d "$BASELINE" ]]; then
   exit 2
 fi
 if [[ -z "$BASE_TAG" ]]; then
-  BASE_TAG=$(git describe --tags --abbrev=0 --match 'v*-mobile.*' 2>/dev/null || true)
+  BASE_TAG=$(detect_base_tag)
 fi
 if [[ -z "$BASE_TAG" ]]; then
   echo "ERROR: cannot determine base tag; pass --base-tag or set FORK_BASE_TAG" >&2
@@ -71,28 +74,6 @@ stage_run() {
   fi
 }
 
-# Print failing test names the way the baseline files were produced.
-mac_fail_list() { grep -E '✘ Test .* failed|Test [Cc]ase .* failed' "$1" | sed -E 's/ (after|\().*//' | sort -u; }
-ios_fail_list() { grep -E 'Test [Cc]ase .* failed|✘ Test .* failed' "$1" | sed -E 's/ (after|on |\().*//' | sort -u; }
-
-# Compare a failure list against its baseline file, or require it to be empty.
-check_new_failures() {
-  local label=$1 list=$2 base=${3:-} new
-  if [[ -n "$base" ]]; then
-    [[ -f "$base" ]] || { echo "baseline file missing: $base"; return 1; }
-    # The "Test run with N tests ... failed" summary line changes whenever tests are added; drop it.
-    new=$(comm -13 <(grep -v 'Test run with' "$base") <(grep -v 'Test run with' "$list"))
-  else
-    new=$(grep -v 'Test run with' "$list")
-  fi
-  if [[ -n "$new" ]]; then
-    echo "$label: new failing tests:"
-    echo "$new"
-    return 1
-  fi
-  echo "$label: no new failures ($(wc -l <"$list" | tr -d ' ') failing, baseline-tolerated)"
-}
-
 s_conflict_markers() {
   if git grep -nE '^(<<<<<<<|>>>>>>>)' -- ':!*.md'; then
     echo "conflict markers found"
@@ -108,11 +89,12 @@ s_identity_and_guards() {
     Scripts/test_fork_readme_guard.sh &&
     Scripts/test_package_signing.sh &&
     Scripts/test_package_signing_fork.sh &&
-    Scripts/test_release_mac_workflow.sh
+    Scripts/test_release_mac_workflow.sh &&
+    Scripts/fork/test_fork_sync_gate.sh
 }
 
 s_footprint() {
-  Scripts/fork/check_footprint.sh "$BASE_TAG" && Scripts/fork/test_check_footprint.sh
+  Scripts/fork/check_footprint.sh "$BASE_TAG" && Scripts/fork/test_check_footprint.sh "$BASE_TAG"
 }
 
 s_generated_files() {
@@ -198,11 +180,7 @@ s_mac_full() {
   "${SWIFT[@]}" test >"$log" 2>&1
   local rc=$?
   mac_fail_list "$log" >"$list"
-  if [[ $rc -ne 0 && ! -s "$list" && -z "$BASELINE" ]]; then
-    echo "swift test exited $rc without a parsable failure (see $log)"
-    return 1
-  fi
-  check_new_failures "mac" "$list" "${BASELINE:+$BASELINE/baseline-mac-fail.txt}"
+  check_test_outcome "mac" "$rc" "$list" "${BASELINE:+$BASELINE/baseline-mac-fail.txt}" "$log"
 }
 
 s_ios_tests() {
@@ -215,7 +193,7 @@ s_ios_tests() {
     echo "xcodebuild produced no test verdict (exit $rc, see $log)"
     return 1
   fi
-  check_new_failures "ios" "$list" "${BASELINE:+$BASELINE/baseline-ios-fail.txt}"
+  check_test_outcome "ios" "$rc" "$list" "${BASELINE:+$BASELINE/baseline-ios-fail.txt}" "$log"
 }
 
 echo "fork gate: base=$BASE_TAG tier=$([[ $FULL -eq 1 ]] && echo full || echo fast)$([[ $IOS -eq 1 && $FULL -eq 0 ]] && echo +ios) logs=$GATE_DIR"
