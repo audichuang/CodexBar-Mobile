@@ -182,7 +182,7 @@ s_mac_full() {
   local py=/opt/homebrew/bin/python3.15
   [[ -x "$py" ]] || py=python3
   CODEXBAR_SWIFT_SCRATCH=${CODEXBAR_SWIFT_SCRATCH:-$HOME/Library/Caches/codexbar-swift-scratch} \
-  GATE_PY=$py GATE_SWIFT="$ROOT_DIR/fork/swift_scratch.sh" GATE_GROUPS="$ROOT_DIR/fork/gate_mac_groups.py" \
+  GATE_PY=$py GATE_SWIFT="$ROOT_DIR/Scripts/fork/swift_scratch.sh" GATE_GROUPS="$ROOT_DIR/Scripts/fork/gate_mac_groups.py" \
     bash -c 'source Scripts/test_environment.sh; exec "$GATE_PY" "$GATE_GROUPS" "$GATE_SWIFT" 12 180' >"$log" 2>&1
   local rc=$?
   mac_fail_list "$log" >"$list"

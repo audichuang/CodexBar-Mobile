@@ -31,6 +31,11 @@ def main() -> int:
         if code != 0:
             print(f"Group {index} failed with exit code {code}; retrying group once", flush=True)
             code = runner.run_group(group, timeout, command)
+        # Leave a line gate_lib.sh's CRASH_MARKER_RE matches, so a killed group cannot hide behind another group's known failure.
+        if code < 0:
+            print(f"Exited with unexpected signal code {-code} (group {index})", flush=True)
+        elif code == 124:
+            print(f"::warning::Command timed out after {timeout}s (group {index})", flush=True)
         print(f"GROUPRESULT {index} {code}", flush=True)
         if code != 0:
             bad.append(index)
