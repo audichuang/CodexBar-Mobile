@@ -1,6 +1,6 @@
 import Foundation
 
-// Fork-owned pure helpers for tracking which saves a CKSyncEngine batch has sent.
+/// Fork-owned pure helpers for tracking which saves a CKSyncEngine batch has sent.
 extension CloudSyncSnapshotMigration {
     enum SaveQueueState: Equatable {
         case notQueued
