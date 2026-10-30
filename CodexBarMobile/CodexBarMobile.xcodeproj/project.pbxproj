@@ -1087,7 +1087,6 @@
 				CED957E849BAB30E54DC1FF8 /* CodexBarMobileWidgets */,
 				40AE898ED982B754716E1841 /* CodexBarWidgetShared */,
 				2C8E2303749694E24E47B87A /* Config */,
-				E885519810099589A32096E1 /* Models */,
 				F386B1ED277BE636CCA375AD /* Shared */,
 				3C72FFB904D6F67F4C3A441A /* Products */,
 			);
@@ -1226,8 +1225,7 @@
 				A40E8BAA999D1B73115437CD /* WidgetActivityProjectionBuilder.swift */,
 				B82D201B6F52BFA4723E9A6E /* WidgetActivityPublisher.swift */,
 			);
-			name = Models;
-			path = CodexBarMobile/Models;
+			path = Models;
 			sourceTree = "<group>";
 		};
 		EF6BE6D5AF77B9CC16AAFBA3 /* Views */ = {
