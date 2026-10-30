@@ -89,7 +89,10 @@ targets:
       - path: CodexBarWidgetShared
         excludes:
           - "**/.DS_Store"
+      # Single file shared with the app target; intermediate groups keep the
+      # generated Models group from being listed under two parents (Xcode 27.2).
       - path: CodexBarMobile/Models/ProviderColorPalette.swift
+        createIntermediateGroups: true
       # AppIntent display names and WidgetKit UI strings resolve in the
       # extension bundle, so compile the main localization catalog into
       # the widget target as its source of truth.
