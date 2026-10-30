@@ -1,3 +1,4 @@
+import CodexBarSync
 import Foundation
 import WidgetKit
 
@@ -101,7 +102,7 @@ struct WidgetActivityProjection: Codable, Equatable, Sendable {
 }
 
 enum WidgetActivityStore {
-    static let groupID = "group.com.audichuang.codexbar"
+    static let groupID = ForkIdentity.appGroup
     static let filename = "widget-token-activity-v1.json"
 
     static func fileURL(fileManager: FileManager = .default) -> URL? {

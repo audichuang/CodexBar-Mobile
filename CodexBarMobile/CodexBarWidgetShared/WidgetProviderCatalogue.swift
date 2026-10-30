@@ -1,3 +1,4 @@
+import CodexBarSync
 import Foundation
 
 /// One quota window a provider reported in its latest synced snapshot
@@ -178,7 +179,7 @@ enum QuotaPaceWindowChoice {
 
 enum WidgetProviderCatalogue {
     static func fileURL() -> URL? {
-        FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.audichuang.codexbar")?
+        FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: ForkIdentity.appGroup)?
             .appendingPathComponent("widget-provider-catalogue-v1.json")
     }
 
