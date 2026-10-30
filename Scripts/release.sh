@@ -19,6 +19,7 @@ ROOT=$(cd "$(dirname "$0")/.." && pwd)
 cd "$ROOT"
 
 source "$ROOT/version.env"
+source "$ROOT/version.fork.env"
 source "$ROOT/Scripts/load-release-secrets.sh"
 source "$ROOT/Scripts/release_dsym_paths.sh"
 source "$ROOT/Scripts/sparkle_helpers.sh"
@@ -48,6 +49,7 @@ ARTIFACT_INPUTS=(
   Scripts/verify_packaged_app_launch.sh
   Scripts/sparkle_signing_paths.sh
   version.env
+  version.fork.env
 )
 
 artifact_git_commit() {
