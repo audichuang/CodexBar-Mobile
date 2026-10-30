@@ -1,10 +1,11 @@
 import AppIntents
+import CodexBarSync
 import Foundation
 import Intents
 import OSLog
 import WidgetKit
 
-private let widgetActivityLogger = Logger(subsystem: "com.audichuang.codexbar.mobile.widgets", category: "activity")
+private let widgetActivityLogger = Logger(subsystem: ForkIdentity.widgetOslogSubsystem, category: "activity")
 
 enum WidgetActivityTimeline {
     static func sourceID(_ choice: TokenActivitySource) -> String {

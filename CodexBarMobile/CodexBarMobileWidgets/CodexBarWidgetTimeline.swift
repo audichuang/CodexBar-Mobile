@@ -41,7 +41,7 @@ struct CodexBarWidgetProvider: AppIntentTimelineProvider {
     {
         let now = Date()
         #if DEBUG
-        Logger(subsystem: "com.audichuang.codexbar.mobile.widgets", category: "overview").notice(
+        Logger(subsystem: ForkIdentity.widgetOslogSubsystem, category: "overview").notice(
             "Overview configuration count: \(configuration.providers?.count ?? 0, privacy: .public)")
         #endif
         #if targetEnvironment(simulator)
