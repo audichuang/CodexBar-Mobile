@@ -31,15 +31,6 @@ struct WidgetProviderWindowRecord: Codable, Hashable, Sendable {
     }
 }
 
-/// One account of a provider in its latest synced snapshot, for the provider
-/// quota widget's account picker.
-struct WidgetProviderAccountRecord: Codable, Hashable, Sendable {
-    /// The account part of the widget summary id (`<providerID>|<key>`).
-    let key: String
-    /// Short name shown in the picker, as the widget labels accounts.
-    let label: String?
-}
-
 struct WidgetProviderRecord: Codable, Hashable, Sendable {
     let id: String
     let name: String
@@ -199,8 +190,8 @@ enum WidgetProviderCatalogue {
     }
 
     /// One record per provider id, sorted by name. Several accounts of one
-    /// provider contribute the union of their windows and accounts in
-    /// first-seen order.
+    /// provider contribute the union of their windows (and accounts, see
+    /// `withMergedAccounts`) in first-seen order.
     static func merged(_ providers: [WidgetProviderRecord]) -> [WidgetProviderRecord] {
         var order: [String] = []
         var byID: [String: WidgetProviderRecord] = [:]
@@ -210,26 +201,17 @@ enum WidgetProviderCatalogue {
                 byID[provider.id] = provider
                 continue
             }
-            var windows = existing.windows
-            var defaultWindowID = existing.defaultWindowID
-            if let extra = provider.windows {
-                var seen = Set(windows?.map(\.id) ?? [])
-                windows = (windows ?? []) + extra.filter { seen.insert($0.id).inserted }
-                defaultWindowID = defaultWindowID ?? provider.defaultWindowID
-            }
-            var accounts = existing.accounts
-            if let extra = provider.accounts {
-                var seen = Set(accounts?.map(\.key) ?? [])
-                accounts = (accounts ?? []) + extra.filter { seen.insert($0.key).inserted }
-            }
+            guard let extra = provider.windows else { continue }
+            var windows = existing.windows ?? []
+            var seen = Set(windows.map(\.id))
+            windows += extra.filter { seen.insert($0.id).inserted }
             byID[provider.id] = WidgetProviderRecord(
                 id: existing.id,
                 name: existing.name,
                 windows: windows,
-                defaultWindowID: defaultWindowID,
-                accounts: accounts)
+                defaultWindowID: existing.defaultWindowID ?? provider.defaultWindowID)
         }
-        return order.compactMap { byID[$0] }
+        return self.withMergedAccounts(order.compactMap { byID[$0] }, from: providers)
             .sorted { $0.name.localizedStandardCompare($1.name) == .orderedAscending }
     }
 }
