@@ -15,6 +15,7 @@ cd "$TMP"
 git init -q
 mkdir -p Scripts App Sources
 cp "$SCRIPT" Scripts/apply_fork_identity.sh
+cp "$(dirname "$SCRIPT")/fork_identity_excludes.txt" Scripts/fork_identity_excludes.txt
 cp "$REPO_ROOT/.swiftformat" .swiftformat
 # 119 columns before the rewrite, 122 after: the rewrite must re-wrap it.
 cat > Sources/Long.swift <<'SWIFT'
@@ -67,5 +68,12 @@ cp -R App /tmp/_app.$$
 SWIFTFORMAT_BIN="$SWIFTFORMAT_BIN" bash Scripts/apply_fork_identity.sh >/dev/null
 check diff -r /tmp/_app.$$ App >/dev/null
 rm -rf /tmp/_app.$$
+
+# --check: clean tree passes; a stray upstream string fails and nothing is written.
+check bash Scripts/apply_fork_identity.sh --check >/dev/null
+printf 'static let id = "group.com.o1xhack.codexbar"\n' > App/Stray.swift
+git add App/Stray.swift
+if bash Scripts/apply_fork_identity.sh --check >/dev/null 2>&1; then echo "FAIL: --check missed a stray identity string"; fail=1; fi
+check grep -q 'group.com.o1xhack.codexbar' App/Stray.swift
 
 if [[ $fail -eq 0 ]]; then echo "PASS: apply_fork_identity"; else echo "FAILED: apply_fork_identity"; exit 1; fi

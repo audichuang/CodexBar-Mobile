@@ -1,0 +1,17 @@
+# Tracked files that Scripts/apply_fork_identity.sh must not rewrite and that
+# Scripts/test_fork_identity.sh does not scan for upstream identity strings.
+# One shell glob per line (matched against the repo-relative path; `*` also
+# matches `/`). Blank lines and lines starting with `#` are ignored.
+Scripts/apply_fork_identity.sh
+Scripts/test_apply_fork_identity.sh
+Scripts/test_fork_identity.sh
+*.md
+Archive/*
+appcast.xml
+CodexBarMobile/Research/*
+release-notes/*
+CHANGELOG*
+*/CHANGELOG*
+CodexBarMobile/AppStoreMetadata/*
+.github/FUNDING.yml
+*.xcstrings

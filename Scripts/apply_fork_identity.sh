@@ -1,13 +1,33 @@
 #!/usr/bin/env bash
 # Rewrite the upstream (o1xhack) signing/bundle/container/repo identity to this fork's owner.
 # Idempotent: safe to re-run after every merge from upstream.
+# Usage: apply_fork_identity.sh [--check]
+#   --check  read-only: list files that would change and exit 1 if any (no writes).
+# Files it never touches are listed in Scripts/fork_identity_excludes.txt.
 # Author credits (x.com/o1xhack, @o1xhack, o1xhack@gmail.com, *.o1xhack.com, telegram-watch,
 # "Yuxiao" credit text) and history/marketing files are intentionally left alone.
 set -euo pipefail
 
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 cd "$ROOT"
-SELF="Scripts/apply_fork_identity.sh"
+EXCLUDES_FILE="Scripts/fork_identity_excludes.txt"
+
+CHECK=0
+case "${1:-}" in
+  "") ;;
+  --check) CHECK=1 ;;
+  *) echo "usage: $0 [--check]" >&2; exit 2 ;;
+esac
+
+EXCLUDES=()
+while IFS= read -r pattern || [[ -n "$pattern" ]]; do
+  [[ -z "$pattern" || "$pattern" == \#* ]] && continue
+  EXCLUDES+=("$pattern")
+done < "$EXCLUDES_FILE"
+if (( ${#EXCLUDES[@]} == 0 )); then
+  echo "apply_fork_identity: no patterns in $EXCLUDES_FILE" >&2
+  exit 1
+fi
 
 SPARKLE_OLD='eBPpE8Yx+2Dbl/viiieSBqdfSC8t20g657Dgas+Xw3o='
 SPARKLE_NEW='Ap5ROjdeTY0W74UZvHhNXUquirI11sGKZBBr+g8yu2M='
@@ -21,8 +41,11 @@ export SPARKLE_OLD SPARKLE_NEW
 # raw "#...#" strings, unicode escapes. A key containing both an identity string and one of
 # those stays rewritable (and is then caught by Scripts/audit_localized_keys.py).
 KEYS_FILE=$(mktemp)
-trap 'rm -f "$KEYS_FILE"' EXIT
+# --check writes the would-be rewrite here and compares it with the original instead of editing in place.
+OUT_FILE=$(mktemp)
+trap 'rm -f "$KEYS_FILE" "$OUT_FILE"' EXIT
 export KEYS_FILE
+if (( CHECK )); then PERL_EDIT=-p; else PERL_EDIT=-pi; fi
 git ls-files -z '*.xcstrings' | python3 -I -c '
 import json, re, sys
 ident = re.compile(r"o1xhack|3TUERHN53E|Yuxiao Wang|" + re.escape("eBPpE8Yx+2Dbl/viiieSBqdfSC8t20g657Dgas+Xw3o="))
@@ -45,9 +68,10 @@ changed=0
 swift_changed=()
 while IFS= read -r f; do
   [[ -f "$f" && ! -L "$f" ]] || continue
-  case "$f" in
-    "$SELF"|Scripts/test_apply_fork_identity.sh|*.md|Archive/*|appcast.xml|CodexBarMobile/Research/*|release-notes/*|CHANGELOG*|*/CHANGELOG*|CodexBarMobile/AppStoreMetadata/*|.github/FUNDING.yml|*.xcstrings) continue ;;
-  esac
+  for pattern in "${EXCLUDES[@]}"; do
+    # shellcheck disable=SC2053
+    [[ "$f" == $pattern ]] && continue 2
+  done
   # Skip binary files.
   grep -Iq . "$f" 2>/dev/null || continue
   before=$(cksum < "$f")
@@ -56,7 +80,7 @@ while IFS= read -r f; do
     *) owner=0 ;;
   esac
   # Catalog-key literals are swapped for placeholders, rewritten around, then restored.
-  OWNER_RULES=$owner perl -pi -e '
+  OWNER_RULES=$owner perl "$PERL_EDIT" -e '
     BEGIN {
       open(my $kf, "<", $ENV{KEYS_FILE}) or die "keys: $!";
       chomp(@keys = <$kf>);
@@ -78,10 +102,10 @@ while IFS= read -r f; do
       s/"login":"o1xhack"/"login":"audichuang"/g;
     }
     s/\x01(\d+)\x02/"$keys[$1]"/g;
-  ' "$f"
-  after=$(cksum < "$f")
+  ' "$f" > "$OUT_FILE"
+  if (( CHECK )); then after=$(cksum < "$OUT_FILE"); else after=$(cksum < "$f"); fi
   if [[ "$before" != "$after" ]]; then
-    echo "changed: $f"
+    if (( CHECK )); then echo "would change: $f"; else echo "changed: $f"; fi
     changed=$((changed + 1))
     case "$f" in
       Sources/*.swift|Tests/*.swift) swift_changed+=("$f") ;;
@@ -92,6 +116,14 @@ done < <(git ls-files)
 # Longer replacement strings can push a line past the formatter's width, which
 # the macOS CI lint (swiftformat Sources Tests --lint) rejects. Reformat what we
 # touched with the repo's pinned SwiftFormat so the rewrite stays lint-clean.
+if (( CHECK )); then
+  if (( changed > 0 )); then
+    echo "apply_fork_identity --check: $changed file(s) need Scripts/apply_fork_identity.sh" >&2
+    exit 1
+  fi
+  echo "apply_fork_identity --check: clean"
+  exit 0
+fi
 if (( ${#swift_changed[@]} > 0 )); then
   SWIFTFORMAT_BIN="${SWIFTFORMAT_BIN:-.build/lint-tools/bin/swiftformat}"
   if [[ ! -x "$SWIFTFORMAT_BIN" ]]; then
