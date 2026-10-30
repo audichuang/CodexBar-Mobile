@@ -1,5 +1,5 @@
 // Fork-owned identity values (audichuang fork). Referenced via configFiles in project.yml.
-// Literal values in project.yml are not yet switched over to these variables.
+// project.yml references these via $(FORK_*) variables.
 FORK_TEAM = 37HFR5V2JJ
 FORK_BUNDLE_PREFIX = com.audichuang.codexbar
 FORK_APP_GROUP = group.com.audichuang.codexbar
