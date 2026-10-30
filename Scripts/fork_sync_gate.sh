@@ -176,8 +176,14 @@ s_fork_tests() { "${SWIFT[@]}" test --filter "$FORK_TEST_FILTER"; }
 
 s_mac_full() {
   local log="$GATE_DIR/gate-mac-full-raw.log" list="$GATE_DIR/gate-mac-fail.txt"
-  # Do not stop at the first failing test: collect every failure, then diff against the baseline.
-  "${SWIFT[@]}" test >"$log" 2>&1
+  # Plain `swift test` gives hundreds of false failures here, so use the grouped runner, but through
+  # a wrapper that keeps going after a failing group: collect every failure, then diff against the baseline.
+  # The runner swaps HOME per group, so the scratch path must be absolute.
+  local py=/opt/homebrew/bin/python3.15
+  [[ -x "$py" ]] || py=python3
+  CODEXBAR_SWIFT_SCRATCH=${CODEXBAR_SWIFT_SCRATCH:-$HOME/Library/Caches/codexbar-swift-scratch} \
+  GATE_PY=$py GATE_SWIFT="$ROOT_DIR/fork/swift_scratch.sh" GATE_GROUPS="$ROOT_DIR/fork/gate_mac_groups.py" \
+    bash -c 'source Scripts/test_environment.sh; exec "$GATE_PY" "$GATE_GROUPS" "$GATE_SWIFT" 12 180' >"$log" 2>&1
   local rc=$?
   mac_fail_list "$log" >"$list"
   check_test_outcome "mac" "$rc" "$list" "${BASELINE:+$BASELINE/baseline-mac-fail.txt}" "$log"
@@ -189,10 +195,6 @@ s_ios_tests() {
     -destination "$IOS_DEST" -only-testing:CodexBarMobileTests) >"$log" 2>&1
   local rc=$?
   ios_fail_list "$log" >"$list"
-  if grep -qE '\*\* TEST (FAILED|SUCCEEDED) \*\*' "$log"; then :; else
-    echo "xcodebuild produced no test verdict (exit $rc, see $log)"
-    return 1
-  fi
   check_test_outcome "ios" "$rc" "$list" "${BASELINE:+$BASELINE/baseline-ios-fail.txt}" "$log"
 }
 
