@@ -3,6 +3,7 @@ xcuserdata/
 .swiftpm/xcode/xcshareddata/
 .codexbar/config.json
 *.env
+!version.fork.env
 *.local
 .codexbar-release.local.env
 
