@@ -52,7 +52,7 @@ classify_path() {
     TestsLinux/*)
       require_linux_tests "$path" "changes Linux-only test behavior"
       ;;
-    CodexBarMobile/*|.agents/*|.github/*|docs/*|Scripts/*|*.md|appcast.xml|version.env|.mac-release.env|.gitignore|.swiftformat|.swiftlint.yml)
+    CodexBarMobile/*|.agents/*|.github/*|docs/*|Scripts/*|*.md|appcast.xml|version.env|version.fork.env|.mac-release.env|.gitignore|.swiftformat|.swiftlint.yml)
       # PRs already run portable lint and repository policy checks. iOS-only,
       # release metadata, docs, workflow and other non-runtime paths do not
       # justify cold macOS or dual-architecture Linux builds after merge.

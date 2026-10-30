@@ -110,13 +110,13 @@ jobs:
       - name: Compute version, tag and asset names
         run: |
           set -euo pipefail
-          set -a; source version.env; set +a
+          set -a; source version.env; source version.fork.env; set +a
           if [[ -z "${MARKETING_VERSION:-}" || -z "${MOBILE_VERSION:-}" ]]; then
             echo "::error::version.env must define MARKETING_VERSION and MOBILE_VERSION"
             exit 1
           fi
           if [[ -z "${FORK_PATCH:-}" ]]; then
-            echo "::error::version.env must define FORK_PATCH for fork releases"
+            echo "::error::version.fork.env must define FORK_PATCH for fork releases"
             exit 1
           fi
           SUFFIX="mobile.${MOBILE_VERSION}${FORK_PATCH:+-audi.${FORK_PATCH}}"
@@ -133,11 +133,11 @@ jobs:
           } >> "$GITHUB_ENV"
           echo "Tag: ${TAG}; asset: ${BASENAME}.zip"
           if git ls-remote --exit-code --tags origin "refs/tags/${TAG}" >/dev/null 2>&1; then
-            echo "::error::Tag ${TAG} already exists; bump FORK_PATCH in version.env"
+            echo "::error::Tag ${TAG} already exists; bump FORK_PATCH in version.fork.env"
             exit 1
           fi
           if gh release view "${TAG}" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
-            echo "::error::Release ${TAG} already exists; bump FORK_PATCH in version.env"
+            echo "::error::Release ${TAG} already exists; bump FORK_PATCH in version.fork.env"
             exit 1
           fi
 

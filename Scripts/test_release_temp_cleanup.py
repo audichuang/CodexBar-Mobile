@@ -17,6 +17,7 @@ for case,expected_exit in expected_codes.items():
   for name in ['sparkle_helpers.sh','release_dsym_paths.sh']:shutil.copy(repo/'Scripts'/name,s/name)
   (s/'load-release-secrets.sh').write_text('')
   (b/'version.env').write_text('MARKETING_VERSION=0.0.0.1\nBUILD_NUMBER=1.1\nMOBILE_VERSION=0.0.1\n')
+  (b/'version.fork.env').write_text('')
   (b/'appcast.xml').write_text('<rss><channel/></rss>')
   (b/'key').write_text('synthetic-fixture-key\n')
   for name in ['lint.sh','sign-and-notarize.sh']:
