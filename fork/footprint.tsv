@@ -39,6 +39,7 @@ CodexBarMobile/CodexBarWidgetShared/WidgetProviderCatalogue.swift	15	fork widget
 CodexBarMobile/CodexBarWidgetShared/WidgetProviderSelection.swift	77	fork widget hook (calls fork-owned +Accounts/Fork extension)
 CodexBarMobile/project.yml	51	xcodegen source: fork identity, fork source groups and Fork.xcconfig wiring
 docs/RELEASING.md	4	fork release docs adaptation
+Makefile	6	fork gate hook: fork-gate target runs Scripts/fork_sync_gate.sh
 Package.swift	7	SwiftPM wiring for fork-owned targets/sources
 Scripts/acknowledgements.py	12	fork identity adaptation of upstream release/CI script
 Scripts/changelog-to-html.sh	4	fork identity adaptation of upstream release/CI script
