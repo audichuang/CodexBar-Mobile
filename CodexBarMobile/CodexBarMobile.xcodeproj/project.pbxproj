@@ -29,6 +29,7 @@
 		0D28EE2951A26C6192D17673 /* DeviceSnapshotResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = E61A19B110DF384F7EE02BD5 /* DeviceSnapshotResolver.swift */; };
 		0D7C4FE104FBA31F17F8A591 /* AntigravityAccountSwitcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B07946DD625AF9E4DFFFAB41 /* AntigravityAccountSwitcher.swift */; };
 		0DB97648AEC3DF89867DCBD7 /* UsageQuotaDetailPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F471BA8BF41D618D14F335D4 /* UsageQuotaDetailPresentationTests.swift */; };
+		0DC0DEF46ED7126E5BF87EDC /* ForkIdentity.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40F59C9E92C2487E598A1AC /* ForkIdentity.swift */; };
 		10FEFC29978C1B22D5599BD7 /* WidgetActivityPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = B82D201B6F52BFA4723E9A6E /* WidgetActivityPublisher.swift */; };
 		11AC2379AE3CECC2ED530CEA /* CostDashboardPreferencesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7EE529EE2837EA9E2319661 /* CostDashboardPreferencesTests.swift */; };
 		134FDBBA3076DE5E1FA986F2 /* ClaudePeakHours.swift in Sources */ = {isa = PBXBuildFile; fileRef = 646750577DC086F6AB6026FD /* ClaudePeakHours.swift */; };
@@ -667,6 +668,7 @@
 		C39869539C7AAD1E71CCEDD6 /* V026SettingsTogglesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = V026SettingsTogglesTests.swift; sourceTree = "<group>"; };
 		C3CD1A8B5A71D029B3BB7E08 /* SummaryTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryTab.swift; sourceTree = "<group>"; };
 		C3D273F51CDB63F11D2E772A /* QuotaProviderListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuotaProviderListTests.swift; sourceTree = "<group>"; };
+		C40F59C9E92C2487E598A1AC /* ForkIdentity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForkIdentity.swift; sourceTree = "<group>"; };
 		C64C2DA34FBFB5523DC71C9B /* MockProviderDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockProviderDetector.swift; sourceTree = "<group>"; };
 		C6E09421163437758922CD21 /* ReportPanePlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReportPanePlan.swift; sourceTree = "<group>"; };
 		C72931072F68B14CC2BA1A37 /* SummaryModuleGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryModuleGrid.swift; sourceTree = "<group>"; };
@@ -1058,6 +1060,7 @@
 		B11456315A3C981950CDD1ED /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				C40F59C9E92C2487E598A1AC /* ForkIdentity.swift */,
 				B81A012795332305519003C2 /* iCloud */,
 				E48ACB00DD8BE4E69213E83A /* Models */,
 				40E8C082323391AE263B8168 /* Notifications */,
@@ -1786,6 +1789,7 @@
 				47E56DB489686A9CF257EA70 /* CloudSyncManager.swift in Sources */,
 				870DB32558A225B7979C5752 /* DeviceLifecycleEvent.swift in Sources */,
 				C87E63885A58161DEE788B56 /* EmailRedaction.swift in Sources */,
+				0DC0DEF46ED7126E5BF87EDC /* ForkIdentity.swift in Sources */,
 				EBE2A4618178227F342DCDF4 /* NSEInvocationLog.swift in Sources */,
 				F869D4469A5649D0357A7FE5 /* PayloadCompression.swift in Sources */,
 				90D08BDB0023F9AC882235B1 /* ProviderAccountLinkage.swift in Sources */,
