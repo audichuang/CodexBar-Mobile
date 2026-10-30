@@ -116,6 +116,7 @@ targets:
     sources:
       - path: CodexBarMobileWidgetOptions
       - path: CodexBarWidgetShared/WidgetProviderCatalogue.swift
+      - path: CodexBarWidgetShared/WidgetProviderCatalogue+Accounts.swift
       - path: CodexBarWidgetShared
         excludes:
           - "**/*.swift"
