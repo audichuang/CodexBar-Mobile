@@ -1,3 +1,4 @@
+import CodexBarSync
 import SwiftUI
 
 struct OnboardingView: View {
@@ -78,7 +79,7 @@ struct OnboardingView: View {
 
                 // Actions
                 VStack(spacing: 12) {
-                    Link(destination: URL(string: "https://github.com/audichuang/CodexBar-Mobile/releases")!) {
+                    Link(destination: URL(string: ForkIdentity.repoURL + "/releases")!) {
                         Label("Download Mac App", systemImage: "arrow.down.circle.fill")
                             .font(.headline)
                             .frame(maxWidth: .infinity)

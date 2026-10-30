@@ -120,6 +120,8 @@ targets:
         excludes:
           - "**/*.swift"
           - "**/.DS_Store"
+    dependencies:
+      - target: CodexBarSync
     configFiles:
       Debug: Config/Fork.xcconfig
       Release: Config/Fork.xcconfig
