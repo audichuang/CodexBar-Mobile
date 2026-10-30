@@ -6,11 +6,12 @@ APP_IDENTITY="Developer ID Application: Yung Chun Chuang (37HFR5V2JJ)"
 APP_BUNDLE="CodexBar.app"
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 source "$ROOT/version.env"
+source "$ROOT/version.fork.env"
 # Load CodexBar-local release secrets plus global Apple App Manager ASC creds.
 source "$ROOT/Scripts/load-release-secrets.sh"
 source "$ROOT/Scripts/package_product_paths.sh"
 source "$ROOT/Scripts/release_dsym_paths.sh"
-# FORK_PATCH (version.env) appends our own release counter: -mobile.X-audi.N.
+# FORK_PATCH (version.fork.env) appends our own release counter: -mobile.X-audi.N.
 # CFBundleShortVersionString stays ${MARKETING_VERSION}.
 RELEASE_VERSION_SUFFIX="mobile.${MOBILE_VERSION}${FORK_PATCH:+-audi.${FORK_PATCH}}"
 RELEASE_ASSET_BASENAME="${APP_NAME}-${MARKETING_VERSION}-${RELEASE_VERSION_SUFFIX}"
