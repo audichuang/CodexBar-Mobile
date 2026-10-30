@@ -12,11 +12,16 @@ ios_fail_list() { grep -E 'Test [Cc]ase .* failed|✘ Test .* failed' "$1" | sed
 
 # Compare a failure list against its baseline file, or require it to be empty.
 check_new_failures() {
-  local label=$1 list=$2 base=${3:-} new
+  local label=$1 list=$2 base=${3:-} new tmp
   if [[ -n "$base" ]]; then
     [[ -f "$base" ]] || { echo "baseline file missing: $base"; return 1; }
     # The "Test run with N tests ... failed" summary line changes whenever tests are added; drop it.
-    new=$(comm -13 <(grep -v 'Test run with' "$base") <(grep -v 'Test run with' "$list"))
+    # comm needs both inputs in one collation, so sort them here instead of trusting how they were stored.
+    tmp=$(mktemp -d)
+    grep -v 'Test run with' "$base" | LC_ALL=C sort -u >"$tmp/base"
+    grep -v 'Test run with' "$list" | LC_ALL=C sort -u >"$tmp/list"
+    new=$(LC_ALL=C comm -13 "$tmp/base" "$tmp/list")
+    rm -rf "$tmp"
   else
     new=$(grep -v 'Test run with' "$list")
   fi
@@ -69,6 +74,12 @@ check_test_outcome() {
   if grep -qE "$CRASH_MARKER_RE" "$log"; then
     echo "$label: crash or timeout marker in $log:"
     grep -E "$CRASH_MARKER_RE" "$log" | head -5
+    return 1
+  fi
+  # The grouped runner's own verdict: a signal (rc < 0) or timeout (124) is a crash even without a marker line.
+  if grep -qE '^GROUPRESULT [0-9]+ (-[0-9]+|124)$' "$log"; then
+    echo "$label: a test group was killed by a signal or timed out in $log:"
+    grep -E '^GROUPRESULT [0-9]+ (-[0-9]+|124)$' "$log" | head -5
     return 1
   fi
   check_test_completion "$label" "$log" || return 1

@@ -1,0 +1,6 @@
+✘ Test "2 Mac x 2 iPhone Today cost old-new matrix" recorded an issue with 1 argument mask → 0 at WidgetSnapshotBuilderTests.swift:908:9: Expectation failed: phoneA.todayDisplay == phoneAExpected
+✘ Test "2 Mac x 2 iPhone Today cost old-new matrix" recorded an issue with 1 argument mask → 0 at WidgetSnapshotBuilderTests.swift:909:9: Expectation failed: phoneB.todayDisplay == phoneBExpected
+✘ Test "2 Mac x 2 iPhone Today cost old-new matrix" recorded an issue with 1 argument mask → 0 at WidgetSnapshotBuilderTests.swift:910:9: Expectation failed: phoneA.widgetDisplay == phoneAExpected
+Test Suite 'All tests' failed at 2026-10-30 07:51:33.207.
+✘ Test run with 1279 tests in 85 suites failed after 9.540 seconds with 3 issues.
+** TEST FAILED **
