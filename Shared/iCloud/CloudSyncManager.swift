@@ -239,7 +239,7 @@ public final class CloudSyncManager: SyncPushing, @unchecked Sendable {
 
     #if canImport(OSLog)
     private let logger = Logger(
-        subsystem: Bundle.main.bundleIdentifier ?? "com.audichuang.codexbar",
+        subsystem: Bundle.main.bundleIdentifier ?? ForkIdentity.oslogSubsystem,
         category: "cloudkit-sync")
     #endif
 
