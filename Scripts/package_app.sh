@@ -49,6 +49,7 @@ esac
 
 # Load version info
 source "$ROOT/version.env"
+source "$ROOT/version.fork.env"
 source "$ROOT/Scripts/package_product_paths.sh"
 source "$ROOT/Scripts/sparkle_signing_paths.sh"
 
