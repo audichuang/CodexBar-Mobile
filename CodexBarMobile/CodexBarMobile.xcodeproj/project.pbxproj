@@ -521,6 +521,7 @@
 		4E99CE7398A3BA54F4202DB5 /* WidgetConfigurationAppIntentsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetConfigurationAppIntentsTests.swift; sourceTree = "<group>"; };
 		4F08974FE5ADF851E663690F /* ProviderWindowLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderWindowLabel.swift; sourceTree = "<group>"; };
 		5007E1592F72BADEFFB72A99 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		51BDB4B080E13BAB75BEB985 /* Fork.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Fork.xcconfig; sourceTree = "<group>"; };
 		523FB93D267EE1CADF39FE8F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		5252859FF3EC40069E720BD4 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/WidgetStatus.strings"; sourceTree = "<group>"; };
 		534FD5DA53F564D357F039EE /* WidgetSnapshotBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetSnapshotBuilderTests.swift; sourceTree = "<group>"; };
@@ -888,6 +889,14 @@
 			path = CodexBarMobileTests;
 			sourceTree = "<group>";
 		};
+		2C8E2303749694E24E47B87A /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				51BDB4B080E13BAB75BEB985 /* Fork.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
 		3C72FFB904D6F67F4C3A441A /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1039,6 +1048,7 @@
 				E19BB803B9B46CFF514BB388 /* CodexBarMobileWidgetOptions */,
 				CED957E849BAB30E54DC1FF8 /* CodexBarMobileWidgets */,
 				40AE898ED982B754716E1841 /* CodexBarWidgetShared */,
+				2C8E2303749694E24E47B87A /* Config */,
 				E885519810099589A32096E1 /* Models */,
 				F386B1ED277BE636CCA375AD /* Shared */,
 				3C72FFB904D6F67F4C3A441A /* Products */,
@@ -1935,6 +1945,7 @@
 /* Begin XCBuildConfiguration section */
 		1D3C76AAA001C61276685A5C /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 51BDB4B080E13BAB75BEB985 /* Fork.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = CodexBarMobileWidgets/WidgetExtension.entitlements;
@@ -1956,6 +1967,7 @@
 		};
 		25EF2E0B6B9568B5E7C0E3E0 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 51BDB4B080E13BAB75BEB985 /* Fork.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = 261;
@@ -1980,6 +1992,7 @@
 		};
 		3058CDCB711CF0F8E8463A65 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 51BDB4B080E13BAB75BEB985 /* Fork.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = CodexBarMobileWidgets/WidgetExtension.entitlements;
@@ -2122,6 +2135,7 @@
 		};
 		6BFEB4B88BC3C6965FB2D5BE /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 51BDB4B080E13BAB75BEB985 /* Fork.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2139,6 +2153,7 @@
 		};
 		79FAE4DDA0D68A648138747C /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 51BDB4B080E13BAB75BEB985 /* Fork.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2156,6 +2171,7 @@
 		};
 		883B4F450889FA6A99BE0C73 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 51BDB4B080E13BAB75BEB985 /* Fork.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = CodexBarMobilePushExtension/PushExtension.entitlements;
 				CURRENT_PROJECT_VERSION = 261;
@@ -2176,6 +2192,7 @@
 		};
 		9829FFD154D18714920E58E9 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 51BDB4B080E13BAB75BEB985 /* Fork.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = CodexBarMobileWidgetOptions/WidgetOptions.entitlements;
@@ -2197,6 +2214,7 @@
 		};
 		A086DDCAC990129CC320BB8B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 51BDB4B080E13BAB75BEB985 /* Fork.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = CodexBarMobile/CodexBarMobile.entitlements;
@@ -2218,6 +2236,7 @@
 		};
 		A3CB79165A707B5CBD8FC803 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 51BDB4B080E13BAB75BEB985 /* Fork.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2235,6 +2254,7 @@
 		};
 		ACC2C65F67920391171946C9 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 51BDB4B080E13BAB75BEB985 /* Fork.xcconfig */;
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_ENTITLEMENTS = CodexBarMobileWidgetOptions/WidgetOptions.entitlements;
@@ -2256,6 +2276,7 @@
 		};
 		B06CF9DC86417E3012591574 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 51BDB4B080E13BAB75BEB985 /* Fork.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = CodexBarMobile/CodexBarMobile.entitlements;
@@ -2277,6 +2298,7 @@
 		};
 		E397FFA9C4C99D08D771062F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 51BDB4B080E13BAB75BEB985 /* Fork.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2294,6 +2316,7 @@
 		};
 		EA57092D3B891AC66A2B6F67 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 51BDB4B080E13BAB75BEB985 /* Fork.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				CURRENT_PROJECT_VERSION = 261;
@@ -2318,6 +2341,7 @@
 		};
 		EA9E1DC33C5830587AF80B8A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 51BDB4B080E13BAB75BEB985 /* Fork.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = CodexBarMobilePushExtension/PushExtension.entitlements;
 				CURRENT_PROJECT_VERSION = 261;
