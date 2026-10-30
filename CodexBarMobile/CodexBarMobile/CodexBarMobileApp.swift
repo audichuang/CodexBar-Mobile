@@ -70,7 +70,7 @@ extension Notification.Name {
     /// per-provider zone. `SyncedUsageData` listens and triggers its
     /// cache-based incremental refresh (Research/011 v2).
     static let codexBarProviderZoneDidChange = Notification.Name(
-        "com.audichuang.codexbar.providerZoneDidChange")
+        ForkIdentity.providerZoneDidChangeNotification)
 }
 
 // MARK: - AppDelegate
