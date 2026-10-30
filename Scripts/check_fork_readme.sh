@@ -3,7 +3,7 @@
 set -euo pipefail
 
 ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
-README_PATH=${CODEXBAR_FORK_README_PATH:-"$ROOT_DIR/README.md"}
+README_PATH=${CODEXBAR_FORK_README_PATH:-"$ROOT_DIR/.github/README.md"}
 EXPECTED_SHA256="bfa705b07f26877d3786994a72d28e1669a053c9b0e44cfbd3079c691bd1f9c0"
 
 sha256_file() {
@@ -24,8 +24,8 @@ fi
 
 actual_sha256=$(sha256_file "$README_PATH")
 if [[ "$actual_sha256" != "$EXPECTED_SHA256" ]]; then
-  echo "ERROR: README.md differs from the reviewed fork-owned version." >&2
-  echo "       During an upstream merge, keep README.md exactly from the fork/mobile-dev side." >&2
+  echo "ERROR: .github/README.md differs from the reviewed fork-owned version." >&2
+  echo "       During an upstream rebase, keep .github/README.md exactly from the fork/mobile-dev side." >&2
   echo "       Do not update EXPECTED_SHA256 merely to accept the upstream README wholesale." >&2
   echo "       After separately auditing upstream facts, review any intentional fork README edit and this hash together." >&2
   exit 1
