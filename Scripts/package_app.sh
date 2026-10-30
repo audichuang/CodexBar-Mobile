@@ -50,6 +50,7 @@ esac
 # Load version info
 source "$ROOT/version.env"
 source "$ROOT/version.fork.env"
+source "$ROOT/Scripts/fork/package_app_fork.sh"
 source "$ROOT/Scripts/package_product_paths.sh"
 source "$ROOT/Scripts/sparkle_signing_paths.sh"
 
@@ -148,51 +149,8 @@ path.write_text(text)
 PY
 }
 
-# Validate the CloudKit provisioning profile before compiling anything.
-# Release + real-signed builds claim CloudKit and push entitlements, so the
-# embedded profile must authorize them (app id, team, aps-environment=production,
-# CloudKit, iCloud container, unexpired). Fail loud here instead of shipping a
-# bundle that AMFI rejects or that never receives CloudKit change pushes.
-PROVISION_PROFILE="$ROOT/Provisioning/CodexBar_Dev.provisionprofile"
-if [[ "${CONF}" == "release" && "${SIGNING_MODE:-}" != "adhoc" ]]; then
-  if [[ ! -f "$PROVISION_PROFILE" ]]; then
-    echo "FATAL: provisioning profile not found at $PROVISION_PROFILE" >&2
-    echo "" >&2
-    echo "  This file is gitignored and local-only. In a worktree or fresh" >&2
-    echo "  checkout, copy it from the main repo:" >&2
-    echo "    cp -R <main-repo>/Provisioning $ROOT/" >&2
-    echo "" >&2
-    echo "  Without it the bundle ships missing Contents/embedded.provisionprofile" >&2
-    echo "  and AMFI rejects the binary at launch (POSIX 163), even though" >&2
-    echo "  codesign / spctl / notarization / stapler all pass." >&2
-    echo "  Enable Push Notifications on the App ID and regenerate the Developer ID profile." >&2
-    exit 1
-  fi
-  python3 "$ROOT/Scripts/validate_cloudkit_profile.py" "$PROVISION_PROFILE" \
-    "${APP_TEAM_ID:-37HFR5V2JJ}.com.audichuang.codexbar"
-fi
-
-KEYBOARD_SHORTCUTS_UTIL="$ROOT/.build/checkouts/KeyboardShortcuts/Sources/KeyboardShortcuts/Utilities.swift"
-KEYBOARD_SHORTCUTS_CHECKOUT="$ROOT/.build/checkouts/KeyboardShortcuts"
-# Always resolve before compiling, and from a clean checkout: a restored CI cache
-# can hold an older, already-patched KeyboardShortcuts. Without the reset, the
-# patch marker would skip patching and `swift build` would then move the checkout
-# to the new pin unpatched. Resolving (instead of a bootstrap `swift build`) only
-# materializes .build/checkouts, so the patch lands before the first compile.
-if [[ -d "$KEYBOARD_SHORTCUTS_CHECKOUT/.git" || -f "$KEYBOARD_SHORTCUTS_CHECKOUT/.git" ]]; then
-  git -C "$KEYBOARD_SHORTCUTS_CHECKOUT" checkout -q -- . 2>/dev/null || true
-fi
-swift package resolve
-if [[ ! -f "$KEYBOARD_SHORTCUTS_UTIL" ]]; then
-  echo "ERROR: swift package resolve did not produce $KEYBOARD_SHORTCUTS_UTIL" >&2
-  exit 1
-fi
-# Idempotent: skips a checkout that already carries the keyboardShortcutsSafeBundle patch.
-patch_keyboard_shortcuts
-if ! grep -q "keyboardShortcutsSafeBundle" "$KEYBOARD_SHORTCUTS_UTIL"; then
-  echo "ERROR: KeyboardShortcuts is not patched (keyboardShortcutsSafeBundle missing in $KEYBOARD_SHORTCUTS_UTIL)" >&2
-  exit 1
-fi
+fork_validate_cloudkit_profile
+fork_prepare_keyboard_shortcuts
 
 # Resolve SwiftPM's current output path without relying on a fixed build-system layout.
 # The output variable keeps the per-arch cache in this shell instead of losing it to
@@ -321,14 +279,6 @@ elif [[ "$SIGNING_MODE" != "adhoc" ]]; then
     NEEDS_GET_TASK_ALLOW=1
   fi
 fi
-# CloudKit change pushes need the macOS push entitlement; only release identity
-# builds embed a profile validated to authorize it.
-APS_ENTITLEMENT_KEYS=""
-if [[ "$LOWER_CONF" == "release" && "$INCLUDE_SHARED_ENTITLEMENTS" == "1" && "$BUNDLE_ID" != *".debug"* ]]; then
-  APS_ENTITLEMENT_KEYS="    <key>com.apple.developer.aps-environment</key>
-    <string>production</string>
-"
-fi
 cat > "$APP_ENTITLEMENTS" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -355,7 +305,7 @@ cat > "$APP_ENTITLEMENTS" <<PLIST
     </array>
     <key>com.apple.developer.icloud-container-environment</key>
     <string>Production</string>
-${APS_ENTITLEMENT_KEYS}
+$(fork_aps_entitlement_keys)
 EOF
 fi)
     $(if [[ "$NEEDS_GET_TASK_ALLOW" == "1" ]]; then echo "    <key>com.apple.security.get-task-allow</key>
@@ -771,13 +721,27 @@ if [[ -d "${APP}/Contents/PlugIns/CodexBarWidget.appex" ]]; then
     "$APP/Contents/PlugIns/CodexBarWidget.appex"
 fi
 
-# Embed provisioning profile (validated before compilation above).
+# Embed provisioning profile.
 # REQUIRED for release + real-signed builds: app entitlements include
 # com.apple.application-identifier, which AMFI checks at launch against
 # the embedded profile. A bundle without this file passes codesign /
 # spctl / notarization / stapler but fails to launch with "Launchd job
-# spawn failed" (POSIX 163).
+# spawn failed" (POSIX 163). Fail loud here instead of shipping a
+# broken bundle that only breaks on the user's Mac.
+PROVISION_PROFILE="$ROOT/Provisioning/CodexBar_Dev.provisionprofile"
 if [[ "${CONF}" == "release" && "${SIGNING_MODE:-}" != "adhoc" ]]; then
+  if [[ ! -f "$PROVISION_PROFILE" ]]; then
+    echo "FATAL: provisioning profile not found at $PROVISION_PROFILE" >&2
+    echo "" >&2
+    echo "  This file is gitignored and local-only. In a worktree or fresh" >&2
+    echo "  checkout, copy it from the main repo:" >&2
+    echo "    cp -R <main-repo>/Provisioning $ROOT/" >&2
+    echo "" >&2
+    echo "  Without it the bundle ships missing Contents/embedded.provisionprofile" >&2
+    echo "  and AMFI rejects the binary at launch (POSIX 163), even though" >&2
+    echo "  codesign / spctl / notarization / stapler all pass." >&2
+    exit 1
+  fi
   cp "$PROVISION_PROFILE" "$APP/Contents/embedded.provisionprofile"
 elif [[ -f "$PROVISION_PROFILE" ]]; then
   # Adhoc / debug builds: embed best-effort if available, do not fail.
