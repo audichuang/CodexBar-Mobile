@@ -17,9 +17,16 @@ struct WidgetAccountRoundTripTests {
     private var providers: [ProviderUsageSnapshot] {
         func claude(_ email: String?, label: String?) -> ProviderUsageSnapshot {
             ProviderUsageSnapshot(
-                providerID: "claude", providerName: "Claude",
-                primary: nil, secondary: nil, accountEmail: email, loginMethod: nil,
-                statusMessage: nil, isError: false, lastUpdated: self.now, accountLabel: label)
+                providerID: "claude",
+                providerName: "Claude",
+                primary: nil,
+                secondary: nil,
+                accountEmail: email,
+                loginMethod: nil,
+                statusMessage: nil,
+                isError: false,
+                lastUpdated: self.now,
+                accountLabel: label)
         }
         return [
             claude("work@example.com", label: "Work"),
@@ -126,13 +133,22 @@ struct WidgetAccountRoundTripTests {
         let window = { (id: String) in WidgetProviderWindowRecord(id: id, label: id, windowMinutes: 10080) }
         let merged = WidgetProviderCatalogue.merged([
             WidgetProviderRecord(
-                id: "claude", name: "Claude", windows: [window("primary")], defaultWindowID: nil,
+                id: "claude",
+                name: "Claude",
+                windows: [window("primary")],
+                defaultWindowID: nil,
                 accounts: [.init(key: "a", label: "a")]),
             WidgetProviderRecord(
-                id: "claude", name: "Claude", windows: [window("primary"), window("secondary")],
-                defaultWindowID: "secondary", accounts: [.init(key: "b", label: "b")]),
+                id: "claude",
+                name: "Claude",
+                windows: [window("primary"), window("secondary")],
+                defaultWindowID: "secondary",
+                accounts: [.init(key: "b", label: "b")]),
             WidgetProviderRecord(
-                id: "claude", name: "Claude", windows: [window("tertiary")], defaultWindowID: "tertiary",
+                id: "claude",
+                name: "Claude",
+                windows: [window("tertiary")],
+                defaultWindowID: "tertiary",
                 accounts: [.init(key: "a", label: "a")]),
         ])
         #expect(merged.count == 1)
