@@ -18,12 +18,12 @@ source = Path(sys.argv[1]).read_text()
 start = source.index('BUNDLE_ID="com.audichuang.codexbar"')
 end = source.index('BUILD_TIMESTAMP=', start)
 generation = source[start:end]
-assert source.index('validate_cloudkit_profile.py') < source.index('  swift build'), 'profile must be checked before compilation'
+fork_script = Path(sys.argv[1]).parent / 'fork/package_app_fork.sh'
+assert 'validate_cloudkit_profile.py' in fork_script.read_text()
+assert source.index('\nfork_validate_cloudkit_profile\n') < source.index('  swift build'), 'profile must be checked before compilation'
+validation = f'source "{fork_script}"\nfork_validate_cloudkit_profile'
 start = source.index('PROVISION_PROFILE="$ROOT/Provisioning/CodexBar_Dev.provisionprofile"')
 end = source.index('\nfi', start) + len('\nfi')
-validation = source[start:end]
-start = source.index('if [[ "${CONF}" == "release" && "${SIGNING_MODE:-}" != "adhoc" ]]; then\n  cp ')
-end = source.index('\nfi', source.index('elif [[ -f "$PROVISION_PROFILE" ]]', start)) + len('\nfi')
 embedding = source[start:end]
 
 profile_cases = ['production', 'missing-push', 'development', 'expired', 'wrong-app', 'wrong-team',
