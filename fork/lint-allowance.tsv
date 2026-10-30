@@ -1,0 +1,11 @@
+# Lint debt the fork carries over the base tag: rule<TAB>extra violations tolerated<TAB>reason.
+# The fork-gate lint stage fails when a rule exceeds (base tag count + allowance). Lower these as the debt is paid.
+(blankLinesAtEndOfScope)	1	fork code pending cleanup
+(large_tuple)	1	fork code pending cleanup
+(line_length)	5	fork code pending cleanup
+(multiline_arguments)	19	fork code pending cleanup
+(noForceUnwrapInTests)	12	fork test files pending cleanup
+(wrap)	5	fork code pending cleanup
+(wrapIfExpressionBodies)	4	fork code pending cleanup
+(wrapLoopBodies)	4	fork code pending cleanup
+(wrapMultilineStatementBraces)	1	fork code pending cleanup

@@ -4,7 +4,7 @@ SHELL := /bin/bash
 unexport FILTER
 test_filter_arg = $(if $(value FILTER),--filter '$(subst ','"'"',$(value FILTER))')
 
-.PHONY: build check docs-list format lint release restart start start-debug start-release stop test test-fast test-skip-build test-live test-tty
+.PHONY: build check docs-list fork-gate format lint release restart start start-debug start-release stop test test-fast test-skip-build test-live test-tty
 
 start:
 	./Scripts/compile_and_run.sh
@@ -27,6 +27,10 @@ check lint:
 
 format:
 	./Scripts/lint.sh format
+
+# Fork upstream-sync gate; pass flags with ARGS, e.g. make fork-gate ARGS='--ios --baseline DIR'.
+fork-gate:
+	./Scripts/fork_sync_gate.sh $(ARGS)
 
 docs-list:
 	node Scripts/docs-list.mjs
