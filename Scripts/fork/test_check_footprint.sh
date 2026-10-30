@@ -4,8 +4,10 @@ set -euo pipefail
 
 ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
 CHECK="$ROOT_DIR/Scripts/fork/check_footprint.sh"
-BASE=${1:-v0.82.0.1-mobile.3.2.0}
 cd "$ROOT_DIR"
+# Base tag: $1, else $FORK_BASE_TAG, else the nearest upstream-based tag (fork -audi.* tags excluded).
+BASE=${1:-${FORK_BASE_TAG:-$(git describe --tags --abbrev=0 --match 'v*-mobile.*' --exclude '*-audi.*' 2>/dev/null || true)}}
+[[ -n "$BASE" ]] || { echo "ERROR: cannot determine base tag; pass it as \$1 or set FORK_BASE_TAG" >&2; exit 2; }
 
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT

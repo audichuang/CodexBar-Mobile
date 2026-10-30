@@ -127,6 +127,21 @@ done < <(git ls-files)
 leaks=$(printf '%s\0' "${scan[@]}" | xargs -0 grep -lIE -e "$UPSTREAM_TEAM" -e 'com\.o1xhack\.(codexbar|CodexBar)' -e "$SPARKLE_OLD_RE" | tr '\n' ' ' || true)
 check "upstream identity (o1xhack team/bundle/Sparkle key) found in: $leaks" test -z "$leaks"
 
+# ForkIdentity constants: the Mac (Core) and iOS (Shared) copies must be identical, and helpURL must point at a file
+# that exists on mobile-dev (the fork README is .github/README.md; the root README.md is upstream's).
+CORE_ID=Sources/CodexBarCore/Sync/ForkIdentity.swift
+SHARED_ID=Shared/ForkIdentity.swift
+check "ForkIdentity copies differ ($CORE_ID vs $SHARED_ID)" diff -q <(grep 'static let' "$CORE_ID") <(grep 'static let' "$SHARED_ID") >/dev/null
+for id_file in "$CORE_ID" "$SHARED_ID"; do
+  help_url=$(sed -n 's/.*helpURL = "\(.*\)".*/\1/p' "$id_file")
+  help_path=${help_url#https://github.com/audichuang/CodexBar-Mobile/blob/mobile-dev/}
+  if [[ "$help_path" == "$help_url" || "$help_path" == README.md ]]; then
+    echo "FAIL: $id_file helpURL '$help_url' must point at the fork README (.github/README.md)"; fail=1
+  else
+    check "$id_file helpURL target $help_path is missing" test -f "$help_path"
+  fi
+done
+
 # Version files.
 for f in version.env version.fork.env; do
   patch=$(kv "$f" FORK_PATCH)
@@ -137,7 +152,7 @@ check "FORK_PATCH is set in version.env or version.fork.env" \
 UPSTREAM_VERSION=$(kv version.env UPSTREAM_VERSION)
 MARKETING_VERSION=$(kv version.env MARKETING_VERSION)
 MOBILE_VERSION=$(kv version.env MOBILE_VERSION)
-BASE_TAG=${BASE_TAG:-$(git describe --tags --abbrev=0 --match 'v*-mobile.*' 2>/dev/null || true)}
+BASE_TAG=${BASE_TAG:-$(git describe --tags --abbrev=0 --match 'v*-mobile.*' --exclude '*-audi.*' 2>/dev/null || true)}
 if [[ -z "$BASE_TAG" ]]; then
   echo "SKIP: no v*-mobile.* tag reachable from HEAD; UPSTREAM_VERSION vs base tag not checked"
 else
