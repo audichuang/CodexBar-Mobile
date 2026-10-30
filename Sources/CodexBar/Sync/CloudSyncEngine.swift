@@ -945,8 +945,8 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
     nonisolated static let containerIdentifier = CloudSyncConstants.containerIdentifier
     nonisolated static let zoneID = CKRecordZone.ID(zoneName: "CodexBarSync", ownerName: CKCurrentUserDefaultName)
 
-    private let settings: SettingsStore
-    private let state: CloudSyncState
+    let settings: SettingsStore
+    let state: CloudSyncState
     private let persistence: CloudSyncPersistence
     private nonisolated let delegateEventQueue = CloudSyncDelegateEventQueue()
     private var persistenceEnvelope: CloudSyncPersistence.Envelope
@@ -956,7 +956,6 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
     private var enabled = false
     private var configPushTask: Task<Void, Never>?
     private var snapshotPushTask: Task<Void, Never>?
-    private let snapshotSendKick = CloudSyncSnapshotSendKick()
     private var periodicFetchTask: Task<Void, Never>?
     private var fetchRecoveryCheckpoint: UInt64?
     private var pushRecoveryCheckpoint: UInt64?
@@ -970,15 +969,13 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
     private var pendingSnapshotProviderConfigRevisions: [ProviderInstanceID: UInt64] = [:]
     private var latestAcceptedSnapshotPublicationGenerations: [ProviderInstanceID: UInt64] = [:]
     private var lastSnapshotHashes: [String: String] = [:]
-    private var skippedTerminalReplacementHashes: [String: String] = [:]
-    private var pendingSaveHashes: [String: String] = [:]
+    var skippedTerminalReplacementHashes: [String: String] = [:]
+    var pendingSaveHashes: [String: String] = [:]
     /// Latest accepted producer topology, retained by provider until a newer
     /// publication for that provider arrives. Save callbacks can lag behind a
     /// subsequent topology change, so predecessor deletion must consult this
     /// set at the final destructive boundary.
     private var latestLiveSnapshotRecordNamesByProvider: [ProviderInstanceID: Set<String>] = [:]
-    private var sentSaveHashes: [String: [String]] = [:]
-    private var providedSaveHashes: [UUID: [String: String]] = [:]
     private var lastKnownProviderConfigs: [ProviderInstanceID: ProviderConfig] = [:]
     private var lastAppliedConfigurationRevision: Int
     private var lastKnownPreferences: SyncedPreferences?
@@ -991,6 +988,8 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
     private var applyGeneration = 0
     private let beforeApply: (@Sendable () async -> Void)?
     private let logger = CodexBarLog.logger(LogCategories.settings)
+    let forkSend = CloudSyncForkSend()
+    func isCurrent(syncEngine: CKSyncEngine?) -> Bool { self.enabled && self.engine === syncEngine }
 
     init(
         settings: SettingsStore,
@@ -1385,27 +1384,23 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
             }
             if !changes.savedRecords.isEmpty || !changes.deletedRecordIDs.isEmpty {
                 self.quotaRetryState.reset()
-                self.snapshotSendKick.clearBackoff()
+                self.forkSend.kick.clearBackoff()
             }
-            let supersededSaves = CloudSyncSnapshotMigration.takeSupersededSaveResults(
-                recordNames: changes.savedRecords.map(\.recordID.recordName)
-                    + changes.failedRecordSaves.map(\.record.recordID.recordName),
-                sentSaveHashes: &self.sentSaveHashes,
-                pendingSaveHashes: self.pendingSaveHashes)
-            self.applySavedRecords(changes.savedRecords, supersededSaves: supersededSaves)
+            let supersededSaves = self.takeSupersededSaves(changes)
+            for record in changes.savedRecords {
+                self.cacheSystemFields(record)
+                CloudSyncForkSend.applySaved(record, supersededSaves, &self.desiredRecords, &self.lastSnapshotHashes)
+            }
             CloudSyncDirtyState.clearSavedRecords(
                 changes.savedRecords.map(\.recordID.recordName),
                 envelope: &self.persistenceEnvelope)
             // Evaluate confirmed saves before abandoning terminal failures so a mixed batch
             // still counts a failed sibling's shared predecessor as referenced.
             self.finishConfirmedSnapshotMigrations(
-                savedRecordNames: changes.savedRecords.map(\.recordID.recordName)
-                    .filter { supersededSaves[$0] == nil },
+                savedRecordNames: CloudSyncForkSend.confirmed(changes.savedRecords, supersededSaves),
                 syncEngine: syncEngine)
             self.removeDeletedRecordsFromCaches(changes.deletedRecordIDs.map(\.recordName))
-            for failure in changes.failedRecordSaves
-                where supersededSaves[failure.record.recordID.recordName] == nil
-            {
+            for failure in CloudSyncForkSend.unsuperseded(changes.failedRecordSaves, supersededSaves) {
                 await self.handleSaveFailure(failure.record, error: failure.error, syncEngine: syncEngine)
             }
             self.handleSentRecordDeletes(
@@ -1418,12 +1413,8 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
             }
             if !self.pendingSnapshots.isEmpty {
                 Task { [weak self] in
-                    guard let self, self.enabled,
-                          CloudSyncLifecycle.isCurrentEngine(
-                              originatingEngine: ObjectIdentifier(syncEngine),
-                              currentEngine: self.engine.map(ObjectIdentifier.init))
-                    else { return }
-                    self.pushPendingSnapshots()
+                    guard self?.isCurrent(syncEngine: syncEngine) == true else { return }
+                    self?.pushPendingSnapshots()
                 }
             }
         case let .fetchedDatabaseChanges(changes):
@@ -1441,6 +1432,19 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
         syncEngine: CKSyncEngine) async -> CKSyncEngine.RecordZoneChangeBatch?
     {
         await self.makeChangeBatch(context, syncEngine: syncEngine)
+    }
+
+    private func makeChangeBatch(
+        _ context: CKSyncEngine.SendChangesContext,
+        syncEngine: CKSyncEngine) async -> CKSyncEngine.RecordZoneChangeBatch?
+    {
+        await self.makeForkChangeBatch(context, syncEngine: syncEngine)
+    }
+
+    func recordForPendingSave(_ recordID: CKRecord.ID, syncEngine: CKSyncEngine? = nil) -> CKRecord? {
+        CloudSyncBatchRecordProvider.record(for: recordID, desiredRecords: self.desiredRecords) { change in
+            syncEngine?.state.remove(pendingRecordZoneChanges: [change])
+        }
     }
 
     func applyFetchedRecords(_ records: [CKRecord], errorScope: CloudSyncErrorScope = .fetch) async {
@@ -1565,11 +1569,11 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
         syncEngine: CKSyncEngine? = nil) async
     {
         guard syncEngine == nil || (self.enabled && self.engine === syncEngine) else { return }
-        self.snapshotSendKick.postpone(for: error)
+        self.forkSend.kick.postpone(for: error)
         switch error.code {
         case .quotaExceeded:
             let retry = self.quotaRetryState.nextDelay(serverRetryAfter: error.retryAfterSeconds)
-            self.snapshotSendKick.postpone(for: error, minimumDelay: retry)
+            self.forkSend.kick.postpone(for: error, minimumDelay: retry)
             self.scheduleRetry(recordID: record.recordID, after: retry)
         case .accountTemporarilyUnavailable:
             let retry = CloudSyncSnapshotMigration.retryDelay(for: error) ?? 1
@@ -1684,13 +1688,11 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
         self.engine = nil
         self.configPushTask?.cancel()
         self.snapshotPushTask?.cancel()
-        self.snapshotSendKick.stop()
+        self.forkSend.reset()
         self.periodicFetchTask?.cancel()
         self.desiredRecords = [:]
         self.quotaRetryState.reset()
         self.pendingSaveHashes = [:]
-        self.sentSaveHashes = [:]
-        self.providedSaveHashes = [:]
         self.pendingSnapshots = []
         self.pendingSnapshotAuthoritativeProviders = []
         self.pendingSnapshotTokenAccountIDs = [:]
@@ -1808,62 +1810,6 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
 }
 
 extension CloudSyncEngine {
-    private func makeChangeBatch(
-        _ context: CKSyncEngine.SendChangesContext,
-        syncEngine: CKSyncEngine) async -> CKSyncEngine.RecordZoneChangeBatch?
-    {
-        // A retired engine's late callback must not read or record the current engine's saves.
-        guard self.enabled, self.engine === syncEngine else { return nil }
-        let changes = syncEngine.state.pendingRecordZoneChanges.filter(context.options.scope.contains)
-        let build = UUID()
-        self.providedSaveHashes[build] = [:]
-        let batch = await CKSyncEngine.RecordZoneChangeBatch(pendingChanges: changes) { [weak self] recordID in
-            guard let self else { return nil }
-            return await self.recordForPendingSave(recordID, syncEngine: syncEngine, batch: build)
-        }
-        let provided = self.providedSaveHashes.removeValue(forKey: build) ?? [:]
-        guard self.enabled, self.engine === syncEngine else { return nil }
-        // A full batch can ask for a record and then leave it out; only the records it kept are sent.
-        CloudSyncSnapshotMigration.recordSentSaveHashes(
-            batchRecordNames: batch?.recordsToSave.map(\.recordID.recordName) ?? [],
-            providedHashes: provided,
-            sentSaveHashes: &self.sentSaveHashes)
-        return batch
-    }
-
-    func recordForPendingSave(
-        _ recordID: CKRecord.ID,
-        syncEngine: CKSyncEngine? = nil,
-        batch: UUID? = nil) -> CKRecord?
-    {
-        if batch != nil {
-            guard self.enabled, self.engine === syncEngine else { return nil }
-        }
-        let record = CloudSyncBatchRecordProvider.record(for: recordID, desiredRecords: self.desiredRecords) { change in
-            syncEngine?.state.remove(pendingRecordZoneChanges: [change])
-        }
-        if record != nil, let batch, let hash = self.pendingSaveHashes[recordID.recordName] {
-            self.providedSaveHashes[batch]?[recordID.recordName] = hash
-        }
-        return record
-    }
-
-    private func applySavedRecords(_ records: [CKRecord], supersededSaves: [String: String]) {
-        for record in records {
-            self.cacheSystemFields(record)
-            if let sentHash = supersededSaves[record.recordID.recordName] {
-                // A newer payload is already queued for this record: keep it, and send it on
-                // the change tag this save returned.
-                self.lastSnapshotHashes[record.recordID.recordName] = sentHash
-                if let desired = self.desiredRecords[record.recordID] {
-                    self.desiredRecords[record.recordID] = Self.copyUserFields(from: desired, onto: record)
-                }
-            } else {
-                self.desiredRecords.removeValue(forKey: record.recordID)
-            }
-        }
-    }
-
     /// Runs inside the fetched-record apply boundary: the settings write, the snapshot
     /// reconciliation for the new configuration, and the sync bookkeeping commit together.
     private func applyProviderIntent(_ record: CKRecord) throws {
@@ -2368,27 +2314,8 @@ extension CloudSyncEngine {
         }
     }
 
-    private func scheduleSnapshotSendKick(engine: CKSyncEngine) {
-        let originatingEngine = ObjectIdentifier(engine)
-        self.snapshotSendKick.schedule { [weak self] in
-            guard let self, !self.state.status.needsAppUpdate else { return [] }
-            return CloudSyncSnapshotSendKickPolicy.snapshotRecordIDs(
-                in: engine.state.pendingRecordZoneChanges,
-                deviceID: self.settings.macFleetSyncDeviceID,
-                zoneID: Self.zoneID).filter { self.skippedTerminalReplacementHashes[$0.recordName] == nil }
-        } isCurrentEngine: { [weak self] in
-            guard let self, self.enabled else { return false }
-            return CloudSyncLifecycle.isCurrentEngine(
-                originatingEngine: originatingEngine,
-                currentEngine: self.engine.map(ObjectIdentifier.init))
-        } send: { ids in
-            try await engine.sendChanges(.init(scope: .recordIDs(ids)))
-        }
-    }
-
     private func pushPendingSnapshots() {
         guard let engine = self.engine else { return }
-        // Even an empty publication or an all-inFlight cycle must inspect CKSyncEngine's queue.
         defer { self.scheduleSnapshotSendKick(engine: engine) }
         guard !self.pendingSnapshots.isEmpty
             || !self.persistenceEnvelope.pendingSnapshotDeletes.isEmpty
@@ -2502,25 +2429,12 @@ extension CloudSyncEngine {
                     }
                     continue
                 }
-                let recordID = self.recordID(named: payload.recordName)
-                // CKSyncEngine's pending changes are the source of truth for what will be sent;
-                // `pendingSaveHashes` only remembers which payload a save carries.
-                switch CloudSyncSnapshotMigration.saveQueueState(
-                    recordName: payload.recordName,
-                    pendingSaveHashes: self.pendingSaveHashes,
-                    engineHasPendingSave: engine.state.pendingRecordZoneChanges.contains(.saveRecord(recordID)),
-                    hasUnprocessedSend: self.sentSaveHashes[payload.recordName] != nil)
-                {
-                case .inFlight:
+                if self.hasInFlightSnapshotSave(payload.recordName, engine: engine) {
                     self.persistenceEnvelope.fleetSnapshots[payload.recordName] = payload
                     stillPending.append(payload)
                     continue
-                case .orphaned:
-                    self.logger.warning("Re-queueing snapshot save CKSyncEngine no longer holds: \(payload.recordName)")
-                    self.pendingSaveHashes.removeValue(forKey: payload.recordName)
-                case .notQueued:
-                    break
                 }
+                let recordID = self.recordID(named: payload.recordName)
                 let record = self.record(type: .accountSnapshot, id: recordID)
                 record["schemaVersion"] = payload.schemaVersion as CKRecordValue
                 record["provider"] = payload.provider.rawValue as CKRecordValue
