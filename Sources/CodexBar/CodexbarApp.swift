@@ -418,7 +418,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var mobileSyncCoordinator: (any MobileSyncCoordinating)?
     private var managedCodexAccountCoordinator: ManagedCodexAccountCoordinator?
     private var codexAccountPromotionCoordinator: CodexAccountPromotionCoordinator?
-    private var cloudSyncCoordinator: CloudSyncCoordinator?
+    var cloudSyncCoordinator: CloudSyncCoordinator? // fork hook: read by AppDelegate+ForkPush.swift
     private var settingsWindowController: SettingsWindowController?
     private var pendingUpdateSettingsOpen = false
     private lazy var placeholderSettingsWindowGuard = PlaceholderSettingsWindowGuard(
@@ -582,10 +582,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         self.confettiOverlayController.dismiss()
         self.dismissAppKitWindowsForShutdown()
         self.terminateActiveProcessesForAppShutdown()
-    }
-
-    func application(_ application: NSApplication, didReceiveRemoteNotification userInfo: [String: Any]) {
-        self.cloudSyncCoordinator?.didReceiveRemoteNotification(userInfo)
     }
 
     func applicationDidBecomeActive(_ notification: Notification) {
