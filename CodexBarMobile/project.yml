@@ -41,6 +41,9 @@ targets:
         group: Shared
         excludes:
           - "**/.DS_Store"
+    configFiles:
+      Debug: Config/Fork.xcconfig
+      Release: Config/Fork.xcconfig
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.audichuang.codexbar.sync
@@ -63,6 +66,9 @@ targets:
       - path: CodexBarMobile/Localizable.xcstrings
     dependencies:
       - target: CodexBarSync
+    configFiles:
+      Debug: Config/Fork.xcconfig
+      Release: Config/Fork.xcconfig
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.audichuang.codexbar.mobile.pushextension
@@ -90,6 +96,9 @@ targets:
       - path: CodexBarMobile/Localizable.xcstrings
     dependencies:
       - target: CodexBarSync
+    configFiles:
+      Debug: Config/Fork.xcconfig
+      Release: Config/Fork.xcconfig
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.audichuang.codexbar.mobile.widgets
@@ -111,6 +120,9 @@ targets:
         excludes:
           - "**/*.swift"
           - "**/.DS_Store"
+    configFiles:
+      Debug: Config/Fork.xcconfig
+      Release: Config/Fork.xcconfig
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.audichuang.codexbar.mobile.widgetoptions
@@ -137,6 +149,9 @@ targets:
       - target: CodexBarMobilePushExtension
       - target: CodexBarMobileWidgets
       - target: CodexBarMobileWidgetOptions
+    configFiles:
+      Debug: Config/Fork.xcconfig
+      Release: Config/Fork.xcconfig
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.audichuang.codexbar.mobile
@@ -158,6 +173,9 @@ targets:
     dependencies:
       - target: CodexBarMobile
       - target: CodexBarSync
+    configFiles:
+      Debug: Config/Fork.xcconfig
+      Release: Config/Fork.xcconfig
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.audichuang.codexbar.mobile.tests
@@ -172,6 +190,9 @@ targets:
           - "**/.DS_Store"
     dependencies:
       - target: CodexBarMobile
+    configFiles:
+      Debug: Config/Fork.xcconfig
+      Release: Config/Fork.xcconfig
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.audichuang.codexbar.mobile.uitests
