@@ -150,4 +150,12 @@ else
   echo "SKIP base tag detection: fork/upstream tags not fetched"
 fi
 
+# A passing parameterized test whose argument contains "failed" prints a
+# "◇ Test case passing ... failed... started." line; it is not a failure.
+printf '%s\n' '◇ Test case passing 1 argument failedStage → 2 to "x" started.' '✔ Test run with 1 test passed after 0.1 seconds.' >"$TMP/started.log"
+for kind in mac ios; do
+  if [[ $kind == mac ]]; then n=$(mac_fail_list "$TMP/started.log" | grep -c .); else n=$(ios_fail_list "$TMP/started.log" | grep -c .); fi
+  expect "$kind fail list ignores started lines that mention failed" 0 "$n"
+done
+
 exit $fails

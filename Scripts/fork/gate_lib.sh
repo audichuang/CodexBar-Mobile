@@ -7,8 +7,8 @@ detect_base_tag() {
 }
 
 # Print failing test names the way the baseline files were produced.
-mac_fail_list() { grep -E '✘ Test .* failed|Test [Cc]ase .* failed' "$1" | sed -E 's/ (after|\().*//' | sort -u; }
-ios_fail_list() { grep -E 'Test [Cc]ase .* failed|✘ Test .* failed' "$1" | sed -E 's/ (after|on |\().*//' | sort -u; }
+mac_fail_list() { grep -E '✘ Test .* failed|Test [Cc]ase .* failed' "$1" | grep -vE '^◇| started\.$' | sed -E 's/ (after|\().*//' | sort -u; }
+ios_fail_list() { grep -E 'Test [Cc]ase .* failed|✘ Test .* failed' "$1" | grep -vE '^◇| started\.$' | sed -E 's/ (after|on |\().*//' | sort -u; }
 
 # Compare a failure list against its baseline file, or require it to be empty.
 check_new_failures() {
