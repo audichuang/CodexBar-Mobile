@@ -252,6 +252,7 @@
 		B5283E8AA416C223E2086226 /* CostGroupOrderEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF7925ED82B2D964CC98F5C1 /* CostGroupOrderEditor.swift */; };
 		B753636647F8E9B7CA4CB04A /* MoreAppsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74DC888E67DDE31A9A250104 /* MoreAppsView.swift */; };
 		B791AA587A4C35B09ADB0104 /* SyncedDailyActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F6D955B355B9CDF255AF8DB /* SyncedDailyActivityView.swift */; };
+		B7BB616784B737802A25F239 /* CodexBarSync.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D34FB83FA26B8508F5A3D9FB /* CodexBarSync.framework */; };
 		B7EC6DFB5C971047AC6D544C /* CodexBarMobileUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53728795F865E33900DA3C3 /* CodexBarMobileUITests.swift */; };
 		BA057299F72E0ADFF7E79DC0 /* V026SettingsTogglesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C39869539C7AAD1E71CCEDD6 /* V026SettingsTogglesTests.swift */; };
 		BAF8432BD40F9F09F4EA74D4 /* V079CostAuthorityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43B49C70DD8E3FC3D7DD92E /* V079CostAuthorityTests.swift */; };
@@ -364,6 +365,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 7916284950C20C9B23853D0B;
 			remoteInfo = CodexBarMobileWidgets;
+		};
+		B2B5B04A54B1CBAE306766BA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C4095294D0D55415E29FF461 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5547EC44D00232824E4A565F;
+			remoteInfo = CodexBarSync;
 		};
 		B45C5B25C6A221E251454AA0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -774,6 +782,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				07F02876676ED6B3B7B4A6AD /* CodexBarSync.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D9301EE8E9FEE7A151989054 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B7BB616784B737802A25F239 /* CodexBarSync.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1356,10 +1372,12 @@
 			buildPhases = (
 				CE3D837E36EF4FAA7024C501 /* Sources */,
 				F773F945A08E4B922F5DC471 /* Resources */,
+				D9301EE8E9FEE7A151989054 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				6043B05A7303E5B51184067A /* PBXTargetDependency */,
 			);
 			name = CodexBarMobileWidgetOptions;
 			packageProductDependencies = (
@@ -1884,6 +1902,11 @@
 			isa = PBXTargetDependency;
 			target = 9C83063937EAADDC78C3C7F9 /* CodexBarMobileWidgetOptions */;
 			targetProxy = 9E2FBC3D889AACF51A343E31 /* PBXContainerItemProxy */;
+		};
+		6043B05A7303E5B51184067A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5547EC44D00232824E4A565F /* CodexBarSync */;
+			targetProxy = B2B5B04A54B1CBAE306766BA /* PBXContainerItemProxy */;
 		};
 		70477089E5434E5DCA20E2E7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

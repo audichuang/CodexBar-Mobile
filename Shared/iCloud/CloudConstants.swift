@@ -12,7 +12,7 @@ public enum CloudSyncConstants {
     /// records still exist under the old container, just nobody reads them)
     /// and forces re-pairing across Mac + iOS. Never change without a
     /// user-migration plan.
-    public static let containerIdentifier = "iCloud.com.audichuang.codexbar"
+    public static let containerIdentifier = ForkIdentity.iCloudContainer
 
     /// The CloudKit record type for per-device usage snapshots.
     ///

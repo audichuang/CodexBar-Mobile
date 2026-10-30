@@ -1,3 +1,4 @@
+import CodexBarSync
 import Foundation
 import SwiftData
 
@@ -12,7 +13,7 @@ import SwiftData
 ///   and use explicitly reported temporary storage until the next launch.
 enum ModelContainerFactory {
     /// Shared projection group; the SwiftData store does not move here.
-    static let appGroupID = "group.com.audichuang.codexbar"
+    static let appGroupID = ForkIdentity.appGroup
 
     /// Default SQLite filename inside whichever container we land on.
     static let storeFilename = "CodexBarStore.sqlite"
