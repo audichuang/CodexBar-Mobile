@@ -129,6 +129,14 @@ These carry identity strings or fork packaging calls and nothing else. Larger fo
 | `CodexBarMobile/CodexBarWidgetShared/StatusWidgetConfigurationAdapter.swift`, `CodexBarMobile/CodexBarWidgetShared/WidgetActivityProjection.swift`, `CodexBarMobile/CodexBarWidgetShared/WidgetProviderCatalogue.swift`, `CodexBarMobile/CodexBarWidgetShared/WidgetProviderSelection.swift` | account-aware selection and catalogue (partly inline) | `WidgetProviderCatalogue+Accounts.swift` |
 | `CodexBarMobile/CodexBarWidgetShared/WidgetConfigurationAppIntents.swift` | two App Intent kind names | `WidgetConfigurationAppIntents+Account.swift` |
 
+### Upstream fixes pending PR
+
+Bug fixes in upstream-owned files meant to go upstream as a PR. When upstream merges an equivalent fix, drop the commit during the rebase (step 3) and delete its footprint rows and its entry here.
+
+| Commit | Files | Fix |
+|---|---|---|
+| `fix(sync): don't treat the Codex login as a local account for other providers` | `Sources/CodexBar/UsageStore/UsageStore+WidgetSnapshot.swift`, `Tests/CodexBarTests/FleetAccountMenuProjectionTests.swift` | `cloudSyncLocalAccountKeys` borrows `accountInfo(for:)` (the Codex login) only for providers with `usesAccountFallback`; before, a reader Mac with no local Claude identity hid the remote Claude account whose email equals its Codex login |
+
 ### Tests added inside upstream test files
 
 Budgeted because the fork's cases still sit in upstream test files: `CodexBarMobile/CodexBarMobileTests/MobileDisplayFormattingTests.swift`, `CodexBarMobile/CodexBarMobileTests/ProviderAccountGroupTests.swift`, `CodexBarMobile/CodexBarMobileTests/WidgetConfigurationAppIntentsTests.swift`, `Tests/CodexBarTests/AppGroupSupportTests.swift`, `Tests/CodexBarTests/CloudSyncDeviceRemovalTests.swift`, `Tests/CodexBarTests/CloudSyncPushRegistrationTests.swift`, `Tests/CodexBarTests/CloudSyncSettingsTests.swift`, `Tests/CodexBarTests/SyncCoordinatorMultiAccountTests.swift`, `Tests/CodexBarTests/SyncWireFormatRoundTripTests.swift`. New fork tests go into `+Fork` siblings instead.

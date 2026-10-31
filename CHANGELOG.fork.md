@@ -12,6 +12,12 @@ Fork-only changes. Upstream history lives in CHANGELOG.md.
 - Pass flags through make: `make fork-gate ARGS='--ios --baseline ~/Library/Caches/codexbar-gate'`.
 - `Scripts/fork/swift_scratch.sh` runs swift with the shared scratch path (`CODEXBAR_SWIFT_SCRATCH` overrides it).
 
+## 0.82.0.1 - audi.2
+
+### Fixed
+
+- iCloud fleet: a Mac without local Claude credentials no longer hides the remote Claude account whose email matches its Codex login (upstream fix pending PR).
+
 ## 0.82.0.1 - audi.1
 
 ### Fixed

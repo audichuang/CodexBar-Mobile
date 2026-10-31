@@ -76,6 +76,7 @@ Sources/CodexBar/Sync/CloudSyncCoordinator.swift	4	fork multi-account/sync hook 
 Sources/CodexBar/Sync/CloudSyncEngine.swift	39	fork multi-account/sync hook in Mac sync code
 Sources/CodexBar/Sync/CloudSyncPersistence.swift	2	fork multi-account/sync hook in Mac sync code
 Sources/CodexBar/Sync/SyncCoordinator.swift	13	fork multi-account/sync hook in Mac sync code
+Sources/CodexBar/UsageStore/UsageStore+WidgetSnapshot.swift	2	upstream fix pending PR: non-Codex providers must not borrow the Codex login as a fleet local account key; drop when upstream merges an equivalent
 Sources/CodexBarCore/Generated/CodexParserHash.generated.swift	2	generated parser hash; regenerate with Scripts/regenerate-codex-parser-hash.sh
 Sources/CodexBarCore/Resources/Acknowledgements.json	16	fork acknowledgements entries
 Sources/CodexBarCore/Vendored/CostUsage/CostUsagePricing.swift	2	fork hook in Mac app/core code (calls fork-owned extension)
@@ -84,5 +85,6 @@ Tests/CodexBarTests/AppGroupSupportTests.swift	10	fork test coverage added to up
 Tests/CodexBarTests/CloudSyncDeviceRemovalTests.swift	24	fork test coverage added to upstream-owned test file
 Tests/CodexBarTests/CloudSyncPushRegistrationTests.swift	58	fork test coverage added to upstream-owned test file
 Tests/CodexBarTests/CloudSyncSettingsTests.swift	4	fork test coverage added to upstream-owned test file
+Tests/CodexBarTests/FleetAccountMenuProjectionTests.swift	36	upstream fix pending PR: non-Codex providers must not borrow the Codex login as a fleet local account key; drop when upstream merges an equivalent (regression test)
 Tests/CodexBarTests/SyncCoordinatorMultiAccountTests.swift	40	fork test coverage added to upstream-owned test file
 Tests/CodexBarTests/SyncWireFormatRoundTripTests.swift	27	fork test coverage added to upstream-owned test file
