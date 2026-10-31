@@ -53,7 +53,7 @@ fi
 GATE_DIR=${CODEXBAR_GATE_DIR:-$HOME/Library/Caches/codexbar-gate}
 mkdir -p "$GATE_DIR"
 SWIFT=(Scripts/fork/swift_scratch.sh)
-FORK_TEST_FILTER='CloudSync|SyncCoordinator|SyncModel|SyncWireFormat|V082SyncMetadata|CostUsageStore|CodexArchivedRollout|CostUsageForkParserRevision|ProviderArchitectureGatekeeper|ForkSyncIntegration|ForkIdentityConsistency'
+FORK_TEST_FILTER='CloudSync|SyncCoordinator|SyncModel|SyncWireFormat|V082SyncMetadata|CostUsageStore|CodexArchivedRollout|CostUsageForkParserRevision|ProviderArchitectureGatekeeper|ForkSyncIntegration|ForkIdentityConsistency|FleetAccountMenuProjection'
 IOS_DEST='platform=iOS Simulator,name=CB iPhone 18 Pro Max'
 GATE_START=$SECONDS
 
