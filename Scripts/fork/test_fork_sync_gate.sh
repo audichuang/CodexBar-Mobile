@@ -158,4 +158,13 @@ for kind in mac ios; do
   expect "$kind fail list ignores started lines that mention failed" 0 "$n"
 done
 
+# A fresh worktree has no .build/debug; the gate links it to the shared scratch build.
+W="$TMP/wt"; mkdir -p "$W"
+ensure_worktree_debug_link "$W" "/scratch"; got=$(readlink "$W/.build/debug" 2>/dev/null)
+[[ "$got" == "/scratch/debug" ]]; expect "fresh worktree gets .build/debug -> scratch/debug" 0 $?
+ln -sfn /stale/debug "$W/.build/debug"; ensure_worktree_debug_link "$W" "/scratch"
+[[ "$(readlink "$W/.build/debug")" == "/scratch/debug" ]]; expect "a link to another scratch is repointed" 0 $?
+rm "$W/.build/debug"; mkdir -p "$W/.build/debug"; touch "$W/.build/debug/keep"; ensure_worktree_debug_link "$W" "/scratch"
+[[ -d "$W/.build/debug" && ! -L "$W/.build/debug" && -e "$W/.build/debug/keep" ]]; expect "a real .build/debug directory is left alone" 0 $?
+
 exit $fails

@@ -53,6 +53,7 @@ fi
 GATE_DIR=${CODEXBAR_GATE_DIR:-$HOME/Library/Caches/codexbar-gate}
 mkdir -p "$GATE_DIR"
 SWIFT=(Scripts/fork/swift_scratch.sh)
+SCRATCH=${CODEXBAR_SWIFT_SCRATCH:-$HOME/Library/Caches/codexbar-swift-scratch}
 FORK_TEST_FILTER='CloudSync|SyncCoordinator|SyncModel|SyncWireFormat|V082SyncMetadata|CostUsageStore|CodexArchivedRollout|CostUsageForkParserRevision|ProviderArchitectureGatekeeper|ForkSyncIntegration|ForkIdentityConsistency|FleetAccountMenuProjection'
 IOS_DEST='platform=iOS Simulator,name=CB iPhone 18 Pro Max'
 GATE_START=$SECONDS
@@ -72,6 +73,16 @@ stage_run() {
     echo "GATE FAILED at stage: $name (total $((SECONDS - GATE_START))s)" >&2
     exit 1
   fi
+}
+
+# Stage 0: a fresh worktree has no `.build/` (gitignored). Stage 2's identity scripts and stage 6 need the
+# pinned lint tools; the Mac tests need `.build/debug` to find resource bundles. Both are created here.
+s_prepare_worktree() {
+  local bin="$ROOT_DIR/.build/lint-tools/bin"
+  if [[ ! -x "$bin/swiftformat" || ! -x "$bin/swiftlint" ]]; then
+    Scripts/install_lint_tools.sh swiftformat && Scripts/install_lint_tools.sh swiftlint || return 1
+  fi
+  ensure_worktree_debug_link "$ROOT_DIR" "$SCRATCH" && ls -l "$ROOT_DIR/.build/debug"
 }
 
 s_conflict_markers() {
@@ -129,9 +140,6 @@ lint_rule_counts() {
 s_lint() {
   # Pinned versions, same as Scripts/lint.sh; install once with Scripts/install_lint_tools.sh.
   LINT_BIN="$ROOT_DIR/.build/lint-tools/bin"
-  if [[ ! -x "$LINT_BIN/swiftformat" || ! -x "$LINT_BIN/swiftlint" ]]; then
-    Scripts/install_lint_tools.sh swiftformat && Scripts/install_lint_tools.sh swiftlint || return 1
-  fi
   local files=() existing=() tmp
   while IFS= read -r f; do files+=("$f"); done < <(git diff --name-only --diff-filter=AMR "$BASE_TAG" -- '*.swift')
   if [[ ${#files[@]} -eq 0 ]]; then echo "no changed swift files"; return 0; fi
@@ -181,7 +189,7 @@ s_mac_full() {
   # The runner swaps HOME per group, so the scratch path must be absolute.
   local py=/opt/homebrew/bin/python3.15
   [[ -x "$py" ]] || py=python3
-  CODEXBAR_SWIFT_SCRATCH=${CODEXBAR_SWIFT_SCRATCH:-$HOME/Library/Caches/codexbar-swift-scratch} \
+  CODEXBAR_SWIFT_SCRATCH=$SCRATCH \
   GATE_PY=$py GATE_SWIFT="$ROOT_DIR/Scripts/fork/swift_scratch.sh" GATE_GROUPS="$ROOT_DIR/Scripts/fork/gate_mac_groups.py" \
     bash -c 'source Scripts/test_environment.sh; exec "$GATE_PY" "$GATE_GROUPS" "$GATE_SWIFT" 12 180' >"$log" 2>&1
   local rc=$?
@@ -199,6 +207,7 @@ s_ios_tests() {
 }
 
 echo "fork gate: base=$BASE_TAG tier=$([[ $FULL -eq 1 ]] && echo full || echo fast)$([[ $IOS -eq 1 && $FULL -eq 0 ]] && echo +ios) logs=$GATE_DIR"
+stage_run 0-prepare-worktree s_prepare_worktree
 stage_run 1-conflict-markers s_conflict_markers
 stage_run 2-identity-and-guards s_identity_and_guards
 stage_run 3-footprint s_footprint
