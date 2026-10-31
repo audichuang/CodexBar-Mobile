@@ -6,6 +6,17 @@ detect_base_tag() {
   git describe --tags --abbrev=0 --match 'v*-mobile.*' --exclude '*-audi.*' "$@" 2>/dev/null || true
 }
 
+# Make a fresh worktree usable by the gate. `.build/` is gitignored, so a new worktree has neither the
+# pinned lint tools nor `.build/debug`; CodexBarCoreResources looks for the debug resource bundles under
+# `<package root>/.build/debug`, while the gate builds into the shared scratch path. Link the two.
+# ensure_worktree_debug_link <root> <scratch>: a real `.build/debug` directory is left alone.
+ensure_worktree_debug_link() {
+  local root=$1 scratch=$2 link="$1/.build/debug"
+  if [[ -d "$link" && ! -L "$link" ]]; then return 0; fi
+  if [[ -L "$link" && "$(readlink "$link")" == "$scratch/debug" ]]; then return 0; fi
+  mkdir -p "$root/.build" && ln -sfn "$scratch/debug" "$link"
+}
+
 # Print failing test names the way the baseline files were produced.
 mac_fail_list() { grep -E '✘ Test .* failed|Test [Cc]ase .* failed' "$1" | grep -vE '^◇| started\.$' | sed -E 's/ (after|\().*//' | sort -u; }
 ios_fail_list() { grep -E 'Test [Cc]ase .* failed|✘ Test .* failed' "$1" | grep -vE '^◇| started\.$' | sed -E 's/ (after|on |\().*//' | sort -u; }
