@@ -40,12 +40,16 @@ struct AccountsWidgetView: View {
         self.previewFamily ?? self.environmentFamily
     }
 
-    private var accounts: [CodexBarWidgetProviderSummary] {
-        WidgetProviderSelection.accounts(
+    /// Every account of the provider, the one that runs out first on top.
+    private var rankedAccounts: [CodexBarWidgetProviderSummary] {
+        WidgetProviderSelection.accountsByUrgency(
             from: self.entry.snapshot.topProviders,
             selected: self.entry.configuration.providers?.first,
-            count: self.family == .systemLarge || self.family == .systemExtraLarge ? 6 : 3,
             now: self.entry.date)
+    }
+
+    private var accountLimit: Int {
+        self.family == .systemLarge || self.family == .systemExtraLarge ? 6 : 3
     }
 
     private var isLarge: Bool {
@@ -53,71 +57,152 @@ struct AccountsWidgetView: View {
     }
 
     private var loadedView: some View {
-        let accounts = self.accounts
-        return VStack(alignment: .leading, spacing: self.family == .systemSmall ? 8 : 10) {
-            self.header(accounts)
+        let ranked = self.rankedAccounts
+        let accounts = Array(ranked.prefix(self.accountLimit))
+        return VStack(alignment: .leading, spacing: self.family == .systemSmall ? 7 : 9) {
+            self.header(
+                accounts,
+                switchTo: WidgetProviderSelection.accountToSwitchTo(from: ranked, now: self.entry.date))
+            if self.family == .systemSmall, let first = accounts.first(where: { !$0.isError }) {
+                self.compactColumnTitles(first)
+            }
             if accounts.isEmpty {
                 self.message(String(localized: "No provider data"))
             } else {
+                let reservesSession = accounts.contains { !$0.isError && $0.sessionUsedPercent != nil }
                 ForEach(accounts) { account in
                     if self.family == .systemSmall {
                         self.compactRow(account)
                     } else {
-                        self.row(account)
+                        if self.isLarge, account.id != accounts.first?.id {
+                            Divider().overlay(self.track)
+                        }
+                        self.row(account, reservesSession: reservesSession)
                             // A large widget spreads its rows instead of leaving the bottom empty.
                                 .frame(maxHeight: self.isLarge ? .infinity : nil)
                     }
                 }
             }
             if !self.isLarge { Spacer(minLength: 0) }
+            if self.family == .systemSmall, let warning = self.compactWarning(accounts.first) {
+                warning
+            }
         }
     }
 
-    private func header(_ accounts: [CodexBarWidgetProviderSummary]) -> some View {
+    private func header(
+        _ accounts: [CodexBarWidgetProviderSummary],
+        switchTo: CodexBarWidgetProviderSummary?) -> some View
+    {
         HStack(spacing: 4) {
             Text(accounts.first?.providerName ?? String(localized: "Account Quotas"))
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(self.secondary)
                 .lineLimit(1)
-            Spacer(minLength: 4)
-            if self.family == .systemSmall, let first = accounts.first(where: { !$0.isError }) {
-                // Names the two columns of the compact rows.
-                Text(first.sessionUsedPercent == nil
-                    ? String(localized: "Week")
-                    : "\(self.sessionLabel(first)) · \(String(localized: "Week"))")
-                    .font(.system(size: 10, weight: .medium))
-                    .foregroundStyle(self.secondary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
+                .layoutPriority(1)
+            if let label = switchTo?.accountLabel {
+                HStack(spacing: 2) {
+                    Image(systemName: "arrow.right")
+                        .font(.system(size: 9, weight: .bold))
+                        .accessibilityHidden(true)
+                    Text(label)
+                        .font(.system(size: 12, weight: .bold))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                        .privacySensitive()
+                }
+                .foregroundStyle(WidgetRiskColor.safe(self.colorScheme))
+                .widgetAccentable()
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(String(format: String(localized: "Switch to %@"), label))
             }
-            if self.entry.snapshot.isStale {
-                Image(systemName: "exclamationmark.triangle.fill")
-                    .font(.system(size: 10))
-                    .foregroundStyle(Color.orange)
-                    .accessibilityLabel(String(localized: "Stale"))
+            Spacer(minLength: 4)
+            // The oldest report on screen: one fresh account must not vouch for the others.
+            if let oldest = accounts.filter({ !$0.isError }).map(\.lastUpdated).min() {
+                let isOld = self.entry.snapshot.isStale || WidgetFreshnessText.isOld(oldest, now: self.entry.date)
+                HStack(spacing: 2) {
+                    if isOld {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .font(.system(size: 9))
+                            .accessibilityHidden(true)
+                    }
+                    Text(WidgetFreshnessText.text(since: oldest, now: self.entry.date))
+                        .font(.system(size: 10))
+                        .monospacedDigit()
+                        .lineLimit(1)
+                }
+                .foregroundStyle(isOld ? Color.orange : self.secondary)
             }
         }
     }
 
+    /// Names the two columns of the compact rows, right above their figures.
+    private func compactColumnTitles(_ account: CodexBarWidgetProviderSummary) -> some View {
+        HStack(spacing: 4) {
+            Spacer(minLength: 0)
+            if account.sessionUsedPercent != nil {
+                self.compactColumnTitle(self.sessionLabel(account))
+            }
+            self.compactColumnTitle(String(localized: "Week"))
+        }
+        .padding(.bottom, -4)
+    }
+
+    private func compactColumnTitle(_ title: String) -> some View {
+        Text(title)
+            .font(.system(size: 10, weight: .medium))
+            .foregroundStyle(self.secondary)
+            .lineLimit(1)
+            .minimumScaleFactor(0.7)
+            .frame(width: Self.compactColumnWidth, alignment: .trailing)
+    }
+
+    /// Fixed so "100%" and "8%" keep the same column from row to row.
+    private static let compactColumnWidth: CGFloat = 38
+
     @ViewBuilder
-    private func row(_ account: CodexBarWidgetProviderSummary) -> some View {
+    private func row(_ account: CodexBarWidgetProviderSummary, reservesSession: Bool) -> some View {
         if self.isLarge {
             // The name gets its own line so both meters span the width.
             VStack(alignment: .leading, spacing: 6) {
                 self.name(account, size: 16)
-                HStack(spacing: 14) { self.meters(account) }
+                HStack(spacing: 14) { self.meters(account, reservesSession: reservesSession) }
             }
         } else {
             HStack(alignment: .center, spacing: 10) {
                 self.name(account, size: 14)
                     .frame(width: 58, alignment: .leading)
-                self.meters(account)
+                self.meters(account, reservesSession: reservesSession)
             }
         }
     }
 
+    /// The compact rows have no room for a time, so the top account's gets its own line.
+    private func compactWarning(_ account: CodexBarWidgetProviderSummary?) -> AnyView? {
+        guard let account, !account.isError else { return nil }
+        let now = self.entry.date
+        let forecasts = [account.sessionForecast(now: now), account.weeklyForecast(now: now)].compactMap(\.self)
+        let urgent = forecasts.filter(\.isAtRisk).min {
+            ($0.depletesAt ?? .distantFuture) < ($1.depletesAt ?? .distantFuture)
+        }
+        guard let text = urgent?.riskText(now: now) else { return nil }
+        return AnyView(
+            HStack(spacing: 3) {
+                Image(systemName: "exclamationmark.circle.fill")
+                    .font(.system(size: 10, weight: .medium))
+                    .accessibilityHidden(true)
+                Text(account.accountLabel.map { "\($0) \(text)" } ?? text)
+                    .font(.system(size: 11, weight: .semibold))
+                    .monospacedDigit()
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                    .privacySensitive()
+            }
+            .foregroundStyle(WidgetRiskColor.color(self.colorScheme)))
+    }
+
     @ViewBuilder
-    private func meters(_ account: CodexBarWidgetProviderSummary) -> some View {
+    private func meters(_ account: CodexBarWidgetProviderSummary, reservesSession: Bool) -> some View {
         if account.isError {
             Text(String(localized: "Unavailable"))
                 .font(.system(size: 12, weight: .medium))
@@ -128,12 +213,17 @@ struct AccountsWidgetView: View {
                 self.meter(
                     label: self.sessionLabel(account),
                     percent: account.sessionUsedPercent,
-                    detail: WidgetProviderResetText.hours(account.sessionResetsAt, now: self.entry.date))
+                    detail: WidgetProviderResetText.hours(account.sessionResetsAt, now: self.entry.date),
+                    forecast: account.sessionForecast(now: self.entry.date))
+            } else if reservesSession {
+                // Keeps the weekly meter in the same column as the other rows.
+                Color.clear.frame(maxWidth: .infinity, maxHeight: 0)
             }
             self.meter(
                 label: String(localized: "Week"),
                 percent: account.weeklyUsedPercent,
-                detail: WidgetProviderResetText.days(account.weeklyResetsAt, now: self.entry.date))
+                detail: WidgetProviderResetText.days(account.weeklyResetsAt, now: self.entry.date),
+                forecast: account.weeklyForecast(now: self.entry.date))
         }
     }
 
@@ -146,10 +236,16 @@ struct AccountsWidgetView: View {
                     .font(.system(size: 11))
                     .foregroundStyle(self.secondary)
             } else {
-                if account.sessionUsedPercent != nil {
-                    self.percentText(account.sessionUsedPercent, size: 14)
+                HStack(spacing: 4) {
+                    if account.sessionUsedPercent != nil {
+                        self.compactFigure(
+                            account.sessionUsedPercent,
+                            forecast: account.sessionForecast(now: self.entry.date))
+                    }
+                    self.compactFigure(
+                        account.weeklyUsedPercent,
+                        forecast: account.weeklyForecast(now: self.entry.date))
                 }
-                self.percentText(account.weeklyUsedPercent, size: 14)
             }
         }
     }
@@ -163,47 +259,54 @@ struct AccountsWidgetView: View {
             .privacySensitive()
     }
 
-    private func meter(label: String, percent: Double?, detail: String?) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
+    private func compactFigure(_ percent: Double?, forecast: WidgetQuotaForecast?) -> some View {
+        self.percentText(percent, size: 14, isAtRisk: forecast?.isAtRisk == true)
+            .frame(width: Self.compactColumnWidth, alignment: .trailing)
+    }
+
+    private func meter(label: String, percent: Double?, detail: String?, forecast: WidgetQuotaForecast?) -> some View {
+        let risk = forecast?.riskText(now: self.entry.date)
+        return VStack(alignment: .leading, spacing: 4) {
             HStack(alignment: .firstTextBaseline, spacing: 4) {
                 Text(label)
                     .font(.system(size: 10, weight: .medium))
                     .foregroundStyle(self.secondary)
-                self.percentText(percent, size: self.isLarge ? 20 : 15)
+                self.percentText(percent, size: self.isLarge ? 20 : 15, isAtRisk: risk != nil)
                 Spacer(minLength: 2)
-                if let detail {
-                    Text(detail)
-                        .font(.system(size: 10))
+                // When it ends before the reset, that moment matters more than the reset.
+                if let text = risk ?? detail {
+                    Text(text)
+                        .font(.system(size: 10, weight: risk == nil ? .regular : .semibold))
                         .monospacedDigit()
-                        .foregroundStyle(self.secondary)
+                        .foregroundStyle(risk == nil ? self.secondary : WidgetRiskColor.color(self.colorScheme))
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                 }
             }
-            self.bar(percent, height: self.isLarge ? 6 : 4)
+            self.bar(percent, height: self.isLarge ? 6 : 4, isAtRisk: risk != nil)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
 
-    private func percentText(_ percent: Double?, size: CGFloat) -> some View {
+    private func percentText(_ percent: Double?, size: CGFloat, isAtRisk: Bool) -> some View {
         Text(percent.map { (min(100, max(0, $0)) / 100).formatted(.percent.precision(.fractionLength(0))) } ?? "—")
             .font(.system(size: size, weight: .bold, design: .rounded))
             .monospacedDigit()
-            .foregroundStyle(self.usageColor(percent))
+            .foregroundStyle(isAtRisk ? WidgetRiskColor.color(self.colorScheme) : self.usageColor(percent))
             .lineLimit(1)
             .minimumScaleFactor(0.7)
             .privacySensitive()
             .widgetAccentable()
     }
 
-    private func bar(_ percent: Double?, height: CGFloat) -> some View {
+    private func bar(_ percent: Double?, height: CGFloat, isAtRisk: Bool) -> some View {
         GeometryReader { proxy in
             let fraction = min(1, max(0, (percent ?? 0) / 100))
             ZStack(alignment: .leading) {
                 Capsule().fill(self.track)
                 if fraction > 0 {
                     Capsule()
-                        .fill(self.usageColor(percent))
+                        .fill(isAtRisk ? WidgetRiskColor.color(self.colorScheme) : self.usageColor(percent))
                         .frame(width: max(4, proxy.size.width * fraction))
                         .widgetAccentable()
                 }
