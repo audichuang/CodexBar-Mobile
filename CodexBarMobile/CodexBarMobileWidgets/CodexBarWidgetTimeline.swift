@@ -56,7 +56,7 @@ struct CodexBarWidgetProvider: AppIntentTimelineProvider {
                 overviewQuota: overviewQuota,
                 accountChoice: accountChoice)
             return Timeline(
-                entries: [entry],
+                entries: entry.ticking(until: 15 * 60), // fork hook: moving countdowns
                 policy: .after(now.addingTimeInterval(15 * 60)))
         }
         #endif
@@ -89,7 +89,7 @@ struct CodexBarWidgetProvider: AppIntentTimelineProvider {
         case .noData, .error: 10 * 60
         }
         return Timeline(
-            entries: [entry],
+            entries: entry.ticking(until: refreshInterval), // fork hook: moving countdowns
             policy: .after(now.addingTimeInterval(refreshInterval)))
     }
 }

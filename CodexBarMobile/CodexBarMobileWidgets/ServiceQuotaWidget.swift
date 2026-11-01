@@ -12,11 +12,11 @@ struct CodexBarProviderQuotaAppIntentWidget: Widget {
             intent: ProviderQuotaWidgetAppIntent.self,
             provider: ProviderQuotaAppIntentTimelineProvider())
         { entry in
-            ProviderQuotaWidgetView(entry: entry)
+            ProviderQuotaFamilyView(entry: entry)
         }
         .configurationDisplayName("Provider Quota")
         .description("Show one provider's weekly and session usage.")
-        .supportedFamilies([.systemSmall])
+        .supportedFamilies([.systemSmall, .accessoryRectangular, .accessoryCircular, .accessoryInline])
         .contentMarginsDisabled()
     }
 }

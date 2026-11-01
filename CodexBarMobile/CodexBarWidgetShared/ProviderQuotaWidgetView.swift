@@ -101,25 +101,22 @@ struct ProviderQuotaWidgetView: View {
             }
             .layoutPriority(1)
             Spacer(minLength: 4)
-            if self.entry.snapshot.isStale {
-                Image(systemName: "exclamationmark.triangle.fill")
+            // This account's own report: another provider's fresher sync says nothing about it.
+            let isOld = self.entry.snapshot.isStale
+                || WidgetFreshnessText.isOld(provider.lastUpdated, now: self.entry.date)
+            HStack(spacing: 2) {
+                if isOld {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .font(.system(size: 9))
+                        .accessibilityHidden(true)
+                }
+                Text(WidgetFreshnessText.text(since: provider.lastUpdated, now: self.entry.date))
                     .font(.system(size: 10))
-                    .foregroundStyle(Color.orange)
-                    .accessibilityLabel(String(localized: "Stale"))
-            } else {
-                Image(systemName: "arrow.clockwise")
-                    .font(.system(size: 9, weight: .semibold))
-                    .foregroundStyle(self.secondary)
-                    .accessibilityHidden(true)
-            }
-            if let synced = self.entry.snapshot.latestSyncAt {
-                Text(self.elapsedText(since: synced))
-                    .font(.system(size: 11))
                     .monospacedDigit()
-                    .foregroundStyle(self.secondary)
                     .lineLimit(1)
-                    .accessibilityLabel(String(format: String(localized: "Updated %@ ago"), self.elapsedText(since: synced)))
+                    .minimumScaleFactor(0.8)
             }
+            .foregroundStyle(isOld ? Color.orange : self.secondary)
         }
     }
 
@@ -130,52 +127,74 @@ struct ProviderQuotaWidgetView: View {
             now: self.entry.date)
         let hasWeekly = provider.weeklyResetsAt != nil || provider.weeklyUsedPercent != nil
         return self.section(
-            label: hasWeekly ? String(localized: "Weekly") : String(localized: "Usage"),
-            reset: figures.resetsAt.map { self.weeklyResetText($0) },
-            percent: figures.usagePercent,
-            accent: ProviderColorPalette.color(for: provider.providerID),
+            Section(
+                label: hasWeekly ? String(localized: "Weekly") : String(localized: "Usage"),
+                reset: figures.resetsAt.map { self.weeklyResetText($0) },
+                percent: figures.usagePercent,
+                accent: ProviderColorPalette.color(for: provider.providerID),
+                forecast: provider.weeklyForecast(now: self.entry.date)),
             large: large)
     }
 
     private func sessionSection(_ provider: CodexBarWidgetProviderSummary) -> some View {
         self.section(
-            label: self.sessionLabel(provider),
-            reset: provider.sessionResetsAt.map { self.sessionResetText($0) },
-            percent: provider.sessionUsedPercent,
-            accent: ProviderColorPalette.color(for: provider.providerID),
+            Section(
+                label: self.sessionLabel(provider),
+                reset: provider.sessionResetsAt.map { self.sessionResetText($0) },
+                percent: provider.sessionUsedPercent,
+                accent: ProviderColorPalette.color(for: provider.providerID),
+                forecast: provider.sessionForecast(now: self.entry.date)),
             large: false)
     }
 
-    private func section(label: String, reset: String?, percent: Double?, accent: Color, large: Bool) -> some View {
-        VStack(alignment: .leading, spacing: large ? 10 : 6) {
+    private struct Section {
+        let label: String
+        let reset: String?
+        let percent: Double?
+        let accent: Color
+        let forecast: WidgetQuotaForecast?
+    }
+
+    private func section(_ section: Section, large: Bool) -> some View {
+        let risk = section.forecast?.riskText(now: self.entry.date)
+        return VStack(alignment: .leading, spacing: large ? 10 : 6) {
             HStack(alignment: .bottom, spacing: 4) {
                 VStack(alignment: .leading, spacing: 3) {
-                    Text(label)
-                        .font(.system(size: 13, weight: .bold))
-                        .foregroundStyle(self.primary.opacity(0.8))
-                        .lineLimit(1)
-                    if let reset {
+                    HStack(spacing: 4) {
+                        Text(section.label)
+                            .font(.system(size: 13, weight: .bold))
+                            .foregroundStyle(self.primary.opacity(0.8))
+                            .lineLimit(1)
+                        if section.forecast?.outcome == .lasts {
+                            Image(systemName: "checkmark.circle.fill")
+                                .font(.system(size: 10))
+                                .foregroundStyle(WidgetRiskColor.safe(self.colorScheme))
+                                .accessibilityLabel(String(localized: "Lasts until reset"))
+                        }
+                    }
+                    // When it ends before the reset, that moment matters more than the reset.
+                    if let text = risk ?? section.reset {
                         HStack(spacing: 3) {
-                            Image(systemName: "clock.arrow.circlepath")
+                            Image(systemName: risk == nil ? "clock.arrow.circlepath" : "exclamationmark.circle.fill")
                                 .font(.system(size: 9, weight: .medium))
                                 .accessibilityHidden(true)
-                            Text(reset)
-                                .font(.system(size: 11))
+                            Text(text)
+                                .font(.system(size: 11, weight: risk == nil ? .regular : .semibold))
                                 .monospacedDigit()
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.7)
                         }
-                        .foregroundStyle(self.secondary)
+                        .foregroundStyle(risk == nil ? self.secondary : WidgetRiskColor.color(self.colorScheme))
                     }
                 }
                 Spacer(minLength: 2)
                 // The figure keeps its size; the reset line shrinks first.
-                self.percentText(percent, size: large ? 46 : 34)
+                self.percentText(section.percent, size: large ? 46 : 34)
                     .layoutPriority(1)
             }
             SegmentedMeter(
-                percent: percent,
-                fill: accent,
+                percent: section.percent,
+                fill: risk == nil ? section.accent : WidgetRiskColor.color(self.colorScheme),
                 track: self.track,
                 segments: 20)
                 .frame(height: large ? 14 : 11)
@@ -213,16 +232,6 @@ struct ProviderQuotaWidgetView: View {
             return String(localized: "Session")
         }
         return String(format: String(localized: "%@h"), "\(minutes / 60)")
-    }
-
-    /// Time since the last sync, one unit: "8 min", "2 hr", "3 days".
-    private func elapsedText(since date: Date) -> String {
-        let interval = max(0, self.entry.date.timeIntervalSince(date))
-        if interval < 60 { return String(localized: "just now") }
-        return Self.duration(
-            interval,
-            units: interval < 3600 ? [.minute] : interval < 86400 ? [.hour] : [.day],
-            style: .short)
     }
 
     /// "4 hr 30 min from now" for a session reset.

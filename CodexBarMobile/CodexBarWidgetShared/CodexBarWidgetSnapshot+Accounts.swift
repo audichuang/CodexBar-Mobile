@@ -25,7 +25,7 @@ extension CodexBarWidgetSnapshot {
     static func sampleClaudeAccounts(now: Date) -> [CodexBarWidgetProviderSummary] {
         let samples: [(label: String, session: Double?, sessionHours: Double, weekly: Double, days: Double)] = [
             ("Work", 12, 2.6, 8, 6.0),
-            ("Personal", 81, 0.9, 64, 2.4),
+            ("Personal", 92, 1.5, 64, 2.4),
             ("Side", nil, 0, 5, 5.6),
         ]
         return samples.map { sample in
