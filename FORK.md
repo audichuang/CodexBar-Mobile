@@ -121,8 +121,8 @@ These carry identity strings or fork packaging calls and nothing else. Larger fo
 
 | File | Hook | Calls into |
 |---|---|---|
-| `CodexBarMobile/CodexBarMobileWidgets/CodexBarWidgets.swift` | registers the two iOS 27 App Intent widgets | `AccountsQuotaWidget.swift`, `ServiceQuotaWidget.swift` |
-| `CodexBarMobile/CodexBarMobileWidgets/CodexBarWidgetTimeline.swift`, `CodexBarMobile/CodexBarMobileWidgets/StatusWidgetTimeline.swift` | `accountChoice` parameter, oslog subsystem, accounts timeline provider (partly inline) | `+Accounts` extensions |
+| `CodexBarMobile/CodexBarMobileWidgets/CodexBarWidgets.swift` | registers the two iOS 27 App Intent widgets | `AccountsQuotaWidget.swift`, `ServiceQuotaWidget.swift`, `ProviderQuotaAccessoryView.swift`, `WidgetQuotaForecast.swift` |
+| `CodexBarMobile/CodexBarMobileWidgets/CodexBarWidgetTimeline.swift`, `CodexBarMobile/CodexBarMobileWidgets/StatusWidgetTimeline.swift` | `accountChoice` parameter, `entry.ticking` for moving countdowns, oslog subsystem, accounts timeline provider (partly inline) | `+Accounts` extensions |
 | `CodexBarMobile/CodexBarMobileWidgets/WidgetActivityTimeline.swift` | oslog subsystem via `ForkIdentity` | |
 | `CodexBarMobile/CodexBarWidgetShared/CodexBarWidgetEntry.swift` | `accountChoice` stored property | |
 | `CodexBarMobile/CodexBarWidgetShared/CodexBarWidgetSnapshot.swift`, `CodexBarMobile/CodexBarWidgetShared/ProviderSnapshotMerger.swift` | `accountLabel` and session fields carried through merge | `CodexBarWidgetSnapshot+Accounts.swift` |
