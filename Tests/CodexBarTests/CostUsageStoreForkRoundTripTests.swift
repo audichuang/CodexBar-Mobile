@@ -35,7 +35,10 @@ struct CostUsageStoreForkRoundTripTests {
         #expect(try Self.storedParserHash(databaseURL) == CodexParserHash.value)
 
         // A fresh store (a new launch) must adopt the file as-is and serve identical data.
-        let reopened = CostUsageStore(cacheRoot: env.cacheRoot)
+        // Rows are scoped to the Codex home they came from (upstream CostUsageStore+CodexHomeScope).
+        let reopened = CostUsageStore(
+            cacheRoot: env.cacheRoot,
+            home: CodexHomeCostStoreScope.key(sessionsRoot: env.codexSessionsRoot))
         let snapshot = await reopened.readSnapshot()
         #expect(await reopened.rebuildCount == 0)
         #expect(await reopened.configuration()?.userVersion == Int(CostUsageStore.schemaVersion))
@@ -99,7 +102,9 @@ struct CostUsageStoreForkRoundTripTests {
             provider: .codex, since: day, until: day, now: day, options: Self.options(env))
 
         #expect(report.summary?.totalTokens == 330)
-        let cache = CostUsageStoreAccess.read(cacheRoot: env.cacheRoot)
+        let cache = CostUsageStoreAccess.read(
+            cacheRoot: env.cacheRoot,
+            home: CodexHomeCostStoreScope.key(sessionsRoot: env.codexSessionsRoot))
         #expect(cache.files[ghostPath] == nil)
         #expect(cache.files.count == 1)
         #expect(try Self.storedParserHash(old.databaseURL) == CodexParserHash.value)
