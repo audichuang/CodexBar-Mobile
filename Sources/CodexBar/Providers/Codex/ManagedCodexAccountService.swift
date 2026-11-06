@@ -191,7 +191,6 @@ final class ManagedCodexAccountService {
     private let workspaceResolver: any ManagedCodexWorkspaceResolving
     private let workspaceSelector: any ManagedCodexWorkspaceSelecting
     private let fileManager: FileManager
-    private let removeWebsiteData: @MainActor (ManagedCodexAccount, @MainActor () -> Bool) async -> Void
 
     init(
         store: any ManagedCodexAccountStoring,
@@ -200,9 +199,7 @@ final class ManagedCodexAccountService {
         identityReader: any ManagedCodexIdentityReading,
         workspaceResolver: any ManagedCodexWorkspaceResolving = DefaultManagedCodexWorkspaceResolver(),
         workspaceSelector: any ManagedCodexWorkspaceSelecting = CodexWorkspaceAlertSelector(),
-        fileManager: FileManager = .default,
-        removeWebsiteData: @escaping @MainActor (ManagedCodexAccount, @MainActor () -> Bool) async -> Void = { _, _ in
-        })
+        fileManager: FileManager = .default)
     {
         self.store = store
         self.homeFactory = homeFactory
@@ -211,7 +208,6 @@ final class ManagedCodexAccountService {
         self.workspaceResolver = workspaceResolver
         self.workspaceSelector = workspaceSelector
         self.fileManager = fileManager
-        self.removeWebsiteData = removeWebsiteData
     }
 
     convenience init(fileManager: FileManager = .default) {
@@ -222,8 +218,7 @@ final class ManagedCodexAccountService {
             identityReader: DefaultManagedCodexIdentityReader(),
             workspaceResolver: DefaultManagedCodexWorkspaceResolver(),
             workspaceSelector: CodexWorkspaceAlertSelector(),
-            fileManager: fileManager,
-            removeWebsiteData: OpenAIDashboardWebsiteDataStore.removeStore(forRemovedAccount:isStillRemoved:))
+            fileManager: fileManager)
     }
 
     func authenticateManagedAccount(
@@ -336,19 +331,14 @@ final class ManagedCodexAccountService {
     }
 
     func removeManagedAccount(id: UUID) async throws {
-        let removed = try ManagedCodexAccountLock.withLock(at: self.store.lockURL) {
+        try ManagedCodexAccountLock.withLock(at: self.store.lockURL) {
             try self.removeManagedAccountLocked(id: id)
-        }
-        if let removed {
-            await self.removeWebsiteData(removed) {
-                (try? self.store.loadAccounts()).map { $0.account(id: id) == nil } ?? false
-            }
         }
     }
 
-    private func removeManagedAccountLocked(id: UUID) throws -> ManagedCodexAccount? {
+    private func removeManagedAccountLocked(id: UUID) throws {
         let snapshot = try self.store.loadAccounts()
-        guard let account = snapshot.account(id: id) else { return nil }
+        guard let account = snapshot.account(id: id) else { return }
 
         let remaining = snapshot.accounts.filter { $0.id != id }
         try FileManagedCodexAccountStore.$mutation.withValue(.remove) {
@@ -361,7 +351,6 @@ final class ManagedCodexAccountService {
         if homeStillReferenced == false {
             try? self.removeManagedHomeIfSafe(atPath: account.managedHomePath, mutation: .remove)
         }
-        return account
     }
 
     private func removeManagedHomeIfSafe(atPath path: String, mutation: FileManagedCodexAccountStore.Mutation) throws {
