@@ -539,7 +539,9 @@ enum CostUsagePricing {
     /// turn identifiers; published 0.73.0.1 stores adopt like upstream 0.73.0 stores.
     /// Version 24: v0.80.0-v0.81.0 merged Claude Cowork de-duplication and Codex `.jsonl.zst` archived
     /// rollouts (steipete #4534); roll every cache so both axes re-scan with the merged scanners.
-    static let parserLogicVersion = 24
+    /// Version 25: steipete main after v0.83.0 (upstream `.jsonl.zst` archived rollouts replace the fork's
+    /// mirror, Codex home scoping, Fast pricing correction); roll every cache so both axes re-scan.
+    static let parserLogicVersion = 25
 
     /// Stable string fingerprint of the pricing tables + parser logic.
     /// `CostUsageCacheIO.load` compares this against the value stored

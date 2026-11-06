@@ -43,7 +43,7 @@ struct WidgetLocalQuotaHistory: Codable, Equatable, Sendable {
 }
 
 enum WidgetLocalQuotaHistoryStore {
-    static let groupID = "group.com.audichuang.codexbar"
+    static let groupID = ForkIdentity.appGroup
     static let filename = "widget-local-quota-history-v1.json"
 
     static func fileURL(fileManager: FileManager = .default) -> URL? {

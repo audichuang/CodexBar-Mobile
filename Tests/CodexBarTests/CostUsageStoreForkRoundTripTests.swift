@@ -24,7 +24,7 @@ struct CostUsageStoreForkRoundTripTests {
         try env.writeCodexSessionFile(
             day: day,
             filename: "rollout-2026-08-30T12-00-00-roundtrip.jsonl",
-            contents: CodexArchivedRolloutMirrorTests.rollout(stamp: env.isoString(for: day)))
+            contents: Self.rollout(stamp: env.isoString(for: day)))
         let options = Self.options(env)
 
         let first = CostUsageScanner.loadDailyReport(
@@ -93,7 +93,7 @@ struct CostUsageStoreForkRoundTripTests {
         try env.writeCodexSessionFile(
             day: day,
             filename: "rollout-2026-08-30T12-00-00-after-upgrade.jsonl",
-            contents: CodexArchivedRolloutMirrorTests.rollout(stamp: env.isoString(for: day)))
+            contents: Self.rollout(stamp: env.isoString(for: day)))
 
         let report = CostUsageScanner.loadDailyReport(
             provider: .codex, since: day, until: day, now: day, options: Self.options(env))
@@ -105,34 +105,15 @@ struct CostUsageStoreForkRoundTripTests {
         #expect(try Self.storedParserHash(old.databaseURL) == CodexParserHash.value)
     }
 
-    @Test
-    func `an archived jsonl zst rollout is counted once and sets the scan file total`() throws {
-        let env = try CostUsageTestEnvironment()
-        defer { env.cleanup() }
-        let day = try env.makeLocalNoon(year: 2026, month: 8, day: 30)
-        try CodexArchivedRolloutMirrorTests.writeArchive(
-            env: env,
-            day: day,
-            name: "rollout-2026-08-30T12-00-00-\(CodexArchivedRolloutMirrorTests.uuid(7)).jsonl",
-            contents: Data(CodexArchivedRolloutMirrorTests.rollout(stamp: env.isoString(for: day)).utf8),
-            modified: day)
-        let options = Self.options(env)
-
-        let first = CostUsageScanner.loadDailyReport(
-            provider: .codex, since: day, until: day, now: day, options: options)
-        #expect(first.summary?.totalTokens == 330)
-        let cache = CostUsageStoreAccess.read(cacheRoot: env.cacheRoot)
-        #expect(cache.codexScanTotalFiles == 1)
-        #expect(cache.codexScanCatchUpPending != true)
-
-        // A later refresh over the unchanged archive must not mirror or count it a second time.
-        let again = CostUsageScanner.loadDailyReport(
-            provider: .codex, since: day, until: day, now: day.addingTimeInterval(1), options: options)
-        #expect(again.summary?.totalTokens == 330)
-        #expect(CostUsageStoreAccess.read(cacheRoot: env.cacheRoot).codexScanTotalFiles == 1)
+    private static func rollout(stamp: String) -> String {
+        [
+            #"{"type":"turn_context","timestamp":"\#(stamp)","payload":{"model":"gpt-5.4"}}"#,
+            #"{"type":"event_msg","timestamp":"\#(stamp)","payload":{"type":"token_count","info":"#
+                + #"{"total_token_usage":{"input_tokens":100,"output_tokens":10}}}}"#,
+            #"{"type":"event_msg","timestamp":"\#(stamp)","payload":{"type":"token_count","info":"#
+                + #"{"total_token_usage":{"input_tokens":300,"output_tokens":30}}}}"#,
+        ].joined(separator: "\n") + "\n"
     }
-
-    // MARK: - Fixtures
 
     private static func options(_ env: CostUsageTestEnvironment) -> CostUsageScanner.Options {
         var options = CostUsageScanner.Options(
