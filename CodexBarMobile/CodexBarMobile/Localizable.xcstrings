@@ -146,7 +146,6 @@
         }
       }
     },
-    "just now": {"extractionState": "manual", "localizations": {"en": {"stringUnit": {"state": "translated", "value": "just now"}}, "zh-Hans": {"stringUnit": {"state": "translated", "value": "刚刚"}}, "zh-Hant": {"stringUnit": {"state": "translated", "value": "剛剛"}}, "ja": {"stringUnit": {"state": "translated", "value": "たった今"}}}},
     "Out %@": {"extractionState": "manual", "localizations": {"en": {"stringUnit": {"state": "translated", "value": "Out %@"}}, "zh-Hans": {"stringUnit": {"state": "translated", "value": "%@ 用完"}}, "zh-Hant": {"stringUnit": {"state": "translated", "value": "%@ 用完"}}, "ja": {"stringUnit": {"state": "translated", "value": "%@ に上限"}}}},
     "Used up": {"extractionState": "manual", "localizations": {"en": {"stringUnit": {"state": "translated", "value": "Used up"}}, "zh-Hans": {"stringUnit": {"state": "translated", "value": "已用完"}}, "zh-Hant": {"stringUnit": {"state": "translated", "value": "已用完"}}, "ja": {"stringUnit": {"state": "translated", "value": "上限到達"}}}},
     "Likely used up": {"extractionState": "manual", "localizations": {"en": {"stringUnit": {"state": "translated", "value": "Likely used up"}}, "zh-Hans": {"stringUnit": {"state": "translated", "value": "可能已用完"}}, "zh-Hant": {"stringUnit": {"state": "translated", "value": "可能已用完"}}, "ja": {"stringUnit": {"state": "translated", "value": "上限到達の可能性"}}}},
