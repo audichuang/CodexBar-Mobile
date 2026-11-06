@@ -13,6 +13,9 @@ extension CodexAccountScopedRefreshTests {
         settings.refreshFrequency = .fiveMinutes
         settings.codexCookieSource = .off
         settings.multiAccountMenuLayout = .segmented
+        // o1xhack fans out every Codex account while iCloud sync is on (its default); this test
+        // covers the single-account path, so turn sync off.
+        settings.iCloudSyncEnabled = false
         let email = "weekly-follow-up@example.com"
         let accountID = UUID()
         let siblingID = UUID()
