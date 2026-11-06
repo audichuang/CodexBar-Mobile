@@ -61,7 +61,6 @@ struct CloudSyncForkEndToEndTests {
             userInfo: [CKErrorRetryAfterKey: NSNumber(value: retryAfter)]))
     }
 
-
     @Test
     func `a publication is kicked once`() async {
         let publisher = Publisher()

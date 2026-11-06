@@ -1414,6 +1414,15 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
         return true
     }
 
+    /// fork hook: a retired engine's late callback must not push for the current one.
+    private func pushPendingSnapshots(ifCurrent syncEngine: CKSyncEngine) {
+        guard self.enabled, CloudSyncLifecycle.isCurrentEngine(
+            originatingEngine: ObjectIdentifier(syncEngine),
+            currentEngine: self.engine.map(ObjectIdentifier.init))
+        else { return }
+        self.pushPendingSnapshots()
+    }
+
     private func processEvent(_ event: CKSyncEngine.Event, syncEngine: CKSyncEngine) async {
         // Retired records, recovery checkpoints, and their fetch checkpoint must be discarded together.
         guard self.enabled, self.engine === syncEngine, !Task.isCancelled else { return }
@@ -1489,14 +1498,7 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
                 self.state.status.lastSuccessfulPushAt = Date()
             }
             if !self.pendingSnapshots.isEmpty {
-                Task { [weak self] in
-                    guard let self, self.enabled,
-                          CloudSyncLifecycle.isCurrentEngine(
-                              originatingEngine: ObjectIdentifier(syncEngine),
-                              currentEngine: self.engine.map(ObjectIdentifier.init))
-                    else { return }
-                    self.pushPendingSnapshots()
-                }
+                Task { [weak self] in self?.pushPendingSnapshots(ifCurrent: syncEngine) }
             }
         case let .fetchedDatabaseChanges(changes):
             self.fetchHadSuccessfulResponse = true
