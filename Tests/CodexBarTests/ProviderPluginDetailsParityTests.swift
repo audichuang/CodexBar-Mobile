@@ -130,14 +130,19 @@ struct ProviderPluginDetailsParityTests {
         ])
     }
 
-    @Test(arguments: Self.parityEngines, [false, true])
+    @Test(.timeLimit(.minutes(1)), arguments: Self.parityEngines, [false, true])
     func `OpenRouter optional key timeout is an observable degradation`(
         engine: ProviderPluginEngineKind, delaysTaskStart: Bool) async throws
     {
         let transport = ProviderHTTPTransportHandler { request in
             let isKeyRequest = request.url?.path == "/api/v1/key"
             if isKeyRequest {
-                try await Task.sleep(for: .milliseconds(7500))
+                // A delayed timeout task must never turn this pending request into a success.
+                let (pending, release) = AsyncStream<Void>.makeStream()
+                defer { release.finish() }
+                for await _ in pending {}
+                #expect(Task.isCancelled)
+                try Task.checkCancellation()
             }
             let response = try #require(HTTPURLResponse(
                 url: request.url!,
@@ -154,14 +159,11 @@ struct ProviderPluginDetailsParityTests {
             source: source,
             resourceBundle: CodexBarCoreResources.bundle,
             transport: transport,
-            timeout: 60,
             contextOptions: ProviderPluginContextOptions(
-                // Keep a scheduling margin for credits under the full concurrent Linux matrix.
-                // The key transport and pre-attempt delay still exceed this budget.
-                optionalRequestTimeoutSeconds: 5,
+                optionalRequestTimeoutSeconds: 1,
                 beforeHTTPAttempt: { _ in
                     // Model a task queued longer than the attempt budget before the transport begins.
-                    if delaysTaskStart { try await Task.sleep(for: .milliseconds(7500)) }
+                    if delaysTaskStart { try await Task.sleep(for: .milliseconds(1500)) }
                 }),
             engine: engine)
             .fetchUsage(secrets: ["OPENROUTER_API_KEY": "fixture-key"])
@@ -632,9 +634,6 @@ struct ProviderPluginDetailsParityTests {
         ProviderHTTPTransportHandler { request in
             #expect(request.httpMethod == "GET")
             #expect(request.value(forHTTPHeaderField: "Authorization") == "Bearer fixture-key")
-            if request.url?.path == "/api/v1/key" {
-                try await Task.sleep(for: .milliseconds(950))
-            }
             let response = try #require(HTTPURLResponse(
                 url: request.url!,
                 statusCode: 200,
