@@ -60,6 +60,7 @@ Source of truth is `fork/footprint.tsv` (path, max changed lines against the bas
 |---|---|---|
 | `Makefile` | `fork-gate` target and its `.PHONY` entry | `make fork-gate` runs `Scripts/fork_sync_gate.sh` |
 | `.gitignore` | ignore fork-only local artifacts | |
+| `version.env` | comment naming the upstream commit when the sync base is not a release tag | `UPSTREAM_VERSION` must still match the base tag |
 | `CodexBarMobile/project.yml` | `configFiles:` entries for `Fork.xcconfig`, `$(FORK_*)` ids, fork source groups | fork identity and fork-owned sources in each target |
 | `CodexBarMobile/CodexBarMobile.xcodeproj/project.pbxproj` | generated | regenerate with xcodegen; budget grows with fork-owned source files |
 | `docs/RELEASING.md` | fork release docs adaptation | |
