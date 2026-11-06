@@ -81,3 +81,4 @@ Tests/CodexBarTests/CloudSyncPushRegistrationTests.swift	58	fork test coverage a
 Tests/CodexBarTests/CloudSyncSettingsTests.swift	4	fork test coverage added to upstream-owned test file
 Tests/CodexBarTests/SyncCoordinatorMultiAccountTests.swift	40	fork test coverage added to upstream-owned test file
 Tests/CodexBarTests/SyncWireFormatRoundTripTests.swift	27	fork test coverage added to upstream-owned test file
+version.env	3	sync base note: upstream version and the steipete main commit the base merged
