@@ -1416,11 +1416,7 @@ final class CloudSyncEngine: CKSyncEngineDelegate {
 
     /// fork hook: a retired engine's late callback must not push for the current one.
     private func pushPendingSnapshots(ifCurrent syncEngine: CKSyncEngine) {
-        guard self.enabled, CloudSyncLifecycle.isCurrentEngine(
-            originatingEngine: ObjectIdentifier(syncEngine),
-            currentEngine: self.engine.map(ObjectIdentifier.init))
-        else { return }
-        self.pushPendingSnapshots()
+        if self.enabled, self.engine === syncEngine { self.pushPendingSnapshots() }
     }
 
     private func processEvent(_ event: CKSyncEngine.Event, syncEngine: CKSyncEngine) async {
