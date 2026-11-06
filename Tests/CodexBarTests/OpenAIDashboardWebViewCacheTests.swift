@@ -5,7 +5,11 @@ import WebKit
 @testable import CodexBar
 @testable import CodexBarCore
 
-/// Verifies per-store isolation, lease ownership, handoff reuse and teardown.
+/// Tests for OpenAIDashboardWebViewCache to verify WebView reuse behavior.
+///
+/// Background: The cache should keep WebViews alive after use to avoid re-downloading
+/// the ChatGPT SPA bundle on every refresh. Previously, WebViews were destroyed after
+/// each fetch, causing 15+ GB of network traffic over time. See GitHub issues #269, #251.
 @MainActor
 @Suite(.serialized)
 struct OpenAIDashboardWebViewCacheTests {
@@ -65,6 +69,7 @@ struct OpenAIDashboardWebViewCacheTests {
         let error = evaluationError
         let elapsed = Date().timeIntervalSince(started)
         #expect(error != nil, "Terminating WebContent must fail its pending evaluation")
+        #expect(elapsed < 3, "The five-second microtask loop must stop at the two-second refresh deadline")
         #expect(!cache.hasCachedEntry(for: store))
         let exitDeadline = Date().addingTimeInterval(2)
         while kill(pid, 0) == 0, Date() < exitDeadline {
@@ -83,15 +88,13 @@ struct OpenAIDashboardWebViewCacheTests {
 
     private static func loadOfflinePage(_ webView: WKWebView) async throws {
         let navigation = Navigation()
-        defer {
-            webView.navigationDelegate = nil
-            withExtendedLifetime(navigation) {}
+        webView.navigationDelegate = navigation
+        webView.loadHTMLString("<html><title>Offline fixture</title></html>", baseURL: nil)
+        let limit = Date().addingTimeInterval(5)
+        while !navigation.finished, Date() < limit {
+            try await Task.sleep(for: .milliseconds(10))
         }
-        try await withCheckedThrowingContinuation { continuation in
-            navigation.completion = continuation
-            webView.navigationDelegate = navigation
-            webView.loadHTMLString("<html><title>Offline fixture</title></html>", baseURL: nil)
-        }
+        try #require(navigation.finished)
     }
 
     private static func stall(_ webView: WKWebView) async -> NSError? {
@@ -112,27 +115,10 @@ struct OpenAIDashboardWebViewCacheTests {
     }
 
     private final class Navigation: NSObject, WKNavigationDelegate {
-        var completion: CheckedContinuation<Void, any Error>?
+        var finished = false
 
         func webView(_: WKWebView, didFinish _: WKNavigation!) {
-            self.complete(.success(()))
-        }
-
-        func webView(_: WKWebView, didFail _: WKNavigation!, withError error: any Error) {
-            self.complete(.failure(error))
-        }
-
-        func webView(_: WKWebView, didFailProvisionalNavigation _: WKNavigation!, withError error: any Error) {
-            self.complete(.failure(error))
-        }
-
-        func webViewWebContentProcessDidTerminate(_: WKWebView) {
-            self.complete(.failure(URLError(.networkConnectionLost)))
-        }
-
-        private func complete(_ result: Result<Void, any Error>) {
-            self.completion?.resume(with: result)
-            self.completion = nil
+            self.finished = true
         }
     }
 
