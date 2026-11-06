@@ -59,7 +59,6 @@ Source of truth is `fork/footprint.tsv` (path, max changed lines against the bas
 | File | Hook | Why |
 |---|---|---|
 | `Makefile` | `fork-gate` target and its `.PHONY` entry | `make fork-gate` runs `Scripts/fork_sync_gate.sh` |
-| `Package.swift` | `CZstd` target and its dependency | decoder-only zstd for Codex `*.jsonl.zst` rollouts |
 | `.gitignore` | ignore fork-only local artifacts | |
 | `CodexBarMobile/project.yml` | `configFiles:` entries for `Fork.xcconfig`, `$(FORK_*)` ids, fork source groups | fork identity and fork-owned sources in each target |
 | `CodexBarMobile/CodexBarMobile.xcodeproj/project.pbxproj` | generated | regenerate with xcodegen; budget grows with fork-owned source files |
@@ -78,8 +77,8 @@ Fork-only: `.github/workflows/release-mac.yml`, `.github/README.md`.
 
 These carry identity strings or fork packaging calls and nothing else. Larger fork logic goes to `Scripts/fork/` (for example `package_app.sh` calls `Scripts/fork/package_app_fork.sh`).
 
-- Release and CI: `Scripts/acknowledgements.py`, `Scripts/changelog-to-html.sh`, `Scripts/check_fork_readme.sh`, `Scripts/check_pr_review_gate.sh`, `Scripts/check-release-assets.sh`, `Scripts/ci_macos_test_gate.sh`, `Scripts/cloudkit/deploy_schema.sh`, `Scripts/compile_and_run.sh`, `Scripts/deploy_quota_account_email_field.sh`, `Scripts/make_appcast.sh`, `Scripts/package_app.sh`, `Scripts/release.sh`, `Scripts/sign-and-notarize.sh`, `Scripts/sparkle_helpers.sh`, `Scripts/upload_ios_testflight.sh`, `Scripts/upstream-release-monitor.mjs`
-- Their tests: `Scripts/test_acknowledgements.py`, `Scripts/test_fork_readme_guard.sh`, `Scripts/test_ios_upload_contract.sh`, `Scripts/test_package_product_paths.sh`, `Scripts/test_package_signing.sh`, `Scripts/test_pr_review_gate.sh`, `Scripts/test_release_cli_workflow.sh`, `Scripts/test_release_temp_cleanup.py`
+- Release and CI: `Scripts/changelog-to-html.sh`, `Scripts/check_fork_readme.sh`, `Scripts/check_pr_review_gate.sh`, `Scripts/check-release-assets.sh`, `Scripts/ci_macos_test_gate.sh`, `Scripts/cloudkit/deploy_schema.sh`, `Scripts/compile_and_run.sh`, `Scripts/deploy_quota_account_email_field.sh`, `Scripts/make_appcast.sh`, `Scripts/package_app.sh`, `Scripts/release.sh`, `Scripts/sign-and-notarize.sh`, `Scripts/sparkle_helpers.sh`, `Scripts/upload_ios_testflight.sh`, `Scripts/upstream-release-monitor.mjs`
+- Their tests: `Scripts/test_fork_readme_guard.sh`, `Scripts/test_ios_upload_contract.sh`, `Scripts/test_package_product_paths.sh`, `Scripts/test_package_signing.sh`, `Scripts/test_pr_review_gate.sh`, `Scripts/test_release_cli_workflow.sh`, `Scripts/test_release_temp_cleanup.py`
 
 ### Entitlements and plists (identity values)
 
@@ -87,7 +86,7 @@ These carry identity strings or fork packaging calls and nothing else. Larger fo
 
 ### Localization
 
-`CodexBarMobile/CodexBarMobile/Localizable.xcstrings`, `CodexBarMobile/CodexBarWidgetShared/WidgetConfiguration.xcstrings`, `Sources/CodexBarCore/Resources/Acknowledgements.json` (fork credits). Union-merge, regenerate.
+`CodexBarMobile/CodexBarMobile/Localizable.xcstrings`, `CodexBarMobile/CodexBarWidgetShared/WidgetConfiguration.xcstrings`. Union-merge, regenerate.
 
 ### Mac app, core and sync
 
@@ -96,9 +95,8 @@ These carry identity strings or fork packaging calls and nothing else. Larger fo
 | `Sources/CodexBar/CodexbarApp.swift` | `ForkIdentity` oslog and help URL; `cloudSyncCoordinator` property visible to the extension | `AppDelegate+ForkPush.swift` |
 | `Sources/CodexBar/Settings/PreferencesAboutPane.swift` | repo URL via `ForkIdentity` | `ForkIdentity` |
 | `Sources/CodexBar/Sync/CloudSyncCoordinator.swift` | `settings` and `scheduleResume(debounce:)` widened for the extension | `CloudSyncCoordinator+RemotePush.swift` |
-| `Sources/CodexBar/Sync/CloudSyncEngine.swift` | stored properties (`settings`, `state`, pending/skipped hash maps, `forkSend`) and kick backoff call (partly inline) | `CloudSyncEngine+ForkSendTracking.swift`, `CloudSyncSnapshotSendKick.swift` |
+| `Sources/CodexBar/Sync/CloudSyncEngine.swift` | `snapshotSendKick` stored property, kick scheduling, backoff and retired-engine guards (partly inline) | `CloudSyncSnapshotSendKick.swift` |
 | `Sources/CodexBar/Sync/CloudSyncPersistence.swift`, `Sources/CodexBar/Sync/SyncCoordinator.swift` | `accountLabel` published to iPhone (`syncedAccountLabel`) | `UsageSnapshot.accountLabel` |
-| `Sources/CodexBarCore/Vendored/CostUsage/CostUsageScanner.swift` | archived-rollout mirror roots (`ensureMirrorRoots`, `existingMirrorRoots`) (partly inline) | `CodexArchivedRolloutMirror.swift`, `CostUsageScanner+ForkCoverage.swift`, `CostUsageScanner+ForkParserRevision.swift` |
 | `Sources/CodexBarCore/Vendored/CostUsage/CostUsagePricing.swift` | `parserLogicVersion` value and its fork rationale comment | `CostUsageScanner+ForkParserRevision.swift` |
 | `Sources/CodexBarCore/Generated/CodexParserHash.generated.swift` | generated | `Scripts/regenerate-codex-parser-hash.sh` |
 
@@ -131,7 +129,7 @@ These carry identity strings or fork packaging calls and nothing else. Larger fo
 
 ### Tests added inside upstream test files
 
-Budgeted because the fork's cases still sit in upstream test files: `CodexBarMobile/CodexBarMobileTests/MobileDisplayFormattingTests.swift`, `CodexBarMobile/CodexBarMobileTests/ProviderAccountGroupTests.swift`, `CodexBarMobile/CodexBarMobileTests/WidgetConfigurationAppIntentsTests.swift`, `Tests/CodexBarTests/AppGroupSupportTests.swift`, `Tests/CodexBarTests/CloudSyncDeviceRemovalTests.swift`, `Tests/CodexBarTests/CloudSyncPushRegistrationTests.swift`, `Tests/CodexBarTests/CloudSyncSettingsTests.swift`, `Tests/CodexBarTests/SyncCoordinatorMultiAccountTests.swift`, `Tests/CodexBarTests/SyncWireFormatRoundTripTests.swift`. New fork tests go into `+Fork` siblings instead.
+Budgeted because the fork's cases still sit in upstream test files: `CodexBarMobile/CodexBarMobileTests/MobileDisplayFormattingTests.swift`, `CodexBarMobile/CodexBarMobileTests/ProviderAccountGroupTests.swift`, `CodexBarMobile/CodexBarMobileTests/WidgetConfigurationAppIntentsTests.swift`, `Tests/CodexBarTests/AppGroupSupportTests.swift`, `Tests/CodexBarTests/CloudSyncPushRegistrationTests.swift`, `Tests/CodexBarTests/CloudSyncSettingsTests.swift`, `Tests/CodexBarTests/SyncCoordinatorMultiAccountTests.swift`, `Tests/CodexBarTests/SyncWireFormatRoundTripTests.swift`. New fork tests go into `+Fork` siblings instead.
 
 ## Check standard
 
