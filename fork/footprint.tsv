@@ -35,13 +35,12 @@ CodexBarMobile/CodexBarWidgetShared/StatusWidgetConfigurationAdapter.swift	30	fo
 CodexBarMobile/CodexBarWidgetShared/WidgetActivityProjection.swift	3	fork widget hook (calls fork-owned +Accounts/Fork extension)
 CodexBarMobile/CodexBarWidgetShared/WidgetConfiguration.xcstrings	180	fork localization keys (union-merge, regenerate with locale scripts)
 CodexBarMobile/CodexBarWidgetShared/WidgetConfigurationAppIntents.swift	2	fork widget hook (calls fork-owned +Accounts/Fork extension)
+CodexBarMobile/CodexBarWidgetShared/WidgetLocalQuotaHistory.swift	2	fork app-group identity via ForkIdentity
 CodexBarMobile/CodexBarWidgetShared/WidgetProviderCatalogue.swift	15	fork widget hook (calls fork-owned +Accounts/Fork extension)
 CodexBarMobile/CodexBarWidgetShared/WidgetProviderSelection.swift	77	fork widget hook (calls fork-owned +Accounts/Fork extension)
 CodexBarMobile/project.yml	51	xcodegen source: fork identity, fork source groups and Fork.xcconfig wiring
 docs/RELEASING.md	4	fork release docs adaptation
 Makefile	6	fork gate hook: fork-gate target runs Scripts/fork_sync_gate.sh
-Package.swift	7	SwiftPM wiring for fork-owned targets/sources
-Scripts/acknowledgements.py	12	fork identity adaptation of upstream release/CI script
 Scripts/changelog-to-html.sh	4	fork identity adaptation of upstream release/CI script
 Scripts/check_fork_readme.sh	8	fork identity adaptation of upstream release/CI script
 Scripts/check_pr_review_gate.sh	6	fork identity adaptation of upstream release/CI script
@@ -55,7 +54,6 @@ Scripts/package_app.sh	32	fork identity adaptation of upstream release/CI script
 Scripts/release.sh	40	fork identity adaptation of upstream release/CI script
 Scripts/sign-and-notarize.sh	11	fork identity adaptation of upstream release/CI script
 Scripts/sparkle_helpers.sh	2	fork identity adaptation of upstream release/CI script
-Scripts/test_acknowledgements.py	2	fork identity adaptation of upstream release script test
 Scripts/test_fork_readme_guard.sh	2	fork identity adaptation of upstream release script test
 Scripts/test_ios_upload_contract.sh	12	fork identity adaptation of upstream release script test
 Scripts/test_package_product_paths.sh	12	fork identity adaptation of upstream release script test
@@ -77,11 +75,8 @@ Sources/CodexBar/Sync/CloudSyncEngine.swift	39	fork multi-account/sync hook in M
 Sources/CodexBar/Sync/CloudSyncPersistence.swift	2	fork multi-account/sync hook in Mac sync code
 Sources/CodexBar/Sync/SyncCoordinator.swift	13	fork multi-account/sync hook in Mac sync code
 Sources/CodexBarCore/Generated/CodexParserHash.generated.swift	2	generated parser hash; regenerate with Scripts/regenerate-codex-parser-hash.sh
-Sources/CodexBarCore/Resources/Acknowledgements.json	16	fork acknowledgements entries
 Sources/CodexBarCore/Vendored/CostUsage/CostUsagePricing.swift	2	fork hook in Mac app/core code (calls fork-owned extension)
-Sources/CodexBarCore/Vendored/CostUsage/CostUsageScanner.swift	61	fork hook in Mac app/core code (calls fork-owned extension)
 Tests/CodexBarTests/AppGroupSupportTests.swift	10	fork test coverage added to upstream-owned test file
-Tests/CodexBarTests/CloudSyncDeviceRemovalTests.swift	24	fork test coverage added to upstream-owned test file
 Tests/CodexBarTests/CloudSyncPushRegistrationTests.swift	58	fork test coverage added to upstream-owned test file
 Tests/CodexBarTests/CloudSyncSettingsTests.swift	4	fork test coverage added to upstream-owned test file
 Tests/CodexBarTests/SyncCoordinatorMultiAccountTests.swift	40	fork test coverage added to upstream-owned test file
