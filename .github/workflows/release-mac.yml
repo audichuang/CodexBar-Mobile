@@ -80,6 +80,8 @@ jobs:
       # Caches are an optimization only: SwiftPM and Xcode recompile anything whose
       # sources changed, and package_app.sh re-validates arch, minos and SDK of every
       # staged binary. Restore-only here; saved after a successful build below.
+      # Package clones are the exception: a cache from another Package.resolved made
+      # xcodebuild fail with "unable to read tree", so restore keys keep the dependency hash.
       - name: Restore SwiftPM build cache
         id: swiftpm-cache
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -92,7 +94,6 @@ jobs:
           key: release-swiftpm-${{ runner.os }}-${{ runner.arch }}-${{ steps.cachekeys.outputs.xcode }}-${{ hashFiles('Package.resolved', 'Package.swift') }}-${{ github.sha }}
           restore-keys: |
             release-swiftpm-${{ runner.os }}-${{ runner.arch }}-${{ steps.cachekeys.outputs.xcode }}-${{ hashFiles('Package.resolved', 'Package.swift') }}-
-            release-swiftpm-${{ runner.os }}-${{ runner.arch }}-${{ steps.cachekeys.outputs.xcode }}-
 
       - name: Restore widget DerivedData cache
         id: widget-cache
@@ -105,7 +106,6 @@ jobs:
           key: release-widget-${{ runner.os }}-${{ runner.arch }}-${{ steps.cachekeys.outputs.xcode }}-${{ hashFiles('Package.resolved', 'Package.swift', 'WidgetExtension/project.yml', 'WidgetExtension/CodexBarWidgetExtension.xcodeproj/project.pbxproj') }}-${{ github.sha }}
           restore-keys: |
             release-widget-${{ runner.os }}-${{ runner.arch }}-${{ steps.cachekeys.outputs.xcode }}-${{ hashFiles('Package.resolved', 'Package.swift', 'WidgetExtension/project.yml', 'WidgetExtension/CodexBarWidgetExtension.xcodeproj/project.pbxproj') }}-
-            release-widget-${{ runner.os }}-${{ runner.arch }}-${{ steps.cachekeys.outputs.xcode }}-
 
       - name: Compute version, tag and asset names
         run: |
