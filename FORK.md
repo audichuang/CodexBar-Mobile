@@ -98,8 +98,6 @@ These carry identity strings or fork packaging calls and nothing else. Larger fo
 | `Sources/CodexBar/Sync/CloudSyncCoordinator.swift` | `settings` and `scheduleResume(debounce:)` widened for the extension | `CloudSyncCoordinator+RemotePush.swift` |
 | `Sources/CodexBar/Sync/CloudSyncEngine.swift` | `snapshotSendKick` stored property, kick scheduling, backoff and retired-engine guards (partly inline) | `CloudSyncSnapshotSendKick.swift` |
 | `Sources/CodexBar/Sync/CloudSyncPersistence.swift`, `Sources/CodexBar/Sync/SyncCoordinator.swift` | `accountLabel` published to iPhone (`syncedAccountLabel`) | `UsageSnapshot.accountLabel` |
-| `Sources/CodexBarCore/Vendored/CostUsage/CostUsagePricing.swift` | `parserLogicVersion` value and its fork rationale comment | `CostUsageScanner+ForkParserRevision.swift` |
-| `Sources/CodexBarCore/Generated/CodexParserHash.generated.swift` | generated | `Scripts/regenerate-codex-parser-hash.sh` |
 
 ### Shared (Mac and iOS)
 

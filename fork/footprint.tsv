@@ -58,7 +58,7 @@ Scripts/test_fork_readme_guard.sh	2	fork identity adaptation of upstream release
 Scripts/test_ios_upload_contract.sh	12	fork identity adaptation of upstream release script test
 Scripts/test_package_product_paths.sh	12	fork identity adaptation of upstream release script test
 Scripts/test_package_signing.sh	10	fork identity adaptation of upstream release script test
-Scripts/test_pr_review_gate.sh	8	fork identity adaptation of upstream release script test
+Scripts/test_pr_review_gate.sh	12	fork identity adaptation of upstream release script test
 Scripts/test_release_cli_workflow.sh	2	fork identity adaptation of upstream release script test
 Scripts/test_release_temp_cleanup.py	3	fork identity adaptation of upstream release script test
 Scripts/upload_ios_testflight.sh	14	fork identity adaptation of upstream release script test
@@ -74,8 +74,6 @@ Sources/CodexBar/Sync/CloudSyncCoordinator.swift	4	fork multi-account/sync hook 
 Sources/CodexBar/Sync/CloudSyncEngine.swift	39	fork multi-account/sync hook in Mac sync code
 Sources/CodexBar/Sync/CloudSyncPersistence.swift	2	fork multi-account/sync hook in Mac sync code
 Sources/CodexBar/Sync/SyncCoordinator.swift	13	fork multi-account/sync hook in Mac sync code
-Sources/CodexBarCore/Generated/CodexParserHash.generated.swift	2	generated parser hash; regenerate with Scripts/regenerate-codex-parser-hash.sh
-Sources/CodexBarCore/Vendored/CostUsage/CostUsagePricing.swift	2	fork hook in Mac app/core code (calls fork-owned extension)
 Tests/CodexBarTests/AppGroupSupportTests.swift	10	fork test coverage added to upstream-owned test file
 Tests/CodexBarTests/CloudSyncPushRegistrationTests.swift	58	fork test coverage added to upstream-owned test file
 Tests/CodexBarTests/CloudSyncSettingsTests.swift	4	fork test coverage added to upstream-owned test file
