@@ -103,6 +103,9 @@ See [WorkBuddy](workbuddy.md) for the request contract, bounded optional reset l
 [abliteration.ai](abliteration.md) uses a fixed-origin bearer request to read prepaid USD credits. It reuses the
 standard API-key field and classified errors, with no browser access or inferred reset schedule.
 
+[SiliconFlow](siliconflow.md) reads `GET /v1/user/info` with the same API-key field. China (`api.siliconflow.cn`)
+is the default and displays CNY; the international origin displays USD. The key is not sent to any other host.
+
 [X API](xapi.md) uses the same cookie host with a bundled `ct0` header echo for account discovery and developer-console
 credits. Its script preserves dollar balances and debt without receiving cookie values or adding a native fetcher.
 
@@ -259,6 +262,8 @@ so portable third-party plugins must use the host helpers below instead of ECMA-
   only collects an already completed secondary; a fast primary can wait for the remainder of that budget.
   Failed optional work is discarded. Unfinished optional work is cancelled on collection, primary failure, or caller
   cancellation. This works on both engines without JavaScript promise concurrency. HTTP responses expose their final `url`.
+  Timeout and cancellation results return without waiting for a transport's cancellation handler. Cancellation of
+  already-started network work is best effort; this does not guarantee recovery from a stuck networking session.
 - `await ctx.http.postJSON(url, {body, headers?})` performs JSON POST. `body` must be JSON-serializable.
 - `await ctx.http.post(url, {body, headers?})` sends the same JSON POST and returns `{status, headers, bodyText}` so a
   plugin can classify non-JSON error pages before parsing a successful response.
@@ -382,6 +387,10 @@ cross-process locking. Removing the source file manually does not delete state. 
 cookies, and tokens belong in secure settings. Storage does not alter `ctx.cache` or the settings `persist` allowlist.
 
 Bundled first-party providers that have cut over to JavaScript use the shared runtime's 20-second hung-script watchdog.
+Default API plugin descriptors retain a strategy for each declared timeout, reusing its initialized runtime across
+refreshes. Each fetch still reads current settings and credentials and requests fresh usage. Overlapping fetches use
+separate temporary runtimes so one account cannot consume another account's fetch deadline. Web strategies keep
+their existing source-specific lifecycle.
 A timeout fails that refresh and discards the poisoned worker before returning the error, so an immediate retry starts
 with a fresh context. Cancellation retires the worker in the same way. This is production-default and does not depend
 on `CODEXBAR_JS_PROVIDERS`.
@@ -394,7 +403,8 @@ abandoned evaluation thread can remain alive until process exit.
 
 QuickJS worker jobs drain autoreleased host objects when they finish, preventing refresh temporaries from building up
 across a plugin's lifetime. JavaScriptCore registration and completed-fetch callbacks do not keep retired runtimes or
-contexts alive; active evaluations and the existing fetch watchdog still determine when cleanup can finish.
+contexts alive. Completed-fetch watchdogs copy the timeout value, allowing retired runtimes to be released
+as soon as the fetch finishes.
 
 ## Snapshot result
 
@@ -596,8 +606,9 @@ error and can also be deleted.
 
 ## Security and limitations
 
-User-plugin HTTP sessions are scoped to a single request and released after success or failure.
-Reloading or removing plugins does not leave inactive sessions retained by their delegates. Redirect and credential-isolation rules remain unchanged.
+User plugins share one process-lifetime HTTP session with a stateless delegate. Each request has its own response
+buffer and byte limit; completion or cancellation removes its state. The session retains no plugin runtime or client.
+Cookies, caches, and credential storage remain disabled, redirects are refused, and both session timeouts remain 15 seconds.
 
 Treat a plugin like code you run locally, even though its host capabilities are narrow. Read the manifest and source,
 verify every origin, and avoid installing files from untrusted repositories. Approval grants the listed origin network

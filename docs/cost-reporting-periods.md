@@ -43,6 +43,8 @@ is selected. No additional history store is created.
 
 The menu's **History window** supports rolling days, **Month to date**, and **All**. Usage & Spend uses the same period model and keeps its own range selection. Existing saved day counts retain their rolling windows; the dashboard's former All selection migrates to All available history.
 
+Usage & Spend prepares its detailed display model on demand and reuses it until the source, period, or selection changes. Background publications keep Overview current without eagerly preparing an unused dashboard model. Underlying source history remains available; a dashboard view that still observes updates can continue to request the model.
+
 Usage & Spend groups ranges longer than 45 reporting days by week, and ranges longer than 180 days by month. Select a bucket to inspect its days, then a day with hourly records to inspect individual hours. Daily scrolling keeps whole reporting days visible across daylight-saving changes. Hour labels use a shared 24-hour clock and include UTC offsets in the inspector to distinguish repeated hours. The legend can isolate an account without changing dashboard totals. It shows sources with recorded amounts in the displayed range, drilled interval, or hourly day, including recorded zero-dollar amounts. Sources without priced records in that scope are omitted; account labels and colors stay stable. Legend chips and inspector amounts wrap in narrow windows. Daily inspection only selects existing buckets, so plot padding cannot produce an adjacent date with an empty inspector.
 
 Chart summaries describe **recorded spend**, not an authoritative bill. A priced day alongside an unpriced day keeps the source and period totals unavailable. Missing hours remain distinct from recorded zero, incomplete sources retain their lower-bound marker, and an empty daily chart shows no usage only when coverage proves zero spend for the selected sources and interval. Aggregates that cannot be represented remain unavailable; valid individual records stay in the accounting model.
@@ -60,6 +62,8 @@ codexbar cost --days 7 --json
 ```
 
 `--days N` always selects a rolling window, even alongside `--period`. Rolling windows accept 1–365 days and default to 30 on installations without a saved selection. JSON includes `reportingPeriod`, `historyLabel`, and period totals under `totals`; the existing `last30DaysTokens` and `last30DaysCostUSD` compatibility fields retain their documented meaning.
+
+An explicit `--days` value must be an integer; malformed, fractional, or overflowing values fail with an argument error. Valid integers are clamped to 1–365 days.
 
 The existing host-summary protocol (`--remote` and `--summary-only`) remains limited to 1–365 days. When All is selected, use an explicit `--days N` for those modes.
 
