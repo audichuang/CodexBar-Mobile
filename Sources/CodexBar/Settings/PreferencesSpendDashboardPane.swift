@@ -132,7 +132,7 @@ struct SpendDashboardPane: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 18) {
+            LazyVStack(alignment: .leading, spacing: 18) {
                 if let request = self.sessionNavigation.request {
                     HStack {
                         Text(L("Sessions")).font(.title2.weight(.semibold))
@@ -733,7 +733,7 @@ struct SpendDashboardCurrencySection: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 18) {
+        LazyVStack(alignment: .leading, spacing: 18) {
             VStack(alignment: .leading, spacing: 4) {
                 Text(self.group.currencyCode)
                     .font(.caption.weight(.semibold))

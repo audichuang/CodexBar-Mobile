@@ -273,7 +273,7 @@ and stable account numbers distinguish rows while usable workspace labels remain
 - Preferences → Providers → Codex → OpenAI cookies (Automatic or Manual).
 - URL: `https://chatgpt.com/codex/cloud/settings/analytics#usage`.
 - Uses an off-screen `WKWebView` with a per-account `WKWebsiteDataStore`.
-- Clears disposable WebKit disk/memory caches at launch and at most daily after background use, preserving cookies and session storage. Removing a managed account attempts to remove only its matching scoped store; unknown historical mappings retain sessions. See [WebKit storage and cleanup](webkit.md#persistent-data-and-cache-maintenance).
+- Clears disposable WebKit disk/memory caches in existing named stores at most daily across launches and after background use, preserving cookies and session storage. Launches without named stores skip WebKit initialization. Removing a managed account attempts to remove only its matching scoped store; unknown historical mappings retain sessions. See [WebKit storage and cleanup](webkit.md#persistent-data-and-cache-maintenance).
   - Store key: deterministic UUID from the normalized email.
 - WebKit store can hold multiple accounts concurrently.
 - Active page preparation and JavaScript evaluations share the refresh deadline. Expired pages are terminated and discarded; verified API usage remains available. Timeout diagnostics do not start new JavaScript after the deadline.
@@ -357,6 +357,7 @@ and stable account numbers distinguish rows while usable workspace labels remain
   - `Credits:` line
   - `5h limit` line → percent + reset text
   - `Weekly limit` line → percent + reset text
+- Time-only reset text retains its requested local hour when rolling into tomorrow, even if daylight saving skipped that hour today.
 - Detects update prompts and surfaces a "CLI update needed" error.
 
 ## Account identity resolution (for web matching)
@@ -456,6 +457,7 @@ Every participating CLI must support schema 2. This opt-in mode does not change 
     - `~/.codex/sessions/YYYY/MM/DD/*.jsonl`
     - `~/.codex/archived_sessions/*.jsonl` (flat; date inferred from filename when present)
     - Or `$CODEX_HOME/sessions/...` + `$CODEX_HOME/archived_sessions/...` if `CODEX_HOME` is set.
+    - `sessions` and `archived_sessions` may each be symlinked to another directory or disk, including flat and legacy nested logs. The archive sibling is selected from the configured home before resolving either link; nested directory links are not recursively followed. Existing incomplete linked-root inventories are rediscovered without clearing saved history.
   - Supported pi-compatible sessions:
     - `~/.pi/agent/sessions/**/*.jsonl`
     - `~/.omp/agent/sessions/**/*.jsonl`
@@ -540,6 +542,7 @@ Every participating CLI must support schema 2. This opt-in mode does not change 
     time; a concurrent database change requests a rescan. Fresh database opens retain integrity validation.
   - Cost cache retention skips identical metadata writes and reads only paths when checking for archived rollouts. Explicit scan bounds avoid loading fallback metadata. Unchanged protected histories keep their warm scan baseline even above the cache budget.
   - Scan loads retain decoded baselines for up to four recently used cache roots. Transaction-validated freshness and priority-cursor updates share one metadata write and keep the decoded history warm. Content changes, external commits, failed operations, schema changes, and database replacement invalidate reuse. Each load still issues a fresh save receipt and rechecks transcript identity.
+  - Unchanged native cost scans commit their freshness and priority cursor updates without forcing a WAL checkpoint each cycle. Changed native history saves and page reclamation retain their forced checkpoints; cache byte budgets include pages still held in WAL and keep counting the physical database size while a reader blocks truncation. Readers and reopened stores see the committed updates. The WAL is shared with imported history, so this also defers incidental synchronization of other committed frames to SQLite's normal checkpoint policy. Power-loss synchronization timing can therefore differ when SQLite uses `synchronous=NORMAL`.
   - Up to four recently used cache roots retain validated reader connections and decoded status/activity data.
     External writes invalidate cached data; database replacement or incompatible metadata reopens the reader through
     existing validation on its next access. Every read still reconciles file identities, and detailed report history
@@ -556,6 +559,8 @@ Every participating CLI must support schema 2. This opt-in mode does not change 
   - Saves skip unchanged files using the transaction-validated scan baseline, so a changed session or scan metadata
     does not rewrite every retained file's metadata, aggregates, fork state, buffers, and accumulator. Changed files,
     parser/calendar migrations, and incomplete persisted row sets still take the normal persistence path.
+    Unchanged checks reuse decoded completion flags instead of rebuilding the restored file map. Incoming optional
+    flags still normalize, and filesystem reconciliation runs both before and under the writer lock.
     Hydrating an empty token history does not force a content rewrite when no snapshot rows are stored for that file.
     Clearing a non-empty history still removes its snapshot rows and preserves sibling histories.
   - Excess cached request rows trigger bounded revalidation of readable, unchanged session files. Ordered source
@@ -640,6 +645,7 @@ Every participating CLI must support schema 2. This opt-in mode does not change 
   still scan local history. Faster provider refreshes still update quota/status. The scanner's default 60-second
   debounce is a separate internal limit, bypassed by forced scans and catch-up passes; it is not the app's refresh cadence.
 - Usage & Spend catch-up remains inactive after a no-progress or error pause until you choose **Refresh** in the dashboard toolbar or catch-up panel. Opening the dashboard or receiving background updates does not retry those terminal pauses. Low-power and thermal pauses can still recover automatically; this retry policy does not change cached history or token accounting.
+- Growth in a fully read rollout's scan target does not hide a stalled parent dependency. Unfinished scan targets and newly resolved dependencies still count as progress; a no-progress pause keeps the existing explicit Refresh retry policy.
 - Each catch-up worker permits one recovery per cache when a repeated progress state comes from a time-budget yield before any file attempt or byte read. Automatic recovery waits for the normal cooldown, then uses a full scan budget. Repeated empty passes and semantic cycles still pause; user stops, errors, and power or thermal constraints keep their existing behavior.
 - Dashboard synchronization can clear a no-progress pause or retire a sleeping automatic worker with a read-only check when another scan has completed the same accounts, roots, time zone, and requested history window. Synchronization during that check queues another coverage read before completion can publish. It does not start a scan, change scan budgets or duty-cycle delays, or override a user stop or error. Completion uses confirmed cache coverage rather than comparing scan start times with the pause time.
 - Menu cost catch-up keeps user stops and no-progress/error pauses across scheduled refreshes. Choose **Refresh** to retry after the worker stops. Successful completion still honors queued refreshes for newly discovered history; low-power and thermal pauses can recover automatically.
@@ -749,6 +755,8 @@ dashboard labels its values as local estimates and keeps currencies separate.
 Cost refreshes and cached dashboard loads share each file report between session and project views. Daily and
 project totals retain their own pricing evidence scopes. All preparation is local to one call, so later loads use
 their current rows, prices, roots, dates, and time zone without retaining another report cache.
+Project accumulation updates its file and report collections in place, avoiding repeated copies as session counts
+grow. Native caches from the previous parser fingerprint retain their rows, checkpoints, and report totals.
 
 ## Upcoming weekly reset warnings
 

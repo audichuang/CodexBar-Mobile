@@ -204,9 +204,9 @@ public struct CostUsageTokenSnapshot: Sendable, Equatable {
     /// onto the existing opaque payload's `sourceDayKey`.
     public let windowEndDayKey: String?
     /// Exact event-time slices for quota-window projection. Empty for legacy/coarse providers.
-    public let quotaSlices: [CostUsageTimedEntry]
+    public private(set) var quotaSlices: [CostUsageTimedEntry]
     public let updatedAt: Date
-    let quotaProjectionMemo = CostUsageQuotaProjectionMemo()
+    private(set) var quotaProjectionMemo = CostUsageQuotaProjectionMemo()
 
     public init(
         sessionTokens: Int?,
@@ -258,6 +258,15 @@ public struct CostUsageTokenSnapshot: Sendable, Equatable {
         self.windowEndDayKey = windowEndDayKey
         self.quotaSlices = quotaSlices
         self.updatedAt = updatedAt
+    }
+
+    package func droppingQuotaSlices() -> Self {
+        guard !self.quotaSlices.isEmpty else { return self }
+        var copy = self
+        copy.quotaSlices = []
+        // The shared memo belongs to the original immutable entries, including their exact slices.
+        copy.quotaProjectionMemo = CostUsageQuotaProjectionMemo()
+        return copy
     }
 
     /// Coverage is established *and* the read of that coverage ran to completion. Surfaces that

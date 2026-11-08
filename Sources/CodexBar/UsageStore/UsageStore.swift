@@ -360,6 +360,7 @@ final class UsageStore {
         TimeInterval) async throws -> Void)?
     @ObservationIgnored var widgetSnapshotPersistTask: Task<Void, Never>?
     @ObservationIgnored var lastQueuedWidgetSnapshot: WidgetSnapshot?
+    @ObservationIgnored var lastPublishedWidgetSnapshot: WidgetSnapshotPublication?
     @ObservationIgnored var invalidatedQueuedWidgetProviders: Set<ProviderInstanceID> = []
     @ObservationIgnored var lastWidgetSourceSnapshots: [ProviderInstanceID: UsageSnapshot] = [:]
     @ObservationIgnored let widgetSnapshotURL: URL?
@@ -453,7 +454,6 @@ final class UsageStore {
     @ObservationIgnored var lastStorageRefreshRequestKey: String?
     @ObservationIgnored var lastStorageRefreshAt: Date?
     @ObservationIgnored var managedCodexAccountsForStorageOverride: [ManagedCodexAccount]?
-    @ObservationIgnored private var pathDebugRefreshTask: Task<Void, Never>?
     @ObservationIgnored var resetBoundaryRefreshTask: Task<Void, Never>?
     @ObservationIgnored var scheduledResetBoundaryRefreshAt: Date?
     @ObservationIgnored var attemptedResetBoundaryRefreshes: Set<Date> = []
@@ -612,25 +612,12 @@ final class UsageStore {
         }
         self.pruneUserPluginHookState()
         self.observeSettingsChanges()
-        self.pathDebugInfo = PathDebugSnapshot(
-            codexBinary: nil,
-            claudeBinary: nil,
-            geminiBinary: nil,
-            effectivePATH: PathBuilder.effectivePATH(purposes: [.rpc, .tty, .nodeTooling]),
-            loginShellPATH: LoginShellPathCache.shared.current?.joined(separator: ":"))
         guard self.startupBehavior.automaticallyStartsBackgroundWork else { return }
         self.hydrateCachedTokenSnapshots()
         self.startSharedSpendDashboardPublication()
         self.detectVersions()
         self.updateProviderRuntimes()
-        Task { @MainActor [weak self] in
-            self?.schedulePathDebugInfoRefresh()
-        }
-        LoginShellPathCache.shared.captureOnce { [weak self] _ in
-            Task { @MainActor [weak self] in
-                self?.schedulePathDebugInfoRefresh()
-            }
-        }
+        LoginShellPathCache.shared.captureOnce()
         Task { @MainActor [weak self] in
             await self?.refreshHistoricalDatasetIfNeeded()
         }
@@ -1483,17 +1470,15 @@ extension UsageStore {
         }
     }
 
-    @MainActor
-    private func schedulePathDebugInfoRefresh() {
-        self.pathDebugRefreshTask?.cancel()
-        self.pathDebugRefreshTask = Task { [weak self] in
-            do {
-                try await Task.sleep(nanoseconds: 150_000_000)
-            } catch {
-                return
+    func refreshPathDebugInfo(
+        load: @MainActor () async -> PathDebugSnapshot = {
+            await withCheckedContinuation { continuation in
+                LoginShellPathCache.shared.captureOnce { _ in continuation.resume() }
             }
-            await self?.refreshPathDebugInfo()
-        }
+            return await PathBuilder.debugSnapshotAsync(purposes: [.rpc, .tty, .nodeTooling])
+        }) async
+    {
+        self.pathDebugInfo = await load()
     }
 
     func refreshTokenUsage(_ provider: UsageProvider, force: Bool) async {
