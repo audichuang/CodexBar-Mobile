@@ -156,8 +156,9 @@ BASE_TAG=${BASE_TAG:-$(git describe --tags --abbrev=0 --match 'v*-mobile.*' --ex
 if [[ -z "$BASE_TAG" ]]; then
   echo "SKIP: no v*-mobile.* tag reachable from HEAD; UPSTREAM_VERSION vs base tag not checked"
 else
-  # <upstream>[.<n>]-mobile.<mobile>[-audi.<n>]: the fork's own release tags carry the -audi suffix.
-  if [[ ! "$BASE_TAG" =~ ^${UPSTREAM_VERSION//./\\.}(\.[0-9]+)?-mobile\.${MOBILE_VERSION//./\\.}(-audi\.[0-9]+)?$ ]]; then
+  # <upstream>[.<n>]-mobile.<mobile>[-audi.<n>|-base]: the fork's own release tags carry the -audi suffix;
+  # a local synthetic base whose name would collide with a real upstream tag carries -base (FORK.md).
+  if [[ ! "$BASE_TAG" =~ ^${UPSTREAM_VERSION//./\\.}(\.[0-9]+)?-mobile\.${MOBILE_VERSION//./\\.}(-audi\.[0-9]+|-base)?$ ]]; then
     echo "FAIL: UPSTREAM_VERSION=$UPSTREAM_VERSION MOBILE_VERSION=$MOBILE_VERSION do not match base tag $BASE_TAG"
     fail=1
   fi
