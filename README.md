@@ -26,7 +26,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-6e5aff?style=flat-square)](LICENSE)
 [![Site](https://img.shields.io/badge/site-codexbar.app-16d3b4?style=flat-square)](https://codexbar.app)
 
-<a href="https://codexbar.app"><img src="docs/social.png?v=34c94fe9dd95be54" alt="CodexBar — every AI coding limit in your menu bar. 111 providers." width="100%" /></a>
+<a href="https://codexbar.app"><img src="docs/social.png?v=34c94fe9dd95be54" alt="CodexBar — every AI coding limit in your menu bar. 113 providers." width="100%" /></a>
 
 Tiny macOS 14+ menu bar app that keeps **AI coding-provider limits visible** and shows when each window resets. See the [supported providers](#providers) below. One status item per provider, or Merge Icons mode with a provider switcher. No Dock icon, minimal UI, dynamic bar icons.
 
@@ -206,6 +206,8 @@ See [CLI configuration](docs/cli-configuration.md) for the full flow.
 - [Chatbox AI](docs/chatbox.md) — License key for plan points, reward credits, top-up credits, and image quotas.
 - [abliteration.ai](docs/abliteration.md) — API key for prepaid USD credits and cumulative usage.
 - [OpenDesign](docs/opendesign.md) — Browser or manual session cookies for the active workspace's five-hour and weekly subscription allowance.
+- [SiliconFlow](docs/siliconflow.md) — API key for the prepaid account balance on the China (CNY) or international (USD) API.
+- [Tripo](docs/tripo.md) — API key for available and reserved account credits from the official account balance endpoint.
 <!-- End generated provider additions -->
 
 ## Icon & Screenshot
