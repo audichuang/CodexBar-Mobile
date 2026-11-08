@@ -113,8 +113,8 @@ public enum AccountIdentityComputer {
              // Upstream v0.75.0–v0.77.0 providers use no Tier-A extraction here.
              // The bridge supplies source-scoped record keys, including Munito organization IDs.
              .fal, .flora, .parallel, .claudeplatform, .futureagi, .munito,
-             // Upstream v0.83.x providers: single-account cards, no cross-Mac identifier.
-             .opendesign, .siliconflow:
+             // Upstream v0.83.x-v0.84.0 providers: single-account cards, no cross-Mac identifier.
+             .opendesign, .siliconflow, .tripo:
             // Source-scoped record keys may still provide a stable identity in
             // the bridge. Do not synthesize cross-Mac aliases from editable labels.
             // Add Tier-A extraction here only for a verified account contract.
