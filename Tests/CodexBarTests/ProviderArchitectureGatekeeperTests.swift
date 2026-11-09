@@ -4691,7 +4691,6 @@ struct ProviderArchitectureGatekeeperTests {
                 "neuralwatt",
                 "notion",
                 "nous",
-                "opendesign",
                 "parallel",
                 "pi",
                 "qwencloud",
@@ -4715,7 +4714,7 @@ struct ProviderArchitectureGatekeeperTests {
                 "zenmux",
                 "zoommate",
             ],
-            expectedReferenceCount: 54,
+            expectedReferenceCount: 53,
             expectedReferenceFingerprint: [
                 "clinepass@0",
                 "deepinfra@0",
@@ -4755,7 +4754,7 @@ struct ProviderArchitectureGatekeeperTests {
                 "aerostack@21", "cosmic@21", "exa@21", "linkup@21", "tavily@21", "tinyapi@21", "xapi@21",
                 "sailresearch@22", "sofya@22",
                 "claudeplatform@25", "fal@25", "flora@25", "futureagi@25", "munito@25", "parallel@25",
-                "opendesign@27", "siliconflow@27", "tripo@27",
+                "siliconflow@27", "tripo@27",
             ],
             reason: "Account identity keys follow provider-specific credential scope contracts."),
         AllowedProviderConstruct(
