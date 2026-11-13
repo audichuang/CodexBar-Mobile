@@ -97,6 +97,7 @@ These carry identity strings or fork packaging calls and nothing else. Larger fo
 | `Sources/CodexBar/Settings/PreferencesAboutPane.swift` | repo URL via `ForkIdentity` | `ForkIdentity` |
 | `Sources/CodexBar/Sync/CloudSyncCoordinator.swift` | `settings` and `scheduleResume(debounce:)` widened for the extension | `CloudSyncCoordinator+RemotePush.swift` |
 | `Sources/CodexBar/Sync/CloudSyncEngine.swift` | `snapshotSendKick` stored property, kick scheduling, backoff and retired-engine guards (partly inline) | `CloudSyncSnapshotSendKick.swift` |
+| `Sources/CodexBar/Sync/CloudSyncEngine.swift` | both snapshot delete loops call `replaceSaveWithDelete(…, in: engine)`, which also clears `pendingSaveHashes` (carries o1xhack/CodexBar-Mobile#234; 16 lines). When upstream merges #234, drop this hook, the fork file and `CloudSyncForkDeleteHashTests.swift`, and lower the budget to 39 | `CloudSyncBatchRecordProvider+ForkDeleteHash.swift` |
 | `Sources/CodexBar/Sync/CloudSyncPersistence.swift`, `Sources/CodexBar/Sync/SyncCoordinator.swift` | `accountLabel` published to iPhone (`syncedAccountLabel`) | `UsageSnapshot.accountLabel` |
 
 ### Shared (Mac and iOS)

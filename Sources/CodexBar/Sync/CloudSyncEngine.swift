@@ -2244,9 +2244,11 @@ extension CloudSyncEngine {
         self.pendingSnapshots.removeAll { recordNamesToDelete.contains($0.recordName) }
         for recordName in recordNamesToDelete {
             let recordID = self.recordID(named: recordName)
-            self.desiredRecords.removeValue(forKey: recordID)
-            engine.state.remove(pendingRecordZoneChanges: [.saveRecord(recordID)])
-            engine.state.add(pendingRecordZoneChanges: [.deleteRecord(recordID)])
+            CloudSyncBatchRecordProvider.replaceSaveWithDelete( // fork hook: upstream-fork PR 234
+                recordID,
+                desiredRecords: &self.desiredRecords,
+                pendingSaveHashes: &self.pendingSaveHashes,
+                in: engine)
         }
         self.persistEnvelope()
     }
@@ -2478,9 +2480,11 @@ extension CloudSyncEngine {
             }
             for recordName in immediateDeletes {
                 let recordID = self.recordID(named: recordName)
-                self.desiredRecords.removeValue(forKey: recordID)
-                engine.state.remove(pendingRecordZoneChanges: [.saveRecord(recordID)])
-                engine.state.add(pendingRecordZoneChanges: [.deleteRecord(recordID)])
+                CloudSyncBatchRecordProvider.replaceSaveWithDelete( // fork hook: upstream-fork PR 234
+                    recordID,
+                    desiredRecords: &self.desiredRecords,
+                    pendingSaveHashes: &self.pendingSaveHashes,
+                    in: engine)
             }
 
             if !snapshots.isEmpty {
