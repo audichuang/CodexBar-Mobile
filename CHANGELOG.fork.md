@@ -28,6 +28,7 @@ Fork-only changes. Upstream history lives in CHANGELOG.md.
 ### Fixed
 
 - "just now" had no translation.
+- Mac fleet sync: a snapshot whose queued save was replaced by a delete is published again instead of being skipped until the app restarts (the reader Mac showed "No available fetch strategy for claude."). Carries o1xhack/CodexBar-Mobile#234 until upstream merges it.
 
 ## 0.82.0.1 - audi.2
 
