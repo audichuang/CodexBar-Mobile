@@ -73,6 +73,10 @@ struct UsageProgressBar: View {
         // (.compositingGroup, .blendMode) that trigger Metal/RenderBox shader compilation on macOS 26.x,
         // which caused the status item icon to disappear (issue #805).
         Canvas { context, size in
+            // fork hook: segmented meter, UsageProgressBar+ForkSegmented.swift
+            if Self.forkUsesSegmentedMeter {
+                return self.forkDrawSegmented(in: &context, size: size, self.isHighlighted, self.displayScale)
+            }
             let scale = max(self.displayScale, 1)
             let fillPercent = Self.renderedFillPercent(self.clamped)
             let fillWidth = size.width * fillPercent / 100
@@ -164,7 +168,7 @@ struct UsageProgressBar: View {
                 context.fill(stripes.center.applying(shift), with: .color(stripeColor))
             }
         }
-        .frame(height: 6)
+        .frame(height: Self.forkBarHeight) // fork hook: segmented meter height
         .accessibilityLabel(self.accessibilityLabel)
         .accessibilityValue(self.markerAccessibilityValue)
     }
