@@ -82,10 +82,7 @@ struct MetricRowHeader: View {
     }
 
     private func titleLabel(_ title: String, percentText: String?) -> some View {
-        (Text(title) + Text(percentText.map { " " + $0 } ?? "").monospacedDigit())
-            .font(.body)
-            .fontWeight(.medium)
-            .lineLimit(1)
+        ForkMetricTitleLabel(title: title, percentText: percentText) // fork hook: status glyph before percent
     }
 
     private func resetLabel(_ resetText: String) -> some View {
