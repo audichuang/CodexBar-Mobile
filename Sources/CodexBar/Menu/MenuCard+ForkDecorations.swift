@@ -76,6 +76,8 @@ struct ForkMetricTitleLabel: View {
                         .monospacedDigit()
                         .fontWeight(.semibold)
                 }
+                // Truncate the title before the percent when space runs out.
+                .layoutPriority(1)
             }
         }
         .font(.body)

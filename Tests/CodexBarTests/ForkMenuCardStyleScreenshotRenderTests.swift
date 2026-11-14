@@ -31,6 +31,13 @@ final class ForkMenuCardStyleScreenshotRenderTests: XCTestCase {
             ("bars-states-dark", AnyView(Self.barStates(dark: true)), true),
             ("bars-states-light", AnyView(Self.barStates(dark: false)), false),
         ]
+        // Model strings and rendered labels both resolve through the task-local app language.
+        try CodexBarLocalizationOverride.$appLanguage.withValue("zh-Hant") {
+            let data = try XCTUnwrap(Self.pngData(for: AnyView(Self.cards(dark: true)), dark: true))
+            let url = directory.appendingPathComponent("cards-zh-hant-dark.png")
+            try data.write(to: url, options: .atomic)
+            print("Wrote \(url.path)")
+        }
         for (name, view, dark) in extras {
             let data = try XCTUnwrap(Self.pngData(for: view, dark: dark))
             let url = directory.appendingPathComponent("\(name).png")
@@ -61,6 +68,11 @@ final class ForkMenuCardStyleScreenshotRenderTests: XCTestCase {
                 tint: UsageMenuCardView.Model.staleProgressColor,
                 accessibilityLabel: "stale",
                 pacePercent: 60)
+            HStack(spacing: 12) {
+                ForkMiniSegmentedMeter(percent: 72, tint: .green, width: 56)
+                ForkMiniSegmentedMeter(percent: 35, tint: .orange, width: 56)
+                ForkMiniSegmentedMeter(percent: 8, tint: .red, width: 56)
+            }
         }
         .padding(16)
         .frame(width: self.width)
@@ -74,8 +86,13 @@ final class ForkMenuCardStyleScreenshotRenderTests: XCTestCase {
             Divider()
             UsageMenuCardView(model: self.model(.codex, session: 12, weekly: 30), width: self.width)
             Divider()
-            // Gemini: slightly ahead of the clock.
-            UsageMenuCardView(model: self.model(.gemini, session: 68, weekly: 20), width: self.width)
+            // Codex again, slightly ahead of the clock.
+            UsageMenuCardView(model: self.model(.codex, session: 68, weekly: 20), width: self.width)
+            Divider()
+            // Highlighted row: the menu draws the selection background behind a hovered card.
+            UsageMenuCardView(model: self.model(.claude, session: 82, weekly: 41), width: self.width)
+                .environment(\.menuItemHighlighted, true)
+                .background(Color(nsColor: .selectedContentBackgroundColor))
         }
         .frame(width: self.width)
         // Mirrors the hook in StatusItemController+MenuCardItems.swift, which these bare cards bypass.
