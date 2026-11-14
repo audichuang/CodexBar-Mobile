@@ -27,6 +27,44 @@ final class ForkMenuCardStyleScreenshotRenderTests: XCTestCase {
             try data.write(to: url, options: .atomic)
             print("Wrote \(url.path)")
         }
+        let extras: [(String, AnyView, Bool)] = [
+            ("bars-states-dark", AnyView(Self.barStates(dark: true)), true),
+            ("bars-states-light", AnyView(Self.barStates(dark: false)), false),
+        ]
+        for (name, view, dark) in extras {
+            let data = try XCTUnwrap(Self.pngData(for: view, dark: dark))
+            let url = directory.appendingPathComponent("\(name).png")
+            try data.write(to: url, options: .atomic)
+            print("Wrote \(url.path)")
+        }
+    }
+
+    /// Normal, highlighted (selection background), markers, and stale rows of the bare meter.
+    private static func barStates(dark: Bool) -> some View {
+        let tint = Color(red: 0.84, green: 0.47, blue: 0.34)
+        return VStack(alignment: .leading, spacing: 10) {
+            UsageProgressBar(percent: 70, tint: tint, accessibilityLabel: "normal", pacePercent: 45)
+            UsageProgressBar(percent: 70, tint: tint, accessibilityLabel: "highlighted", pacePercent: 45)
+                .environment(\.menuItemHighlighted, true)
+                .padding(4)
+                .background(Color(nsColor: .selectedContentBackgroundColor))
+            UsageProgressBar(
+                percent: 55,
+                tint: tint,
+                accessibilityLabel: "markers",
+                pacePercent: 30,
+                warningMarkerPercents: [80],
+                workdayMarkerPercents: [20, 40, 60],
+                workdayTickAppearance: .highContrast)
+            UsageProgressBar(
+                percent: 40,
+                tint: UsageMenuCardView.Model.staleProgressColor,
+                accessibilityLabel: "stale",
+                pacePercent: 60)
+        }
+        .padding(16)
+        .frame(width: self.width)
+        .background(self.background(dark: dark))
     }
 
     private static func cards(dark: Bool) -> some View {
@@ -37,8 +75,14 @@ final class ForkMenuCardStyleScreenshotRenderTests: XCTestCase {
             UsageMenuCardView(model: self.model(.codex, session: 12, weekly: 30), width: self.width)
         }
         .frame(width: self.width)
+        // Mirrors the hook in StatusItemController+MenuCardItems.swift, which these bare cards bypass.
+        .fontDesign(.monospaced)
         .environment(\.locale, Locale(identifier: "en_US_POSIX"))
-        .background(dark ? Color(nsColor: .init(white: 0.14, alpha: 1)) : Color(nsColor: .init(white: 0.97, alpha: 1)))
+        .background(self.background(dark: dark))
+    }
+
+    private static func background(dark: Bool) -> Color {
+        Color(nsColor: .init(white: dark ? 0.14 : 0.97, alpha: 1))
     }
 
     private static func model(_ provider: UsageProvider, session: Double, weekly: Double) -> UsageMenuCardView.Model {

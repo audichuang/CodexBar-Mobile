@@ -98,6 +98,11 @@ extension UsageProgressBar {
             let tickWidth = Self.forkTickWidth
             let x = min(size.width - tickWidth, max(0, size.width * clampedPace / 100 - tickWidth / 2))
             let tick = CGRect(x: align(x), y: 0, width: tickWidth, height: size.height)
+            // Punch a 1 pt gap on both sides so the tick stays visible over filled cells, including the
+            // highlighted row where fill and tick share the selection text color.
+            context.blendMode = .destinationOut
+            context.fill(Path(tick.insetBy(dx: -1, dy: 0)), with: .color(.white))
+            context.blendMode = .normal
             context.fill(
                 Path(roundedRect: tick, cornerSize: CGSize(width: 1, height: 1)),
                 with: .color(highlighted ? .white : .primary))
