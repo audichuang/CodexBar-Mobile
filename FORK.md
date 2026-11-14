@@ -95,7 +95,7 @@ These carry identity strings or fork packaging calls and nothing else. Larger fo
 | File | Hook | Calls into |
 |---|---|---|
 | `Sources/CodexBar/CodexbarApp.swift` | `ForkIdentity` oslog and help URL; `cloudSyncCoordinator` property visible to the extension | `AppDelegate+ForkPush.swift` |
-| `Sources/CodexBar/Menu/MenuCardView.swift` | `.fontDesign(.monospaced)` on the card root (terminal-style typography) | |
+| `Sources/CodexBar/StatusItem/StatusItemController+MenuCardItems.swift` | `.fontDesign(.monospaced)` on every hosted menu card row (terminal-style typography; also covers the split header/usage/credits sections) | |
 | `Sources/CodexBar/Menu/UsageProgressBar.swift` | Canvas early-return into the segmented meter with a clock tick; bar height from `forkBarHeight`. The upstream drawing stays compiled behind `forkUsesSegmentedMeter` | `UsageProgressBar+ForkSegmented.swift` |
 | `Sources/CodexBar/Settings/PreferencesAboutPane.swift` | repo URL via `ForkIdentity` | `ForkIdentity` |
 | `Sources/CodexBar/Sync/CloudSyncCoordinator.swift` | `settings` and `scheduleResume(debounce:)` widened for the extension | `CloudSyncCoordinator+RemotePush.swift` |

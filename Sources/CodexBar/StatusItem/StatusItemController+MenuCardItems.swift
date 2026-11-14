@@ -71,7 +71,8 @@ extension StatusItemController {
         let payload = MenuCardRowPayload(
             content: AnyView(view
                 .environment(\.providerMenuChartSettings, self.settings)
-                .environment(\.providerCardAction, cardAction)),
+                .environment(\.providerCardAction, cardAction)
+                .fontDesign(.monospaced)), // fork hook: terminal-style menu card typography
             showsSubmenuIndicator: submenu != nil,
             submenuIndicatorAlignment: submenuIndicatorAlignment,
             submenuIndicatorTopPadding: submenuIndicatorTopPadding,
