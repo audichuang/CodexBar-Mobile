@@ -110,14 +110,8 @@ struct MenuCardCompactAccountRowView: View {
                         .foregroundStyle(MenuHighlightStyle.error(self.isHighlighted))
                         .accessibilityLabel(L("Account unavailable"))
                 } else if let headroom = self.model.headroomPercent, let label = self.model.headroomLabel {
-                    Capsule()
-                        .fill(MenuHighlightStyle.progressTrack(self.isHighlighted))
-                        .frame(width: Self.miniBarWidth, height: Self.miniBarHeight)
-                        .overlay(alignment: .leading) {
-                            Capsule()
-                                .fill(self.severityColor)
-                                .frame(width: Self.miniBarWidth * min(100, max(0, headroom)) / 100)
-                        }
+                    // fork hook: segmented mini meter, UsageProgressBar+ForkSegmented.swift
+                    ForkMiniSegmentedMeter(percent: headroom, tint: self.severityColor, width: Self.miniBarWidth)
                         .accessibilityHidden(true)
                     Text(label)
                         .font(.footnote.monospacedDigit())

@@ -4,9 +4,10 @@ import SwiftUI
 ///
 /// Each cell is a small rounded square; filled cells take the provider tint, the rest use the track
 /// color. The pace marker becomes a single tall tick (the share of the window that has elapsed)
-/// instead of the green/red diagonal stripe, so "fill ahead of the tick" reads as burning faster than
-/// the clock. Everything is drawn in the same Canvas as upstream (no SwiftUI compositing modifiers,
-/// see issue #805).
+/// instead of the green/red diagonal stripe. With bars showing used quota, fill past the tick means
+/// burning faster than the clock; with bars showing remaining quota, fill short of the tick does.
+/// Everything is drawn in the same Canvas as upstream (no SwiftUI compositing modifiers, see
+/// issue #805).
 extension UsageProgressBar {
     /// Total view height. Cells are inset vertically so the clock tick can overhang them.
     static let forkBarHeight: CGFloat = 12
@@ -107,5 +108,33 @@ extension UsageProgressBar {
                 Path(roundedRect: tick, cornerSize: CGSize(width: 1, height: 1)),
                 with: .color(highlighted ? .white : .primary))
         }
+    }
+}
+
+/// Fork: small segmented meter for compact account rows, matching the main meter's cells.
+struct ForkMiniSegmentedMeter: View {
+    let percent: Double
+    let tint: Color
+    let width: CGFloat
+    @Environment(\.menuItemHighlighted) private var isHighlighted
+
+    private static let cellWidth: CGFloat = 4
+    private static let gap: CGFloat = 1.5
+    private static let height: CGFloat = 6
+
+    var body: some View {
+        Canvas { context, size in
+            let count = max(1, Int(((size.width + Self.gap) / (Self.cellWidth + Self.gap)).rounded(.down)))
+            let cell = (size.width - Self.gap * CGFloat(count - 1)) / CGFloat(count)
+            let filled = UsageProgressBar.forkFilledCells(percent: self.percent, count: count)
+            let track = MenuHighlightStyle.progressTrack(self.isHighlighted)
+            let fill = MenuHighlightStyle.progressTint(self.isHighlighted, fallback: self.tint)
+            for index in 0..<count {
+                let rect = CGRect(x: CGFloat(index) * (cell + Self.gap), y: 0, width: cell, height: size.height)
+                let path = Path(roundedRect: rect, cornerSize: CGSize(width: 1, height: 1))
+                context.fill(path, with: .color(index < filled ? fill : track))
+            }
+        }
+        .frame(width: self.width, height: Self.height)
     }
 }
