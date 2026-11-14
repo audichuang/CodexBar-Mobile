@@ -117,8 +117,13 @@ struct ForkProviderTitle: View {
                 .background(Circle().fill(self.isHighlighted ? MenuHighlightStyle.selectionText : self.color))
                 .alignmentGuide(.firstTextBaseline) { dimensions in dimensions[VerticalAlignment.center] + 5 }
                 .accessibilityHidden(true)
-            Text(self.name)
+            // Burnstate-style "[name]": dim brackets around the emphasized name.
+            Text("[").foregroundStyle(self.bracketColor) + Text(self.name) + Text("]").foregroundStyle(self.bracketColor)
         }
+    }
+
+    private var bracketColor: Color {
+        MenuHighlightStyle.secondary(self.isHighlighted).opacity(0.7)
     }
 
     private var initial: String {
