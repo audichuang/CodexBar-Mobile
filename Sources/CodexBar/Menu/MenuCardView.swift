@@ -327,6 +327,7 @@ struct UsageMenuCardView: View {
                 ? UsageMenuCardLayout.sectionBottomPadding
                 : UsageMenuCardLayout.headerOnlyVerticalPadding)
         .frame(width: self.width, alignment: .leading)
+        .fontDesign(.monospaced) // fork hook: terminal-style menu card typography
     }
 
     private var liveModel: Model {
