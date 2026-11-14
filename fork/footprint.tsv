@@ -69,6 +69,9 @@ Shared/iCloud/CloudSyncManager.swift	2	fork identity or sync hook in shared iClo
 Shared/Models/UsageSnapshot.swift	7	fork identity or sync hook in shared iCloud/model code
 Shared/Notifications/NSEInvocationLog.swift	2	fork identity or sync hook in shared iCloud/model code
 Sources/CodexBar/CodexbarApp.swift	7	fork hook in Mac app/core code (calls fork-owned extension)
+Sources/CodexBar/Menu/MenuCardMetricRow.swift	3	fork hook: pace status glyph and pace tint (calls fork-owned extension)
+Sources/CodexBar/Menu/MenuCardView.swift	3	fork hook: provider avatar in the card header
+Sources/CodexBar/Menu/UsageMenuCardHeaderAndUsageSectionView.swift	5	fork hook: metric title label with status glyph
 Sources/CodexBar/Menu/UsageProgressBar.swift	6	fork hook: segmented meter with clock tick (calls fork-owned extension)
 Sources/CodexBar/Settings/PreferencesAboutPane.swift	5	fork hook in Mac app/core code (calls fork-owned extension)
 Sources/CodexBar/StatusItem/StatusItemController+MenuCardItems.swift	3	fork hook: monospaced typography for every hosted menu card row

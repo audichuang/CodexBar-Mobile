@@ -73,6 +73,9 @@ final class ForkMenuCardStyleScreenshotRenderTests: XCTestCase {
             UsageMenuCardView(model: self.model(.claude, session: 82, weekly: 41), width: self.width)
             Divider()
             UsageMenuCardView(model: self.model(.codex, session: 12, weekly: 30), width: self.width)
+            Divider()
+            // Gemini: slightly ahead of the clock.
+            UsageMenuCardView(model: self.model(.gemini, session: 68, weekly: 20), width: self.width)
         }
         .frame(width: self.width)
         // Mirrors the hook in StatusItemController+MenuCardItems.swift, which these bare cards bypass.

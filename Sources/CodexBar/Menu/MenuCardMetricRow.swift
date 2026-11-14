@@ -64,6 +64,7 @@ struct MetricRow: View {
             }
         }
         .help(self.metric.helpText ?? "")
+        .environment(\.forkPaceStatus, ForkPaceStatus(metric: self.metric)) // fork hook: pace glyph
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(self.metric.cardStyle ? 10 : 0)
         .background(self.metric.cardStyle ? Color.secondary.opacity(self.isHighlighted ? 0.2 : 0.08) : Color.clear)
@@ -85,7 +86,7 @@ struct MetricRow: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .overlay(alignment: .topLeading) {
                 if let text, !text.isEmpty {
-                    Text(text)
+                    Text(self.forkStyledMeta(text, highlighted: self.isHighlighted)) // fork hook: pace tint
                         .monospacedDigit()
                         .font(.footnote)
                         .foregroundStyle(MenuHighlightStyle.secondary(self.isHighlighted))
