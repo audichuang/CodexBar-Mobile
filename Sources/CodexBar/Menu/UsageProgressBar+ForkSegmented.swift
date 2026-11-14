@@ -42,6 +42,12 @@ extension UsageProgressBar {
         return min(count - 1, max(1, raw))
     }
 
+    /// Same semantics as upstream's pace stripe: red when usage runs ahead of pace, green otherwise.
+    nonisolated static func forkTickColor(highlighted: Bool, paceOnTop: Bool) -> Color {
+        if highlighted { return .white }
+        return paceOnTop ? .green : .red
+    }
+
     /// Constant switch so the upstream Canvas body stays compiled (and reachable for the compiler) behind the hook.
     static let forkUsesSegmentedMeter = true
 
@@ -106,7 +112,7 @@ extension UsageProgressBar {
             context.blendMode = .normal
             context.fill(
                 Path(roundedRect: tick, cornerSize: CGSize(width: 1, height: 1)),
-                with: .color(highlighted ? .white : .primary))
+                with: .color(Self.forkTickColor(highlighted: highlighted, paceOnTop: self.paceOnTop)))
         }
     }
 }
