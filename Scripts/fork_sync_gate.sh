@@ -55,7 +55,7 @@ mkdir -p "$GATE_DIR"
 SWIFT=(Scripts/fork/swift_scratch.sh)
 SCRATCH=${CODEXBAR_SWIFT_SCRATCH:-$HOME/Library/Caches/codexbar-swift-scratch}
 FORK_TEST_FILTER='CloudSync|SyncCoordinator|SyncModel|SyncWireFormat|V082SyncMetadata|CostUsageStore|CodexArchivedRollout|CostUsageForkParserRevision|ProviderArchitectureGatekeeper|ForkSyncIntegration|ForkIdentityConsistency|FleetAccountMenuProjection|ForkMenuCardDecorations'
-IOS_DEST='platform=iOS Simulator,name=CB iPhone 18 Pro Max'
+IOS_SIM_NAME='CB iPhone 18 Pro Max'
 GATE_START=$SECONDS
 
 # Run one stage: stage_run <name> <function>. Output goes to its log; first failure exits.
@@ -199,10 +199,23 @@ s_mac_full() {
 }
 
 s_ios_tests() {
-  local log="$GATE_DIR/gate-ios-raw.log" list="$GATE_DIR/gate-ios-fail.txt"
+  local log="$GATE_DIR/gate-ios-raw.log" list="$GATE_DIR/gate-ios-fail.txt" udid state
+  # Resolve the resident simulator by exact name; a missing or duplicated name fails the stage
+  # instead of letting xcodebuild pick (or clone) some other device.
+  read -r udid state < <(xcrun simctl list devices -j | python3 -c '
+import json, sys
+name = sys.argv[1]
+hits = [d for r in json.load(sys.stdin)["devices"].values() for d in r if d["name"] == name]
+print(*(hits[0]["udid"], hits[0]["state"]) if len(hits) == 1 else ("", ""))' "$IOS_SIM_NAME")
+  if [[ -z "$udid" ]]; then
+    echo "need exactly one simulator named '$IOS_SIM_NAME'" >"$log"
+    return 1
+  fi
   (cd CodexBarMobile && xcodebuild test -project CodexBarMobile.xcodeproj -scheme CodexBarMobile \
-    -destination "$IOS_DEST" -only-testing:CodexBarMobileTests) >"$log" 2>&1
+    -destination "id=$udid" -parallel-testing-enabled NO -only-testing:CodexBarMobileTests) >"$log" 2>&1
   local rc=$?
+  # Leave the resident device as we found it: shut it down only if the gate booted it.
+  [[ "$state" == "Shutdown" ]] && xcrun simctl shutdown "$udid" >/dev/null 2>&1
   ios_fail_list "$log" >"$list"
   check_test_outcome "ios" "$rc" "$list" "${BASELINE:+$BASELINE/baseline-ios-fail.txt}" "$log"
 }
