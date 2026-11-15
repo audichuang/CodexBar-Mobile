@@ -111,7 +111,8 @@ s_footprint() {
 s_generated_files() {
   Scripts/regenerate-codex-parser-hash.sh check &&
     Scripts/test_xcodegen_sync.sh &&
-    Scripts/test_fork_localization.sh
+    Scripts/test_fork_localization.sh &&
+    Scripts/fork/check_widget_project_sources.sh
 }
 
 s_version() {
