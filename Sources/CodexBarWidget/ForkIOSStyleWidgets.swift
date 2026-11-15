@@ -111,12 +111,25 @@ struct ForkProviderSummary: Identifiable {
     let provider: UsageProvider
     let entry: WidgetSnapshot.ProviderEntry
 
-    var id: String { self.provider.rawValue }
-    var name: String { ProviderDefaults.metadata[self.provider]?.displayName ?? self.provider.rawValue.capitalized }
-    var color: Color { WidgetColors.color(for: self.provider.instanceID) }
+    var id: String {
+        self.provider.rawValue
+    }
 
-    var session: ForkQuotaFigure? { ForkWidgetModel.figure(self.entry.primary) }
-    var weekly: ForkQuotaFigure? { ForkWidgetModel.figure(self.entry.secondary) }
+    var name: String {
+        ProviderDefaults.metadata[self.provider]?.displayName ?? self.provider.rawValue.capitalized
+    }
+
+    var color: Color {
+        WidgetColors.color(for: self.provider.instanceID)
+    }
+
+    var session: ForkQuotaFigure? {
+        ForkWidgetModel.figure(self.entry.primary)
+    }
+
+    var weekly: ForkQuotaFigure? {
+        ForkWidgetModel.figure(self.entry.secondary)
+    }
 
     /// The window that runs out first decides whether the user can keep working.
     var headline: ForkQuotaFigure? {
@@ -244,12 +257,32 @@ enum ForkWidgetText {
 struct ForkWidgetPalette {
     let scheme: ColorScheme
 
-    var background: Color { self.scheme == .dark ? .black : Color(red: 0.975, green: 0.975, blue: 0.97) }
-    var primary: Color { self.scheme == .dark ? Color.white.opacity(0.94) : Color.black.opacity(0.86) }
-    var secondary: Color { self.scheme == .dark ? Color.white.opacity(0.55) : Color.black.opacity(0.5) }
-    var track: Color { self.scheme == .dark ? Color.white.opacity(0.12) : Color.black.opacity(0.08) }
-    var divider: Color { self.scheme == .dark ? Color.white.opacity(0.14) : Color.black.opacity(0.1) }
-    var risk: Color { self.scheme == .dark ? Color(red: 1, green: 0.45, blue: 0.4) : Color(red: 0.85, green: 0.2, blue: 0.15) }
+    var background: Color {
+        self.scheme == .dark ? .black : Color(red: 0.975, green: 0.975, blue: 0.97)
+    }
+
+    var primary: Color {
+        self.scheme == .dark ? Color.white.opacity(0.94) : Color.black.opacity(0.86)
+    }
+
+    var secondary: Color {
+        self.scheme == .dark ? Color.white.opacity(0.55) : Color.black.opacity(0.5)
+    }
+
+    var track: Color {
+        self.scheme == .dark ? Color.white.opacity(0.12) : Color.black.opacity(0.08)
+    }
+
+    var divider: Color {
+        self.scheme == .dark ? Color.white.opacity(0.14) : Color.black.opacity(0.1)
+    }
+
+    var risk: Color {
+        self.scheme == .dark ? Color(red: 1, green: 0.45, blue: 0.4) : Color(
+            red: 0.85,
+            green: 0.2,
+            blue: 0.15)
+    }
 
     func fill(for percent: Double, accent: Color) -> Color {
         percent >= 90 ? self.risk : accent
@@ -360,10 +393,17 @@ struct ForkOverviewWidgetView: View {
     /// Render tests cannot set `widgetFamily`; the widget itself leaves this nil.
     var familyOverride: WidgetFamily?
 
-    private var family: WidgetFamily { self.familyOverride ?? self.environmentFamily }
+    private var family: WidgetFamily {
+        self.familyOverride ?? self.environmentFamily
+    }
 
-    private var palette: ForkWidgetPalette { ForkWidgetPalette(scheme: self.scheme) }
-    private var providers: [ForkProviderSummary] { ForkWidgetModel.providers(in: self.entry.snapshot) }
+    private var palette: ForkWidgetPalette {
+        ForkWidgetPalette(scheme: self.scheme)
+    }
+
+    private var providers: [ForkProviderSummary] {
+        ForkWidgetModel.providers(in: self.entry.snapshot)
+    }
 
     var body: some View {
         Group {
@@ -396,7 +436,9 @@ struct ForkOverviewWidgetView: View {
     private var medium: some View {
         VStack(alignment: .leading, spacing: 10) {
             self.metricStrip
-            if let top = self.providers.max(by: { ($0.headline?.usedPercent ?? -1) < ($1.headline?.usedPercent ?? -1) }) {
+            if let top = self.providers
+                .max(by: { ($0.headline?.usedPercent ?? -1) < ($1.headline?.usedPercent ?? -1) })
+            {
                 self.listRow(top)
             }
             Spacer(minLength: 0)
@@ -557,9 +599,13 @@ struct ForkProviderQuotaWidgetView: View {
     /// Render tests cannot set `widgetFamily`; the widget itself leaves this nil.
     var familyOverride: WidgetFamily?
 
-    private var family: WidgetFamily { self.familyOverride ?? self.environmentFamily }
+    private var family: WidgetFamily {
+        self.familyOverride ?? self.environmentFamily
+    }
 
-    private var palette: ForkWidgetPalette { ForkWidgetPalette(scheme: self.scheme) }
+    private var palette: ForkWidgetPalette {
+        ForkWidgetPalette(scheme: self.scheme)
+    }
 
     private var summary: ForkProviderSummary? {
         guard let provider = self.entry.provider else { return nil }
@@ -589,7 +635,6 @@ struct ForkProviderQuotaWidgetView: View {
         }
     }
 
-    @ViewBuilder
     private func content(_ summary: ForkProviderSummary) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             self.header(summary)
@@ -664,7 +709,11 @@ struct ForkProviderQuotaWidgetView: View {
                     }
                 }
                 Spacer(minLength: 2)
-                ForkPercentText(percent: figure.usedPercent, size: large ? 46 : 34, palette: self.palette, weight: .regular)
+                ForkPercentText(
+                    percent: figure.usedPercent,
+                    size: large ? 46 : 34,
+                    palette: self.palette,
+                    weight: .regular)
                     .layoutPriority(1)
             }
             ForkSegmentedMeter(percent: figure.usedPercent, fill: fill, track: self.palette.track, segments: 20)
