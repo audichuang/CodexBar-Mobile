@@ -80,6 +80,7 @@ Sources/CodexBar/Sync/CloudSyncCoordinator.swift	4	fork multi-account/sync hook 
 Sources/CodexBar/Sync/CloudSyncEngine.swift	55	fork multi-account/sync hook in Mac sync code
 Sources/CodexBar/Sync/CloudSyncPersistence.swift	2	fork multi-account/sync hook in Mac sync code
 Sources/CodexBar/Sync/SyncCoordinator.swift	13	fork multi-account/sync hook in Mac sync code
+Sources/CodexBarWidget/CodexBarWidgetBundle.swift	2	fork hook: registers iPhone-style widgets from ForkIOSStyleWidgets.swift
 Tests/CodexBarTests/AppGroupSupportTests.swift	10	fork test coverage added to upstream-owned test file
 Tests/CodexBarTests/CloudSyncPushRegistrationTests.swift	58	fork test coverage added to upstream-owned test file
 Tests/CodexBarTests/CloudSyncSettingsTests.swift	4	fork test coverage added to upstream-owned test file

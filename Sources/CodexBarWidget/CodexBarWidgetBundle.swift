@@ -4,6 +4,8 @@ import WidgetKit
 @main
 struct CodexBarWidgetBundle: WidgetBundle {
     var body: some Widget {
+        ForkOverviewWidget() // fork hook: iPhone-style widgets in ForkIOSStyleWidgets.swift
+        ForkProviderQuotaWidget() // fork hook: iPhone-style widgets in ForkIOSStyleWidgets.swift
         CodexBarSwitcherWidget()
         CodexBarUsageWidget()
         CodexBarHistoryWidget()
