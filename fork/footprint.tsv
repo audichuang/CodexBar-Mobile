@@ -50,7 +50,7 @@ Scripts/cloudkit/deploy_schema.sh	4	fork identity adaptation of upstream release
 Scripts/compile_and_run.sh	4	fork identity adaptation of upstream release/CI script
 Scripts/deploy_quota_account_email_field.sh	10	fork identity adaptation of upstream release/CI script
 Scripts/make_appcast.sh	7	fork identity adaptation of upstream release/CI script
-Scripts/package_app.sh	32	fork identity adaptation of upstream release/CI script
+Scripts/package_app.sh	34	fork identity adaptation of upstream release/CI script
 Scripts/release.sh	40	fork identity adaptation of upstream release/CI script
 Scripts/sign-and-notarize.sh	13	fork identity adaptation of upstream release/CI script; 10s launch survival
 Scripts/sparkle_helpers.sh	2	fork identity adaptation of upstream release/CI script

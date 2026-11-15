@@ -63,3 +63,11 @@ fork_aps_entitlement_keys() {
     <string>production</string>"
   fi
 }
+
+# The widget extension's CFBundleVersion must change on every fork release. chronod keeps the
+# widget list and gallery previews per extension version; with the upstream BUILD_NUMBER alone
+# (unchanged across audi.N releases) it logged "Unchanged extension" and never showed widgets
+# added in audi.3. Appending FORK_PATCH keeps it numeric and increasing (177.1 -> 177.1.4).
+fork_widget_build_number() {
+  printf '%s' "${BUILD_NUMBER}${FORK_PATCH:+.${FORK_PATCH}}"
+}
