@@ -76,6 +76,7 @@ struct ForkOverviewTimelineProvider: TimelineProvider {
 
 struct ForkProviderQuotaTimelineProvider: AppIntentTimelineProvider {
     func placeholder(in context: Context) -> ForkWidgetEntry {
+        // Provider-specific by design: gallery previews show the sample snapshot, which contains Codex.
         ForkWidgetEntry(date: Date(), snapshot: ForkWidgetPreview.snapshot(), provider: .codex)
     }
 
@@ -741,6 +742,7 @@ enum ForkWidgetPreview {
                 last30DaysCostUSD: month,
                 last30DaysTokens: nil)
         }
+        // Provider-specific by design: sample data for gallery previews mirrors the iPhone screenshots.
         let claude = WidgetSnapshot.ProviderEntry(
             provider: .claude,
             updatedAt: now.addingTimeInterval(-180),
