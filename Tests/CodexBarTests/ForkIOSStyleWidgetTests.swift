@@ -73,6 +73,15 @@ struct ForkIOSStyleWidgetModelTests {
 struct ForkIOSStyleWidgetRenderTests {
     @Test(arguments: [WidgetFamily.systemSmall, .systemMedium, .systemLarge], [ColorScheme.dark, .light])
     func `iPhone-style widgets render at macOS tile sizes`(family: WidgetFamily, scheme: ColorScheme) throws {
+        try self.render(family: family, scheme: scheme, mode: .fullColor)
+    }
+
+    @Test(arguments: [WidgetFamily.systemSmall, .systemMedium, .systemLarge])
+    func `iPhone-style widgets render in the dimmed desktop appearance`(family: WidgetFamily) throws {
+        try self.render(family: family, scheme: .light, mode: .vibrant)
+    }
+
+    private func render(family: WidgetFamily, scheme: ColorScheme, mode: WidgetRenderingMode) throws {
         let snapshot = Self.snapshot()
         let size = CGSize(width: family == .systemSmall ? 155 : 329, height: family == .systemLarge ? 345 : 155)
         let palette = ForkWidgetPalette(scheme: scheme)
@@ -94,9 +103,10 @@ struct ForkIOSStyleWidgetRenderTests {
             try WidgetLocalizationOverride.$language.withValue(Self.language) {
                 let content = view
                     .environment(\.colorScheme, scheme)
+                    .environment(\.widgetRenderingModeOverride, mode)
                     .frame(width: size.width - 28, height: size.height - 28)
                     .padding(14)
-                    .background(palette.background)
+                    .background(mode == .fullColor ? palette.background : Color(white: 0.55))
                     .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
                 let renderer = ImageRenderer(content: content)
                 renderer.scale = 2
@@ -107,7 +117,9 @@ struct ForkIOSStyleWidgetRenderTests {
                         using: .png,
                         properties: [:]))
                     try data
-                        .write(to: URL(fileURLWithPath: dir).appendingPathComponent("\(name)-\(family)-\(scheme).png"))
+                        .write(to: URL(fileURLWithPath: dir)
+                            .appendingPathComponent(
+                                "\(name)-\(family)-\(scheme)-\(mode == .fullColor ? "color" : "vibrant").png"))
                 }
             }
         }
@@ -125,5 +137,16 @@ struct ForkIOSStyleWidgetRenderTests {
             return snapshot
         }
         return ForkWidgetPreview.snapshot()
+    }
+}
+
+struct ForkIOSStyleWidgetTimelineTests {
+    @Test
+    func `timeline steps relative text every five minutes`() {
+        let now = Date(timeIntervalSince1970: 1_800_000_000)
+        let timeline = ForkWidgetTimeline.make(now: now) {
+            ForkWidgetEntry(date: $0, snapshot: ForkWidgetPreview.snapshot())
+        }
+        #expect(timeline.entries.map { $0.date.timeIntervalSince(now) } == [0, 300, 600, 900, 1200, 1500, 1800])
     }
 }

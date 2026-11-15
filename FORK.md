@@ -99,6 +99,7 @@ These carry identity strings or fork packaging calls and nothing else. Larger fo
 | `Sources/CodexBar/StatusItem/StatusItemController+MenuCardItems.swift` | `.fontDesign(.monospaced)` on every hosted menu card row (terminal-style typography; also covers the split header/usage/credits sections) | |
 | `Sources/CodexBar/Menu/MenuCardView.swift` | card header title shows `ForkProviderTitle` (initial avatar in the provider color) | `MenuCard+ForkDecorations.swift` |
 | `Sources/CodexBarWidget/CodexBarWidgetBundle.swift` | registers `ForkOverviewWidget` and `ForkProviderQuotaWidget`, the iPhone-style Mac widgets (2 lines) | `ForkIOSStyleWidgets.swift` |
+| `WidgetExtension/CodexBarWidgetExtension.xcodeproj/project.pbxproj` | lists `ForkIOSStyleWidgets.swift` in the widget target so release builds compile it (4 lines, added by hand: `xcodegen` would also rewrite the checkout folder reference) | `ForkIOSStyleWidgets.swift` |
 | `Sources/CodexBar/Menu/MenuCardCompactAccountRow.swift` | headroom mini bar drawn by `ForkMiniSegmentedMeter` instead of two capsules | `UsageProgressBar+ForkSegmented.swift` |
 | `Sources/CodexBar/Menu/MenuCardMetricRow.swift` | sets `forkPaceStatus` in the environment; pace phrase in the meta line goes through `forkStyledMeta` | `MenuCard+ForkDecorations.swift` |
 | `Sources/CodexBar/Menu/UsageMenuCardHeaderAndUsageSectionView.swift` | `MetricRowHeader.titleLabel` returns `ForkMetricTitleLabel` (status glyph before the percent) | `MenuCard+ForkDecorations.swift` |
