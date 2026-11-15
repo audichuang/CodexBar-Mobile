@@ -62,8 +62,8 @@ struct ForkOverviewTimelineProvider: TimelineProvider {
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<ForkWidgetEntry>) -> Void) {
-        let entry = ForkWidgetEntry(date: Date(), snapshot: Self.load(isPreview: false))
-        completion(Timeline(entries: [entry], policy: .after(Date().addingTimeInterval(15 * 60))))
+        let snapshot = Self.load(isPreview: false)
+        completion(ForkWidgetTimeline.make { ForkWidgetEntry(date: $0, snapshot: snapshot) })
     }
 
     /// The gallery preview falls back to sample data so it never shows an empty tile.
@@ -94,8 +94,20 @@ struct ForkProviderQuotaTimelineProvider: AppIntentTimelineProvider {
     func timeline(for configuration: ProviderSelectionIntent, in context: Context) async -> Timeline<ForkWidgetEntry> {
         let provider = configuration.provider.provider
         let snapshot = WidgetSnapshotStore.load(provider: provider) ?? WidgetPreviewData.emptySnapshot()
-        let entry = ForkWidgetEntry(date: Date(), snapshot: snapshot, provider: provider)
-        return Timeline(entries: [entry], policy: .after(Date().addingTimeInterval(15 * 60)))
+        return ForkWidgetTimeline.make { ForkWidgetEntry(date: $0, snapshot: snapshot, provider: provider) }
+    }
+}
+
+/// "N 分鐘前更新" and the reset countdowns are plain text, so the timeline carries one entry per
+/// five minutes; the app still reloads every widget whenever it publishes a new snapshot.
+enum ForkWidgetTimeline {
+    static let step: TimeInterval = 5 * 60
+    static let count = 7
+
+    static func make(now: Date = Date(), _ entry: (Date) -> ForkWidgetEntry) -> Timeline<ForkWidgetEntry> {
+        Timeline(
+            entries: (0..<self.count).map { entry(now.addingTimeInterval(Double($0) * self.step)) },
+            policy: .atEnd)
     }
 }
 
@@ -239,9 +251,19 @@ enum ForkWidgetText {
         return self.t("\(minutes)m", hant: "\(minutes) 分", hans: "\(minutes) 分")
     }
 
-    static func updated(_ date: Date?, now: Date) -> String {
+    static func updated(_ date: Date?, now: Date, compact: Bool = false) -> String {
         guard let date else { return W("No data") }
         let minutes = max(0, Int(now.timeIntervalSince(date) / 60))
+        if compact {
+            // Small tiles share the header row with the provider name.
+            if minutes < 1 { return self.t("now", hant: "剛剛", hans: "刚刚") }
+            if minutes < 60 { return self.t("\(minutes)m ago", hant: "\(minutes) 分前", hans: "\(minutes) 分前") }
+            if minutes < 1440 { return self.t(
+                "\(minutes / 60)h ago",
+                hant: "\(minutes / 60) 時前",
+                hans: "\(minutes / 60) 时前") }
+            return self.t("\(minutes / 1440)d ago", hant: "\(minutes / 1440) 天前", hans: "\(minutes / 1440) 天前")
+        }
         if minutes < 1 { return self.t("Updated just now", hant: "剛剛更新", hans: "刚刚更新") }
         if minutes < 60 {
             return self.t("Updated \(minutes) min ago", hant: "\(minutes) 分鐘前更新", hans: "\(minutes) 分钟前更新")
@@ -257,25 +279,32 @@ enum ForkWidgetText {
 
 struct ForkWidgetPalette {
     let scheme: ColorScheme
+    /// Tinted and dimmed desktop appearances render through a luminance mask and drop the
+    /// container background, so fixed black/white ink must give way to the semantic styles.
+    var fullColor: Bool = true
 
     var background: Color {
         self.scheme == .dark ? .black : Color(red: 0.975, green: 0.975, blue: 0.97)
     }
 
     var primary: Color {
-        self.scheme == .dark ? Color.white.opacity(0.94) : Color.black.opacity(0.86)
+        guard self.fullColor else { return .primary }
+        return self.scheme == .dark ? Color.white.opacity(0.94) : Color.black.opacity(0.86)
     }
 
     var secondary: Color {
-        self.scheme == .dark ? Color.white.opacity(0.55) : Color.black.opacity(0.5)
+        guard self.fullColor else { return .secondary }
+        return self.scheme == .dark ? Color.white.opacity(0.55) : Color.black.opacity(0.5)
     }
 
     var track: Color {
-        self.scheme == .dark ? Color.white.opacity(0.12) : Color.black.opacity(0.08)
+        guard self.fullColor else { return .primary.opacity(0.15) }
+        return self.scheme == .dark ? Color.white.opacity(0.12) : Color.black.opacity(0.08)
     }
 
     var divider: Color {
-        self.scheme == .dark ? Color.white.opacity(0.14) : Color.black.opacity(0.1)
+        guard self.fullColor else { return .primary.opacity(0.15) }
+        return self.scheme == .dark ? Color.white.opacity(0.14) : Color.black.opacity(0.1)
     }
 
     var risk: Color {
@@ -398,8 +427,13 @@ struct ForkOverviewWidgetView: View {
         self.familyOverride ?? self.environmentFamily
     }
 
+    @Environment(\.widgetRenderingMode) private var renderingMode
+    @Environment(\.widgetRenderingModeOverride) private var renderingModeOverride
+
     private var palette: ForkWidgetPalette {
-        ForkWidgetPalette(scheme: self.scheme)
+        ForkWidgetPalette(
+            scheme: self.scheme,
+            fullColor: (self.renderingModeOverride ?? self.renderingMode) == .fullColor)
     }
 
     private var providers: [ForkProviderSummary] {
@@ -604,8 +638,13 @@ struct ForkProviderQuotaWidgetView: View {
         self.familyOverride ?? self.environmentFamily
     }
 
+    @Environment(\.widgetRenderingMode) private var renderingMode
+    @Environment(\.widgetRenderingModeOverride) private var renderingModeOverride
+
     private var palette: ForkWidgetPalette {
-        ForkWidgetPalette(scheme: self.scheme)
+        ForkWidgetPalette(
+            scheme: self.scheme,
+            fullColor: (self.renderingModeOverride ?? self.renderingMode) == .fullColor)
     }
 
     private var summary: ForkProviderSummary? {
@@ -681,7 +720,10 @@ struct ForkProviderQuotaWidgetView: View {
                 .minimumScaleFactor(0.7)
             Spacer(minLength: 4)
             let isOld = WidgetFreshness.isStale(summary.entry.updatedAt, now: self.entry.date)
-            Text(ForkWidgetText.updated(summary.entry.updatedAt, now: self.entry.date))
+            Text(ForkWidgetText.updated(
+                summary.entry.updatedAt,
+                now: self.entry.date,
+                compact: self.family == .systemSmall))
                 .font(.system(size: 10))
                 .monospacedDigit()
                 .lineLimit(1)
