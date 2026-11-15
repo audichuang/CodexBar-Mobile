@@ -4,6 +4,14 @@ This file is fork-owned. `AGENTS.md` belongs to upstream (do not edit it for for
 
 The fork is a short stack of commits rebased onto each upstream release tag. A change is cheap to carry only if upstream's files barely differ. Everything below exists to keep that diff small, explicit and machine-checked.
 
+## Simulators on this Mac
+
+Codex loads `AGENTS.md` only from this git root, so the workspace rules in `~/Project/codexbar/AGENTS.md`
+(section 模擬器（代號 CB）) are invisible to it; read that file before booting or driving a simulator.
+Short version: prefix `CB`, resident `CB iPhone 18 Pro Max` (iOS 27.2), driven through
+`~/Project/codexbar/.claude/skills/verify/scripts/verify.py ios-start|ios-open|ios-cleanup`;
+temporary devices `CB tmp <task>`; never `booted`; the window is Xcode's `DeviceHub.app`.
+
 ## Rules
 
 1. Fork code lives in fork-owned files. A file is fork-owned when it does not exist in the base tag. Allowed shapes: `*+Fork*.swift`, `*+Accounts.swift`, `Fork*.swift`, `Scripts/fork/`, `fork/`, `version.fork.env`, `CHANGELOG.fork.md`, `.github/README.md`, `CodexBarMobile/Config/Fork.xcconfig`, fork-only workflows, `Tests/**/*Fork*`.
