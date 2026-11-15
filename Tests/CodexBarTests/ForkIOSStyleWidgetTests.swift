@@ -54,12 +54,12 @@ struct ForkIOSStyleWidgetModelTests {
 
     @Test
     func `providers follow enabled order and costs add up`() {
+        let weekly = RateWindow(usedPercent: 27, windowMinutes: 10080, resetsAt: self.now, resetDescription: nil)
+        let session = RateWindow(usedPercent: 10, windowMinutes: 300, resetsAt: self.now, resetDescription: nil)
         let snapshot = WidgetSnapshot(
             entries: [
-                self.entry(.codex, secondary: RateWindow(
-                    usedPercent: 27, windowMinutes: 10080, resetsAt: self.now, resetDescription: nil), today: 2),
-                self.entry(.claude, primary: RateWindow(
-                    usedPercent: 10, windowMinutes: 300, resetsAt: self.now, resetDescription: nil), today: 3),
+                self.entry(.codex, secondary: weekly, today: 2),
+                self.entry(.claude, primary: session, today: 3),
             ],
             enabledProviders: [.claude, .codex],
             generatedAt: self.now)
@@ -78,7 +78,9 @@ struct ForkIOSStyleWidgetRenderTests {
         let palette = ForkWidgetPalette(scheme: scheme)
         var views: [(String, AnyView)] = [(
             "overview",
-            AnyView(ForkOverviewWidgetView(entry: ForkWidgetEntry(date: Date(), snapshot: snapshot), familyOverride: family)))]
+            AnyView(ForkOverviewWidgetView(
+                entry: ForkWidgetEntry(date: Date(), snapshot: snapshot),
+                familyOverride: family)))]
         if family != .systemLarge {
             for provider in [UsageProvider.claude, .codex] {
                 views.append((
@@ -101,8 +103,11 @@ struct ForkIOSStyleWidgetRenderTests {
                 let image = try #require(renderer.cgImage)
                 #expect(image.width == Int(size.width * 2))
                 if let dir = ProcessInfo.processInfo.environment["CODEXBAR_FORK_WIDGET_PROOF_DIR"] {
-                    let data = try #require(NSBitmapImageRep(cgImage: image).representation(using: .png, properties: [:]))
-                    try data.write(to: URL(fileURLWithPath: dir).appendingPathComponent("\(name)-\(family)-\(scheme).png"))
+                    let data = try #require(NSBitmapImageRep(cgImage: image).representation(
+                        using: .png,
+                        properties: [:]))
+                    try data
+                        .write(to: URL(fileURLWithPath: dir).appendingPathComponent("\(name)-\(family)-\(scheme).png"))
                 }
             }
         }
