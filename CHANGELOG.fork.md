@@ -16,6 +16,7 @@ Fork-only changes. Upstream history lives in CHANGELOG.md.
 
 ### Added
 
+- Two iPhone-style Mac desktop widgets: **CodexBar Overview** (big per-provider usage figures; medium and large add Today / 30-day cost and the highest usage) and **CodexBar Quota** (one provider's weekly and session windows as segmented meters). Their gallery previews show sample data instead of an empty tile.
 - Mac menu cards take a terminal look: segmented block meters with a clock tick for elapsed time, monospaced type, a provider initial avatar with a `[name]` title, and a pace glyph (on track / burning fast / running out) that also tints the pace phrase. Compact account rows use a small segmented meter.
 - Provider Quota and Account Quotas widgets say whether a window lasts: "Out 14:05", "Used up", or a check mark. Covers the 5-hour session, which the Quota Pace forecast does not.
 - Account Quotas ranks accounts by who runs out first (before truncating to the rows that fit) and suggests the emptiest account that lasts.
