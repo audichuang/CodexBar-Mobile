@@ -29,6 +29,8 @@ Fork-only changes. Upstream history lives in CHANGELOG.md.
 
 ### Fixed
 
+- macOS kept showing the old widget list after a fork release: the widget extension's build number now includes `FORK_PATCH` (for example `177.1.4`), so the system reloads the widgets each release.
+
 - "just now" had no translation.
 - Mac fleet sync: a snapshot whose queued save was replaced by a delete is published again instead of being skipped until the app restarts (the reader Mac showed "No available fetch strategy for claude."). Carries o1xhack/CodexBar-Mobile#234 until upstream merges it.
 
