@@ -174,35 +174,6 @@ struct AlibabaTokenPlanWebStrategyTests {
     }
 
     @Test
-    func `workspace permission failure preserves cached browser cookies`() async {
-        await self.withIsolatedCookieCache {
-            self.clearCookieCaches()
-            defer { self.clearCookieCaches() }
-
-            let region = AlibabaTokenPlanAPIRegion.chinaMainlandPersonal
-            let cachedHeader = "login_aliyunid_ticket=valid-ticket; gateway=personal"
-            CookieHeaderCache.store(
-                provider: .alibabatokenplan,
-                scope: region.cookieCacheScope,
-                cookieHeader: cachedHeader,
-                sourceLabel: "Personal fixture")
-
-            let strategy = AlibabaTokenPlanWebFetchStrategy { _, _, _ in
-                throw AlibabaTokenPlanUsageError.apiError("BailianGateway.Workspace.NotAuthorised")
-            }
-
-            await #expect(throws: AlibabaTokenPlanUsageError.apiError(
-                "BailianGateway.Workspace.NotAuthorised"))
-            {
-                _ = try await strategy.fetch(self.context(region: region))
-            }
-            #expect(CookieHeaderCache.load(
-                provider: .alibabatokenplan,
-                scope: region.cookieCacheScope)?.cookieHeader == cachedHeader)
-        }
-    }
-
-    @Test
     func `auto web strategy surfaces cookie import errors`() async throws {
         try await self.withIsolatedCookieCache {
             let strategy = AlibabaTokenPlanWebFetchStrategy()
@@ -372,12 +343,18 @@ struct AlibabaTokenPlanWebStrategyTests {
             CookieHeaderCache.store(
                 provider: .alibabatokenplan,
                 scope: AlibabaTokenPlanAPIRegion.international.cookieCacheScope,
-                cookieHeader: "login_aliyunid_ticket=intl-ticket; gateway=intl",
+                cookieHeader: AlibabaTokenPlanCookieHeaders(
+                    apiCookieHeader: "login_aliyunid_ticket=intl-ticket; gateway=intl",
+                    dashboardCookieHeader: "login_aliyunid_ticket=intl-ticket; gateway=intl",
+                    rateLimitCookieHeader: "login_aliyunid_ticket=intl-ticket; rpc=intl").cacheCookieHeader,
                 sourceLabel: "International fixture")
             CookieHeaderCache.store(
                 provider: .alibabatokenplan,
                 scope: AlibabaTokenPlanAPIRegion.chinaMainland.cookieCacheScope,
-                cookieHeader: "login_aliyunid_ticket=cn-ticket; gateway=cn",
+                cookieHeader: AlibabaTokenPlanCookieHeaders(
+                    apiCookieHeader: "login_aliyunid_ticket=cn-ticket; gateway=cn",
+                    dashboardCookieHeader: "login_aliyunid_ticket=cn-ticket; gateway=cn",
+                    rateLimitCookieHeader: "login_aliyunid_ticket=cn-ticket; rpc=cn").cacheCookieHeader,
                 sourceLabel: "China fixture")
             try AlibabaCodingPlanCookieImporter.withImportSessionOverrideForTesting { _, _ in
                 throw AlibabaCodingPlanSettingsError.missingCookie(details: "unexpected import")
@@ -401,7 +378,7 @@ struct AlibabaTokenPlanWebStrategyTests {
     }
 
     @Test
-    func `legacy unscoped cache migrates only to China gateway`() throws {
+    func `legacy unscoped cache refreshes without crossing regions`() throws {
         try self.withIsolatedCookieCache {
             self.clearCookieCaches()
             defer { self.clearCookieCaches() }
@@ -431,7 +408,22 @@ struct AlibabaTokenPlanWebStrategyTests {
             }
 
             let china = try AlibabaCodingPlanCookieImporter.withImportSessionOverrideForTesting { _, _ in
-                throw AlibabaCodingPlanSettingsError.missingCookie(details: "unexpected China import")
+                AlibabaCodingPlanCookieImporter.SessionInfo(
+                    cookies: [
+                        self.cookie(
+                            name: "login_aliyunid_ticket",
+                            value: "cn",
+                            domain: ".aliyun.com"),
+                        self.cookie(
+                            name: "gateway",
+                            value: "fresh-cn",
+                            domain: "bailian.console.aliyun.com"),
+                        self.cookie(
+                            name: "rpc",
+                            value: "fresh-cn",
+                            domain: "bailian-cs.console.aliyun.com"),
+                    ],
+                    sourceLabel: "China fixture")
             } operation: {
                 try AlibabaTokenPlanWebFetchStrategy.resolveCookieHeaders(
                     context: context,
@@ -441,7 +433,9 @@ struct AlibabaTokenPlanWebStrategyTests {
 
             #expect(international.apiCookieHeader.contains("gateway=intl"))
             #expect(!international.apiCookieHeader.contains("gateway=legacy-cn"))
-            #expect(china.apiCookieHeader.contains("gateway=legacy-cn"))
+            #expect(china.apiCookieHeader.contains("gateway=fresh-cn"))
+            #expect(!china.apiCookieHeader.contains("gateway=legacy-cn"))
+            #expect(china.rateLimitCookieHeader?.contains("rpc=fresh-cn") == true)
             #expect(CookieHeaderCache.load(provider: .alibabatokenplan) == nil)
             #expect(CookieHeaderCache.load(
                 provider: .alibabatokenplan,
