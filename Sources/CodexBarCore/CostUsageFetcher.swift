@@ -564,7 +564,8 @@ public struct CostUsageFetcher: Sendable {
             }
             #endif
         } catch {
-            // Local caches cannot establish the identity of an explicitly selected credential.
+            // Provider-specific by design: only Cursor falls back to local caches, which cannot establish the
+            // identity of an explicitly selected credential.
             if provider != .cursor || cursorCookieHeaderOverride != nil {
                 throw error
             }
