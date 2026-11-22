@@ -120,6 +120,12 @@ struct ForkProviderTitle: View {
             // Burnstate-style "[name]": dim brackets around the emphasized name.
             Text("[").foregroundStyle(self.bracketColor) + Text(self.name) + Text("]").foregroundStyle(self.bracketColor)
         }
+        // Same title styling as upstream's UsageMenuCardTitleView, kept here so the header hook stays one line.
+        .font(.headline)
+        .fontWeight(.semibold)
+        .lineLimit(1)
+        .truncationMode(.tail)
+        .layoutPriority(1)
     }
 
     private var bracketColor: Color {
