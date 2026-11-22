@@ -787,13 +787,13 @@
 				3790EA6A7497C8AF592F24D2 /* InfoPlist.xcstrings */,
 				B47F282E1FA9E215551D09F6 /* Localizable.xcstrings */,
 				1C3F51A2F6DE018A276166F7 /* PrivacyInfo.xcprivacy */,
-				F677A47657E5FE3C3F3BFADB /* WidgetActivity.intentdefinition */,
 				78C0055577F3BF5232A8324A /* iCloud */,
 				E885519810099589A32096E1 /* Models */,
 				40BA5B6E45635D96D7A39618 /* Notifications */,
 				72BD66B5E4391FD19D1AAEF4 /* Preview Content */,
 				566A10A064D398A8177F2520 /* Storage */,
 				EF6BE6D5AF77B9CC16AAFBA3 /* Views */,
+				F677A47657E5FE3C3F3BFADB /* WidgetActivity.intentdefinition */,
 			);
 			path = CodexBarMobile;
 			sourceTree = "<group>";
@@ -1075,9 +1075,9 @@
 				BAC28C0DE37814E0D17EF05B /* CodexBarWidgetTimeline.swift */,
 				F73457F32FC7DD4C6DE7F847 /* Info.plist */,
 				0B38802B33E177667A2B8224 /* StatusWidgetTimeline.swift */,
-				9493E5B0739B4A4F3FE4C82F /* WidgetActivity.intentdefinition */,
 				E143BBA8CCF436071E8DFE5F /* WidgetActivityTimeline.swift */,
 				F74DC452F05CFF7BC6196E10 /* WidgetExtension.entitlements */,
+				9493E5B0739B4A4F3FE4C82F /* WidgetActivity.intentdefinition */,
 			);
 			path = CodexBarMobileWidgets;
 			sourceTree = "<group>";
@@ -1422,7 +1422,6 @@
 				};
 			};
 			buildConfigurationList = BC9B8EDD8DA612B511EFBDC3 /* Build configuration list for PBXProject "CodexBarMobile" */;
-			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -1435,16 +1434,17 @@
 			mainGroup = AE4CB101A569B5278A98C584;
 			minimizedProjectReferenceProxies = 1;
 			preferredProjectObjectVersion = 77;
+			productRefGroup = 3C72FFB904D6F67F4C3A441A /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				BFE9125269D971C3EB23E583 /* CodexBarMobile */,
+				5547EC44D00232824E4A565F /* CodexBarSync */,
 				59BBAD176F2AF8C44F838B73 /* CodexBarMobilePushExtension */,
+				7916284950C20C9B23853D0B /* CodexBarMobileWidgets */,
+				9C83063937EAADDC78C3C7F9 /* CodexBarMobileWidgetOptions */,
+				BFE9125269D971C3EB23E583 /* CodexBarMobile */,
 				62A1D41F26DB4CE375E6F965 /* CodexBarMobileTests */,
 				A02A488005F484BB2BC37276 /* CodexBarMobileUITests */,
-				9C83063937EAADDC78C3C7F9 /* CodexBarMobileWidgetOptions */,
-				7916284950C20C9B23853D0B /* CodexBarMobileWidgets */,
-				5547EC44D00232824E4A565F /* CodexBarSync */,
 			);
 		};
 /* End PBXProject section */
