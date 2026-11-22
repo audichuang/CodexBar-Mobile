@@ -1360,11 +1360,18 @@ struct SpendDashboardModel: Equatable, Sendable {
         displayCalendar: Calendar) -> ClosedRange<Date>
     {
         let bucketCalendar = Self.bucketCalendar(for: input, displayCalendar: displayCalendar)
+        // The mobile base keeps `updatedAt` as the observation time and records a declared coverage end
+        // separately (plugins, Grok); prefer it, as the Mac-to-iOS sync projection does.
+        let declaredEnd = input.snapshot.windowEndDayKey.flatMap { key -> Date? in
+            let parts = key.split(separator: "-").compactMap { Int($0) }
+            guard parts.count == 3 else { return nil }
+            return bucketCalendar.date(from: DateComponents(year: parts[0], month: parts[1], day: parts[2]))
+        }
         // Legacy plugins encode their civil windowEnd at noon UTC, independently of the viewer's zone.
-        let windowEnd = input.provider.firstPartyProvider == nil
+        let windowEnd = declaredEnd ?? (input.provider.firstPartyProvider == nil
             ? bucketCalendar.date(from: Self.utcCalendar.dateComponents(
                 [.year, .month, .day], from: input.snapshot.updatedAt)) ?? input.snapshot.updatedAt
-            : input.snapshot.updatedAt
+            : input.snapshot.updatedAt)
         let bucketEnd = bucketCalendar.startOfDay(for: windowEnd)
         let scanEnd = displayCalendar.startOfDay(for: bucketEnd)
         let scanDays = max(1, input.snapshot.historyDays)
