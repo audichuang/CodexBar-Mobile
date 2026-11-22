@@ -87,4 +87,3 @@ Tests/CodexBarTests/CloudSyncSettingsTests.swift	4	fork test coverage added to u
 Tests/CodexBarTests/SyncCoordinatorMultiAccountTests.swift	40	fork test coverage added to upstream-owned test file
 Tests/CodexBarTests/SyncWireFormatRoundTripTests.swift	27	fork test coverage added to upstream-owned test file
 WidgetExtension/CodexBarWidgetExtension.xcodeproj/project.pbxproj	4	fork widget source ForkIOSStyleWidgets.swift added to the tracked widget project (4 lines; xcodegen would rewrite the checkout path)
-version.env	3	sync base note: upstream version and the steipete main commit the base merged
