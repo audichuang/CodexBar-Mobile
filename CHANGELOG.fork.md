@@ -14,6 +14,10 @@ Fork-only changes. Upstream history lives in CHANGELOG.md.
 
 ## Unreleased
 
+### Changed
+
+- Synced to steipete v0.85.0 on top of the o1xhack mobile 3.3.0 base (`0.85.0.1-mobile.3.3.0`). o1xhack's own Codex pricing-model helper now also keeps native Ultrafast rows on their own model, matching upstream.
+
 ### Added
 
 - Two iPhone-style Mac desktop widgets: **CodexBar Overview** (big per-provider usage figures; medium and large add Today / 30-day cost and the highest usage) and **CodexBar Quota** (one provider's weekly and session windows as segmented meters). Their gallery previews show sample data instead of an empty tile.
