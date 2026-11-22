@@ -233,7 +233,9 @@ extension CostUsageScanner {
         for row: CodexUsageRow,
         priorityMetadata: CodexPriorityTurnMetadata?) -> String
     {
-        priorityMetadata.map { self.codexPriorityPricingModel(for: row, priorityMetadata: $0) }
+        // Native Ultrafast rows carry their own model; older turn-level Priority evidence must not reprice them.
+        guard row.pricingMode != "ultrafast" else { return row.pricingModel ?? row.model }
+        return priorityMetadata.map { self.codexPriorityPricingModel(for: row, priorityMetadata: $0) }
             ?? row.pricingModel
             ?? row.model
     }
