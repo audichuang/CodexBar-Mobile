@@ -19,7 +19,8 @@ Settings omits the Version row because this provider reads web APIs and does not
 
 ## Data sources + fallback order
 
-Manual cookie configuration is always the explicit override. The automatic order is Cursor.app → cached cookie → browser
+Manual cookie configuration is always the explicit override. An empty or whitespace-only Manual header fails without
+trying app credentials, cached sessions, or browser imports. The automatic order is Cursor.app → cached cookie → browser
 cookie import → stored session on macOS, and cached cookie → stored session → Cursor.app token → `cursor-agent` token on
 Linux. Explicit `web` mode never reads local Cursor credentials; macOS uses its cookie ladder, while Linux requires a configured manual cookie.
 
@@ -83,11 +84,11 @@ Manual option:
 - Paste the `Cookie:` header from a cursor.com request.
 
 ## Add and switch account
-- **Add Account** opens `https://authenticator.cursor.sh/` in a supported browser.
+- **Add Account** opens `https://cursor.com/login` in a supported browser.
 - Aside, Opera, and Opera Neon are supported with SweetCookieKit 0.5.5. The selected application's bundle identifier pins login to that browser's cookie store.
 - SweetCookieKit 0.5.11 adds Brave Origin cookie imports and Add/Switch Account support. Its `com.brave.Browser.origin` bundle identifier pins login to the separate `BraveSoftware/Brave-Origin` profile store, using the shared browser import order and Keychain prompt safeguards.
 - SweetCookieKit 0.5.6 adds Ego Lite cookie imports. Add/Switch Account does not offer Ego Lite until its application has a verified, unambiguous bundle-identifier mapping; display names and storage paths are insufficient for interactive login.
-- **Switch Account** opens the same authenticator and waits for a different stable account ID when available, falling back to normalized email when IDs are unavailable.
+- **Switch Account** opens the same Cursor login route and waits for a different stable account ID when available, falling back to normalized email when IDs are unavailable.
 - When the system's HTTPS handler is a supported browser, CodexBar opens the route there automatically. When the handler is an intermediary app, CodexBar asks the user to choose a concrete supported browser before opening the route.
 - CodexBar pins the original HTTPS route to that concrete browser and polls cookies only from the same application. Interactive login never falls back to another browser, a stored session, or Cursor.app; cancelling browser selection or the absence of a supported browser stops before login opens.
 - Login polls every two seconds with a two-minute deadline, and API requests are capped by the remaining time. The timeout
@@ -102,6 +103,20 @@ Manual option:
 - A successful add or switch selects the Automatic cookie source. Saved manual headers and token accounts remain
   stored but passive: they do not override browser fetching, cached usage, quota warnings, or utilization/reset
   ownership. Explicitly selecting a saved token account switches Cursor back to Manual and reactivates it.
+
+## Cursor and Grok account boundaries
+
+- [Shared xAI sign-in](https://docs.x.ai/x-subscription/sign-in) does not merge accounts, change plans, or cancel
+  subscriptions. CodexBar opens Cursor's login route and validates the resulting Cursor session; a Grok credential
+  is not substituted for a Cursor cookie.
+- [Account unification](https://docs.x.ai/x-subscription/unify-accounts) is a separate user decision. CodexBar never
+  initiates it or infers it from matching email addresses, plan names, or seven-day billing cycles.
+- A usable weekly window becomes Cursor's primary shared allowance only when Cursor explicitly reports `isUnified`.
+  This classification survives snapshot caching and supplemental cost updates. Older caches without that evidence
+  remain unclassified until refresh. The marker applies only to Cursor snapshots and does not establish a common
+  billing owner or pool identifier across separate Cursor and Grok accounts.
+- [Legacy SuperGrok/X Premium+ links](https://cursor.com/help/grok-bot/supergrok) grant Grok Bot access without
+  replacing a Cursor subscription. Independent Cursor and Grok Bot percentages remain separate.
 
 ## API endpoints
 - `GET https://cursor.com/api/usage-summary`
@@ -160,7 +175,7 @@ The storage detail lists measured paths and their sizes. CodexBar does not delet
 
 ## Token cost (dashboard API)
 The cost summary's Cursor section is opt-in: it only fetches when **Show cost summary** is enabled and the Cursor provider is on.
-Unlike Claude and Codex cost (scanned from local session logs on this machine), Cursor cost is remote, account-wide data from the cursor.com dashboard, so it covers usage from every machine on the account.
+Unlike Claude and Codex cost (scanned from local session logs on this machine), Cursor cost normally uses remote, account-wide data from the cursor.com dashboard, so it covers usage from every machine on the account.
 
 Auth reuses the exact status-probe session resolution and cookie-source policy:
 - **Auto**: Cursor.app local auth → cached cookie header → browser cookie import → stored session.
@@ -183,7 +198,28 @@ API-list-price estimates are not estimates of actual Cursor charges: they do not
 
 Caching: automatic cost refreshes follow the app's token-cost cadence, with a minimum interval of 15 minutes (30 minutes in Low Power Mode). Snapshots are scoped to the history window, cookie source, and resolved account (manual-cookie hash or auto-mode account fingerprint), so switching accounts or pasting a new cookie invalidates them immediately.
 
-An HTTP 403 from the cost endpoint records a failed cost source with an in-memory retry time at least six hours later, even when no cost snapshot is available. It does not invalidate the working quota session or change local CSV fallback. Manual and menu-open refreshes bypass the cooldown, and a changed account, credential source, history window, timezone, or provider configuration permits a new attempt. Timed-out cost scans keep their normal cooldown without a snapshot; transient failures retain their normal retry behavior. Restarting the app clears this in-memory cooldown.
+An HTTP 403 from the cost endpoint records a failed cost source with an in-memory retry time at least six hours later, even when no cost snapshot is available. It does not invalidate the working quota session. Automatic mode retains the local cache fallback; Manual mode surfaces the selected credential failure because local cache metadata cannot establish the selected credential identity. Manual and menu-open refreshes bypass the cooldown, and a changed account, credential source, history window, timezone, or provider configuration permits a new attempt. Timed-out cost scans keep their normal cooldown without a snapshot; transient failures retain their normal retry behavior. Restarting the app clears this in-memory cooldown.
+
+The local fallback first reads Tokscale's canonical `usage.json` on macOS. It supports object and positional event rows,
+Unix-millisecond and ISO-8601 timestamps, and numeric strings. Repeated snapshots of the same `usageEventId` count once,
+keeping the largest token total and then the largest reported cost, with the earliest row retained on an exact tie.
+Distinct event IDs remain distinct. Id-less rows keep their multiplicity unless they match an identified event's
+conversation, model, and timestamp; ambiguous matches join only the smallest event ID.
+
+Only the canonical JSON cache is read. Other accounts' `usage.account-*.json` files, backups, and archives are excluded.
+When owner metadata is present, its supported version, account hash, and header/footer generation must agree.
+Metadata-free legacy JSON remains eligible for Automatic fallback, like legacy CSV. These tags describe cache consistency;
+they do not authenticate a selected CodexBar account. Manual credentials and Off mode retain their existing behavior.
+
+Once `usage.json` exists, it takes precedence over CSV, including when it is malformed, unreadable, empty, or outside the
+requested history window. The fallback never combines JSON with migration CSVs or substitutes CSV after rejecting the
+canonical JSON. A missing canonical JSON retains CSV-only compatibility. Rejected event rows leave usable history marked
+partial and withhold the Cursor-metered total; invalid reported amounts stay unpriced rather than becoming zero.
+Reported API-rate amounts and Cursor-metered charges remain separate, and both use the requested history window.
+
+The producer schema and snapshot rules are documented in
+[Tokscale's pinned Cursor parser](https://github.com/junhoyeo/tokscale/blob/5569a0397b52c6c445e346814747a772fc3c0a11/crates/tokscale-core/src/sessions/cursor.rs)
+and [cache writer](https://github.com/junhoyeo/tokscale/blob/5569a0397b52c6c445e346814747a772fc3c0a11/crates/tokscale-cli/src/cursor.rs).
 
 The local Tokscale CSV fallback supports legacy, `Kind`, and cloud-agent layouts. A `Cloud Agent ID` header identifies
 the cloud-agent layout; trailing billing columns such as `Cost to you` leave the layout unchanged. The existing

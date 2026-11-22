@@ -788,8 +788,8 @@ final class UsageStore {
                 coalesceProviderRefreshesOverride: coalesceProviderRefreshesOverride)
         }
 
-        guard !self.isRefreshing else { return false }
-        guard enrichmentMode != .automatic || !self.hasForcedRefreshEnrichmentInFlight else { return false }
+        guard !self.isRefreshing,
+              enrichmentMode != .automatic || !self.hasForcedRefreshEnrichmentInFlight else { return false }
         let forcedBackgroundGeneration: UInt64?
         if enrichmentMode == .forcedBackground {
             self.forcedRefreshEnrichmentGeneration &+= 1
@@ -1220,11 +1220,15 @@ extension UsageStore {
         fallbackCookieHeader: String) async -> ClaudeDebugLogConfiguration
     {
         await MainActor.run {
-            let sourceMode = self.sourceMode(for: .claude)
-            let snapshot = ProviderRegistry.makeSettingsSnapshot(settings: self.settings, tokenOverride: nil)
+            let provider: UsageProvider = .claude
+            let sourceMode = self.sourceMode(for: provider)
+            let snapshot = ProviderRegistry.makeSettingsSnapshot(
+                provider: provider,
+                settings: self.settings,
+                tokenOverride: nil)
             let environment = ProviderRegistry.makeEnvironment(
                 base: self.environmentBase,
-                provider: .claude,
+                provider: provider,
                 settings: self.settings,
                 tokenOverride: nil)
             let claudeSettings = snapshot.claude ?? ProviderSettingsSnapshot.ClaudeProviderSettings(
@@ -1332,11 +1336,8 @@ extension UsageStore {
 
             do {
                 let probe = CursorStatusProbe(browserDetection: browserDetection)
-                let snapshot: CursorStatusSnapshot = if cursorCookieSource == .manual,
-                                                        let normalizedHeader = CookieHeaderNormalizer
-                                                            .normalize(cursorCookieHeader)
-                {
-                    try await probe.fetchWithManualCookies(normalizedHeader)
+                let snapshot: CursorStatusSnapshot = if cursorCookieSource == .manual {
+                    try await probe.fetch(cookieHeaderOverride: cursorCookieHeader)
                 } else {
                     try await probe.fetch { msg in lines.append("[cursor-cookie] \(msg)") }
                 }
@@ -1513,9 +1514,8 @@ extension UsageStore {
             return
         }
 
-        guard await self.refreshPiHistoryScope(for: provider) else { return }
-
-        guard !self.tokenRefreshInFlight.contains(provider.instanceID) else { return }
+        guard await self.refreshPiHistoryScope(for: provider),
+              !self.tokenRefreshInFlight.contains(provider.instanceID) else { return }
 
         let now = Date()
         let historyDays = self.settings.costReportingPeriod.days(

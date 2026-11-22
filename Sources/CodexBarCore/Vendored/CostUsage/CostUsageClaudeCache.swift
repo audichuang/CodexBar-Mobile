@@ -102,6 +102,7 @@ final class CostUsageClaudeReportMemo: @unchecked Sendable {
         let sourceInventory: [String: CostUsageClaudeFileStamp]
         let reportKey: CostUsageClaudeReportMemoKey
         let report: CostUsageDailyReport
+        let breakdowns: ClaudeReportBreakdowns?
         /// Established by a full rebuild or continuation of certified rows for this memo's scan window.
         let hasWindowScopedRows: Bool
 
@@ -127,8 +128,9 @@ final class CostUsageClaudeReportMemo: @unchecked Sendable {
     static let shared = CostUsageClaudeReportMemo()
     #endif
     static let persistedVersion = 1
-    /// Bump when bundled pricing, model aliases, or daily-report aggregation changes without new artifact stamps.
-    static let reportSemanticsVersion = 9
+    /// Bump when bundled pricing, model aliases, daily-report aggregation, or the persisted session/project
+    /// breakdown attribution changes without new artifact stamps.
+    static let reportSemanticsVersion = 11
 
     private struct PersistedEnvelope: Codable {
         var version: Int
@@ -139,6 +141,7 @@ final class CostUsageClaudeReportMemo: @unchecked Sendable {
         var hourly: [CostUsageCodexPreviousReport.HourlyEntry]?
         var quotaSlices: QuotaSlices?
         var hasWindowScopedRows: Bool?
+        var breakdowns: ClaudeReportBreakdowns?
     }
 
     private struct QuotaSlices: Codable {
@@ -186,28 +189,31 @@ final class CostUsageClaudeReportMemo: @unchecked Sendable {
         guard let persisted = Self.loadPersisted(canonicalCachePath: canonicalCachePath) else { return nil }
         return self.lock.withLock {
             if let memory = self.entries.first(where: { $0.key == key })?.entry { return memory }
-            self.installUnlocked(key: key, entry: persisted)
-            return persisted
+            return self.installUnlocked(key: key, entry: persisted)
         }
     }
 
+    @discardableResult
     func store(
         provider: UsageProvider,
         canonicalCachePath: String,
         sourceInventory: [String: CostUsageClaudeFileStamp],
         reportKey: CostUsageClaudeReportMemoKey,
         report: CostUsageDailyReport,
-        hasWindowScopedRows: Bool = false)
+        breakdowns: ClaudeReportBreakdowns? = nil,
+        hasWindowScopedRows: Bool = false) -> Entry
     {
         let key = "\(provider.rawValue)|\(canonicalCachePath)"
         let entry = Entry(
             sourceInventory: sourceInventory,
             reportKey: reportKey,
             report: report,
+            breakdowns: breakdowns,
             hasWindowScopedRows: hasWindowScopedRows)
-        self.lock.withLock { self.installUnlocked(key: key, entry: entry) }
-        Self.persist(entry, canonicalCachePath: canonicalCachePath)
+        let shared = self.lock.withLock { self.installUnlocked(key: key, entry: entry) }
+        Self.persist(shared, canonicalCachePath: canonicalCachePath)
         CostUsageClaudeFragments.shared.evict(at: URL(fileURLWithPath: canonicalCachePath))
+        return shared
     }
 
     #if DEBUG
@@ -218,10 +224,34 @@ final class CostUsageClaudeReportMemo: @unchecked Sendable {
 
     #endif
 
-    private func installUnlocked(key: String, entry: Entry) {
+    private func installUnlocked(key: String, entry: Entry) -> Entry {
+        var shared = entry
+        if !entry.report.quotaSlices.isEmpty, let prior = self.entries.last(where: {
+            // Reports retain their own window certificates; only identical event sequences share storage.
+            $0.entry.reportKey.scanConfiguration == entry.reportKey.scanConfiguration
+                && $0.entry.reportKey.pricingArtifactStamp == entry.reportKey.pricingArtifactStamp
+                && $0.entry.sourceInventory == entry.sourceInventory
+                && $0.entry.report.quotaSlices == entry.report.quotaSlices
+                && zip($0.entry.report.quotaSlices, entry.report.quotaSlices).allSatisfy { lhs, rhs in
+                    lhs.timestamp.timeIntervalSince1970.bitPattern == rhs.timestamp.timeIntervalSince1970.bitPattern
+                        && lhs.costUSD?.bitPattern == rhs.costUSD?.bitPattern
+                }
+        })?.entry {
+            shared = Entry(
+                sourceInventory: entry.sourceInventory,
+                reportKey: entry.reportKey,
+                report: CostUsageDailyReport(
+                    data: entry.report.data,
+                    summary: entry.report.summary,
+                    hourly: entry.report.hourly,
+                    quotaSlices: prior.report.quotaSlices),
+                breakdowns: entry.breakdowns,
+                hasWindowScopedRows: entry.hasWindowScopedRows)
+        }
         self.entries.removeAll { $0.key == key }
-        self.entries.append((key: key, entry: entry))
+        self.entries.append((key: key, entry: shared))
         if self.entries.count > self.capacity { self.entries.removeFirst() }
+        return shared
     }
 
     static func reportMemoFileURL(cacheFileURL: URL) -> URL {
@@ -236,6 +266,7 @@ final class CostUsageClaudeReportMemo: @unchecked Sendable {
             envelope.sourceInventory = [:]
             return (envelope, inventory)
         }) else { return nil }
+        defer { CostUsageClaudeFragments.shared.discardDecodedHeader(at: url) }
         var envelope: PersistedEnvelope = loaded.0
         envelope.sourceInventory = loaded.1
         guard envelope.version == Self.persistedVersion,
@@ -250,6 +281,7 @@ final class CostUsageClaudeReportMemo: @unchecked Sendable {
                 summary: envelope.report.summary,
                 hourly: (envelope.hourly ?? []).map(\.hourlyValue),
                 quotaSlices: envelope.quotaSlices?.values ?? []),
+            breakdowns: envelope.breakdowns,
             hasWindowScopedRows: envelope.hasWindowScopedRows == true)
     }
 
@@ -268,7 +300,8 @@ final class CostUsageClaudeReportMemo: @unchecked Sendable {
             report: entry.report,
             hourly: entry.report.hourly.map(CostUsageCodexPreviousReport.HourlyEntry.init),
             quotaSlices: QuotaSlices(values: entry.report.quotaSlices),
-            hasWindowScopedRows: entry.hasWindowScopedRows)
+            hasWindowScopedRows: entry.hasWindowScopedRows,
+            breakdowns: entry.breakdowns)
         _ = try? CostUsageClaudeFragments.shared.save(
             header: envelope, values: entry.sourceInventory, at: url)
     }
@@ -313,25 +346,33 @@ struct CostUsageClaudeCache: Codable {
         didSet { self.contentID = UUID() }
     }
 
+    /// First cwd per session key in each transcript, so one file can attribute several sessions.
+    var sourceProjectPaths: [String: [String: String]] = [:] {
+        didSet { self.contentID = UUID() }
+    }
+
     final class File: Codable, Equatable {
         let usage: CostUsageFileUsage?
         let sourceID: String?
         let sourceKey: String?
         let dayBounds: CostUsageClaudeDayBounds?
+        let projectPaths: [String: String]?
         private let metadata: Data
-        private enum CodingKeys: CodingKey { case usage, sourceID, sourceKey, dayBounds }
+        private enum CodingKeys: CodingKey { case usage, sourceID, sourceKey, dayBounds, projectPaths }
 
         init(
             usage: CostUsageFileUsage?,
             sourceID: String?,
             sourceKey: String?,
             dayBounds: CostUsageClaudeDayBounds? = nil,
+            projectPaths: [String: String]? = nil,
             encoder: JSONEncoder) throws
         {
             self.usage = usage
             self.sourceID = sourceID
             self.sourceKey = sourceKey
             self.dayBounds = dayBounds
+            self.projectPaths = projectPaths
             var metadata = usage
             metadata?.claudeRows = nil
             self.metadata = try encoder.encode(metadata)
@@ -346,12 +387,13 @@ struct CostUsageClaudeCache: Codable {
                 sourceID: container.decodeIfPresent(String.self, forKey: .sourceID),
                 sourceKey: container.decodeIfPresent(String.self, forKey: .sourceKey),
                 dayBounds: container.decodeIfPresent(CostUsageClaudeDayBounds.self, forKey: .dayBounds),
+                projectPaths: container.decodeIfPresent([String: String].self, forKey: .projectPaths),
                 encoder: encoder)
         }
 
         static func == (lhs: File, rhs: File) -> Bool {
             if lhs === rhs { return true }
-            guard lhs.metadata == rhs.metadata, lhs.dayBounds == rhs.dayBounds,
+            guard lhs.metadata == rhs.metadata, lhs.dayBounds == rhs.dayBounds, lhs.projectPaths == rhs.projectPaths,
                   self.sameString(lhs.sourceID, rhs.sourceID),
                   self.sameString(lhs.sourceKey, rhs.sourceKey) else { return false }
             let left = lhs.usage?.claudeRows, right = rhs.usage?.claudeRows
@@ -384,6 +426,7 @@ struct CostUsageClaudeCache: Codable {
                 sourceID: self.sourceFileIDs[path],
                 sourceKey: sourceKey,
                 dayBounds: self.sourceDayBounds[path],
+                projectPaths: self.sourceProjectPaths[path],
                 encoder: encoder)
             files[path] = self.fileRecords[path].flatMap { $0 == file ? $0 : nil } ?? file
         }
@@ -391,6 +434,7 @@ struct CostUsageClaudeCache: Codable {
         header.usage.files = [:]
         header.sourceFileIDs = [:]
         header.sourceDayBounds = [:]
+        header.sourceProjectPaths = [:]
         header.fileRecords = [:]
         header.contentID = self.contentID
         return (header, files)
@@ -405,6 +449,9 @@ struct CostUsageClaudeCache: Codable {
         self.sourceDayBounds = files.reduce(into: .init(minimumCapacity: files.count)) { bounds, entry in
             bounds[entry.value.sourceKey ?? entry.key] = entry.value.dayBounds
         }
+        self.sourceProjectPaths = files.reduce(into: [:]) { paths, entry in
+            paths[entry.value.sourceKey ?? entry.key] = entry.value.projectPaths
+        }
         self.fileRecords = files
         self.contentID = contentID
     }
@@ -412,7 +459,7 @@ struct CostUsageClaudeCache: Codable {
     private var fileRecords: [String: File] = [:]
     private(set) var contentID = UUID() // String equality cannot establish byte-identical JSON.
 
-    private enum CodingKeys: String, CodingKey { case sourceFileIDs, sourceDayBounds }
+    private enum CodingKeys: String, CodingKey { case sourceFileIDs, sourceDayBounds, sourceProjectPaths }
 
     init() {}
 
@@ -422,6 +469,8 @@ struct CostUsageClaudeCache: Codable {
             .decodeIfPresent([String: String].self, forKey: .sourceFileIDs) ?? [:]
         self.sourceDayBounds = try decoder.container(keyedBy: CodingKeys.self)
             .decodeIfPresent([String: CostUsageClaudeDayBounds].self, forKey: .sourceDayBounds) ?? [:]
+        self.sourceProjectPaths = try decoder.container(keyedBy: CodingKeys.self)
+            .decodeIfPresent([String: [String: String]].self, forKey: .sourceProjectPaths) ?? [:]
     }
 
     func encode(to encoder: any Encoder) throws {
@@ -430,6 +479,9 @@ struct CostUsageClaudeCache: Codable {
         try container.encode(self.sourceFileIDs, forKey: .sourceFileIDs)
         if !self.sourceDayBounds.isEmpty {
             try container.encode(self.sourceDayBounds, forKey: .sourceDayBounds)
+        }
+        if !self.sourceProjectPaths.isEmpty {
+            try container.encode(self.sourceProjectPaths, forKey: .sourceProjectPaths)
         }
     }
 }
@@ -459,8 +511,8 @@ extension CostUsageScanner.ClaudeUsageRow {
 /// Claude and Vertex retain their transcript cache. Codex deliberately has no route
 /// through this JSON I/O boundary; its only persistence authority is `CostUsageStore`.
 enum CostUsageClaudeCacheIO {
-    /// Compact row keys; older artifacts rebuild from their source transcripts.
-    private static let schemaVersion = 5
+    /// v6 records per-session transcript cwd; older artifacts rebuild from their source transcripts.
+    private static let schemaVersion = 6
 
     #if DEBUG
     @TaskLocal static var readForTesting: (@Sendable (URL, Data.ReadingOptions) -> Data?)?

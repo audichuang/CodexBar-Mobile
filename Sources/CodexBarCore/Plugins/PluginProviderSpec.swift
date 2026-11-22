@@ -46,6 +46,7 @@ public struct PluginProviderSpec: Sendable {
     public var progressColorStyle: ProviderBranding.ProgressColorStyle = .brand
     public let noDataMessage: String
     public var supportsTokenCost = false
+    public var isCostUsageUnavailable: @Sendable (UsageSnapshot) -> Bool = { _ in false }
     public var settingsSection: ProviderSettingsSectionRegistration?
     public var pluginResultPolicy = ProviderPluginResultPolicy()
     public var history: ProviderHistoryCapability = .optIn
@@ -61,6 +62,7 @@ public struct PluginProviderSpec: Sendable {
     public var menuBarMetrics: ProviderMenuBarMetricCapabilities?
     public var presentation = ProviderUsagePresentation()
     public var aliases: [String] = []
+    public var setup: ProviderSetup = .unknown
     public var timeout = ProviderPluginRuntime.defaultTimeout
     public var scriptSettings: @Sendable (ProviderFetchContext) -> [String: String] = { _ in [:] }
     public var validateContext: ScriptFetchStrategy.ContextValidator = { _ in }
@@ -152,11 +154,14 @@ public struct PluginProviderSpec: Sendable {
                 widgetColor: self.widgetColor,
                 progressColorStyle: self.progressColorStyle),
             tokenCost: ProviderTokenCostConfig(
-                supportsTokenCost: self.supportsTokenCost, noDataMessage: { self.noDataMessage }),
+                supportsTokenCost: self.supportsTokenCost,
+                noDataMessage: { self.noDataMessage },
+                isUsageUnavailable: self.isCostUsageUnavailable),
             history: self.history,
             presentation: self.presentation,
             fetchPlan: fetchPlan,
-            cli: cli)
+            cli: cli,
+            setup: self.setup)
     }
 
     func scriptValues(_ context: ProviderFetchContext) -> ScriptFetchStrategy.Values? {
