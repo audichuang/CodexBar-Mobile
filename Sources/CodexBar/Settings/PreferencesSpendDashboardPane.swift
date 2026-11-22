@@ -268,10 +268,7 @@ struct SpendDashboardPane: View {
                 ForEach(self.controller.publication.sources.filter {
                     $0.state == .unavailable || $0.state == .staleLastKnown
                 }, id: \.id) { source in
-                    Text(source.displayName + " · " + L(source.provider.flatMap {
-                        // Account-specific sources must not borrow another account's error.
-                        source.id == $0.rawValue ? self.store.tokenErrors[$0.instanceID] : nil
-                    } ?? "Local token history is unavailable or incomplete."))
+                    Text(source.displayName + " · " + self.refreshFailureDetail(for: source))
                     if let cached = self.controller.publication.inputs.first(where: { $0.id == source.id }) {
                         Text(L("Cached data from") + " " +
                             cached.snapshot.updatedAt.formatted(date: .abbreviated, time: .shortened))
@@ -285,6 +282,15 @@ struct SpendDashboardPane: View {
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(.orange.opacity(0.08), in: RoundedRectangle(cornerRadius: 8, style: .continuous))
         }
+    }
+
+    // Split out of `refreshStatus`: inline, the type error surfaced only as a type-checker timeout.
+    private func refreshFailureDetail(for source: SpendSourcePublication) -> String {
+        // Account-specific sources must not borrow another account's error.
+        let error: String? = source.provider.flatMap {
+            source.id == $0.rawValue ? self.store.tokenErrors[$0] : nil
+        }
+        return L(error ?? "Local token history is unavailable or incomplete.")
     }
 
     @ViewBuilder
