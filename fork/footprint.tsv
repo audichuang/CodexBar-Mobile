@@ -15,7 +15,7 @@ CodexBarMobile/CodexBarMobile/Models/ProviderAccountGroup.swift	9	fork hook in i
 CodexBarMobile/CodexBarMobile/Models/WidgetActivityPublisher.swift	8	fork hook in iOS app code (calls fork-owned extension)
 CodexBarMobile/CodexBarMobile/Storage/ModelContainerFactory.swift	3	fork hook in iOS app code (calls fork-owned extension)
 CodexBarMobile/CodexBarMobile/Views/OnboardingView.swift	3	fork hook in iOS app code (calls fork-owned extension)
-CodexBarMobile/CodexBarMobile/Views/ProviderDetailView.swift	113	fork hook in iOS app code (calls fork-owned extension)
+CodexBarMobile/CodexBarMobile/Views/ProviderDetailView.swift	116	fork hook in iOS app code (calls fork-owned extension)
 CodexBarMobile/CodexBarMobile/Views/ProviderUsageView.swift	77	fork hook in iOS app code (calls fork-owned extension)
 CodexBarMobile/CodexBarMobile/Views/TokenActivityView.swift	42	fork hook in iOS app code (calls fork-owned extension)
 CodexBarMobile/CodexBarMobilePushExtension/PushExtension.entitlements	2	fork team/app-group/iCloud identity in entitlements

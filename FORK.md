@@ -131,7 +131,7 @@ These carry identity strings or fork packaging calls and nothing else. Larger fo
 | `CodexBarMobile/CodexBarMobile/Storage/ModelContainerFactory.swift` | app group via `ForkIdentity` |
 | `CodexBarMobile/CodexBarMobile/Models/ProviderAccountGroup.swift` | account title from `accountLabel` (inline) |
 | `CodexBarMobile/CodexBarMobile/Models/WidgetActivityPublisher.swift` | publishes account records to widgets (inline) |
-| `CodexBarMobile/CodexBarMobile/Views/ProviderDetailView.swift`, `CodexBarMobile/CodexBarMobile/Views/ProviderUsageView.swift`, `CodexBarMobile/CodexBarMobile/Views/TokenActivityView.swift` | account row, day-key hardening, Dynamic Type month labels (inline) |
+| `CodexBarMobile/CodexBarMobile/Views/ProviderDetailView.swift`, `CodexBarMobile/CodexBarMobile/Views/ProviderUsageView.swift`, `CodexBarMobile/CodexBarMobile/Views/TokenActivityView.swift` | account row, day-key hardening, Dynamic Type month labels (inline); `ProviderDetailView` routes details through `ForkProviderDetailsView` (`ProviderDetailsView+ForkCompact.swift`), which gives user-plugin quota rows a one-line layout (3 lines) |
 
 ### Widgets
 

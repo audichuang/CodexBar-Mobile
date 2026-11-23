@@ -220,6 +220,7 @@
 		90D08BDB0023F9AC882235B1 /* ProviderAccountLinkage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AAB8310784E24CC51831768 /* ProviderAccountLinkage.swift */; };
 		91B35DACBDEA15589F225BF4 /* V079DetailsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B91FD2F4A2FE8C520900137 /* V079DetailsTests.swift */; };
 		923EAFD177F69D9DB697A002 /* CodexBarWidgetIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = E024B1E38E5CEBF63EDB05E3 /* CodexBarWidgetIntent.swift */; };
+		9283906FA0A4E83F79C03C24 /* ProviderDetailsView+ForkCompactTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE9071F7D486291F965B4E89 /* ProviderDetailsView+ForkCompactTests.swift */; };
 		92D6A0FFEAE1BBC5554937A5 /* SummaryPresentationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0C56E393033E8A0BF335345 /* SummaryPresentationTests.swift */; };
 		9360E35B526CE57E9C5ED2D0 /* DeepSeekUsageCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 477F069536CCC8340DF0B198 /* DeepSeekUsageCard.swift */; };
 		93754684AD608ECF9833F867 /* V026ViewSmokeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 157142B7B8F8ADF6A79DCD07 /* V026ViewSmokeTests.swift */; };
@@ -252,6 +253,7 @@
 		A910B3424F6BF1DCE7543E2E /* CodexBarMobileApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC3A52976034BA3F0CA44327 /* CodexBarMobileApp.swift */; };
 		A925E0A6BF1C1AD4179ADB52 /* ProviderSourceStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731ECB211729DE961CC82954 /* ProviderSourceStatus.swift */; };
 		A9305459F82B07AAE8ADC1A2 /* ProviderUsageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CAFBA243E25814E22BAAA6B /* ProviderUsageView.swift */; };
+		A99764723BA0D80B57A66D75 /* ProviderDetailsView+ForkCompact.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8BFE8EB7C65D6485D9234C0 /* ProviderDetailsView+ForkCompact.swift */; };
 		AAD38B49F341E26428134603 /* WidgetActivityProjectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1BB1B7D889AC7E25520F356 /* WidgetActivityProjectionTests.swift */; };
 		ACA7EB9D06944B5EA0FD9E84 /* CostFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947901EA2B0C4A99FF204533 /* CostFormatting.swift */; };
 		AE12A24886CE229E23CE0913 /* UsageQuotaProjection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10FD8C6FFD7E9E740892253 /* UsageQuotaProjection.swift */; };
@@ -664,6 +666,7 @@
 		A6FE2A42D78794922FD09FCE /* CostDashboardPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostDashboardPreferences.swift; sourceTree = "<group>"; };
 		A720D2B9B124834977F7A418 /* WidgetProviderSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetProviderSelection.swift; sourceTree = "<group>"; };
 		A7D93C3084621BE903FDADAB /* WidgetConfigurationAppIntents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetConfigurationAppIntents.swift; sourceTree = "<group>"; };
+		A8BFE8EB7C65D6485D9234C0 /* ProviderDetailsView+ForkCompact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProviderDetailsView+ForkCompact.swift"; sourceTree = "<group>"; };
 		A8D1A686D11DB3E3BB3D5B96 /* SummaryCardEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SummaryCardEditor.swift; sourceTree = "<group>"; };
 		A9F340DA45364A878F1BB616 /* V027Snapshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = V027Snapshots.swift; sourceTree = "<group>"; };
 		AA293C8F7A388B3FE79C2856 /* DeepgramUsageCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepgramUsageCard.swift; sourceTree = "<group>"; };
@@ -780,6 +783,7 @@
 		FC9438CA3638CF9A785DF480 /* WidgetQuotaForecast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetQuotaForecast.swift; sourceTree = "<group>"; };
 		FD40B01663354A5068FDD17E /* V077Snapshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = V077Snapshots.swift; sourceTree = "<group>"; };
 		FD8478C8A0C9D8732B72F7CB /* CodexWorkspaceBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodexWorkspaceBadge.swift; sourceTree = "<group>"; };
+		FE9071F7D486291F965B4E89 /* ProviderDetailsView+ForkCompactTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProviderDetailsView+ForkCompactTests.swift"; sourceTree = "<group>"; };
 		FF27BDA86EA01A9BD2362579 /* UsageQuotaCompatibilityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsageQuotaCompatibilityTests.swift; sourceTree = "<group>"; };
 		FFDC4744200553A1E1EA11EE /* V074ProviderPresentationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = V074ProviderPresentationTests.swift; sourceTree = "<group>"; };
 		FFF4778481814E84B90018D6 /* V082RenderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = V082RenderTests.swift; sourceTree = "<group>"; };
@@ -878,6 +882,7 @@
 				EFF79D2D057BBCA67F01411F /* OverviewQuotaWindowTests.swift */,
 				621D68074A776C6DDAE3E81D /* ProviderAccountGroupTests.swift */,
 				CC94BA62C1AD26767A4958DC /* ProviderColorPaletteTests.swift */,
+				FE9071F7D486291F965B4E89 /* ProviderDetailsView+ForkCompactTests.swift */,
 				C0369FFFEB823BDDD0EF77D4 /* ProviderSourceNoticePlacementTests.swift */,
 				96F4B4918D5CB25D930D349C /* ProviderUsageViewSubtitleTests.swift */,
 				F29398405BA75DD7486CCA9D /* QuotaPaceWidgetTests.swift */,
@@ -1292,6 +1297,7 @@
 				3AF5B28EEE593B46A1604352 /* OpenRouterStatsCard.swift */,
 				6DCD19FE389036BE565A572D /* PerplexityCreditsCard.swift */,
 				56E892AA32E52BD7EA6D63CE /* ProviderDetailsView.swift */,
+				A8BFE8EB7C65D6485D9234C0 /* ProviderDetailsView+ForkCompact.swift */,
 				CB05AAA074EEE8CC4379BD42 /* ProviderDetailView.swift */,
 				DE8DC4580179398C294E7398 /* ProviderSourceNoticeView.swift */,
 				3CAFBA243E25814E22BAAA6B /* ProviderUsageView.swift */,
@@ -1608,6 +1614,7 @@
 				11E96164D43584F5C0C39147 /* OverviewQuotaWindowTests.swift in Sources */,
 				36890D62A476E10C3211107E /* ProviderAccountGroupTests.swift in Sources */,
 				F78F3508FDA61D1B36D66800 /* ProviderColorPaletteTests.swift in Sources */,
+				9283906FA0A4E83F79C03C24 /* ProviderDetailsView+ForkCompactTests.swift in Sources */,
 				95F3F3E9381B3185C4A74746 /* ProviderSourceNoticePlacementTests.swift in Sources */,
 				E7948A0383825AE3E4A49801 /* ProviderUsageViewSubtitleTests.swift in Sources */,
 				3E5AFF6C6E5FEDFEEC7856DD /* QuotaPaceWidgetTests.swift in Sources */,
@@ -1751,6 +1758,7 @@
 				5F2D9A30A52D927A22BE6A8A /* ProviderDetailLocalization.swift in Sources */,
 				19EEC45174C2EE6DBE354E5E /* ProviderDetailRowPresentation.swift in Sources */,
 				B050FB5BF5817C3844A27F32 /* ProviderDetailView.swift in Sources */,
+				A99764723BA0D80B57A66D75 /* ProviderDetailsView+ForkCompact.swift in Sources */,
 				E18D8313EEDFF2093F589700 /* ProviderDetailsView.swift in Sources */,
 				9A6BC4C6D32EC02615CF8AA3 /* ProviderQuotaAccessoryView.swift in Sources */,
 				3772C81E2F6715A0EF1A02B5 /* ProviderQuotaWidgetView.swift in Sources */,

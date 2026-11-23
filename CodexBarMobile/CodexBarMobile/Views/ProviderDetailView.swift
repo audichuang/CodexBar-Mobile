@@ -193,7 +193,8 @@ struct ProviderDetailView: View {
                 self.primaryUsageSection
 
                 if !self.provider.details.isEmpty {
-                    ProviderDetailsView(
+                    ForkProviderDetailsView( // fork hook: compact plugin rows, ProviderDetailsView+ForkCompact.swift
+                        isUserPlugin: self.provider.providerIconMonogram != nil,
                         providerID: self.provider.providerID,
                         sections: self.provider.details,
                         tintColor: self.providerColor,
