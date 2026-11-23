@@ -1193,7 +1193,7 @@ extension UsageMenuCardView.Model {
         subtitle: (text: String, style: SubtitleStyle)) -> RedactedText
     {
         let email = PersonalInfoRedactor.redactAccountLabel(
-            Self.email(from: input),
+            Self.forkAccountLabelTitle(input) ?? Self.email(from: input), // fork hook: MenuCard+ForkDecorations.swift
             isEnabled: input.hidePersonalInfo,
             ordinal: input.accountPrivacyOrdinal)
         let subtitleText = PersonalInfoRedactor.redactEmails(in: subtitle.text, isEnabled: input.hidePersonalInfo)

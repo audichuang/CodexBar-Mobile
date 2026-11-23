@@ -136,3 +136,14 @@ struct ForkProviderTitle: View {
         self.name.first.map { String($0).uppercased() } ?? "?"
     }
 }
+
+extension UsageMenuCardView.Model {
+    /// Claude account cards show the user's account label (e.g. "la") rather than the fetched login email,
+    /// which upstream only uses as a fallback.
+    static func forkAccountLabelTitle(_ input: Input) -> String? {
+        guard input.provider == .claude, input.accountIsAuthoritative,
+              let label = input.account.email?.trimmingCharacters(in: .whitespacesAndNewlines), !label.isEmpty
+        else { return nil }
+        return label
+    }
+}
