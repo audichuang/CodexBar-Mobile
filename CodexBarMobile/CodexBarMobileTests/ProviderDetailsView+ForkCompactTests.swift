@@ -1,15 +1,20 @@
-@testable import CodexBarMobile
 import CodexBarSync
 import Testing
+@testable import CodexBarMobile
 
 /// Fork: only user-plugin details without charts or pace ticks take the compact layout.
 struct ProviderDetailsViewForkCompactTests {
     private let quotaRow = SyncProviderDetailSection.Row(
-        label: "Gemini · 5h", value: "剩 82%", secondaryValue: "3h12m 後重置", progress: .init(used: 0.82, total: 1))
+        label: "Gemini · 5h",
+        value: "剩 82%",
+        secondaryValue: "3h12m 後重置",
+        progress: .init(used: 0.82, total: 1))
 
     @Test
     func `plugin quota sections use the compact layout`() {
-        let sections = [SyncProviderDetailSection(title: "coding", rows: [self.quotaRow, .init(label: "⚠ 更新", value: "42 分鐘前")])]
+        let sections = [SyncProviderDetailSection(
+            title: "coding",
+            rows: [self.quotaRow, .init(label: "⚠ 更新", value: "42 分鐘前")])]
         #expect(ForkProviderDetailsView.usesCompactLayout(isUserPlugin: true, sections: sections))
     }
 
