@@ -13,7 +13,7 @@ struct ForkProviderDetailsView: View {
     let tintColor: Color
     var hasResetCreditCard = false
 
-    static func usesCompactLayout(isUserPlugin: Bool, sections: [SyncProviderDetailSection]) -> Bool {
+    nonisolated static func usesCompactLayout(isUserPlugin: Bool, sections: [SyncProviderDetailSection]) -> Bool {
         isUserPlugin && sections.allSatisfy { section in
             section.chart == nil && section.rows.allSatisfy { $0.progress?.expectedUsed == nil }
         }
